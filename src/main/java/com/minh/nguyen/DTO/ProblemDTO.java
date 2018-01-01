@@ -5,5 +5,6 @@ package com.minh.nguyen.DTO;
  * @since 01/01/2018
  * Purpose:
  */
-public class ProblemDTO {
+public class ProblemDTO extends BaseDTO {
+
 }

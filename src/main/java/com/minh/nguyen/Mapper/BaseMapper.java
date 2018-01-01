@@ -1,17 +1,29 @@
 package com.minh.nguyen.Mapper;
 
 import com.minh.nguyen.Provider.BaseProvider;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
+/**
+ * @author Mr.Minh
+ * @since 31/12/2017
+ * Purpose: provide base prepared SQL statement
+ */
 @Mapper
 public interface BaseMapper<T> {
-    @SelectProvider(type = BaseProvider.class, method = "findByPK")
-    T findByPK(T entity);
+    /**
+     * @since 01-01-2018
+     * @param entity
+     * @return
+     */
+    @SelectProvider(type = BaseProvider.class, method = "selectByPK")
+    List<T> selectByPK(@Param("entity") T entity);
+
     @InsertProvider(type = BaseProvider.class, method = "insert")
-    int insert(T entity);
+    int insert(@Param("entity") T entity);
+
     @UpdateProvider(type = BaseProvider.class, method = "updateByPK")
-    int updateByPK(T entity);
+    int updateByPK(@Param("entity") T entity);
+
 }

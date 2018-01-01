@@ -2,6 +2,7 @@ package com.minh.nguyen.Provider;
 
 import com.minh.nguyen.Entity.BaseEntity;
 import org.apache.ibatis.jdbc.SQL;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -15,18 +16,19 @@ import java.util.List;
  * @since 31/12/2017
  * Purpose: provide base prepared SQL statement
  */
+@Component
 public class BaseProvider {
     public String updateByPK(final Class<? extends BaseEntity> entity) {
         return new SQL(){{
 
         }}.toString();
     }
-    public String findByPK(final Class<?> entity){
+    public String selectByPK(final Class<?> entity){
         return new SQL(){{
             Class<?> C = entity.getClass();
             List<Field> getAllFields = new ArrayList<>();
             while (C != null) {
-                Field[] currentField = entity.getFields();
+                Field[] currentField = entity.getDeclaredFields();
                 for(int i = 0;i < currentField.length;i++){
                     getAllFields.add(currentField[i]);
                 }
@@ -52,6 +54,7 @@ public class BaseProvider {
             SELECT(select.toString());
             FROM(entity.getAnnotation(Table.class).name());
             WHERE(where.toString());
+            WHERE("deleteFlg='0'");
         }}.toString();
     }
     public String insert(final Class<?> entity){

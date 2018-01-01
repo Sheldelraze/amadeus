@@ -462,9 +462,12 @@
                         <a class="waves-effect waves-dark" href="Index.aspx" aria-expanded="false"><i
                                 class="mdi mdi-home"></i><span class="hide-menu">Trang chủ </span></a>
                     </li>
-                    <li>
-                        <a class="waves-effect waves-dark" href="ProblemList.aspx" aria-expanded="false"><i
-                                class="mdi mdi-calendar-question"></i><span class="hide-menu">Bài tập</span></a>
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
+                            class="mdi mdi-calendar-question"></i><span class="hide-menu">Bài tập</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="#">Tất cả bài tập</a></li>
+                            <li><a href="#">Bài tập của tôi</a></li>
+                        </ul>
                     </li>
                     <li>
                         <a class="waves-effect waves-dark" href="CourseList.aspx" aria-expanded="false"><i
@@ -577,14 +580,9 @@
     <!-- ============================================================== -->
     <!-- This page plugins -->
     <!-- ============================================================== -->
-    <!-- chartist chart -->
-    <script src="../../static/assets/plugins/chartist-js/dist/chartist.min.js" th:src="@{assets/plugins/chartist-js/dist/chartist.min.js}" ></script>
-    <script src="../../static/assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js" th:src="@{assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js}" ></script>
     <!--c3 JavaScript -->
     <script src="../../static/assets/plugins/d3/d3.min.js" th:src="@{assets/plugins/d3/d3.min.js}" ></script>
     <script src="../../static/assets/plugins/c3-master/c3.min.js" th:src="@{assets/plugins/c3-master/c3.min.js}" ></script>
-    <!-- Chart JS -->
-    <script src="../../static/js/dashboard1.js" th:src="@{js/dashboard1.js}" ></script>
     <!-- ============================================================== -->
     <!-- Style switcher -->
     <!-- ============================================================== -->

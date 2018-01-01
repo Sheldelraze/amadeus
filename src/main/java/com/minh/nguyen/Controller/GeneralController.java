@@ -1,7 +1,6 @@
 package com.minh.nguyen.Controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,7 +14,7 @@ public class GeneralController {
     @GetMapping("/")
     public ModelAndView getFirst() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("share/index");
+        modelAndView.setViewName("problem/info/info-statement");
         return modelAndView;
     }
 }
