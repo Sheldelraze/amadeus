@@ -15,6 +15,7 @@ public class GeneralController {
     public ModelAndView getFirst() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("problem/info/info-statement");
+//        modelAndView.setViewName("share/index");
         return modelAndView;
     }
 }
