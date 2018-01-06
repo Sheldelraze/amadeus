@@ -1,5 +1,6 @@
 package com.minh.nguyen.Util;
-import javax.annotation.Nonnull;
+import com.sun.javafx.beans.annotations.NonNull;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public class ExceptionUtil {
         throw new UnsupportedOperationException();
     }
 
-    public static String getMessage(@Nonnull Throwable t) {
+    public static String getMessage(@NonNull Throwable t) {
         String message = t.getMessage();
 
         while (message == null) {

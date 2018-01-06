@@ -62,49 +62,63 @@
             <div class="row">
                 <!-- Column -->
                 <!-- Column -->
-                <div class="col-lg-12 col-xlg-12 col-md-12" th:fragment="time">
-                    <div class="card">
-                        <div class="card-outline-info">
-                            <div class="card-header" style="text-align: center">
-                                <h4 class="m-b-0 text-white">Lập trình hướng đối tượng</h4>
-                            </div>
-                        </div>
-                        <div class="card-body" style="margin-top: -10px">
-                            <h4 class="card-text" style="text-align: center">Kỳ thi đang diễn ra</h4>
-                            <div class="progress">
-                                <div class="progress-bar bg-info progress-bar-striped active" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%; height: 20px;"><span class="sr-only">85% Complete</span></div>
-                            </div>
-                            <div style="color: red; text-align: center; font-size: larger"><span id="time">05:00</span></div>
-                        </div>
-                    </div>
-                </div>
+                <div class="col-lg-12 col-xlg-12 col-md-12" th:replace="contest/info/contest-layout::time"></div>
                 <div class="col-lg-12 col-xlg-12 col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <ul class="nav nav-pills m-t-30 m-b-30" th:fragment="navtab">
-                                <li class="nav-item"><a href="#infomation" class="nav-link">Thông tin</a> </li>
-                                <li class="nav-item"><a href="#problem" class="nav-link">Bài tập</a> </li>
-                                <li class="nav-item"><a href="#submit" class="nav-link">Nộp bài</a> </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <span class="hidden-sm-up"><i class="ti-email"></i></span><span class="hidden-xs-down">Danh sách bài nộp</span>
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" id="dropdown1-tab" href="#my" role="tab" data-toggle="tab" aria-controls="dropdown1" style="color: cornflowerblue">Của tôi
-                                        </a>
-                                        <a class="dropdown-item" id="dropdown2-tab" href="#status" role="tab" data-toggle="tab" aria-controls="dropdown2" style="color: cornflowerblue">Tất cả
-                                        </a>
+                            <ul class="nav nav-pills m-t-30 m-b-30" th:replace="contest/info/contest-layout::navtab"></ul>
+                            <div id="announcement" class="tab-pane active" style="margin-top: 20px; color: black">
+                                <div class="card-body">
+                                    <div class="form-group m-t-40 row">
+                                        <label  class="col-2 col-form-label">Chọn bài tập</label>
+                                        <div class="col-5">
+                                            <select class="form-control">
+                                                <option>Thông báo chung</option>
+                                                <option>1. Tính tổng 2 số</option>
+                                                <option>2. Tìm ước chung nhỏ nhất</option>
+                                                <option>3. Tìm bội chung lớn nhất</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </li>
-                                <li class="nav-item"><a href="#leaderboard" class="nav-link">Bảng xếp hạng</a> </li>
+                                    <div class="form-group m-t-40 row">
+                                        <label  class="col-2 col-form-label">Nội dung</label>
+                                        <div class="col-10">
+                                            <textarea class="form-control" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-success">Thêm thông báo</button>
+                                    <hr style="width: 100%" />
+                                    <div class="table-responsive">
+                                        <table class="table" style="color: black; text-align: center">
+                                            <thead>
+                                            <tr>
+                                                <th style="text-align: center">#</th>
+                                                <th style="text-align: center">Tên bài</th>
+                                                <th style="text-align: center">Nội dung</th>
+                                                <th style="text-align: center">Ẩn/Hiện</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
 
-                                <li class="nav-item"><a href="#announcement" class="nav-link">Thông báo <b style="color: red">(2)</b></a> </li>
-                                <li class="nav-item"><a href="#setting" class="nav-link">Thiết lập</a> </li>
-                                <li class="nav-item"><a href="#role" class="nav-link">Phân quyền</a> </li>
-                            </ul>
-                            <div class="tab-content br-n pn">
-                                <div id="infomation" class="tab-pane">
-
+                                            <tr style="background-color: #e8e8e8">
+                                                <td>2</td>
+                                                <td><a href="#"><b>Tính tổng 2 số</b></a></td>
+                                                <td>Giới hạn của M là 100000 chứ không phải 100</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-outline-success">Hiện</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td><a href="#"><b>Tìm ước chung nhỏ nhất</b></a></td>
+                                                <td>Với trường hợp không có đáp án, xuất ra 'No' (không có dấu nháy)</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-outline-danger">Ẩn đi</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
