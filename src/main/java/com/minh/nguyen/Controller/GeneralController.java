@@ -14,7 +14,8 @@ public class GeneralController {
     @GetMapping("/")
     public ModelAndView getFirst() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("problem/info/info-statement");
+        modelAndView.setViewName("contest/info/contest-leaderboard");
+//        modelAndView.setViewName("problem/info/problem-info-");
 //        modelAndView.setViewName("share/index");
         return modelAndView;
     }
