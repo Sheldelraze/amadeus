@@ -2,17 +2,16 @@ package com.minh.nguyen.amadeus;
 
 import com.google.common.util.concurrent.SimpleTimeLimiter;
 import com.google.common.util.concurrent.TimeLimiter;
-import com.minh.nguyen.Util.CommonCompiler;
-import com.minh.nguyen.Util.Runner.Outcome;
-import com.minh.nguyen.Util.Runner.Params;
-import com.minh.nguyen.Util.Runner.ProcessRunner;
+import com.minh.nguyen.util.CompileUtil;
+import com.minh.nguyen.util.Runner.Outcome;
+import com.minh.nguyen.util.Runner.Params;
+import com.minh.nguyen.util.Runner.ProcessRunner;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -23,8 +22,8 @@ public class AmadeusApplicationTests {
 
 	static Logger logger = LoggerFactory.getLogger(AmadeusApplicationTests.class);
 	public static void main(String[] args) throws IOException {
-        CommonCompiler commonCompiler = new CommonCompiler();
-        commonCompiler.solve();
+        CompileUtil compileUtil = new CompileUtil();
+        compileUtil.solve();
         TimeLimiter timeLimiter = new SimpleTimeLimiter();
         try {
             timeLimiter.callWithTimeout(new Callable<Void>() {
