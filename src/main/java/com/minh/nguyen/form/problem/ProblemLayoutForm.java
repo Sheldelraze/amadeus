@@ -6,17 +6,22 @@ package com.minh.nguyen.form.problem;
  * Purpose:
  */
 public class ProblemLayoutForm {
-    protected static int STATEMENT_VIEW = 1;
-    protected static int SOLUTION_VIEW = 2;
-    protected static int TEST_VIEW = 3;
-    protected static int ROLE_VIEW = 4;
     private String name;
+    private int viewTab;
     private int sutId;
     private int timeLimit;
     private int memoryLimit;
     private int difficulty;
     private int cntTest;
     private int isPublished;
+
+    public int getViewTab() {
+        return viewTab;
+    }
+
+    public void setViewTab(int viewTab) {
+        this.viewTab = viewTab;
+    }
 
     public String getName() {
         return name;
