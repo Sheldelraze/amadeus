@@ -1,4 +1,4 @@
-# Amadeus
+# Amadeus system
 Online auto judging system for HaUI.
 Written in Java.
 Framework used:
@@ -6,4 +6,4 @@ Framework used:
 + Front-end engine: Thymeleaf + HCJ + bootstrap + jquery
 + Database: Mybatis
 + Security: Spring security
-+ Testing tool: logback with aspect
++ Testing tool: logback + AOP
