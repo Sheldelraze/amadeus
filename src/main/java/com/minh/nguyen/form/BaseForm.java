@@ -5,5 +5,5 @@ package com.minh.nguyen.form;
  * @since 07/01/2018
  * Purpose:
  */
-public class DummyForm {
+public class BaseForm {
 }

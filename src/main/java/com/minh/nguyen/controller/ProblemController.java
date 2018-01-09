@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -16,17 +17,23 @@ import org.springframework.web.servlet.ModelAndView;
  * Purpose:
  */
 @Controller
-//@RequestMapping("problem")
+@RequestMapping("/problem")
 public class ProblemController {
     public static String LAYOUT_FORM = "problemLayoutForm";
     public static String SOLUTION_FORM = "problemSolutionForm";
     public static String STATEMENT_FORM = "problemStatementForm";
     public static String TEST_FORM = "problemTestForm";
     public static String ROLE_FORM = "problemRoleForm";
+    public static String CREATE_FORM = "problemCreateForm";
+    public static String CREATE_VO = "problemCreateVO";
+
     public static String SOLUTION_VIEW = "problem/info/problem-solution";
     public static String STATEMENT_VIEW = "problem/info/problem-statement";
     public static String TEST_VIEW = "problem/info/problem-test";
     public static String ROLE_VIEW = "problem/info/problem-role";
+    public static String LIST_MY_VIEW = "problem/list/problem-list-my";
+    public static String LIST_ALL_VIEW = "problem/list/problem-list-all";
+    public static String CREATE_VIEW = "problem/other/problem-create";
     public static int LAYTOUT_TAB = 0;
     public static int STATEMENT_TAB = 1;
     public static int SOLUTION_TAB = 2;
@@ -35,7 +42,31 @@ public class ProblemController {
     @Autowired
     private ProblemService problemService;
 
+    @GetMapping("/my")
+    public ModelAndView getFirst() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(LIST_MY_VIEW);
 
+//        modelAndView.setViewName("share/index");
+        return modelAndView;
+    }
+
+    @GetMapping("/create")
+    public ModelAndView getCreate(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(CREATE_VIEW);
+        modelAndView.addObject(CREATE_FORM, new ProblemCreateForm());
+
+        return modelAndView;
+    }
+
+    @PostMapping("/doCreate")
+    public ModelAndView doCreate(ProblemCreateForm problemCreateForm){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(STATEMENT_FORM);
+
+        return modelAndView;
+    }
     public ModelAndView getGeneralInfo(int pmId,ProblemLayoutForm problemLayoutForm,int viewTab){
         ModelAndView modelAndView = new ModelAndView();
 

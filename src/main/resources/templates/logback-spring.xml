@@ -4,7 +4,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-7level %logger{36}.%M - %msg%n)
+                %d{dd-MM-yyyy HH:mm:ss.SS} %magenta([%thread]) %highlight(%-7level %logger{36}.%M - %msg%n)
             </pattern>
         </encoder>
     </appender>
@@ -43,7 +43,7 @@
     <!--</appender>-->
 
     <root level="info">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STOUT"/>
     </root>
     <!--<logger name="com.example.demo.mapper" level="info" additivity="false">-->
         <!--<appender-ref ref="STDOUT"/>-->

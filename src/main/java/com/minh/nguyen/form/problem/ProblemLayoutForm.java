@@ -1,11 +1,13 @@
 package com.minh.nguyen.form.problem;
 
+import com.minh.nguyen.form.BaseForm;
+
 /**
  * @author Mr.Minh
  * @since 07/01/2018
  * Purpose:
  */
-public class ProblemLayoutForm {
+public class ProblemLayoutForm extends BaseForm{
     private String name;
     private int viewTab;
     private int sutId;

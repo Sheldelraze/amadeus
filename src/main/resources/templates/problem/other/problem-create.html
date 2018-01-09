@@ -47,7 +47,8 @@
                 <div class="col-md-5 col-8 align-self-center">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
-                        <li class="breadcrumb-item active">Bài tập của tôi</li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập của tôi</a></li>
+                        <li class="breadcrumb-item active">Thêm bài tập</li>
                     </ol>
                 </div>
             </div>
@@ -61,55 +62,37 @@
                     <div class="card">
                         <div class="card-outline-info">
                             <div class="card-header">
-                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách bài tập của tôi</h4>
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Thêm bài tập
+                                    mới</h4>
                             </div>
                         </div>
                         <div class="card-body">
-                            <div style="float: left">
-                                <button type="button" class="btn btn-block btn-outline-success">Thêm bài tập mới</button>
-                            </div>
-                            <br />
-                            <br />
-                            <div class="table-responsive">
-                                <table id="myTable" class="table table-bordered " style="text-align: center; color: black; font-size: 14px">
-                                    <thead>
-                                    <tr>
-                                        <th style="text-align: center" width="20px">ID</th>
-                                        <th style="text-align: center">Mã bài tập</th>
-                                        <th style="text-align: center">Tên bài tập</th>
-                                        <th style="text-align: center">Môn học</th>
-                                        <th style="text-align: center" width="150px">Người tạo</th>
-                                        <th style="text-align: center">Thể loại</th>
-                                        <th style="text-align: center" width="140px" >Trạng thái</th>
-                                        <th width="100px"></th>
-                                    </tr>
-                                    </thead>
-                                    <tr>
-                                        <td>43152</td>
-                                        <td><a href="ProblemInfo.aspx">SUM</a></td>
-                                        <td>Tính tổng</td>
-                                        <td>Lập trình C++</td>
-                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                        <td>Cơ bản, đồ thị</td>
-                                        <td><span class="label label-success">Đã xuất bản</span></td>
-                                        <td><button type="button" class="btn btn-outline-info">Xem thông tin</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>43152</td>
-                                        <td><a href="ProblemInfo.aspx">MINUS</a></td>
-                                        <td>Tính hiệu 2 số</td>
-                                        <td>Lập trình Java</td>
-                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                        <td>Hình học, quy hoạch động</td>
-                                        <td><span class="label label-danger">Chưa xuất bản</span></td>
-                                        <td><button type="button" class="btn btn-outline-info">Xem thông tin</button></td>
-                                    </tr>
-                                </table>
-                            </div>
+                            <form th:method="post" th:action="doCreate" th:object="${problemCreateForm}">
+                                <div class="form-group m-t-10 row">
+                                    <div class="col-3"><h3 style="float:right">Mã bài tập</h3></div>
+
+                                    <div class="col-4">
+                                        <input class="form-control" type="text" style="color: black" th:field="*{code}"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="submit" class="btn btn-outline-success">Tạo bài tập</button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-4">
+                                        <label class="text-muted db">
+
+                                            Mã bài tập bao gồm các chữ cái in thường và hoa, các
+                                            chữ số và ký tự '_', viết liền không dấu. Độ dài không quá 20
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- ============================================================== -->
             <!-- End PAge Content -->
@@ -139,14 +122,7 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
-<script src="../../static/assets/plugins/datatables/jquery.dataTables.min.js"
-    th:src="@{assets/plugins/datatables/jquery.dataTables.min.js}"
-></script>
-<script>
-    $(document).ready(function () {
-            $('#myTable').DataTable();
-    });
-</script>
+
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>
