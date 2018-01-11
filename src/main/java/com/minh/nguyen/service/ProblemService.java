@@ -4,6 +4,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.form.problem.ProblemSolutionForm;
+import com.minh.nguyen.mapper.ProblemMapper;
 import com.minh.nguyen.util.CompileUtil;
 import com.minh.nguyen.util.ExceptionUtil;
 import com.minh.nguyen.util.FileUtil;
@@ -28,6 +29,9 @@ public class ProblemService extends BaseService<ProblemEntity> {
     private CompileUtil compileUtil;
 
     @Autowired
+    private ProblemMapper problemMapper;
+
+    @Autowired
     private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
     public void tryCompile(ProblemSolutionForm problemSolutionForm) {
@@ -39,4 +43,15 @@ public class ProblemService extends BaseService<ProblemEntity> {
             logger.warn(e.getMessage());
         }
     }
+
+    public void createProblem(String code){
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setCode(code);
+        setCreateInfo(problemEntity);
+        setUpdateInfo(problemEntity);
+        problemMapper.insert(problemEntity);
+        problemEntity.setCode(null);
+    }
+
+
 }

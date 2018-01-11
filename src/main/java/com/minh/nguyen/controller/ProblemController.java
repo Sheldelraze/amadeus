@@ -64,7 +64,7 @@ public class ProblemController {
     public ModelAndView doCreate(ProblemCreateForm problemCreateForm){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(STATEMENT_FORM);
-
+        problemService.createProblem(problemCreateForm.getCode());
         return modelAndView;
     }
     public ModelAndView getGeneralInfo(int pmId,ProblemLayoutForm problemLayoutForm,int viewTab){

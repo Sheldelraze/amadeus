@@ -1,9 +1,8 @@
 package com.minh.nguyen.entity;
 
 
-import org.joda.time.LocalDateTime;
-
 import javax.persistence.Column;
+import java.util.Date;
 
 
 /**
@@ -11,7 +10,7 @@ import javax.persistence.Column;
  */
 public class BaseEntity {
     @Column(name = "createTime")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     @Column(name = "createUser")
     private String createUser;
@@ -20,7 +19,7 @@ public class BaseEntity {
     private String createClass;
 
     @Column(name = "updateTime")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     @Column(name = "updateUser")
     private String updateUser;
@@ -36,11 +35,11 @@ public class BaseEntity {
 
 
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -60,11 +59,11 @@ public class BaseEntity {
         this.createClass = createClass;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

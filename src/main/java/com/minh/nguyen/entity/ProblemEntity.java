@@ -16,6 +16,10 @@ public class ProblemEntity extends BaseEntity implements Serializable {
     @Column(name = "id")
     private Integer id;
 
+    @Id
+    @Column(name = "code")
+    private String code;
+
     @Column(name = "name")
     private String name;
 
@@ -34,6 +38,14 @@ public class ProblemEntity extends BaseEntity implements Serializable {
 
     @Column(name = "difficulty")
     private Integer difficulty;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
