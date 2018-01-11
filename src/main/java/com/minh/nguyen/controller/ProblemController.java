@@ -5,6 +5,7 @@ import com.minh.nguyen.service.ProblemService;
 import com.sun.javafx.beans.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping("/problem")
-public class ProblemController {
+public class ProblemController extends BaseController{
     public static String LAYOUT_FORM = "problemLayoutForm";
     public static String SOLUTION_FORM = "problemSolutionForm";
     public static String STATEMENT_FORM = "problemStatementForm";
@@ -61,8 +62,16 @@ public class ProblemController {
     }
 
     @PostMapping("/doCreate")
-    public ModelAndView doCreate(ProblemCreateForm problemCreateForm){
+    public ModelAndView doCreate(ProblemCreateForm problemCreateForm, BindingResult result){
         ModelAndView modelAndView = new ModelAndView();
+
+        problemCreateForm.setScreenName("makerAdd");
+        validate(problemCreateForm, result);
+        if (result.hasErrors()){
+            modelAndView.setViewName(CREATE_VIEW);
+            modelAndView.addObject(CREATE_FORM, problemCreateForm);
+            return modelAndView;
+        }
         modelAndView.setViewName(STATEMENT_FORM);
         problemService.createProblem(problemCreateForm.getCode());
         return modelAndView;

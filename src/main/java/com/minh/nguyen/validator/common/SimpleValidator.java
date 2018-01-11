@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * Purpose:
  */
 @Service
-public class SimpleValidator extends AppValidator {
+public class SimpleValidator extends BaseValidator {
 
     public void validateField(String field, String fieldValue,
             BindingResult errors) {

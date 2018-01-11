@@ -17,6 +17,7 @@ public class Constants {
     public static String TEST_ERROR_LOCATION = TEST_COMPILE_LOCATION + "error.txt";
     public static String BLANK = "";
 
+    public static String MSG_TOTAL_ERR = "msg000";
     public static String MSG_REQUIRED_INPUT_ERR = "msg001";
     public static String MSG_LENGTH_INPUT_ERR = "msg002";
     public static String MSG_DATE_FORMAT_INPUT_ERR = "msg003";

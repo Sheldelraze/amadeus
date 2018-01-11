@@ -16,41 +16,14 @@ import java.lang.reflect.Field;
 @Component
 public class BaseProvider {
 
-    /**
-     * FORMAT_STRING_SQL_3
-     */
     private static final String FORMAT_STRING_SQL_3 = "#{";
-
-    /**
-     * STRING_COMMA
-     */
     private static final String STRING_COMMA = ",";
-
-    /**
-     * STRING_AS
-     */
     private static final String STRING_AS = " AS ";
-
-    /**
-     * FORMAT_STRING_SQL_2
-     */
     private static final String FORMAT_STRING_SQL_2 = "}";
-
-    /**
-     * FORMAT_STRING_SQL_1
-     */
     private static final String FORMAT_STRING_SQL_1 = " = #{";
-    /**
-     * SQL_COUNT_ALL_RECODE
-     */
     private static final String SQL_COUNT_ALL_RECODE = "count(*)";
 
-    /**
-     * select record by Id
-     * @param entity Object
-     * @return String
-     */
-    public String selectById(Object entity) {
+    public String selectByPrimaryKey(Object entity) {
         final Class<?> table = entity.getClass();
         final String tableName = table.getAnnotation(Table.class).name();
 
@@ -92,11 +65,6 @@ public class BaseProvider {
         }.toString();
     }
 
-    /**
-     * select all
-     * @param classType Class<?>
-     * @return String
-     */
     public String selectAll(Class<?> classType) {
 
         final Class<?> table = classType;
@@ -133,12 +101,7 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * Check exist of recode by primary key
-     * @param entity Object
-     * @return String
-     */
-    public String existId(Object entity) {
+    public String existPrimaryKey(Object entity) {
         final Class<?> table = entity.getClass();
         final String tableName = table.getAnnotation(Table.class).name();
         String sql = new SQL() {
@@ -165,12 +128,6 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * Check exist of recode by example record
-     * @param entity Object
-     * @return String
-     * @throws Exception Exception
-     */
     public String existWithExample(final Object entity) throws Exception {
 
         final Class<?> table = entity.getClass();
@@ -206,12 +163,6 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * select all record with example record
-     * @param entity Object
-     * @return String
-     * @throws Exception Exception
-     */
     public String selectWithExample(final  Object entity) throws Exception {
 
         final Class<?> table = entity.getClass();
@@ -276,12 +227,7 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * delete by primary key
-     * @param entity Object
-     * @return String
-     */
-    public String deleteById(Object entity) {
+    public String deleteByPrimaryKey(Object entity) {
         final Class<?> table = entity.getClass();
         final String tableName = table.getAnnotation(Table.class).name();
 
@@ -308,12 +254,6 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * delete with Example record
-     * @param entity Object
-     * @return String
-     * @throws Exception Exception
-     */
     public String deleteWithExample(final Object entity) throws Exception {
         final Class<?> table = entity.getClass();
         final String tableName = table.getAnnotation(Table.class).name();
@@ -354,11 +294,6 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * insert
-     * @param entity Object
-     * @return String
-     */
     public String insert(final Object entity) {
         final Class<?> table = entity.getClass();
         final String tableName = table.getAnnotation(Table.class).name();
@@ -390,12 +325,7 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * update by Id
-     * @param entity Object
-     * @return String
-     */
-    public String updateById(final Object entity) {
+    public String updateByPrimaryKey(final Object entity) {
         final Class<?> table = entity.getClass();
         final String tableName = table.getAnnotation(Table.class).name();
 
@@ -426,11 +356,6 @@ public class BaseProvider {
         return sql;
     }
 
-    /**
-     * checkExclusive
-     * @param entity Object
-     * @return String
-     */
     public String checkExclusive(Object entity) {
         final Class<?> table = entity.getClass();
         final String tableName = table.getAnnotation(Table.class).name();

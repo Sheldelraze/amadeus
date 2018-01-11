@@ -1,6 +1,8 @@
 package com.minh.nguyen.form.problem;
 
 import com.minh.nguyen.form.BaseForm;
+import com.minh.nguyen.validator.annotation.MaxLength;
+import com.minh.nguyen.validator.annotation.Required;
 
 /**
  * @author Mr.Minh
@@ -9,6 +11,8 @@ import com.minh.nguyen.form.BaseForm;
  */
 public class ProblemCreateForm extends BaseForm {
     private int pmId;
+    @Required(displayFieldName = "code")
+    @MaxLength(displayFieldName = "code", maxlength = 20)
     private String code;
 
     public String getCode() {

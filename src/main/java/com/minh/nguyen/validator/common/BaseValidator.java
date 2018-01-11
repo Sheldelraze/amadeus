@@ -4,13 +4,10 @@ import com.minh.nguyen.exception.BaseException;
 import com.minh.nguyen.form.BaseForm;
 import com.minh.nguyen.util.MessageUtil;
 import com.minh.nguyen.util.StringUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,7 +18,7 @@ import java.util.List;
  * @since 12/01/2018
  * Purpose:
  */
-public abstract class AppValidator {
+public abstract class BaseValidator {
 
     private static final String HAS_ERROR = "] has error: ";
 
@@ -29,7 +26,7 @@ public abstract class AppValidator {
 
     private static final String FIELD_STRING_BEGIN = "Field [";
 
-    protected static Logger logger = LoggerFactory.getLogger(AppValidator.class);
+    protected static Logger logger = LoggerFactory.getLogger(BaseValidator.class);
 
     @Autowired
     protected StringUtil strUtil;
