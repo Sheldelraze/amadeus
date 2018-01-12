@@ -1,9 +1,8 @@
 package com.minh.nguyen.entity;
 
-import org.joda.time.LocalDateTime;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -55,10 +54,10 @@ public class UserEntity extends BaseEntity implements Serializable {
     private Integer isLocked;
 
     @Column(name = "lastLogin")
-    private LocalDateTime lastLogin;
+    private Date lastLogin;
 
     @Column(name = "expiredDate")
-    private LocalDateTime expiredDate;
+    private Date expiredDate;
 
     @Column(name = "accountType")
     private Integer accountType;
@@ -167,19 +166,19 @@ public class UserEntity extends BaseEntity implements Serializable {
         this.isLocked = isLocked;
     }
 
-    public LocalDateTime getLastLogin() {
+    public Date getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(LocalDateTime lastLogin) {
+    public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 
-    public LocalDateTime getExpiredDate() {
+    public Date getExpiredDate() {
         return expiredDate;
     }
 
-    public void setExpiredDate(LocalDateTime expiredDate) {
+    public void setExpiredDate(Date expiredDate) {
         this.expiredDate = expiredDate;
     }
 

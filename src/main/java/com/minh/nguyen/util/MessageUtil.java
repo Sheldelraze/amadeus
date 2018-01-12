@@ -81,7 +81,7 @@ public class MessageUtil {
         }
     }
 
-    private String getMessage(String messageCode, String[] params) {
+    public String getMessage(String messageCode, String[] params) {
         params = processParams(params);
         String messageFormat = propUtil.getMsgProperty(messageCode);
         return getMessageNoCode(messageFormat, params);

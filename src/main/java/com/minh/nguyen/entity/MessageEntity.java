@@ -1,9 +1,8 @@
 package com.minh.nguyen.entity;
 
-import org.joda.time.LocalDateTime;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -22,7 +21,7 @@ public class MessageEntity extends BaseEntity implements Serializable {
     private String content;
 
     @Column(name = "sentTime")
-    private LocalDateTime sentTime;
+    private Date sentTime;
 
 
 }

@@ -3,6 +3,7 @@ package com.minh.nguyen.service;
 import com.minh.nguyen.entity.BaseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.RollbackException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,5 +22,9 @@ public class BaseService<T> {
         entity.setUpdateClass(BaseService.class.toString());
         entity.setUpdateTime(time);
         entity.setUpdateUser("minh.nt");
+    }
+    public void rollBack(String errMessage) {
+        RollbackException ex = new RollbackException(errMessage);
+        throw ex;
     }
 }

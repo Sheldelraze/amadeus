@@ -5,5 +5,5 @@ Framework used:
 + MVC: Spring boot
 + Front-end engine: Thymeleaf + HCJ + bootstrap + jquery
 + Database: Mybatis
-+ Security: Spring security
++ Security: Spring security + AspectJ
 + Testing tool: logback + AOP

@@ -1,9 +1,8 @@
 package com.minh.nguyen.entity;
 
-import org.joda.time.LocalDateTime;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -28,7 +27,7 @@ public class AnnouncementEntity extends BaseEntity implements Serializable {
     private String answer;
 
     @Column(name="timePosted")
-    private LocalDateTime timePosted;
+    private Date timePosted;
 
     @Column(name="isHidden")
     private Integer isHidden;
@@ -69,11 +68,11 @@ public class AnnouncementEntity extends BaseEntity implements Serializable {
         this.answer = answer;
     }
 
-    public LocalDateTime getTimePosted() {
+    public Date getTimePosted() {
         return timePosted;
     }
 
-    public void setTimePosted(LocalDateTime timePosted) {
+    public void setTimePosted(Date timePosted) {
         this.timePosted = timePosted;
     }
 

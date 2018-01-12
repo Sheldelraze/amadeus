@@ -5,6 +5,7 @@ import com.minh.nguyen.exception.BaseException;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
+import com.minh.nguyen.validator.common.ErrorInfoValue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -68,9 +70,9 @@ public class BaseController {
                             org.springframework.validation.BindingResult result) {
 
         if (validator != null) {
+
             bindingResult.clearErrors();
             validator.validate(targetObj, bindingResult);
-
             if (bindingResult.hasErrors()) {
                 try {
 

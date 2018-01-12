@@ -1,15 +1,15 @@
 package com.minh.nguyen.dto;
 
-import org.joda.time.LocalDateTime;
+import java.util.Date;
 
 public class BaseDTO {
-    private LocalDateTime createTime;
+    private Date createTime;
 
     private String createUser;
 
     private String createClass;
 
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     private String updateUser;
 
@@ -19,11 +19,11 @@ public class BaseDTO {
 
     private String deleteTime;
 
-    public LocalDateTime getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -43,11 +43,11 @@ public class BaseDTO {
         this.createClass = createClass;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

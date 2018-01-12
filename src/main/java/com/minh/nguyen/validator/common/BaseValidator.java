@@ -32,9 +32,6 @@ public abstract class BaseValidator {
     protected StringUtil strUtil;
 
     @Autowired
-    protected MessageUtil msgUtil;
-
-    @Autowired
     protected CommonValidator commonValidator;
 
     private List<String> errorItemNameList;
