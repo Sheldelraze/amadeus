@@ -1,24 +1,18 @@
-package com.minh.nguyen.controller;
+package com.minh.nguyen.controller.common;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.BaseException;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
-import com.minh.nguyen.validator.common.ErrorInfoValue;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Mr.Minh

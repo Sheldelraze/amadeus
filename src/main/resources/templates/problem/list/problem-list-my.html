@@ -140,11 +140,11 @@
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
 <script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
-    th:src="@{assets/plugins/datatables/jquery.dataTables.min.js}"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
 ></script>
 <script>
     $(document).ready(function () {
-            $('#myTable').DataTable();
+        $('#myTable').DataTable();
     });
 </script>
 </body>

@@ -8,7 +8,7 @@
     <!-- Favicon icon -->
     <title>Amadeus system</title>
     <link href="../../../static/assets/plugins/select2/dist/css/select2.min.css"
-          th:href="@{assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+          th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
 
     <div th:replace="layout/layout::css"></div>
 </head>
@@ -141,10 +141,10 @@
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
 <!-- This is data table -->
-<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js" th:src="@{assets/plugins/datatables/jquery.dataTables.min.js}" ></script>
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js" th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}" ></script>
 <script>
     $(document).ready(function () {
-            $('#myTable').DataTable();
+        $('#myTable').DataTable();
     });
 </script>
 </body>

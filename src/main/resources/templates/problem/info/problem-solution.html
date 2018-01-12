@@ -8,9 +8,9 @@
     <!-- Favicon icon -->
     <title>Amadeus system</title>
     <link href="../../../static/assets/plugins/select2/dist/css/select2.min.css"
-          th:href="@{assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+          th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="../../../static/assets/plugins/dropify/dist/css/dropify.min.css"
-          th:href="@{assets/plugins/dropify/dist/css/dropify.min.css}"/>
+          th:href="@{/assets/plugins/dropify/dist/css/dropify.min.css}"/>
 
     <div th:replace="layout/layout::css"></div>
     <style type="text/css" media="screen">
@@ -153,8 +153,8 @@ int main(){
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
-<script src="../../../static/ace/ace.js" th:src="@{ace/ace.js}"></script>
-<script src="../../../static/ace/ext-themelist.js" th:src="@{ace/ext-themelist.js}"></script>
+<script src="../../../static/ace/ace.js" th:src="@{/ace/ace.js}"></script>
+<script src="../../../static/ace/ext-themelist.js" th:src="@{/ace/ext-themelist.js}"></script>
 <script>
     function doSubmit(){
         var editor = ace.edit("editor");
@@ -184,9 +184,9 @@ int main(){
 <!-- load ace -->
 
 <script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"
-        th:src="@{assets/plugins/select2/dist/js/select2.full.min.js}" type="text/javascript"></script>
+        th:src="@{/assets/plugins/select2/dist/js/select2.full.min.js}" type="text/javascript"></script>
 <script src="../../../static/assets/plugins/dropify/dist/js/dropify.min.js"
-        th:src="@{assets/plugins/dropify/dist/js/dropify.min.js}"></script>
+        th:src="@{/assets/plugins/dropify/dist/js/dropify.min.js}"></script>
 <script>
     $(document).ready(function () {
         // Basic

@@ -22,4 +22,6 @@ public class Constants {
     public static String MSG_LENGTH_INPUT_ERR = "msg002";
     public static String MSG_DATE_FORMAT_INPUT_ERR = "msg003";
     public static String MSG_EMAIL_FORMAT_INPUT_ERR = "msg004";
+    public static String MSG_SYSTEM_ERR = "msg005";
+    public static String MSG_DUPLICATE_PROBLEM_ERR = "msg006";
 }

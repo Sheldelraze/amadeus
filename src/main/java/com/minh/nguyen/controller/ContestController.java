@@ -1,7 +1,7 @@
 package com.minh.nguyen.controller;
 
+import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.form.contest.*;
-import com.minh.nguyen.form.problem.ProblemSolutionForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

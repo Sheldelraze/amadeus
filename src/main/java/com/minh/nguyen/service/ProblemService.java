@@ -1,6 +1,7 @@
 package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
+import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.form.problem.ProblemSolutionForm;
@@ -12,8 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -43,14 +46,21 @@ public class ProblemService extends BaseService<ProblemEntity> {
             logger.warn(e.getMessage());
         }
     }
-
-    public void createProblem(String code){
+    @Transactional
+    public void createProblem(ProblemDTO problemDTO){
         ProblemEntity problemEntity = new ProblemEntity();
-        problemEntity.setCode(code);
+        problemEntity.setCode(problemDTO.getCode());
+        List<ProblemEntity> getRecord = problemMapper.selectWithExample(problemEntity);
+        if (getRecord.size() > 0){
+            rollBack(Constants.MSG_DUPLICATE_PROBLEM_ERR);
+        }
         setCreateInfo(problemEntity);
         setUpdateInfo(problemEntity);
-        problemMapper.insert(problemEntity);
-        problemEntity.setCode(null);
+        int insertRecord = problemMapper.insertEntity(problemEntity);
+        if (insertRecord != 1){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+        problemDTO.setId(problemEntity.getId());
     }
 
 

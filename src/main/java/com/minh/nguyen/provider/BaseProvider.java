@@ -195,8 +195,7 @@ public class BaseProvider {
                                                       String selectClause,
                                                       Field field) throws IllegalAccessException {
                 field.setAccessible(true);
-                if (field.isAnnotationPresent(Column.class)
-                        || field.isAnnotationPresent(Id.class)) {
+                if (field.isAnnotationPresent(Column.class)) {
                     if (field.get(entity) != null) {
                         if (field.isAnnotationPresent(Column.class)) {
                             WHERE(field.getAnnotation(Column.class).name()
