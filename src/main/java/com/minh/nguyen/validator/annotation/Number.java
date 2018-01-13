@@ -8,25 +8,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * @author Mr.Minh
- * @since 04/01/2018
+ * @since 13/01/2018
  * Purpose:
  */
 @Target({ FIELD })
 @Retention(RUNTIME)
-public @interface Format {
-    public static final String N_A = "N/A";
-
-    enum FormatType {
-    	NUMBER,
-		DATE,
-		EMAIL,
-		PHONENUMBER
-	}
-
-
-	FormatType type();
-
-	String displayFieldName() default N_A;
-
-	String pattern() default N_A;
+public @interface Number {
+    int minValue() default 1;
+    int maxValue() default 1;
+    String displayFieldName() default "N/A";
 }

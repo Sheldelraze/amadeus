@@ -1,6 +1,9 @@
 package com.minh.nguyen.form.problem;
 
 import com.minh.nguyen.form.BaseForm;
+import com.minh.nguyen.validator.annotation.Number;
+import com.minh.nguyen.validator.annotation.MaxLength;
+import com.minh.nguyen.validator.annotation.Required;
 
 /**
  * @author Mr.Minh
@@ -10,14 +13,40 @@ import com.minh.nguyen.form.BaseForm;
 public class ProblemLayoutForm extends BaseForm{
     int id;
     private String code;
+
+    @Required(displayFieldName = "name")
+    @MaxLength(displayFieldName = "name", maxlength = 25)
     private String name;
     private int viewTab;
     private int sutId;
-    private int timeLimit;
-    private int memoryLimit;
+
+    @Required(displayFieldName = "timeLimit")
+    @Number(minValue=1000,maxValue=10000,displayFieldName = "timeLimit")
+    private String timeLimit;
+
+    @Required(displayFieldName = "memoryLimit")
+    @Number(minValue=1,maxValue=256,displayFieldName = "memoryLimit")
+    private String memoryLimit;
+
     private int difficulty;
     private int cntTest;
     private int isPublished;
+
+    public String getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(String timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public String getMemoryLimit() {
+        return memoryLimit;
+    }
+
+    public void setMemoryLimit(String memoryLimit) {
+        this.memoryLimit = memoryLimit;
+    }
 
     public int getId() {
         return id;
@@ -57,22 +86,6 @@ public class ProblemLayoutForm extends BaseForm{
 
     public void setSutId(int sutId) {
         this.sutId = sutId;
-    }
-
-    public int getTimeLimit() {
-        return timeLimit;
-    }
-
-    public void setTimeLimit(int timeLimit) {
-        this.timeLimit = timeLimit;
-    }
-
-    public int getMemoryLimit() {
-        return memoryLimit;
-    }
-
-    public void setMemoryLimit(int memoryLimit) {
-        this.memoryLimit = memoryLimit;
     }
 
     public int getDifficulty() {

@@ -74,33 +74,51 @@
                                 </div>
                             </div>
                             <div class="card-body" style="margin-top: -10px">
-                                <small class="text-muted">Mã bài tập</small>
-                                <h5><label th:text="${problemLayoutVO}?${problemLayoutVO.code}"></label></h5>
+                                <th:block th:if="${problemLayoutVO}?${problemLayoutVO.updateSuccess}">
+                                    <div class="alert alert-success">
+                                        ✔ Cập nhật thành công
+                                    </div>
+                                </th:block>
                                 <input type="hidden" th:value="${problemLayoutVO}?${problemLayoutVO.code}"
                                        id="code" name="code"/>
-                                <small class="text-muted db">Tên bài tập</small>
+                                <small class="text-muted">Mã bài tập</small>
+                                <br/><label th:text="${problemLayoutVO}?${problemLayoutVO.code}" style="color:black"></label>
+
+                                <small class="text-muted db">Tên bài tập (không quá 25 ký tự)</small>
                                 <input type="text" class="form-control form-control-line"
                                        th:value="${problemLayoutVO}?${problemLayoutVO.name}"
                                        id="name" name="name"
                                        style="color: black"/>
+                                <th:block th:if="${#fields.hasErrors('name')}">
+                                        <label th:class="'error'" th:errors="*{name}">Screen
+                                            Error</label>
+                                </th:block>
+
                                 <small class="text-muted db">Môn học</small>
                                 <select class="select2" style="width: 100%; color: black">
                                     <option value="CPP">Kỹ thuật lập trình</option>
                                     <option value="JAVA">Lập trình hướng đối tượng</option>
                                 </select>
-                                <small class="text-muted p-t-10 db">Thời gian chạy (ms)</small>
+                                <small class="text-muted p-t-10 db">Thời gian chạy (ms) [1000, 10000]</small>
                                 <input type="text" class="form-control form-control-line"
                                        th:value="${problemLayoutVO}?${problemLayoutVO.timeLimit}"
                                        id="timeLimit" name="timeLimit"
                                        style="color: black"/>
-                                <small class="text-muted p-t-10 db">Bộ nhớ tối đa (MB)</small>
+                                <label
+                                        th:if="${#fields.hasErrors('timeLimit')}" th:class="'error'"
+                                        th:errors="*{timeLimit}">Name Error</label>
+                                <small class="text-muted p-t-10 db">Bộ nhớ tối đa (MB) [1, 256]</small>
                                 <input type="text" class="form-control form-control-line"
                                        th:value="${problemLayoutVO}?${problemLayoutVO.memoryLimit}"
                                        id="memoryLimit" name="memoryLimit"
                                        style="color: black"/>
+                                <label
+                                        th:if="${#fields.hasErrors('memoryLimit')}" th:class="'error'"
+                                        th:errors="*{memoryLimit}">Name Error</label>
                                 <small class="text-muted p-t-10 db">Độ khó</small>
                                 <div style="width: 30%">
-                                    <select class="form-control" th:remove="all-but-first" id="difficulty" name="difficulty">
+                                    <select class="form-control" th:remove="all-but-first" id="difficulty"
+                                            name="difficulty" style="color:black">
                                         <th:block th:if="${problemLayoutVO != null} ">
                                             <option th:selected="${problemLayoutVO.difficulty==difValue}?'selected'"
                                                     th:each="difValue : ${problemLayoutVO.difficultValue}"

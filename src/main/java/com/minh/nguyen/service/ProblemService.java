@@ -72,7 +72,7 @@ public class ProblemService extends BaseService<ProblemEntity> {
         ProblemEntity problemEntity = new ProblemEntity();
         modelMapper.map(problemDTO,problemEntity);
         setUpdateInfo(problemEntity);
-        int recordCnt = problemMapper.updateByPKExceptFields(problemEntity,exclusiveUpdateField);
+        int recordCnt = problemMapper.updateByPKExceptFields(problemEntity);
         if (recordCnt != 1){
             rollBack(Constants.MSG_SYSTEM_ERR);
         }

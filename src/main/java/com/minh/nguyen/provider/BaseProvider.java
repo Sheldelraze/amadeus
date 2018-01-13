@@ -349,7 +349,7 @@ public class BaseProvider {
     }
 
 
-    public String updateByPKExceptFields(final Object entity, final List<String> exclusive) {
+    public String updateByPKExceptFields(final Object entity) {
         String sql = new SQL() {
             {
                 Class<?> table = entity.getClass();
@@ -370,7 +370,9 @@ public class BaseProvider {
                                 + FORMAT_STRING_SQL_2);
 
                 } else if (field.isAnnotationPresent(Column.class)) {
-                    if (!exclusive.contains(field.getName())) {
+                    if (!field.getName().equals("createClass") &&
+                            !field.getName().equals("createUser") &&
+                            !field.getName().equals("createTime")) {
                         SET(field.getAnnotation(Column.class).name()
                                 + FORMAT_STRING_SQL_1 + field.getName()
                                 + FORMAT_STRING_SQL_2);

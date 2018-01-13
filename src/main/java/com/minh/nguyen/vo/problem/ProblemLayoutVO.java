@@ -17,6 +17,19 @@ public class ProblemLayoutVO {
     private int difficulty;
     private int cntTest;
     private int isPublished;
+    private boolean updateSuccess;
+
+    public static int[] getDifficultValue() {
+        return difficultValue;
+    }
+
+    public boolean isUpdateSuccess() {
+        return updateSuccess;
+    }
+
+    public void setUpdateSuccess(boolean updateSuccess) {
+        this.updateSuccess = updateSuccess;
+    }
 
     public int getId() {
         return id;
