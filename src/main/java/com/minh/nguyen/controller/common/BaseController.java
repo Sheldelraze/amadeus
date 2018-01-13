@@ -5,6 +5,9 @@ import com.minh.nguyen.exception.BaseException;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
+import org.modelmapper.Condition;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MappingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,9 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -39,11 +44,23 @@ public class BaseController {
     @Autowired
     protected BindingResult bindingResult;
 
-    public BaseController() {
-    }
+    protected ModelMapper modelMapper;
+
+    protected List<String> exclusiveUpdateField;
+    public BaseController() {}
     @PostConstruct
     private void init() {
         invokeValidator();
+        modelMapper = new ModelMapper();
+        exclusiveUpdateField = new ArrayList<>();
+        exclusiveUpdateField.add("createClass");
+        exclusiveUpdateField.add("createUser");
+        exclusiveUpdateField.add("createTime");
+        modelMapper.getConfiguration().setPropertyCondition(new Condition<Object, Object>() {
+            public boolean applies(MappingContext<Object, Object> pContext) {
+                return pContext.getSource() != null && pContext.getDestination() == null;
+            }
+        });
     }
     private void invokeValidator() {
         String validateName = this.getClass().getSimpleName();

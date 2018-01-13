@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -280,10 +281,6 @@ public class BaseProvider {
                             WHERE(field.getAnnotation(Column.class).name()
                                     + FORMAT_STRING_SQL_1 + field.getName()
                                     + FORMAT_STRING_SQL_2);
-                        } else {
-                            WHERE(field.getAnnotation(Column.class).name()
-                                    + FORMAT_STRING_SQL_1 + field.getName()
-                                    + FORMAT_STRING_SQL_2);
                         }
                     }
 
@@ -311,10 +308,6 @@ public class BaseProvider {
 
             private void genSqlForInsert(Field field) {
                 if (field.isAnnotationPresent(Column.class)) {
-                    VALUES(field.getAnnotation(Column.class).name(),
-                            FORMAT_STRING_SQL_3 + field.getName()
-                                    + FORMAT_STRING_SQL_2);
-                } else if (field.isAnnotationPresent(Id.class)) {
                     VALUES(field.getAnnotation(Column.class).name(),
                             FORMAT_STRING_SQL_3 + field.getName()
                                     + FORMAT_STRING_SQL_2);
@@ -355,23 +348,54 @@ public class BaseProvider {
         return sql;
     }
 
-    public String checkExclusive(Object entity) {
-        final Class<?> table = entity.getClass();
-        final String tableName = table.getAnnotation(Table.class).name();
 
+    public String updateByPKExceptFields(final Object entity, final List<String> exclusive) {
         String sql = new SQL() {
             {
-                SELECT(SQL_COUNT_ALL_RECODE);
-                FROM(tableName);
-                for (Field field : table.getDeclaredFields()) {
-                    genSqlForCheckExclusive(field);
-                }
-
-                for (Field field : table.getSuperclass().getDeclaredFields()) {
-                    genSqlForCheckExclusive(field);
+                Class<?> table = entity.getClass();
+                String tableName = table.getAnnotation(Table.class).name();
+                UPDATE(tableName);
+                while(table != null) {
+                    for (Field field : table.getDeclaredFields()) {
+                        genSqlForUpdate(field);
+                    }
+                    table = table.getSuperclass();
                 }
             }
 
+            private void genSqlForUpdate(Field field) {
+                if (field.isAnnotationPresent(Id.class)) {
+                        WHERE(field.getAnnotation(Column.class).name()
+                                + FORMAT_STRING_SQL_1 + field.getName()
+                                + FORMAT_STRING_SQL_2);
+
+                } else if (field.isAnnotationPresent(Column.class)) {
+                    if (!exclusive.contains(field.getName())) {
+                        SET(field.getAnnotation(Column.class).name()
+                                + FORMAT_STRING_SQL_1 + field.getName()
+                                + FORMAT_STRING_SQL_2);
+                    }
+                }
+            }
+        }.toString();
+        return sql;
+    }
+
+    public String checkExclusive(final Object entity) {
+
+        String sql = new SQL() {
+            {
+                Class<?> table = entity.getClass();
+                String tableName = table.getAnnotation(Table.class).name();
+                SELECT(SQL_COUNT_ALL_RECODE);
+                FROM(tableName);
+                while(null != table) {
+                    for (Field field : table.getDeclaredFields()) {
+                        genSqlForCheckExclusive(field);
+                    }
+                    table = table.getSuperclass();
+                }
+            }
             private void genSqlForCheckExclusive(Field field) {
                 if (field.isAnnotationPresent(Id.class)) {
                     WHERE(field.getAnnotation(Column.class).name()

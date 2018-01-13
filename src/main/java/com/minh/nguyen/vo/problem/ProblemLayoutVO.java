@@ -1,13 +1,12 @@
-package com.minh.nguyen.form.problem;
-
-import com.minh.nguyen.form.BaseForm;
+package com.minh.nguyen.vo.problem;
 
 /**
  * @author Mr.Minh
- * @since 07/01/2018
+ * @since 13/01/2018
  * Purpose:
  */
-public class ProblemLayoutForm extends BaseForm{
+public class ProblemLayoutVO {
+    public static final int[] difficultValue = new int[]{1,2,3,4,5};
     int id;
     private String code;
     private String name;
@@ -35,20 +34,20 @@ public class ProblemLayoutForm extends BaseForm{
         this.code = code;
     }
 
-    public int getViewTab() {
-        return viewTab;
-    }
-
-    public void setViewTab(int viewTab) {
-        this.viewTab = viewTab;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getViewTab() {
+        return viewTab;
+    }
+
+    public void setViewTab(int viewTab) {
+        this.viewTab = viewTab;
     }
 
     public int getSutId() {

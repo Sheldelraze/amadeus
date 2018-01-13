@@ -9,6 +9,7 @@ import com.minh.nguyen.mapper.ProblemMapper;
 import com.minh.nguyen.util.CompileUtil;
 import com.minh.nguyen.util.ExceptionUtil;
 import com.minh.nguyen.util.FileUtil;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
     @Autowired
     private ProblemMapper problemMapper;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
@@ -56,6 +59,7 @@ public class ProblemService extends BaseService<ProblemEntity> {
         }
         setCreateInfo(problemEntity);
         setUpdateInfo(problemEntity);
+        setCreateProblemInfo(problemEntity);
         int insertRecord = problemMapper.insertEntity(problemEntity);
         if (insertRecord != 1){
             rollBack(Constants.MSG_SYSTEM_ERR);
@@ -63,5 +67,29 @@ public class ProblemService extends BaseService<ProblemEntity> {
         problemDTO.setId(problemEntity.getId());
     }
 
-
+    @Transactional
+    public void updateProblem(ProblemDTO problemDTO){
+        ProblemEntity problemEntity = new ProblemEntity();
+        modelMapper.map(problemDTO,problemEntity);
+        setUpdateInfo(problemEntity);
+        int recordCnt = problemMapper.updateByPKExceptFields(problemEntity,exclusiveUpdateField);
+        if (recordCnt != 1){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+    }
+    public void setCreateProblemInfo(ProblemEntity problemEntity){
+        problemEntity.setTimeLimit(2000);
+        problemEntity.setMemoryLimit(64);
+        problemEntity.setDifficulty(1);
+        problemEntity.setIsPublished(0);
+    }
+    public void getProblemInfo(ProblemDTO problemDTO){
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setId(problemDTO.getId());
+        List<ProblemEntity> lst = problemMapper.selectWithExample(problemEntity);
+        if (lst.size() != 1){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+        modelMapper.map(lst.get(0),problemDTO);
+    }
 }
