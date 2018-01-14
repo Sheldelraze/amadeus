@@ -73,33 +73,49 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <!--second tab-->
-                            <div class="tab-pane active" id="statement" role="tabpanel">
+                            <div class="tab-pane active" role="tabpanel">
                                 <div class="card-body">
-                                    <form th:object="${problemLayoutForm}" th:method="post"
-                                          th:action="|/${problemLayoutForm.code}/updateStatement|">
+                                    <form th:object="${problemStatementForm}" th:method="post"
+                                          th:action="|/problem/${problemLayoutForm.id}/updateStatement|">
                                         <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                             <div class="alert alert-danger">
                                                 <label th:errors="*{screenMessage}"></label>
                                             </div>
                                         </th:block>
+                                        <th:block th:if="${problemLayoutVO}?${problemLayoutVO.updateSuccess}">
+                                            <div class="alert alert-success">
+                                                ✔ Cập nhật thành công
+                                            </div>
+                                        </th:block>
                                         <div style="float:right"><a href="#">Xem trước</a></div>
-                                        <h4>Tên bài tập</h4>
-                                        <input type="text" style="width: 50%" class="form-control form-control-line"
-                                               value="Tính tổng"
-                                        />
-                                        <h4 style="margin-top: 10px">Nội dung</h4>
-                                        <textarea style="height: 300px;" cols="100%" id="content"></textarea>
-
-                                        <h4 style="margin-top: 10px">Điều kiện input</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="input"></textarea>
-
-                                        <h4 style="margin-top: 10px">Yêu cầu output</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="output"></textarea>
-
-                                        <h4 style="margin-top: 10px">Chú ý</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="note"></textarea>
+                                        <h4 style="margin-top: 10px">Nội dung (không quá 20000 ký tự)</h4>
+                                        <textarea style="height: 300px" cols="100%" id="statement" name="statement">
+                                            <label th:value="${problemStatementVO}?{problemStatementVO.statement}"></label>
+                                        </textarea>
+                                        <label
+                                                th:if="${#fields.hasErrors('statement')}" th:class="'error'"
+                                                th:errors="*{statement}">Name Error</label>
+                                        <br/>
+                                        <h4 style="margin-top: 10px">Điều kiện input (không quá 20000 ký tự)</h4>
+                                        <textarea style="height: 150px;" cols="100%" id="input" name="input"></textarea>
+                                        <label
+                                                th:if="${#fields.hasErrors('input')}" th:class="'error'"
+                                                th:errors="*{input}">Name Error</label>
+                                        <br/>
+                                        <h4 style="margin-top: 10px">Yêu cầu output (không quá 20000 ký tự)</h4>
+                                        <textarea style="height: 150px;" cols="100%" id="output" name="output"></textarea>
+                                        <label
+                                                th:if="${#fields.hasErrors('output')}" th:class="'error'"
+                                                th:errors="*{output}">Name Error</label>
+                                        <br/>
+                                        <h4 style="margin-top: 10px">Ghi chú khác (không quá 20000 ký tự)</h4>
+                                        <textarea style="height: 150px;" cols="100%" id="note" name="note"></textarea>
+                                        <label
+                                                th:if="${#fields.hasErrors('note')}" th:class="'error'"
+                                                th:errors="*{note}">Name Error</label>
+                                        <br/>
                                         <div style="margin-top: 20px">
-                                            <button type="button" class="btn btn-outline-warning">Lưu thay đổi</button>
+                                            <button type="submit" class="btn btn-outline-warning">Lưu thay đổi</button>
                                         </div>
                                     </form>
                                 </div>
@@ -151,7 +167,7 @@
     // $(document).ready(function () {
     //     $(".select2").select2();
     // });
-    new nicEditor({maxHeight: 300}).panelInstance('content');
+    new nicEditor({maxHeight: 300}).panelInstance('statement');
     new nicEditor({maxHeight: 150}).panelInstance('input');
     new nicEditor({maxHeight: 150}).panelInstance('output');
     new nicEditor({maxHeight: 150}).panelInstance('note');

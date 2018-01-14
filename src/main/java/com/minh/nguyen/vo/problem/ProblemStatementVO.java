@@ -1,20 +1,14 @@
-package com.minh.nguyen.form.problem;
-
-import com.minh.nguyen.validator.annotation.MaxLength;
+package com.minh.nguyen.vo.problem;
 
 /**
  * @author Mr.Minh
- * @since 07/01/2018
+ * @since 14/01/2018
  * Purpose:
  */
-public class ProblemStatementForm extends ProblemLayoutForm  {
-    @MaxLength(displayFieldName = "statement",maxlength = 20000)
+public class ProblemStatementVO extends  ProblemLayoutVO{
     private String statement;
-    @MaxLength(displayFieldName = "input",maxlength = 20000)
     private String input;
-    @MaxLength(displayFieldName = "output",maxlength = 20000)
     private String output;
-    @MaxLength(displayFieldName = "note",maxlength = 20000)
     private String note;
 
     public String getStatement() {

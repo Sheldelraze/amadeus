@@ -12,8 +12,8 @@ public class ProblemLayoutVO {
     private String name;
     private int viewTab;
     private int sutId;
-    private int timeLimit;
-    private int memoryLimit;
+    private String timeLimit;
+    private String memoryLimit;
     private int difficulty;
     private int cntTest;
     private int isPublished;
@@ -71,19 +71,19 @@ public class ProblemLayoutVO {
         this.sutId = sutId;
     }
 
-    public int getTimeLimit() {
+    public String getTimeLimit() {
         return timeLimit;
     }
 
-    public void setTimeLimit(int timeLimit) {
+    public void setTimeLimit(String timeLimit) {
         this.timeLimit = timeLimit;
     }
 
-    public int getMemoryLimit() {
+    public String getMemoryLimit() {
         return memoryLimit;
     }
 
-    public void setMemoryLimit(int memoryLimit) {
+    public void setMemoryLimit(String memoryLimit) {
         this.memoryLimit = memoryLimit;
     }
 

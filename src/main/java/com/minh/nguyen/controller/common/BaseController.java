@@ -2,6 +2,7 @@ package com.minh.nguyen.controller.common;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.BaseException;
+import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
@@ -28,7 +29,7 @@ public class BaseController {
 
     private static final String SCREEN_MESSAGE = "screenMessage";
 
-    protected  static Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected static Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     private BaseValidator validator;
 
@@ -42,12 +43,18 @@ public class BaseController {
     protected StringUtil strUtil;
 
     @Autowired
+    protected CheckUtil checkUtil;
+
+    @Autowired
     protected BindingResult bindingResult;
 
     protected ModelMapper modelMapper;
 
     protected List<String> exclusiveUpdateField;
-    public BaseController() {}
+
+    public BaseController() {
+    }
+
     @PostConstruct
     private void init() {
         invokeValidator();
@@ -58,10 +65,28 @@ public class BaseController {
         exclusiveUpdateField.add("createTime");
         modelMapper.getConfiguration().setPropertyCondition(new Condition<Object, Object>() {
             public boolean applies(MappingContext<Object, Object> pContext) {
-                return pContext.getSource() != null && pContext.getDestination() == null;
+                if (null == pContext.getSource() || null == pContext.getDestinationType()) {
+                    return false;
+                }
+                if (pContext.getSourceType().equals(String.class)) {
+                    if (Constants.BLANK.equals(pContext.getSource().toString())) {
+                        return false;
+                    }
+                }
+                if (pContext.getSourceType().equals(String.class)
+                        && (Integer.class.equals(pContext.getDestinationType())
+                        || int.class.equals(pContext.getDestinationType()))) {
+                    if (checkUtil.isInteger(pContext.getSource().toString())) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
             }
+
         });
     }
+
     private void invokeValidator() {
         String validateName = this.getClass().getSimpleName();
         validateName = validateName.substring(0, 1).toLowerCase()
@@ -94,8 +119,9 @@ public class BaseController {
                         BaseException ex = null;
                         result.rejectValue(SCREEN_MESSAGE,
                                 Constants.MSG_TOTAL_ERR,
-                                new Integer[] {
-                                        bindingResult.getAllErrors().size() },
+                                new Integer[]{
+
+                                        bindingResult.getAllErrors().size()},
                                 "Screen error!");
                         while (ite.hasNext()) {
                             ex = (BaseException) ite.next();

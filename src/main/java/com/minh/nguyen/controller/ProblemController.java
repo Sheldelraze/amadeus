@@ -5,7 +5,7 @@ import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.form.problem.*;
 import com.minh.nguyen.service.ProblemService;
-import com.minh.nguyen.vo.problem.ProblemLayoutVO;
+import com.minh.nguyen.vo.problem.*;
 import com.sun.javafx.beans.annotations.NonNull;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
@@ -37,6 +37,7 @@ public class ProblemController extends BaseController {
     public static final String CREATE_FORM = "problemCreateForm";
     public static final String LAYOUT_VO = "problemLayoutVO";
     public static final String CREATE_VO = "problemCreateVO";
+    public static final String STATEMENT_VO = "problemStatementVO";
     public static final String NIC_EDITOR = "nicEditorIcons";
     public static final String SOLUTION_VIEW = "problem/info/problem-solution";
     public static final String STATEMENT_VIEW = "problem/info/problem-statement";
@@ -101,18 +102,20 @@ public class ProblemController extends BaseController {
         return new ModelAndView("redirect:/problem/" + problemDTO.getId() + "/statement");
     }
 
-    public ModelAndView getGeneralInfo(int pmId, ProblemLayoutForm problemForm, int viewTab,boolean updateSuccess) {
+    public ModelAndView getGeneralInfo(int pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
-        ProblemLayoutVO problemLayoutVO = new ProblemLayoutVO();
-        if (null == problemForm ||  0 == problemForm.getId()) {
-            if (viewTab == STATEMENT_TAB){
-                problemForm = new ProblemStatementForm();
-            }else if (viewTab == SOLUTION_TAB){
-                problemForm = new ProblemSolutionForm();
-            }else if (viewTab == TEST_TAB){
-                problemForm = new ProblemTestForm();
-            }else if (viewTab == ROLE_TAB){
-                problemForm = new ProblemRoleForm();
+        ProblemLayoutVO problemLayoutVO = null;
+        if (null == problemForm.getCode() || Constants.BLANK.equals(problemForm.getCode())) {
+            if (null == problemForm || 0 == problemForm.getId()){
+                if (viewTab == STATEMENT_TAB) {
+                    problemForm = new ProblemStatementForm();
+                } else if (viewTab == SOLUTION_TAB) {
+                    problemForm = new ProblemSolutionForm();
+                } else if (viewTab == TEST_TAB) {
+                    problemForm = new ProblemTestForm();
+                } else if (viewTab == ROLE_TAB) {
+                    problemForm = new ProblemRoleForm();
+                }
             }
             ProblemDTO problemDTO = new ProblemDTO();
             problemDTO.setId(pmId);
@@ -123,6 +126,15 @@ public class ProblemController extends BaseController {
             }
             modelMapper.map(problemDTO, problemForm);
         }
+        if (viewTab == STATEMENT_TAB) {
+            problemLayoutVO = new ProblemStatementVO();
+        } else if (viewTab == SOLUTION_TAB) {
+            problemLayoutVO = new ProblemSolutionVO();
+        } else if (viewTab == TEST_TAB) {
+            problemLayoutVO = new ProblemTestVO();
+        } else if (viewTab == ROLE_TAB) {
+            problemLayoutVO = new ProblemRoleVO();
+        }
         modelMapper.map(problemForm, problemLayoutVO);
         problemLayoutVO.setUpdateSuccess(updateSuccess);
         modelAndView.addObject(LAYOUT_VO, problemLayoutVO);
@@ -132,15 +144,26 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/statement")
-    public ModelAndView getStatement(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm,boolean updateSuccess) {
+    public ModelAndView getStatement(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm, boolean updateSuccess) {
         ModelAndView modelAndView = null;
-        modelAndView = getGeneralInfo(pmId, problemLayoutForm, STATEMENT_TAB,updateSuccess);
+        modelAndView = getGeneralInfo(pmId, problemLayoutForm, STATEMENT_TAB, updateSuccess);
+
+        ProblemDTO problemDTO = new ProblemDTO();
+        ProblemStatementVO problemStatementVO = new ProblemStatementVO();
+        problemDTO.setId(problemLayoutForm.getId());
+        problemService.getStatementInfo(problemDTO);
+        modelMapper.map(problemLayoutForm, problemStatementVO);
+        modelAndView.addObject(STATEMENT_VO, problemStatementVO);
+        if (null == problemStatementForm){
+            problemStatementForm = new ProblemStatementForm();
+        }
+        modelAndView.addObject(STATEMENT_FORM, problemStatementForm);
         modelAndView.setViewName(STATEMENT_VIEW);
         return modelAndView;
     }
 
     @GetMapping("/{pmId}/solution")
-    public ModelAndView getSolution(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm,boolean updateSuccess) {
+    public ModelAndView getSolution(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, boolean updateSuccess) {
         ProblemSolutionForm problemSolutionForm = new ProblemSolutionForm();
         ModelAndView modelAndView = getGeneralInfo(pmId, problemSolutionForm, SOLUTION_TAB, updateSuccess);
         modelAndView.setViewName(SOLUTION_VIEW);
@@ -150,7 +173,7 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/test")
-    public ModelAndView getTest(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm,boolean updateSuccess) {
+    public ModelAndView getTest(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, boolean updateSuccess) {
         ProblemTestForm problemTestForm = new ProblemTestForm();
         ModelAndView modelAndView = getGeneralInfo(pmId, problemTestForm, TEST_TAB, updateSuccess);
         modelAndView.setViewName(TEST_VIEW);
@@ -160,13 +183,14 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/role")
-    public ModelAndView getRole(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm,boolean updateSuccess) {
+    public ModelAndView getRole(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, boolean updateSuccess) {
         ProblemRoleForm problemRoleForm = new ProblemRoleForm();
         ModelAndView modelAndView = getGeneralInfo(pmId, problemRoleForm, ROLE_TAB, updateSuccess);
         modelAndView.setViewName(ROLE_VIEW);
         modelAndView.addObject(ROLE_FORM, problemRoleForm);
         return modelAndView;
     }
+
     @PostMapping("/{pmId}/updateGeneral/{tab}")
     public ModelAndView updateGeneral(@PathVariable("pmId") int pmId,
                                       @PathVariable("tab") int tab,
@@ -175,7 +199,7 @@ public class ProblemController extends BaseController {
         validate(problemLayoutForm, result);
         if (result.hasErrors()) {
             problemLayoutForm.setId(pmId);
-            return getStatement(pmId,problemLayoutForm,false);
+            return getStatement(pmId, problemLayoutForm,null, false);
         }
         problemLayoutForm.setId(pmId);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -187,25 +211,28 @@ public class ProblemController extends BaseController {
         } catch (Exception e) {
             addLogicError(result, Constants.MSG_SYSTEM_ERR, new Object[]{});
         }
-        if (tab == 1){
-            modelAndView = getStatement(pmId,null,true);
-        }
-        else if (tab == 2){
+        if (tab == 1) {
+            modelAndView = getStatement(pmId, problemLayoutForm,null, true);
+        } else if (tab == 2) {
 
-        }
-        else if (tab == 3){
+        } else if (tab == 3) {
 
-        }
-        else if (tab == 4){
+        } else if (tab == 4) {
 
         }
         return modelAndView;
     }
 
     @PostMapping("/{pmId}/updateStatement")
-    public ModelAndView updateStatement(@PathVariable("pmId") int pmId, @NonNull ProblemStatementForm problemStatementForm) {
+    public ModelAndView updateStatement(@PathVariable("pmId") int pmId,
+                                        @NonNull ProblemStatementForm problemStatementForm,
+                                        BindingResult result) {
         ModelAndView modelAndView = null;
-
+        validate(problemStatementForm, result);
+        if (result.hasErrors()) {
+            problemStatementForm.setId(pmId);
+            return getStatement(pmId, null,problemStatementForm, false);
+        }
         return modelAndView;
     }
 

@@ -35,10 +35,10 @@ public class AmadeusApplicationTests {
             this.a = a;
         }
     }
-    public static class B{
+    public static class B extends A{
         public int a;
 
-        public int getA() {
+        public int getB() {
             return a;
         }
 
@@ -47,11 +47,13 @@ public class AmadeusApplicationTests {
         }
     }
 	public static void main(String[] args) throws IOException {
-	    A a = new A();
-	    a.setA("123");
-	    B b = new B();
-	    modelMapper.map(a,b);
-        b.getA();
+	    A b = new B();
+	    if (b.getClass().equals(A.class)){
+	        System.out.print("haha");
+        }
+        else{
+            System.out.print("no");
+        }
 //        CompileUtil compileUtil = new CompileUtil();
 //        compileUtil.solve();
 //        TimeLimiter timeLimiter = new SimpleTimeLimiter();

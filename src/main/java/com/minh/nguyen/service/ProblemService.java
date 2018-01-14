@@ -77,6 +77,9 @@ public class ProblemService extends BaseService<ProblemEntity> {
             rollBack(Constants.MSG_SYSTEM_ERR);
         }
     }
+    public void getStatementInfo(ProblemDTO problemDTO){
+
+    }
     public void setCreateProblemInfo(ProblemEntity problemEntity){
         problemEntity.setTimeLimit(2000);
         problemEntity.setMemoryLimit(64);
