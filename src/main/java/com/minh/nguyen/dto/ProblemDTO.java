@@ -6,16 +6,16 @@ package com.minh.nguyen.dto;
  * Purpose:
  */
 public class ProblemDTO extends BaseDTO {
-    private int id;
+    private Integer id;
     private String code;
     private String name;
-    private int viewTab;
-    private int sutId;
-    private int timeLimit;
-    private int memoryLimit;
-    private int difficulty;
-    private int cntTest;
-    private int isPublished;
+    private Integer viewTab;
+    private Integer sutId;
+    private Integer timeLimit;
+    private Integer memoryLimit;
+    private Integer difficulty;
+    private Integer cntTest;
+    private Integer isPublished;
     private String statement;
     private String input;
     private String output;
@@ -61,67 +61,67 @@ public class ProblemDTO extends BaseDTO {
         this.name = name;
     }
 
-    public int getViewTab() {
+    public Integer getViewTab() {
         return viewTab;
     }
 
-    public void setViewTab(int viewTab) {
+    public void setViewTab(Integer viewTab) {
         this.viewTab = viewTab;
     }
 
-    public int getSutId() {
+    public Integer getSutId() {
         return sutId;
     }
 
-    public void setSutId(int sutId) {
+    public void setSutId(Integer sutId) {
         this.sutId = sutId;
     }
 
-    public int getTimeLimit() {
+    public Integer getTimeLimit() {
         return timeLimit;
     }
 
-    public void setTimeLimit(int timeLimit) {
+    public void setTimeLimit(Integer timeLimit) {
         this.timeLimit = timeLimit;
     }
 
-    public int getMemoryLimit() {
+    public Integer getMemoryLimit() {
         return memoryLimit;
     }
 
-    public void setMemoryLimit(int memoryLimit) {
+    public void setMemoryLimit(Integer memoryLimit) {
         this.memoryLimit = memoryLimit;
     }
 
-    public int getDifficulty() {
+    public Integer getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(Integer difficulty) {
         this.difficulty = difficulty;
     }
 
-    public int getCntTest() {
+    public Integer getCntTest() {
         return cntTest;
     }
 
-    public void setCntTest(int cntTest) {
+    public void setCntTest(Integer cntTest) {
         this.cntTest = cntTest;
     }
 
-    public int getIsPublished() {
+    public Integer getIsPublished() {
         return isPublished;
     }
 
-    public void setIsPublished(int isPublished) {
+    public void setIsPublished(Integer isPublished) {
         this.isPublished = isPublished;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

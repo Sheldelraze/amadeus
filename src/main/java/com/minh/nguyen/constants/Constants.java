@@ -23,8 +23,11 @@ public class Constants {
     public static String MSG_DATE_FORMAT_INPUT_ERR = "msg003";
     public static String MSG_EMAIL_FORMAT_INPUT_ERR = "msg004";
     public static String MSG_NUMBERL_FORMAT_INPUT_ERR = "msg007";
-    public static String MSG_SYSTEM_ERR = "msg005";
+
     public static String MSG_DUPLICATE_PROBLEM_ERR = "msg006";
     public static String MSG_NUMBER_TOO_SMALL_ERR = "msg008";
     public static String MSG_NUMBER_TOO_BIG_ERR = "msg009";
+
+    public static String MSG_SYSTEM_ERR = "msg005";
+    public static String MSG_UPDATE_ERR = "msg010";
 }

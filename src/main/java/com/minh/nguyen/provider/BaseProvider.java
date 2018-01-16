@@ -164,7 +164,7 @@ public class BaseProvider {
         return sql;
     }
 
-    public String selectWithExample(final  Object entity) throws Exception {
+    public String selectWithExample(final Object entity) throws Exception {
 
         final Class<?> table = entity.getClass();
 
@@ -355,7 +355,7 @@ public class BaseProvider {
                 Class<?> table = entity.getClass();
                 String tableName = table.getAnnotation(Table.class).name();
                 UPDATE(tableName);
-                while(table != null) {
+                while (table != null) {
                     for (Field field : table.getDeclaredFields()) {
                         genSqlForUpdate(field);
                     }
@@ -365,9 +365,9 @@ public class BaseProvider {
 
             private void genSqlForUpdate(Field field) {
                 if (field.isAnnotationPresent(Id.class)) {
-                        WHERE(field.getAnnotation(Column.class).name()
-                                + FORMAT_STRING_SQL_1 + field.getName()
-                                + FORMAT_STRING_SQL_2);
+                    WHERE(field.getAnnotation(Column.class).name()
+                            + FORMAT_STRING_SQL_1 + field.getName()
+                            + FORMAT_STRING_SQL_2);
 
                 } else if (field.isAnnotationPresent(Column.class)) {
                     if (!field.getName().equals("createClass") &&
@@ -391,13 +391,14 @@ public class BaseProvider {
                 String tableName = table.getAnnotation(Table.class).name();
                 SELECT(SQL_COUNT_ALL_RECODE);
                 FROM(tableName);
-                while(null != table) {
+                while (null != table) {
                     for (Field field : table.getDeclaredFields()) {
                         genSqlForCheckExclusive(field);
                     }
                     table = table.getSuperclass();
                 }
             }
+
             private void genSqlForCheckExclusive(Field field) {
                 if (field.isAnnotationPresent(Id.class)) {
                     WHERE(field.getAnnotation(Column.class).name()

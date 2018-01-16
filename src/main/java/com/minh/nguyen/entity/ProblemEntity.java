@@ -16,7 +16,6 @@ public class ProblemEntity extends BaseEntity implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Id
     @Column(name = "code")
     private String code;
 
@@ -26,6 +25,12 @@ public class ProblemEntity extends BaseEntity implements Serializable {
     @Column(name = "statement")
     private String statement;
 
+    @Column(name = "input")
+    private String input;
+    @Column(name = "output")
+    private String output;
+    @Column(name = "note")
+    private String note;
 
     @Column(name = "timeLimit")
     private Integer timeLimit;
@@ -38,6 +43,31 @@ public class ProblemEntity extends BaseEntity implements Serializable {
 
     @Column(name = "difficulty")
     private Integer difficulty;
+
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 
     public String getCode() {
         return code;

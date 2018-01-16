@@ -1,9 +1,12 @@
 package com.minh.nguyen.service;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.entity.BaseEntity;
+import com.minh.nguyen.util.CheckUtil;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +22,8 @@ public class BaseService<T> {
 
     protected List<String> exclusiveUpdateField;
 
+    @Autowired
+    private CheckUtil checkUtil;
     @PostConstruct
     private void init() {
         modelMapper = new ModelMapper();
@@ -26,11 +31,30 @@ public class BaseService<T> {
         exclusiveUpdateField.add("createClass");
         exclusiveUpdateField.add("createUser");
         exclusiveUpdateField.add("createTime");
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         modelMapper.getConfiguration().setPropertyCondition(new Condition<Object, Object>() {
             public boolean applies(MappingContext<Object, Object> pContext) {
-                return pContext.getSource() != null && pContext.getDestination() == null;
+                if (null == pContext.getSource() || null == pContext.getDestinationType()) {
+                    return false;
+                }
+                if (pContext.getSourceType().equals(String.class)) {
+                    if (Constants.BLANK.equals(pContext.getSource().toString())) {
+                        return false;
+                    }
+                }
+                if (pContext.getSourceType().equals(String.class)
+                        && (Integer.class.equals(pContext.getDestinationType())
+                        || int.class.equals(pContext.getDestinationType()))) {
+                    if (checkUtil.isInteger(pContext.getSource().toString())) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
             }
+
         });
+
     }
     void setCreateInfo(BaseEntity entity){
         Calendar today = Calendar.getInstance();

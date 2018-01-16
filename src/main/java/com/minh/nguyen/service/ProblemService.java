@@ -35,8 +35,6 @@ public class ProblemService extends BaseService<ProblemEntity> {
     @Autowired
     private ProblemMapper problemMapper;
 
-    private ModelMapper modelMapper = new ModelMapper();
-
     @Autowired
     private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
@@ -70,15 +68,30 @@ public class ProblemService extends BaseService<ProblemEntity> {
     @Transactional
     public void updateProblem(ProblemDTO problemDTO){
         ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setId(problemDTO.getId());
+        try {
+            problemEntity = problemMapper.selectByPK(problemEntity);
+        }catch(Exception e){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
         modelMapper.map(problemDTO,problemEntity);
         setUpdateInfo(problemEntity);
-        int recordCnt = problemMapper.updateByPKExceptFields(problemEntity);
-        if (recordCnt != 1){
+        int recordCnt = 0;
+        try {
+            recordCnt = problemMapper.updateByPKExceptFields(problemEntity);
+        }
+        catch(Exception e){
             rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+        if (recordCnt != 1){
+            rollBack(Constants.MSG_UPDATE_ERR);
         }
     }
     public void getStatementInfo(ProblemDTO problemDTO){
-
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setId(problemDTO.getId());
+        problemEntity =  problemMapper.selectByPK(problemEntity);
+        modelMapper.map(problemEntity,problemDTO);
     }
     public void setCreateProblemInfo(ProblemEntity problemEntity){
         problemEntity.setTimeLimit(2000);

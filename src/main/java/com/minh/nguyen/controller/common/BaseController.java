@@ -63,12 +63,14 @@ public class BaseController {
         exclusiveUpdateField.add("createClass");
         exclusiveUpdateField.add("createUser");
         exclusiveUpdateField.add("createTime");
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         modelMapper.getConfiguration().setPropertyCondition(new Condition<Object, Object>() {
             public boolean applies(MappingContext<Object, Object> pContext) {
                 if (null == pContext.getSource() || null == pContext.getDestinationType()) {
                     return false;
                 }
-                if (pContext.getSourceType().equals(String.class)) {
+
+                if (String.class.equals(pContext.getSourceType())) {
                     if (Constants.BLANK.equals(pContext.getSource().toString())) {
                         return false;
                     }

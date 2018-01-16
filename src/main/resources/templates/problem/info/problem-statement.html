@@ -76,13 +76,13 @@
                             <div class="tab-pane active" role="tabpanel">
                                 <div class="card-body">
                                     <form th:object="${problemStatementForm}" th:method="post"
-                                          th:action="|/problem/${problemLayoutForm.id}/updateStatement|">
+                                          th:action="|/problem/${problemStatementVO.id}/updateStatement|">
                                         <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                             <div class="alert alert-danger">
-                                                <label th:errors="*{screenMessage}"></label>
+                                                ✘ <label th:errors="*{screenMessage}"></label>
                                             </div>
                                         </th:block>
-                                        <th:block th:if="${problemLayoutVO}?${problemLayoutVO.updateSuccess}">
+                                        <th:block th:if="${problemStatementVO}?${problemStatementVO.updateSuccess}">
                                             <div class="alert alert-success">
                                                 ✔ Cập nhật thành công
                                             </div>
@@ -90,26 +90,32 @@
                                         <div style="float:right"><a href="#">Xem trước</a></div>
                                         <h4 style="margin-top: 10px">Nội dung (không quá 20000 ký tự)</h4>
                                         <textarea style="height: 300px" cols="100%" id="statement" name="statement">
-                                            <label th:value="${problemStatementVO}?{problemStatementVO.statement}"></label>
+                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.statement}"></th:block>
                                         </textarea>
                                         <label
                                                 th:if="${#fields.hasErrors('statement')}" th:class="'error'"
                                                 th:errors="*{statement}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Điều kiện input (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="input" name="input"></textarea>
+                                        <textarea style="height: 150px;" cols="100%" id="input" name="input">
+                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.input}"></th:block>
+                                        </textarea>
                                         <label
                                                 th:if="${#fields.hasErrors('input')}" th:class="'error'"
                                                 th:errors="*{input}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Yêu cầu output (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="output" name="output"></textarea>
+                                        <textarea style="height: 150px;" cols="100%" id="output" name="output">
+                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.output}"></th:block>
+                                        </textarea>
                                         <label
                                                 th:if="${#fields.hasErrors('output')}" th:class="'error'"
                                                 th:errors="*{output}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Ghi chú khác (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="note" name="note"></textarea>
+                                        <textarea style="height: 150px;" cols="100%" id="note" name="note">
+                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.note}"></th:block>
+                                        </textarea>
                                         <label
                                                 th:if="${#fields.hasErrors('note')}" th:class="'error'"
                                                 th:errors="*{note}">Name Error</label>
