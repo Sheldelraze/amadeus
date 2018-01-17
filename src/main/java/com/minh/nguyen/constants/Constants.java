@@ -30,4 +30,6 @@ public class Constants {
 
     public static String MSG_SYSTEM_ERR = "msg005";
     public static String MSG_UPDATE_ERR = "msg010";
+
+    public static String MSG_COMPILE_ERR = "msg011";
 }

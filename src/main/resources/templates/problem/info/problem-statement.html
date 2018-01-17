@@ -121,7 +121,7 @@
                                                 th:errors="*{note}">Name Error</label>
                                         <br/>
                                         <div style="margin-top: 20px">
-                                            <button type="submit" class="btn btn-outline-warning">Lưu thay đổi</button>
+                                            <button type="submit" class="btn btn-outline-success">Lưu thay đổi</button>
                                         </div>
                                     </form>
                                 </div>
@@ -173,10 +173,10 @@
     // $(document).ready(function () {
     //     $(".select2").select2();
     // });
-    new nicEditor({maxHeight: 300}).panelInstance('statement');
-    new nicEditor({maxHeight: 150}).panelInstance('input');
-    new nicEditor({maxHeight: 150}).panelInstance('output');
-    new nicEditor({maxHeight: 150}).panelInstance('note');
+    new nicEditor({maxHeight: 300,fullPanel : true}).panelInstance('statement');
+    new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('input');
+    new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('output');
+    new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('note');
 </script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->

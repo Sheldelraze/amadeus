@@ -26,7 +26,7 @@ public class CompileUtil {
     public Outcome tryCompile(File file,String language) throws CompileErrorException{
         Params.Builder builder = new Params.Builder();
        // builder.setRedirectErrorFile(new File(Constants.TEST_ERROR_LOCATION));
-        builder.setTimeLimit(3000);
+        builder.setTimeLimit(5000);
         StringBuilder stringBuilder = new StringBuilder();
         String command = "";
 
@@ -51,10 +51,10 @@ public class CompileUtil {
         state.setFile(file);
         state.setLanguage(language);
         try {
-            timeLimiter.callWithTimeout(state,3,TimeUnit.SECONDS,true);
-            String errror = state.getOutcome().getError();
-            if (null != errror && !Constants.BLANK.equals(errror)){
-                throw new CompileErrorException("Compile errror!");
+            timeLimiter.callWithTimeout(state,5,TimeUnit.SECONDS,true);
+            String err = state.getOutcome().getError();
+            if (null != err && !Constants.BLANK.equals(err)){
+                throw new CompileErrorException(err);
             }
         } catch (TimeoutException | UncheckedTimeoutException e) {
             throw new UncheckedTimeoutException();

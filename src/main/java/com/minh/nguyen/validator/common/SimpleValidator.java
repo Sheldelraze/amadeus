@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * @since 12/01/2018
  * Purpose:
  */
-@Service
+@Service("SimpleValidator")
 public class SimpleValidator extends BaseValidator {
 
     public void validateField(String field, String fieldValue,

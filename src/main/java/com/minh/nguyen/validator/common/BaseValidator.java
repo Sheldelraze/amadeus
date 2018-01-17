@@ -1,13 +1,19 @@
 package com.minh.nguyen.validator.common;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.BaseException;
 import com.minh.nguyen.form.BaseForm;
+import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.util.MessageUtil;
 import com.minh.nguyen.util.StringUtil;
+import org.modelmapper.Condition;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MappingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,7 +40,10 @@ public abstract class BaseValidator {
     @Autowired
     protected CommonValidator commonValidator;
 
+    protected ModelMapper modelMapper = new ModelMapper();
     private List<String> errorItemNameList;
+    @Autowired
+    private CheckUtil checkUtil;
 
     public abstract void validateField(String fieldName, String fieldValue,
             BindingResult errors);

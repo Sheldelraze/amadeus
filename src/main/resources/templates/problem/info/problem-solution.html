@@ -73,28 +73,47 @@
             <div class="row">
 
                 <!-- Column -->
-                <div th:replace="problem/info/problem-layout::left-bar"></div>
+                <div th:replace="problem/info/problem-layout::left-bar(pmId = ${problemLayoutVO.id},
+                                                                    problemLayoutVO = ${problemLayoutVO},
+                                                                    problemLayoutForm=${problemLayoutForm},
+                                                                    tab='2')"></div>
                 <div class="col-lg-9 col-xlg-9 col-md-7">
                     <div class="card">
                         <!-- Nav tabs -->
-                        <div th:replace="problem/info/problem-layout::navtab"></div>
+                        <div th:replace="problem/info/problem-layout::navtab(tab = ${tab},pmId = ${problemLayoutVO.id})"></div>
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <!--second tab-->
                             <div class="tab-pane active" id="solution" role="tabpanel">
                                 <div class="card-body">
-                                    <form id="solutionForm" th:action="updateSolution" th:method="post" th:object="${problemSolutionForm}">
+                                    <form id="solutionForm" th:action="updateSolution" th:method="post"
+                                          th:object="${problemSolutionForm}">
+
+                                        <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                            <div class="alert alert-danger">
+                                                ✘ <label th:errors="*{screenMessage}"></label>
+                                            </div>
+                                        </th:block>
+                                        <th:block th:if="${problemSolutionVO}?${problemSolutionVO.updateSuccess}">
+                                            <div class="alert alert-success">
+                                                ✔ Cập nhật thành công
+                                            </div>
+                                        </th:block>
                                         <div style="margin-bottom: 20px">
                                             <b style="color: black;">Mã nguồn (<b><a
                                                     href="#">solution.cpp</a></b>)</b><br/>
                                             <br/>
                                             <b style="color: black;">Chọn ngôn ngữ</b>
-                                            <select class="select2" th:field="*{language}" style="width: 30%; color: black">
-                                                <option value="cpp" >C++</option>
-                                                <option value="java" >Java</option>
+                                            <select class="select2" th:field="*{language}"
+                                                    style="width: 30%; color: black">
+                                                <option value="cpp">C++</option>
+                                                <option value="java">Java</option>
                                             </select>
                                         </div>
-                                        <input type="hidden" th:field="*{sourceCode}" />
+                                        <label
+                                                th:if="${#fields.hasErrors('sourceCode')}" th:class="'error'"
+                                                th:errors="*{sourceCode}">Name Error</label>
+                                        <input type="hidden" th:field="*{sourceCode}"/>
                                         <pre id="editor">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 int main(){
@@ -110,7 +129,8 @@ int main(){
                                         <input type="file" id="input-file-now" class="dropify"/>
                                         <div style="float: left; margin-top: 20px; margin-bottom: 20px">
 
-                                            <button type="button" onclick="doSubmit();return false;" class="btn btn-block btn-outline-success">Lưu thay đổi
+                                            <button type="button" onclick="doSubmit();return false;"
+                                                    class="btn btn-block btn-outline-success">Lưu thay đổi
                                             </button>
                                         </div>
                                     </form>
@@ -156,12 +176,13 @@ int main(){
 <script src="../../../static/ace/ace.js" th:src="@{/ace/ace.js}"></script>
 <script src="../../../static/ace/ext-themelist.js" th:src="@{/ace/ext-themelist.js}"></script>
 <script>
-    function doSubmit(){
+    function doSubmit() {
         var editor = ace.edit("editor");
         var code = editor.getValue();
         document.getElementById("sourceCode").value = code;
         document.getElementById("solutionForm").submit();
     }
+
     var $ = document.getElementById.bind(document);
     var dom = require("ace/lib/dom");
 

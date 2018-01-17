@@ -73,7 +73,13 @@
                                     <h4 class="m-b-0 text-white">Thông tin chung</h4>
                                 </div>
                             </div>
+
                             <div class="card-body" style="margin-top: -10px">
+                                <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                    <div class="alert alert-danger">
+                                        ✘ <label th:errors="*{screenMessage}"></label>
+                                    </div>
+                                </th:block>
                                 <th:block th:if="${problemLayoutVO}?${problemLayoutVO.updateSuccess}">
                                     <div class="alert alert-success">
                                         ✔ Cập nhật thành công

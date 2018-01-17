@@ -99,8 +99,8 @@ public class BaseController {
             // get validator bean object
             validator = (BaseValidator) context.getBean(validateName);
         } catch (Exception e) {
-            logger.warn("No customize validator. Use simpleValidator");
-            validator = (BaseValidator) context.getBean("simpleValidator");
+            logger.warn("No customize validator. Use SimpleValidator");
+            validator = (BaseValidator) context.getBean("SimpleValidator");
         }
     }
 

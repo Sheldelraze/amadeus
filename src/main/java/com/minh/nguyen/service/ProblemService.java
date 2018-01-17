@@ -1,5 +1,6 @@
 package com.minh.nguyen.service;
 
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.entity.ProblemEntity;
@@ -13,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,13 +40,13 @@ public class ProblemService extends BaseService<ProblemEntity> {
     @Autowired
     private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
-    public void tryCompile(ProblemSolutionForm problemSolutionForm) {
-        File file = fileUtil.createFile(Constants.TEST_COMPILE_LOCATION, Constants.TEST_COMPILE_FILENAME, problemSolutionForm.getLanguage());
-        fileUtil.writeToFile(problemSolutionForm.getSourceCode(), file);
+    public void tryCompile(ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException {
+        File file = fileUtil.createFile(Constants.TEST_COMPILE_LOCATION, Constants.TEST_COMPILE_FILENAME, problemDTO.getLanguage());
+        fileUtil.writeToFile(problemDTO.getSourceCode(), file);
         try {
-            compileUtil.doCompile(file,problemSolutionForm.getLanguage());
-        } catch (CompileErrorException e) {
-            logger.warn(e.getMessage());
+            compileUtil.doCompile(file,problemDTO.getLanguage());
+        } catch (CompileErrorException | UncheckedTimeoutException e) {
+            throw e;
         }
     }
     @Transactional
@@ -86,12 +88,6 @@ public class ProblemService extends BaseService<ProblemEntity> {
         if (recordCnt != 1){
             rollBack(Constants.MSG_UPDATE_ERR);
         }
-    }
-    public void getStatementInfo(ProblemDTO problemDTO){
-        ProblemEntity problemEntity = new ProblemEntity();
-        problemEntity.setId(problemDTO.getId());
-        problemEntity =  problemMapper.selectByPK(problemEntity);
-        modelMapper.map(problemEntity,problemDTO);
     }
     public void setCreateProblemInfo(ProblemEntity problemEntity){
         problemEntity.setTimeLimit(2000);

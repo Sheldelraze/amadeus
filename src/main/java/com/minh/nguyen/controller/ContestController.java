@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 07/01/2018
  * Purpose:
  */
-@Controller
+@Controller("ContestController")
 public class ContestController extends BaseController {
     public static String INFORMATION_VIEW = "contest/info/contest-information";
     public static String PROBLEM_VIEW = "contest/info/contest-problem";

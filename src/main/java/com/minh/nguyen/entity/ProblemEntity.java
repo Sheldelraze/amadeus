@@ -43,7 +43,26 @@ public class ProblemEntity extends BaseEntity implements Serializable {
 
     @Column(name = "difficulty")
     private Integer difficulty;
+    @Column(name = "sourceCode")
+    private String sourceCode;
+    @Column(name = "language")
+    private String language;
 
+    public String getSourceCode() {
+        return sourceCode;
+    }
+
+    public void setSourceCode(String sourceCode) {
+        this.sourceCode = sourceCode;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     public String getInput() {
         return input;

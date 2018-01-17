@@ -43,8 +43,8 @@ public class BaseService<T> {
                     }
                 }
                 if (pContext.getSourceType().equals(String.class)
-                        && (Integer.class.equals(pContext.getDestinationType())
-                        || int.class.equals(pContext.getDestinationType()))) {
+                        && (pContext.getDestinationType().equals(Integer.class))
+                        || int.class.equals(pContext.getDestinationType())) {
                     if (checkUtil.isInteger(pContext.getSource().toString())) {
                         return true;
                     }
