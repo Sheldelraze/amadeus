@@ -10,7 +10,7 @@ import com.minh.nguyen.validator.annotation.Required;
  * Purpose:
  */
 public class ProblemCreateForm extends BaseForm {
-    private int pmId;
+    private Integer pmId;
     @Required(displayFieldName = "code")
     @MaxLength(displayFieldName = "code", maxlength = 20)
     private String code;
@@ -23,11 +23,11 @@ public class ProblemCreateForm extends BaseForm {
         this.code = code;
     }
 
-    public int getPmId() {
+    public Integer getPmId() {
         return pmId;
     }
 
-    public void setPmId(int pmId) {
+    public void setPmId(Integer pmId) {
         this.pmId = pmId;
     }
 }

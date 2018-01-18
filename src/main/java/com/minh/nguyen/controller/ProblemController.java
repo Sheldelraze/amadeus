@@ -108,7 +108,7 @@ public class ProblemController extends BaseController {
     public ModelAndView getGeneralInfo(int pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
         ProblemLayoutVO problemLayoutVO = null;
-        if (null == problemForm || 0 == problemForm.getId()) {
+        if (null == problemForm || null == problemForm.getId()) {
             ProblemDTO problemDTO = new ProblemDTO();
             problemForm = new ProblemLayoutForm();
             problemDTO.setId(pmId);
@@ -170,6 +170,9 @@ public class ProblemController extends BaseController {
         problemService.getProblemInfo(problemDTO);
         modelMapper.map(problemDTO, problemSolutionVO);
         modelAndView.addObject(SOLUTION_VO, problemSolutionVO);
+        if (null != problemSolutionForm.getSourceCode() && 0 != problemSolutionForm.getSourceCode().length()){
+            problemSolutionVO.setSourceCode(problemSolutionForm.getSourceCode() );
+        }
         if (null == problemSolutionForm){
             problemSolutionForm = new ProblemSolutionForm();
         }
@@ -211,7 +214,7 @@ public class ProblemController extends BaseController {
             if (tab == 1) {
                 return getStatement(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 2) {
-
+                return getSolution(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 3) {
 
             } else if (tab == 4) {
@@ -229,10 +232,22 @@ public class ProblemController extends BaseController {
         } catch (Exception e) {
             addLogicError(result, Constants.MSG_SYSTEM_ERR, new Object[]{});
         }
+        if (result.hasErrors()) {
+            problemLayoutForm.setId(pmId);
+            if (tab == 2) {
+                return getSolution(pmId, problemLayoutForm,null, false,false);
+            } else if (1 == tab) {
+                return getStatement(pmId, problemLayoutForm,null, false,false);
+            } else if (tab == 3) {
+
+            } else if (tab == 4) {
+
+            }
+        }
         if (tab == 1) {
             modelAndView = getStatement(pmId, problemLayoutForm,null, true,false);
         } else if (tab == 2) {
-
+            modelAndView = getSolution(pmId, problemLayoutForm,null, true,false);
         } else if (tab == 3) {
 
         } else if (tab == 4) {
@@ -280,6 +295,7 @@ public class ProblemController extends BaseController {
         }
         ProblemDTO problemDTO = new ProblemDTO();
         modelMapper.map(problemSolutionForm,problemDTO);
+        problemDTO.setId(pmId);
         try{
             problemService.updateProblem(problemDTO);
         }catch(Exception e){

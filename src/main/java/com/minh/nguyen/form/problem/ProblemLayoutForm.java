@@ -11,14 +11,14 @@ import com.minh.nguyen.validator.annotation.Required;
  * Purpose:
  */
 public class ProblemLayoutForm extends BaseForm{
-    int id;
+    private Integer id;
     private String code;
 
     @Required(displayFieldName = "name")
     @MaxLength(displayFieldName = "name", maxlength = 25)
     private String name;
-    private int viewTab;
-    private int sutId;
+    private Integer viewTab;
+    private Integer sutId;
 
     @Required(displayFieldName = "timeLimit")
     @Number(minValue=1000,maxValue=10000,displayFieldName = "timeLimit")
@@ -28,9 +28,9 @@ public class ProblemLayoutForm extends BaseForm{
     @Number(minValue=1,maxValue=256,displayFieldName = "memoryLimit")
     private String memoryLimit;
 
-    private int difficulty;
-    private int cntTest;
-    private int isPublished;
+    private Integer difficulty;
+    private Integer cntTest;
+    private Integer isPublished;
 
     public String getTimeLimit() {
         return timeLimit;
@@ -48,11 +48,11 @@ public class ProblemLayoutForm extends BaseForm{
         this.memoryLimit = memoryLimit;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -64,11 +64,11 @@ public class ProblemLayoutForm extends BaseForm{
         this.code = code;
     }
 
-    public int getViewTab() {
+    public Integer getViewTab() {
         return viewTab;
     }
 
-    public void setViewTab(int viewTab) {
+    public void setViewTab(Integer viewTab) {
         this.viewTab = viewTab;
     }
 
@@ -80,35 +80,35 @@ public class ProblemLayoutForm extends BaseForm{
         this.name = name;
     }
 
-    public int getSutId() {
+    public Integer getSutId() {
         return sutId;
     }
 
-    public void setSutId(int sutId) {
+    public void setSutId(Integer sutId) {
         this.sutId = sutId;
     }
 
-    public int getDifficulty() {
+    public Integer getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(Integer difficulty) {
         this.difficulty = difficulty;
     }
 
-    public int getCntTest() {
+    public Integer getCntTest() {
         return cntTest;
     }
 
-    public void setCntTest(int cntTest) {
+    public void setCntTest(Integer cntTest) {
         this.cntTest = cntTest;
     }
 
-    public int getIsPublished() {
+    public Integer getIsPublished() {
         return isPublished;
     }
 
-    public void setIsPublished(int isPublished) {
+    public void setIsPublished(Integer isPublished) {
         this.isPublished = isPublished;
     }
 }

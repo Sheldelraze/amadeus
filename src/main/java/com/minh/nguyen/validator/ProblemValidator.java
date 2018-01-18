@@ -43,7 +43,7 @@ public class ProblemValidator extends BaseValidator {
             problemService.tryCompile(problemDTO);
         }catch (CompileErrorException e){
             bindingResult.addError(new InputCheckException(
-                    Constants.MSG_COMPILE_ERR,"sourceCode"));
+                    Constants.MSG_COMPILE_ERR + ":" + e.getMessage(),"sourceCode"));
         }
     }
     public void validateCreate(BindingResult errors){

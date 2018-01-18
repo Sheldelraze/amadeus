@@ -112,16 +112,9 @@
                                         </div>
                                         <label
                                                 th:if="${#fields.hasErrors('sourceCode')}" th:class="'error'"
-                                                th:errors="*{sourceCode}">Name Error</label>
+                                                th:errors="*{sourceCode}" style="white-space: pre;">Name Error</label>
                                         <input type="hidden" th:field="*{sourceCode}"/>
-                                        <pre id="editor">#include &lt;bits/stdc++.h&gt;
-using namespace std;
-int main(){
-    int a,b;
-    cin &gt;&gt; a &gt; &gt; b;
-    cout &lt;&lt; a + b;
-}
-                            </pre>
+                                        <pre id="editor" ><label th:text="${problemSolutionVO}?${problemSolutionVO.sourceCode}"></label></pre>
                                         <div style="margin-bottom: 20px; margin-top: 20px">
                                             <b style="color: black;">Hoặc tải từ máy lên</b>
 

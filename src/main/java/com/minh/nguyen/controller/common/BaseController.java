@@ -6,6 +6,7 @@ import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
+import org.aspectj.apache.bcel.classfile.Constant;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -127,8 +128,19 @@ public class BaseController {
                                 "Screen error!");
                         while (ite.hasNext()) {
                             ex = (BaseException) ite.next();
-                            result.rejectValue(ex.getFieldName(),
-                                    ex.getMessageId(), "Error!");
+                            if (ex.getMessageId().startsWith(Constants.MSG_COMPILE_ERR)){
+                                String message = ex.getMessageId();
+                                int pos = message.indexOf(":");
+                                message = message.substring(pos + 1);
+                                result.rejectValue(ex.getFieldName(),
+                                        Constants.MSG_COMPILE_ERR,
+                                        new String[]{"\r\n" + message},
+                                        "Screen error!");
+                            }
+                            else {
+                                result.rejectValue(ex.getFieldName(),
+                                        ex.getMessageId(), "Error!");
+                            }
                         }
 
                     }

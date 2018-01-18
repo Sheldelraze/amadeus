@@ -6,20 +6,20 @@ package com.minh.nguyen.vo.problem;
  * Purpose:
  */
 public class ProblemLayoutVO {
-    public static final int[] difficultValue = new int[]{1,2,3,4,5};
-    int id;
+    public static final Integer[] difficultValue = new Integer[]{1,2,3,4,5};
+    private Integer id;
     private String code;
     private String name;
-    private int viewTab;
-    private int sutId;
+    private Integer viewTab;
+    private Integer sutId;
     private String timeLimit;
     private String memoryLimit;
-    private int difficulty;
-    private int cntTest;
-    private int isPublished;
+    private Integer difficulty;
+    private Integer cntTest;
+    private Integer isPublished;
     private boolean updateSuccess;
 
-    public static int[] getDifficultValue() {
+    public static Integer[] getDifficultValue() {
         return difficultValue;
     }
 
@@ -31,11 +31,11 @@ public class ProblemLayoutVO {
         this.updateSuccess = updateSuccess;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -55,19 +55,19 @@ public class ProblemLayoutVO {
         this.name = name;
     }
 
-    public int getViewTab() {
+    public Integer getViewTab() {
         return viewTab;
     }
 
-    public void setViewTab(int viewTab) {
+    public void setViewTab(Integer viewTab) {
         this.viewTab = viewTab;
     }
 
-    public int getSutId() {
+    public Integer getSutId() {
         return sutId;
     }
 
-    public void setSutId(int sutId) {
+    public void setSutId(Integer sutId) {
         this.sutId = sutId;
     }
 
@@ -87,27 +87,27 @@ public class ProblemLayoutVO {
         this.memoryLimit = memoryLimit;
     }
 
-    public int getDifficulty() {
+    public Integer getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(Integer difficulty) {
         this.difficulty = difficulty;
     }
 
-    public int getCntTest() {
+    public Integer getCntTest() {
         return cntTest;
     }
 
-    public void setCntTest(int cntTest) {
+    public void setCntTest(Integer cntTest) {
         this.cntTest = cntTest;
     }
 
-    public int getIsPublished() {
+    public Integer getIsPublished() {
         return isPublished;
     }
 
-    public void setIsPublished(int isPublished) {
+    public void setIsPublished(Integer isPublished) {
         this.isPublished = isPublished;
     }
 }
