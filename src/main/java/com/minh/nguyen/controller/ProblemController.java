@@ -185,21 +185,44 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/test")
-    public ModelAndView getTest(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, boolean updateSuccess) {
-        ProblemTestForm problemTestForm = new ProblemTestForm();
-        ModelAndView modelAndView = getGeneralInfo(pmId, problemTestForm, TEST_TAB, updateSuccess);
-        modelAndView.setViewName(TEST_VIEW);
+    public ModelAndView getTest(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemTestForm problemTestForm,
+            boolean updateGeneralSuccess,  boolean updateSuccess){
+        ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, TEST_TAB, updateGeneralSuccess);
+        ProblemDTO problemDTO = new ProblemDTO();
+        ProblemTestVO problemTestVO = new ProblemTestVO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        modelMapper.map(problemDTO, problemTestVO);
+        modelAndView.addObject(TEST_VO, problemTestVO);
+        if (null == problemTestForm){
+            problemTestForm = new ProblemTestForm();
+        }
+        if (updateSuccess){
+            problemTestVO.setUpdateSuccess(true);
+        }
         modelAndView.addObject(TEST_FORM, problemTestForm);
-
+        modelAndView.setViewName(TEST_VIEW);
         return modelAndView;
     }
 
     @GetMapping("/{pmId}/role")
-    public ModelAndView getRole(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, boolean updateSuccess) {
-        ProblemRoleForm problemRoleForm = new ProblemRoleForm();
-        ModelAndView modelAndView = getGeneralInfo(pmId, problemRoleForm, ROLE_TAB, updateSuccess);
-        modelAndView.setViewName(ROLE_VIEW);
+    public ModelAndView getRole(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemRoleForm problemRoleForm,
+                                boolean updateGeneralSuccess,  boolean updateSuccess){
+        ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, ROLE_TAB, updateGeneralSuccess);
+        ProblemDTO problemDTO = new ProblemDTO();
+        ProblemRoleVO problemRoleVO = new ProblemRoleVO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        modelMapper.map(problemDTO, problemRoleVO);
+        modelAndView.addObject(ROLE_VO, problemRoleVO);
+        if (null == problemRoleForm){
+            problemRoleForm = new ProblemRoleForm();
+        }
+        if (updateSuccess){
+            problemRoleVO.setUpdateSuccess(true);
+        }
         modelAndView.addObject(ROLE_FORM, problemRoleForm);
+        modelAndView.setViewName(ROLE_VIEW);
         return modelAndView;
     }
 
@@ -216,9 +239,9 @@ public class ProblemController extends BaseController {
             } else if (tab == 2) {
                 return getSolution(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 3) {
-
+                return getTest(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 4) {
-
+                return getRole(pmId, problemLayoutForm,null, false,false);
             }
 
         }
@@ -239,9 +262,9 @@ public class ProblemController extends BaseController {
             } else if (1 == tab) {
                 return getStatement(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 3) {
-
+                return getTest(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 4) {
-
+                return getRole(pmId, problemLayoutForm,null, false,false);
             }
         }
         if (tab == 1) {
@@ -249,9 +272,9 @@ public class ProblemController extends BaseController {
         } else if (tab == 2) {
             modelAndView = getSolution(pmId, problemLayoutForm,null, true,false);
         } else if (tab == 3) {
-
+            modelAndView = getTest(pmId, problemLayoutForm,null, true,false);
         } else if (tab == 4) {
-
+            modelAndView = getRole(pmId, problemLayoutForm,null, true,false);
         }
         return modelAndView;
     }

@@ -1,29 +1,19 @@
 package com.minh.nguyen.amadeus;
 
-import com.google.common.util.concurrent.SimpleTimeLimiter;
-import com.google.common.util.concurrent.TimeLimiter;
-import com.minh.nguyen.util.CompileUtil;
-import com.minh.nguyen.util.Runner.Outcome;
-import com.minh.nguyen.util.Runner.Params;
-import com.minh.nguyen.util.Runner.ProcessRunner;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class AmadeusApplicationTests {
 
     private static ModelMapper modelMapper = new ModelMapper();
-	static Logger logger = LoggerFactory.getLogger(AmadeusApplicationTests.class);
+//	static Logger logger = LoggerFactory.getLogger(AmadeusApplicationTests.class);
 	public static class A{
 	    String a;
 
@@ -46,14 +36,31 @@ public class AmadeusApplicationTests {
             this.a = a;
         }
     }
+    public static class TestRunnable implements Runnable{
+
+        @Override
+        public void run() {
+            int[] a = new int[123123133];
+            a[0] = 123;
+            for(int i = 1;i < a.length;i++){
+                a[i] = a[i - 1] + 2;
+            }
+            try {
+                Thread.sleep(1182);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.print("huha");
+        }
+
+    }
 	public static void main(String[] args) throws IOException {
-	    A b = new B();
-	    if (b.getClass().equals(A.class)){
-	        System.out.print("haha");
-        }
-        else{
-            System.out.print("no");
-        }
+        System.out.print("haa");
+        Thread thread = new Thread(null, new TestRunnable(), "test thread", 1);
+        thread.setDaemon(false);
+        thread.start();
+        System.out.print("hehe");
+        return;
 //        CompileUtil compileUtil = new CompileUtil();
 //        compileUtil.solve();
 //        TimeLimiter timeLimiter = new SimpleTimeLimiter();
