@@ -4,6 +4,6 @@ Written in Java.
 Framework used:
 + MVC: Spring boot
 + Front-end engine: Thymeleaf + HCJ + bootstrap + jquery
-+ Database: Mybatis
++ Database: MySQL with Mybatis
 + Security: Spring security + AspectJ
 + Testing tool: logback + AOP
