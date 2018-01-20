@@ -66,7 +66,7 @@
                                                                     problemLayoutForm=${problemLayoutForm},
                                                                     tab='1')"></div>
 
-                <div class="col-lg-9 col-xlg-9 col-md-7">
+                <div class="col-lg-9 col-xlg-9 col-md-9">
                     <div class="card">
                         <!-- Nav tabs -->
                         <div th:replace="problem/info/problem-layout::navtab (tab = ${tab},pmId = ${problemLayoutVO.id})"></div>
@@ -89,7 +89,7 @@
                                         </th:block>
                                         <div style="float:right"><a href="#">Xem trước</a></div>
                                         <h4 style="margin-top: 10px">Nội dung (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 300px" cols="100%" id="statement" name="statement">
+                                        <textarea style="height: 300px"  id="statement" name="statement">
                                             <th:block th:text="${problemStatementVO}?${problemStatementVO.statement}"></th:block>
                                         </textarea>
                                         <label
@@ -97,7 +97,7 @@
                                                 th:errors="*{statement}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Điều kiện input (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="input" name="input">
+                                        <textarea style="height: 150px;"  id="input" name="input">
                                             <th:block th:text="${problemStatementVO}?${problemStatementVO.input}"></th:block>
                                         </textarea>
                                         <label
@@ -105,7 +105,7 @@
                                                 th:errors="*{input}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Yêu cầu output (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="output" name="output">
+                                        <textarea style="height: 150px;" id="output" name="output">
                                             <th:block th:text="${problemStatementVO}?${problemStatementVO.output}"></th:block>
                                         </textarea>
                                         <label
@@ -113,7 +113,7 @@
                                                 th:errors="*{output}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Ghi chú khác (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;" cols="100%" id="note" name="note">
+                                        <textarea style="height: 150px;"  id="note" name="note">
                                             <th:block th:text="${problemStatementVO}?${problemStatementVO.note}"></th:block>
                                         </textarea>
                                         <label
@@ -173,6 +173,10 @@
     // $(document).ready(function () {
     //     $(".select2").select2();
     // });
+    $('#statement').width('100%');
+    $('#input').width('100%');
+    $('#output').width('100%');
+    $('#note').width('100%');
     new nicEditor({maxHeight: 300,fullPanel : true}).panelInstance('statement');
     new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('input');
     new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('output');
