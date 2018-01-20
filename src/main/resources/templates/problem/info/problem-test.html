@@ -78,7 +78,7 @@
                                           data-original-title="Output sẽ được thêm sau khi chạy code trong 'Đáp án' dựa trên input tương ứng">Tự
                                         sinh output</a></u>
                                     <div style="float: right;margin-bottom: 10px">
-                                        <button type="button" class="btn btn-block btn-outline-success">Thêm bộ test
+                                        <button type="button" th:onclick="|popup(${problemLayoutVO.id})|" class="btn btn-block btn-outline-success">Thêm bộ test
                                         </button>
                                     </div>
                                     <div class="table-responsive">
@@ -90,39 +90,33 @@
                                                 <th style="text-align: center">Input</th>
                                                 <th style="text-align: center">Output</th>
                                                 <th style="text-align: center;width: 100px">Hiển thị trong đề</th>
-                                                <th style="text-align: center;width: 100px"></th>
+                                                <th style="text-align: center;width: 200px"></th>
                                             </tr>
                                             </thead>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>5 2</td>
-                                                <td>7</td>
-                                                <td><label class="custom-control custom-checkbox">
-                                                    <input type="checkbox" required="" value="single"
-                                                           name="styled_single_checkbox" class="custom-control-input"
-                                                           aria-invalid="false"> <span
-                                                        class="custom-control-indicator"></span> <span
-                                                        class="custom-control-description"></span>
-                                                </label></td>
-                                                <td>
-                                                    <button type="button" class="btn btn-outline-info">Cập nhật</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>8 5</td>
-                                                <td>13</td>
-                                                <td><label class="custom-control custom-checkbox">
-                                                    <input type="checkbox" required="" value="single"
-                                                           name="styled_single_checkbox" class="custom-control-input"
-                                                           aria-invalid="false"> <span
-                                                        class="custom-control-indicator"></span> <span
-                                                        class="custom-control-description"></span>
-                                                </label></td>
-                                                <td>
-                                                    <button type="button" class="btn btn-outline-info">Cập nhật</button>
-                                                </td>
-                                            </tr>
+                                            <tbody>
+                                                <th:block th:if="${problemTestVO != null}">
+                                                    <tr th:each="input,iter : ${problemTestVO.lstInput}">
+                                                        <td th:text="${iter.index} + 1"
+                                                            style="padding: 2px" class="value"></td>
+                                                        <td th:text="${input.input}"></td>
+                                                        <td th:text="${input.output}"></td>
+                                                        <td>
+                                                            <th:block th:if="${input.showInput == 1}">
+                                                                <span class="label label-success">Có</span>
+                                                            </th:block>
+                                                            <th:block th:unless="${input.showInput == 1}">
+                                                                <span class="label label-danger">Không</span>
+                                                            </th:block>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-outline-warning">Cập nhật
+                                                            </button>
+                                                            <button type="button" class="btn btn-outline-danger">Xóa
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </th:block>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -165,7 +159,17 @@
 <!-- All Jquery -->
 <div th:replace="layout/layout::js"></div>
 <!-- load ace -->
-
+<script>
+    function popup(pmId){
+        var url = '/problem/' + pmId + '/createTest';
+        window.open(url,
+            '1426494439650',
+            'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
+    }
+    function HandlePopupResult(result) {
+        location.reload();
+    }
+</script>
 <script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"
         th:src="@{/assets/plugins/select2/dist/js/select2.full.min.js}" type="text/javascript"></script>
 <script>

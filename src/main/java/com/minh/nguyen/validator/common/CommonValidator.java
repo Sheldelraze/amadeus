@@ -91,7 +91,7 @@ public class CommonValidator {
         if (field.isAnnotationPresent(Number.class)
                 && !checkUtil.isSignNumber(fieldVal)) {
             InputCheckException ex = new InputCheckException(
-                    Constants.MSG_NUMBERL_FORMAT_INPUT_ERR,
+                    Constants.MSG_NUMBER_FORMAT_INPUT_ERR,
                     new String[] { field.getAnnotation(Number.class)
                             .displayFieldName() });
             ex.setFieldName(field.getName());

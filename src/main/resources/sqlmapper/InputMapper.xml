@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minh.nguyen.mapper.InputMapper">
+    <select id="getAllTest" resultType="InputDTO">
+        select input,
+            output,
+            showInput
+        from input where input.id in(select itId from pm_it where pmId=#{pmId})
+        and deleteFlg='0'
+    </select>
+</mapper>

@@ -22,6 +22,17 @@ public class InputEntity extends BaseEntity implements Serializable {
     @Column(name = "output")
     private String output;
 
+    @Column(name="showInput")
+    private int showInput;
+
+    public int getShowInput() {
+        return showInput;
+    }
+
+    public void setShowInput(int showInput) {
+        this.showInput = showInput;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

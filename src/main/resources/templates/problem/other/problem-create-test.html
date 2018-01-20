@@ -4,36 +4,40 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" th:href="../../assets/images/favicon.png}">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../static/assets/images/favicon.png"
+          th:href="@{/assets/images/favicon.png}">
     <!-- Favicon icon -->
     <title>Amadeus system</title>
-    <!-- Bootstrap Core CSS -->
-    <link th:href="../../assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
-    <!-- chartist CSS -->
-    <link th:href="../../assets/plugins/chartist-js/dist/chartist.min.css}" rel="stylesheet">
-    <link th:href="../../assets/plugins/chartist-js/dist/chartist-init.css}" rel="stylesheet">
-    <link th:href="../../assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css}"
-          rel="stylesheet">
-    <!--This page css - Morris CSS -->
-    <link href="../../../static/assets/plugins/c3-master/c3.min.css"
-          th:href="../../assets/plugins/c3-master/c3.min.css}" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="../../../static/css/style.css" th:href="../../css/style.css}" rel="stylesheet">
+
+    <link href="../../../static/assets/plugins/bootstrap/css/bootstrap.min.css"
+          th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
     <!-- You can change the theme colors from here -->
-    <link href="../../../static/css/colors/blue.css" th:href="../../css/colors/blue.css}" id="theme" rel="stylesheet">
+    <link href="../../../static/css/colors/blue.css" th:href="@{/css/colors/blue.css}" id="theme" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style>
+        .error {
+            color: red;
+        }
 
+        .success {
+            color: #1ed921;
+        }
+    </style>
 </head>
-<body class="fix-header fix-sidebar card-no-border">
+<body>
 <!-- ============================================================== -->
 <!-- Preloader - style you can find in spinners.css -->
 <!-- ============================================================== -->
@@ -44,6 +48,7 @@
     <!-- ============================================================== -->
     <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
+
     <!-- ============================================================== -->
     <!-- End Topbar header -->
     <!-- ============================================================== -->
@@ -57,38 +62,107 @@
     <!-- ============================================================== -->
     <!-- Page wrapper  -->
     <!-- ============================================================== -->
-    <div class="page-wrapper">
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
-        <div class="container-fluid">
-            <!-- ============================================================== -->
-            <!-- Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
 
-            <!-- ============================================================== -->
-            <!-- End Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
 
-            <!-- ============================================================== -->
-            <!-- End PAge Content -->
-            <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <div class="row" style="margin-top:30px">
+            <!-- Column -->
+            <!-- Column -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="settings" class="tab-pane active" style="color: black">
+                            <form th:action="addTest" th:object="${problemCreateTestForm}" method="post">
+                                <th:block th:if="${#fields.hasErrors('screenMessage')}">
+
+                                    <div class="alert alert-danger">
+                                        ✘ <label th:errors="*{screenMessage}"></label>
+                                    </div>
+                                </th:block>
+                                <th:block th:if="${updateSuccess}">
+                                    <div class="alert alert-success">
+                                        ✔ Thêm test thành công
+                                    </div>
+                                </th:block>
+                                <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()" style="margin-left: 50px">Đóng cứa sổ
+                                </button>
+                                <div style="text-align: center">
+                                    <h3>Thêm bộ test</h3>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Input <b
+                                            style="color:red">(*)</b></label>
+                                    <div class="col-10">
+                                        <small style="color:slategray">Tối đa 5000000 ký tự</small>
+                                        <textarea style="color:black" class="form-control" rows="7"
+                                                  th:field="*{input}"></textarea>
+                                        <th:block th:if="${#fields.hasErrors('input')}">
+                                            <label class="error" th:errors="*{input}">Screen
+                                                Error</label>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Output</label>
+                                    <div class="col-10">
+                                        <small style="color:slategray">Tối đa 5000000 ký tự</small>
+                                        <textarea style="color:black" class="form-control" rows="7"
+                                                  th:field="*{output}"></textarea>
+                                        <th:block th:if="${#fields.hasErrors('output')}">
+                                            <label class="error" th:errors="*{output}">Screen
+                                                Error</label>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right"></label>
+                                    <div class="col-10">
+                                        <u><a href="#" >Sinh output tự động</a></u>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right"></label>
+                                    <div class="col-10">
+                                        <input type="checkbox" id="showInput" name="showInput" value="1"
+                                               class="filled-in chk-col-light-green"/>
+                                        <label for="showInput">Sử dụng trong đề bài</label>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 35%">
+                                    <button type="submit" class="btn btn-success" style="margin-left: 50px">Thêm bộ test
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Column -->
         </div>
         <!-- ============================================================== -->
-        <!-- End Container fluid  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- footer -->
-        <!-- ============================================================== -->
-        <footer class="footer" th:fragment="footer">
-            Copyright © Nguyen Tuan Minh
-        </footer>
-        <!-- ============================================================== -->
-        <!-- End footer -->
+        <!-- End PAge Content -->
         <!-- ============================================================== -->
     </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- footer -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
     <!-- ============================================================== -->
     <!-- End Page wrapper  -->
     <!-- ============================================================== -->
@@ -99,35 +173,31 @@
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
-<div th:fragment="js">
-    <script src="../../../static/assets/plugins/jquery/jquery.min.js"
-            th:src="../../assets/plugins/jquery/jquery.min.js}"></script>
-    <!-- Bootstrap tether Core JavaScript -->
-    <script src="../../../static/assets/plugins/bootstrap/js/popper.min.js"
-            th:src="../../assets/plugins/bootstrap/js/popper.min.js}"></script>
-    <script src="../../../static/assets/plugins/bootstrap/js/bootstrap.min.js"
-            th:src="../../assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
-    <!-- slimscrollbar scrollbar JavaScript -->
-    <script src="../../../static/js/jquery.slimscroll.js" th:src="../../js/jquery.slimscroll.js}"></script>
-    <!--Wave Effects -->
-    <script src="../../../static/js/waves.js" th:src="../../js/waves.js}"></script>
-    <!--Menu sidebar -->
-    <script src="../../../static/js/sidebarmenu.js" th:src="../../js/sidebarmenu.js}"></script>
-    <!--stickey kit -->
-    <script src="../../../static/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js"
-            th:src="../../assets/plugins/sticky-kit-master/dist/sticky-kit.min.js}"></script>
-    <script src="../../../static/assets/plugins/sparkline/jquery.sparkline.min.js"
-            th:src="../../assets/plugins/sparkline/jquery.sparkline.min.js}"></script>
-    <!--Custom JavaScript -->
-    <script src="../../../static/js/custom.min.js" th:src="../../js/custom.min.js}"></script>
-    <!-- ============================================================== -->
-    <!-- This page plugins -->
-    <!-- ============================================================== -->
-    <!--c3 JavaScript -->
-    <script src="../../../static/assets/plugins/d3/d3.min.js" th:src="../../assets/plugins/d3/d3.min.js}"></script>
-    <script src="../../../static/assets/plugins/c3-master/c3.min.js"
-            th:src="../../assets/plugins/c3-master/c3.min.js}"></script>
-</div>
+
+<script>
+    function CloseMySelf() {
+        try {
+            window.opener.HandlePopupResult();
+        }
+        catch (err) {}
+        window.close();
+        return false;
+    }
+</script>
+<script src="../../../static/assets/plugins/jquery/jquery.min.js"
+        th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../../static/assets/plugins/bootstrap/js/popper.min.js"
+        th:src="@{/assets/plugins/bootstrap/js/popper.min.js}"></script>
+<script src="../../../static/assets/plugins/bootstrap/js/bootstrap.min.js"
+        th:src="@{/assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
+
+<!--Custom JavaScript -->
+<script src="../../../static/js/custom.min.js" th:src="@{/js/custom.min.js}"></script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--c3 JavaScript -->
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

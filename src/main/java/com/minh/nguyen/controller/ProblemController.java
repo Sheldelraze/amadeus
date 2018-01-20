@@ -32,9 +32,9 @@ public class ProblemController extends BaseController {
     public static final String LAYOUT_FORM = "problemLayoutForm";
     public static final String SOLUTION_FORM = "problemSolutionForm";
     public static final String STATEMENT_FORM = "problemStatementForm";
-    public static final String TEST_FORM = "problemTestForm";
     public static final String ROLE_FORM = "problemRoleForm";
     public static final String CREATE_FORM = "problemCreateForm";
+    public static final String CREATE_TEST_FORM = "problemCreateTestForm";
     public static final String LAYOUT_VO = "problemLayoutVO";
     public static final String CREATE_VO = "problemCreateVO";
     public static final String STATEMENT_VO = "problemStatementVO";
@@ -46,6 +46,7 @@ public class ProblemController extends BaseController {
     public static final String STATEMENT_VIEW = "problem/info/problem-statement";
     public static final String TEST_VIEW = "problem/info/problem-test";
     public static final String ROLE_VIEW = "problem/info/problem-role";
+    public static final String CREATE_TEST_VIEW = "problem/other/problem-create-test";
     public static final String LIST_MY_VIEW = "problem/list/problem-list-my";
     public static final String LIST_ALL_VIEW = "problem/list/problem-list-all";
     public static final String NIC_EDITOR_PATH = "'../../assets/images/users/nicEditorIcons.gif'";
@@ -185,7 +186,7 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/test")
-    public ModelAndView getTest(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemTestForm problemTestForm,
+    public ModelAndView getTest(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm,
             boolean updateGeneralSuccess,  boolean updateSuccess){
         ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, TEST_TAB, updateGeneralSuccess);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -193,14 +194,11 @@ public class ProblemController extends BaseController {
         problemDTO.setId(pmId);
         problemService.getProblemInfo(problemDTO);
         modelMapper.map(problemDTO, problemTestVO);
-        modelAndView.addObject(TEST_VO, problemTestVO);
-        if (null == problemTestForm){
-            problemTestForm = new ProblemTestForm();
-        }
+        problemService.getAllTest(problemTestVO);
         if (updateSuccess){
             problemTestVO.setUpdateSuccess(true);
         }
-        modelAndView.addObject(TEST_FORM, problemTestForm);
+        modelAndView.addObject(TEST_VO, problemTestVO);
         modelAndView.setViewName(TEST_VIEW);
         return modelAndView;
     }
@@ -225,7 +223,45 @@ public class ProblemController extends BaseController {
         modelAndView.setViewName(ROLE_VIEW);
         return modelAndView;
     }
-
+    @GetMapping("/{pmId}/createTest")
+    public ModelAndView createTest(@PathVariable("pmId") int pmId, ProblemCreateTestForm problemCreateTestForm,
+                                boolean updateSuccess){
+        ModelAndView modelAndView = new ModelAndView();
+        if (null == problemCreateTestForm || null == problemCreateTestForm.getId()){
+            problemCreateTestForm = new ProblemCreateTestForm();
+        }
+        modelAndView.addObject(CREATE_TEST_FORM,problemCreateTestForm);
+        modelAndView.setViewName(CREATE_TEST_VIEW);
+        if (updateSuccess){
+            modelAndView.addObject(UPDATE_SUCCESS,true);
+        }
+        return modelAndView;
+    }
+    @PostMapping("/{pmId}/addTest")
+    public ModelAndView addTest(@PathVariable("pmId") int pmId, ProblemCreateTestForm problemCreateTestForm,
+                                   BindingResult bindingResult){
+        validate(problemCreateTestForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            problemCreateTestForm.setId(pmId);
+            return createTest(pmId,problemCreateTestForm,false);
+        }
+        try{
+            ProblemDTO problemDTO = new ProblemDTO();
+            problemDTO.setId(pmId);
+            modelMapper.map(problemCreateTestForm,problemDTO);
+            problemService.createTest(problemDTO);
+        }catch (RollbackException ex) {
+            addLogicError(bindingResult, ex.getMessage(), new Object[]{});
+        }
+        catch(Exception e){
+            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
+        }
+        if(bindingResult.hasErrors()){
+            problemCreateTestForm.setId(pmId);
+            return createTest(pmId,problemCreateTestForm,false);
+        }
+        return createTest(pmId,null,true);
+    }
     @PostMapping("/{pmId}/updateGeneral/{tab}")
     public ModelAndView updateGeneral(@PathVariable("pmId") int pmId,
                                       @PathVariable("tab") int tab,
@@ -239,7 +275,7 @@ public class ProblemController extends BaseController {
             } else if (tab == 2) {
                 return getSolution(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 3) {
-                return getTest(pmId, problemLayoutForm,null, false,false);
+                return getTest(pmId, problemLayoutForm,false,false);
             } else if (tab == 4) {
                 return getRole(pmId, problemLayoutForm,null, false,false);
             }
@@ -262,7 +298,7 @@ public class ProblemController extends BaseController {
             } else if (1 == tab) {
                 return getStatement(pmId, problemLayoutForm,null, false,false);
             } else if (tab == 3) {
-                return getTest(pmId, problemLayoutForm,null, false,false);
+                return getTest(pmId, problemLayoutForm, false,false);
             } else if (tab == 4) {
                 return getRole(pmId, problemLayoutForm,null, false,false);
             }
@@ -272,7 +308,7 @@ public class ProblemController extends BaseController {
         } else if (tab == 2) {
             modelAndView = getSolution(pmId, problemLayoutForm,null, true,false);
         } else if (tab == 3) {
-            modelAndView = getTest(pmId, problemLayoutForm,null, true,false);
+            modelAndView = getTest(pmId, problemLayoutForm,true,false);
         } else if (tab == 4) {
             modelAndView = getRole(pmId, problemLayoutForm,null, true,false);
         }
@@ -294,6 +330,8 @@ public class ProblemController extends BaseController {
         problemDTO.setId(pmId);
         try{
             problemService.updateProblem(problemDTO);
+        }catch (RollbackException ex) {
+            addLogicError(result, ex.getMessage(), new Object[]{});
         }catch(Exception e){
             addLogicError(result, Constants.MSG_SYSTEM_ERR, new Object[]{});
         }
@@ -321,6 +359,8 @@ public class ProblemController extends BaseController {
         problemDTO.setId(pmId);
         try{
             problemService.updateProblem(problemDTO);
+        }catch (RollbackException ex) {
+            addLogicError(bindingResult, ex.getMessage(), new Object[]{});
         }catch(Exception e){
             addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
         }
@@ -330,13 +370,6 @@ public class ProblemController extends BaseController {
             return getSolution(pmId, null,problemSolutionForm, false,false);
         }
         return getSolution(pmId,null,null,false,true);
-    }
-
-    @PostMapping("/{pmId}/updateTest")
-    public ModelAndView updateTest(@PathVariable("pmId") int pmId, @NonNull ProblemTestForm problemTestForm) {
-        ModelAndView modelAndView = null;
-
-        return modelAndView;
     }
 
     @PostMapping("/{pmId}/updateRole")

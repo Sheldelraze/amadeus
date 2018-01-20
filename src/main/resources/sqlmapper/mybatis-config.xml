@@ -4,12 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <!--<typeAlias alias="User" type="com.example.demo.domain.User"/>-->
+        <typeAlias alias="InputDTO" type="com.minh.nguyen.dto.InputDTO"/>
     </typeAliases>
     <typeHandlers>
     </typeHandlers>
     <mappers>
-        <!--<mapper resource="sqlmapper/UserMapper.xml"/>-->
+        <mapper resource="sqlmapper/InputMapper.xml"/>
         <!--<package name="sqlmapper"/>-->
     </mappers>
 

@@ -45,6 +45,7 @@ public class BaseProvider {
                 selectClause = selectClause.substring(0,
                         selectClause.length() - 1);
                 SELECT(selectClause);
+                WHERE("deleteFlg='0'");
             }
 
             private String genarateSelectedField(String selectClause,
@@ -86,7 +87,7 @@ public class BaseProvider {
                         selectClause.length() - 1);
                 SELECT(selectClause);
                 FROM(tableName);
-
+                WHERE("deleteFlg='0'");
             }
 
             private String genarateSelectedField(String selectClause,
@@ -190,6 +191,7 @@ public class BaseProvider {
                 selectClause = selectClause.substring(0,
                         selectClause.length() - 1);
                 SELECT(selectClause);
+                WHERE("deleteFlg='0'");
             }
 
             private String genSqlForSelectWithExample(Object entity,
@@ -233,7 +235,8 @@ public class BaseProvider {
 
         String sql = new SQL() {
             {
-                DELETE_FROM(tableName);
+                UPDATE(tableName);
+                SET("deleteFlg='1'");
                 for (Field field : table.getDeclaredFields()) {
                     if (field.isAnnotationPresent(Id.class)) {
                         WHERE(field.getAnnotation(Column.class).name()
@@ -243,6 +246,9 @@ public class BaseProvider {
                 }
 
                 for (Field field : table.getSuperclass().getDeclaredFields()) {
+                    if (field.getName().equals("deleteTime")){
+                        SET("deleteTime=#{deleteTime}");
+                    }
                     if (field.isAnnotationPresent(Id.class)) {
                         WHERE(field.getAnnotation(Column.class).name()
                                 + FORMAT_STRING_SQL_1 + field.getName()
@@ -260,13 +266,17 @@ public class BaseProvider {
 
         String sql = new SQL() {
             {
-                DELETE_FROM(tableName);
+                UPDATE(tableName);
+                SET("deleteFlg='1'");
                 for (Field field : entity.getClass().getDeclaredFields()) {
                     genSqlForDeleteWithExample(entity, field);
                 }
 
                 for (Field field : entity.getClass().getSuperclass()
                         .getDeclaredFields()) {
+                    if (field.getName().equals("deleteTime")){
+                        SET("deleteTime=#{deleteTime}");
+                    }
                     genSqlForDeleteWithExample(entity, field);
                 }
             }

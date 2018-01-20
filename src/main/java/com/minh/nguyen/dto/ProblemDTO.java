@@ -19,9 +19,18 @@ public class ProblemDTO extends BaseDTO {
     private String statement;
     private String input;
     private String output;
+    private Integer showInput;
     private String note;
     private String sourceCode;
     private String language;
+
+    public Integer getShowInput() {
+        return showInput;
+    }
+
+    public void setShowInput(Integer showInput) {
+        this.showInput = showInput;
+    }
 
     public String getSourceCode() {
         return sourceCode;

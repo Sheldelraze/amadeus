@@ -42,9 +42,7 @@ public class ContestController extends BaseController {
     @GetMapping("/")
     public ModelAndView getFirst() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(INFORMATION_VIEW);
-
-//        modelAndView.setViewName("share/index");
+        modelAndView.setViewName("problem/other/problem-create-test");
         return modelAndView;
     }
 
