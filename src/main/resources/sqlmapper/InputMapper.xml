@@ -5,7 +5,7 @@
 
 <mapper namespace="com.minh.nguyen.mapper.InputMapper">
     <select id="getAllTest" resultType="InputDTO">
-        select input,
+        select id,input,
             output,
             showInput
         from input where input.id in(select itId from pm_it where pmId=#{pmId})

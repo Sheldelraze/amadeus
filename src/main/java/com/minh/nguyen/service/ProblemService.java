@@ -9,6 +9,7 @@ import com.minh.nguyen.entity.PmItEntity;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.form.problem.ProblemSolutionForm;
+import com.minh.nguyen.form.problem.ProblemUpdateTestForm;
 import com.minh.nguyen.mapper.InputMapper;
 import com.minh.nguyen.mapper.PmItMapper;
 import com.minh.nguyen.mapper.ProblemMapper;
@@ -111,6 +112,31 @@ public class ProblemService extends BaseService<ProblemEntity> {
     public void getAllTest(ProblemTestVO problemTestVO){
         List<InputDTO> lstInput = inputMapper.getAllTest(problemTestVO.getId());
         problemTestVO.setLstInput(lstInput);
+        for(InputDTO inputDTO : lstInput){
+            inputDTO.setInput(trimString(inputDTO.getInput()));
+            inputDTO.setOutput(trimString(inputDTO.getOutput()));
+        }
+    }
+    public String trimString(String s){
+        if (null == s){
+            return null;
+        }
+        if (s.length() > 100){
+            s = s.substring(0,100);
+            s += "...";
+        }
+        int cnt = 0;
+        for(int i = 0;i < s.length();i++){
+            if (s.charAt(i) == '\n'){
+                cnt = 0;
+            }
+            cnt++;
+            if (cnt > 43){
+                s = s.substring(0,i) + "\r\n" + s.substring(i);
+                cnt = 0;
+            }
+        }
+        return s;
     }
     @Transactional
     public void updateProblem(ProblemDTO problemDTO){
@@ -128,11 +154,17 @@ public class ProblemService extends BaseService<ProblemEntity> {
             recordCnt = problemMapper.updateByPKExceptFields(problemEntity);
         }
         catch(Exception e){
+            e.printStackTrace();
             rollBack(Constants.MSG_SYSTEM_ERR);
         }
         if (recordCnt != 1){
             rollBack(Constants.MSG_UPDATE_ERR);
         }
+    }
+    public void deleteTest(int itId){
+        InputEntity inputEntity = new InputEntity();
+        inputEntity.setId(itId);
+        inputMapper.deleteByPK(inputEntity);
     }
     public void setCreateProblemInfo(ProblemEntity problemEntity){
         problemEntity.setTimeLimit(2000);
@@ -149,4 +181,21 @@ public class ProblemService extends BaseService<ProblemEntity> {
         }
         modelMapper.map(lst.get(0),problemDTO);
     }
+    public void getTestCase(ProblemUpdateTestForm problemUpdateTestForm){
+        InputEntity inputEntity = new InputEntity();
+        inputEntity.setId(problemUpdateTestForm.getId());
+        inputEntity = inputMapper.selectByPK(inputEntity);
+        modelMapper.map(inputEntity,problemUpdateTestForm);
+    }
+    public void updateTest(ProblemUpdateTestForm problemUpdateTestForm){
+        InputEntity inputEntity = new InputEntity();
+        modelMapper.map(problemUpdateTestForm,inputEntity);
+        try{
+            inputMapper.updateByPKExceptFields(inputEntity);
+        }catch(Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
 }

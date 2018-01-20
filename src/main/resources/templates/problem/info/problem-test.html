@@ -74,6 +74,11 @@
                             <!--second tab-->
                             <div class="tab-pane active" id="test" role="tabpanel">
                                 <div class="card-body">
+                                    <th:block th:if="${problemTestVO}?${problemTestVO.updateSuccess}">
+                                        <div class="alert alert-success">
+                                            ✔ Cập nhật thành công
+                                        </div>
+                                    </th:block>
                                     <u><a href="#" data-toggle="tooltip" data-placement="bottom" title=""
                                           data-original-title="Output sẽ được thêm sau khi chạy code trong 'Đáp án' dựa trên input tương ứng">Tự
                                         sinh output</a></u>
@@ -81,16 +86,16 @@
                                         <button type="button" th:onclick="|popup(${problemLayoutVO.id})|" class="btn btn-block btn-outline-success">Thêm bộ test
                                         </button>
                                     </div>
-                                    <div class="table-responsive">
+                                    <div>
                                         <table id="myTable" class="table table-bordered "
                                                style="text-align: center; color: black; font-size: 14px">
                                             <thead>
                                             <tr>
-                                                <th style="text-align: center;width: 20px">#</th>
-                                                <th style="text-align: center">Input</th>
-                                                <th style="text-align: center">Output</th>
-                                                <th style="text-align: center;width: 100px">Hiển thị trong đề</th>
-                                                <th style="text-align: center;width: 200px"></th>
+                                                <th style="text-align: center;max-width: 10%">#</th>
+                                                <th style="text-align: center;max-width: 100px">Input</th>
+                                                <th style="text-align: center;max-width: 100px">Output</th>
+                                                <th style="text-align: center;max-width: 50px">Hiển thị trong đề</th>
+                                                <th style="text-align: center;max-width: 20%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -98,9 +103,9 @@
                                                     <tr th:each="input,iter : ${problemTestVO.lstInput}">
                                                         <td th:text="${iter.index} + 1"
                                                             style="padding: 2px" class="value"></td>
-                                                        <td th:text="${input.input}"></td>
-                                                        <td th:text="${input.output}"></td>
-                                                        <td>
+                                                        <td style="white-space: pre;text-align: left;max-width: 30%" th:text="${input.input}"></td>
+                                                        <td style="white-space: pre;text-align: left;max-width: 30%" th:text="${input.output}"></td>
+                                                        <td style="width: 70px">
                                                             <th:block th:if="${input.showInput == 1}">
                                                                 <span class="label label-success">Có</span>
                                                             </th:block>
@@ -109,9 +114,11 @@
                                                             </th:block>
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="btn btn-outline-warning">Cập nhật
+                                                            <button type="button" class="btn btn-outline-warning"
+                                                                    th:onclick="|popupUpdate(${problemLayoutVO.id},${input.id})|">Cập nhật
                                                             </button>
-                                                            <button type="button" class="btn btn-outline-danger">Xóa
+                                                            <button type="button" class="btn btn-outline-danger"
+                                                                    th:onclick="|deleteTest(${problemLayoutVO.id},${input.id})|">Xóa
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -166,8 +173,20 @@
             '1426494439650',
             'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
     }
+    function popupUpdate(pmId,itId){
+        var url = '/problem/' + pmId + '/updateTest/' + itId;
+        window.open(url,
+            '1426494439650',
+            'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
+    }
     function HandlePopupResult(result) {
         location.reload();
+    }
+    function deleteTest(pmId,itId){
+        if (!confirm("Bạn có chắc là muốn xóa không?")){
+            return false;
+        }
+        window.location.replace('/problem/' + pmId + '/deleteTest/' + itId);
     }
 </script>
 <script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"

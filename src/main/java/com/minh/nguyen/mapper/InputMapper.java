@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component("InputMapper")
 @Mapper
 public interface InputMapper extends BaseMapper<InputEntity> {
     @InsertProvider(type = BaseProvider.class, method = "insert")

@@ -359,7 +359,7 @@ public class BaseProvider {
     }
 
 
-    public String updateByPKExceptFields(final Object entity) {
+    public String updateByPKExceptFields(final Object entity) throws IllegalAccessException {
         String sql = new SQL() {
             {
                 Class<?> table = entity.getClass();
@@ -367,25 +367,28 @@ public class BaseProvider {
                 UPDATE(tableName);
                 while (table != null) {
                     for (Field field : table.getDeclaredFields()) {
-                        genSqlForUpdate(field);
+                        field.setAccessible(true);
+                        genSqlForUpdate(entity,field);
                     }
                     table = table.getSuperclass();
                 }
             }
 
-            private void genSqlForUpdate(Field field) {
+            private void genSqlForUpdate(Object entity,Field field) throws IllegalAccessException {
                 if (field.isAnnotationPresent(Id.class)) {
                     WHERE(field.getAnnotation(Column.class).name()
                             + FORMAT_STRING_SQL_1 + field.getName()
                             + FORMAT_STRING_SQL_2);
 
                 } else if (field.isAnnotationPresent(Column.class)) {
-                    if (!field.getName().equals("createClass") &&
-                            !field.getName().equals("createUser") &&
-                            !field.getName().equals("createTime")) {
-                        SET(field.getAnnotation(Column.class).name()
-                                + FORMAT_STRING_SQL_1 + field.getName()
-                                + FORMAT_STRING_SQL_2);
+                    if (field.get(entity) != null) {
+                        if (!field.getName().equals("createClass") &&
+                                !field.getName().equals("createUser") &&
+                                !field.getName().equals("createTime")) {
+                            SET(field.getAnnotation(Column.class).name()
+                                    + FORMAT_STRING_SQL_1 + field.getName()
+                                    + FORMAT_STRING_SQL_2);
+                        }
                     }
                 }
             }
