@@ -14,6 +14,7 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,37 +31,35 @@ import javax.persistence.RollbackException;
 @Controller
 @RequestMapping("/problem")
 public class ProblemController extends BaseController {
-    public static final String LAYOUT_FORM = "problemLayoutForm";
-    public static final String SOLUTION_FORM = "problemSolutionForm";
-    public static final String STATEMENT_FORM = "problemStatementForm";
-    public static final String ROLE_FORM = "problemRoleForm";
-    public static final String CREATE_FORM = "problemCreateForm";
-    public static final String CREATE_TEST_FORM = "problemCreateTestForm";
-    public static final String UPDATE_TEST_FORM = "problemUpdateTestForm";
-    public static final String LAYOUT_VO = "problemLayoutVO";
-    public static final String CREATE_VO = "problemCreateVO";
-    public static final String STATEMENT_VO = "problemStatementVO";
-    public static final String SOLUTION_VO = "problemSolutionVO";
-    public static final String ROLE_VO = "problemRoleVO";
-    public static final String TEST_VO = "problemTestVO";
-    public static final String NIC_EDITOR = "nicEditorIcons";
-    public static final String SOLUTION_VIEW = "problem/info/problem-solution";
-    public static final String STATEMENT_VIEW = "problem/info/problem-statement";
-    public static final String TEST_VIEW = "problem/info/problem-test";
-    public static final String ROLE_VIEW = "problem/info/problem-role";
-    public static final String UPDATE_TEST_VIEW = "problem/other/problem-update-test";
-    public static final String CREATE_TEST_VIEW = "problem/other/problem-create-test";
-    public static final String LIST_MY_VIEW = "problem/list/problem-list-my";
-    public static final String LIST_ALL_VIEW = "problem/list/problem-list-all";
-    public static final String NIC_EDITOR_PATH = "'../../assets/images/users/nicEditorIcons.gif'";
-    public static final String CREATE_VIEW = "problem/other/problem-create";
-    public static final String UPDATE_SUCCESS = "updateSuccess";
-    public static final int LAYTOUT_TAB = 0;
-    public static final int STATEMENT_TAB = 1;
-    public static final int SOLUTION_TAB = 2;
-    public static final int TEST_TAB = 3;
-    public static final int ROLE_TAB = 4;
-    public static final String TAB = "tab";
+    private static final String LAYOUT_FORM = "problemLayoutForm";
+    private static final String SOLUTION_FORM = "problemSolutionForm";
+    private static final String STATEMENT_FORM = "problemStatementForm";
+    private static final String ROLE_FORM = "problemRoleForm";
+    private static final String CREATE_FORM = "problemCreateForm";
+    private static final String CREATE_TEST_FORM = "problemCreateTestForm";
+    private static final String UPDATE_TEST_FORM = "problemUpdateTestForm";
+    private static final String PREVIEW_VO = "problemPreviewVO";
+    private static final String LAYOUT_VO = "problemLayoutVO";
+    private static final String STATEMENT_VO = "problemStatementVO";
+    private static final String SOLUTION_VO = "problemSolutionVO";
+    private static final String ROLE_VO = "problemRoleVO";
+    private static final String TEST_VO = "problemTestVO";
+    private static final String PREVIEW_VIEW = "problem/other/problem-preview";
+    private static final String SOLUTION_VIEW = "problem/info/problem-solution";
+    private static final String STATEMENT_VIEW = "problem/info/problem-statement";
+    private static final String TEST_VIEW = "problem/info/problem-test";
+    private static final String ROLE_VIEW = "problem/info/problem-role";
+    private static final String UPDATE_TEST_VIEW = "problem/other/problem-update-test";
+    private static final String CREATE_TEST_VIEW = "problem/other/problem-create-test";
+    private static final String LIST_MY_VIEW = "problem/list/problem-list-my";
+    private static final String LIST_ALL_VIEW = "problem/list/problem-list-all";
+    private static final String CREATE_VIEW = "problem/other/problem-create";
+    private static final String UPDATE_SUCCESS = "updateSuccess";
+    private static final int STATEMENT_TAB = 1;
+    private static final int SOLUTION_TAB = 2;
+    private static final int TEST_TAB = 3;
+    private static final int ROLE_TAB = 4;
+    private static final String TAB = "tab";
     @Autowired
     private ProblemService problemService;
 
@@ -109,7 +108,7 @@ public class ProblemController extends BaseController {
         return new ModelAndView("redirect:/problem/" + problemDTO.getId() + "/statement");
     }
 
-    public ModelAndView getGeneralInfo(int pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
+    private ModelAndView getGeneralInfo(int pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
         ProblemLayoutVO problemLayoutVO = null;
         if (null == problemForm || null == problemForm.getId()) {
@@ -139,7 +138,20 @@ public class ProblemController extends BaseController {
         modelAndView.addObject(TAB, viewTab);
         return modelAndView;
     }
-
+    @GetMapping("/{pmId}/preview")
+    public ModelAndView getPreview(@PathVariable("pmId") int pmId){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(PREVIEW_VIEW);
+        ProblemDTO problemDTO = new ProblemDTO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        problemService.getActiveTest(problemDTO);
+        ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
+        modelMapper.map(problemDTO,problemPreviewVO);
+        problemPreviewVO.setLstInput(problemDTO.getLstInput());
+        modelAndView.addObject(PREVIEW_VO,problemPreviewVO);
+        return modelAndView;
+    }
     @GetMapping("/{pmId}/statement")
     public ModelAndView getStatement(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,
                                      boolean updateGeneralSuccess, boolean updateSuccess) {

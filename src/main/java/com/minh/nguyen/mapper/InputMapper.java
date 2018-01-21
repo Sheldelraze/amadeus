@@ -18,4 +18,6 @@ public interface InputMapper extends BaseMapper<InputEntity> {
     Integer insertInput(InputEntity record);
 
     List<InputDTO> getAllTest(@Param("pmId")Integer pmId);
+
+    List<InputDTO> getActiveTest(@Param("pmId")Integer pmId);
 }

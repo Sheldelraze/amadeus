@@ -8,7 +8,6 @@ import com.minh.nguyen.entity.InputEntity;
 import com.minh.nguyen.entity.PmItEntity;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.CompileErrorException;
-import com.minh.nguyen.form.problem.ProblemSolutionForm;
 import com.minh.nguyen.form.problem.ProblemUpdateTestForm;
 import com.minh.nguyen.mapper.InputMapper;
 import com.minh.nguyen.mapper.PmItMapper;
@@ -17,14 +16,11 @@ import com.minh.nguyen.util.CompileUtil;
 import com.minh.nguyen.util.ExceptionUtil;
 import com.minh.nguyen.util.FileUtil;
 import com.minh.nguyen.vo.problem.ProblemTestVO;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 
 import javax.persistence.RollbackException;
 import java.io.File;
@@ -109,6 +105,10 @@ public class ProblemService extends BaseService<ProblemEntity> {
             throw e;
         }
     }
+    public void getActiveTest(ProblemDTO problemDTO){
+        List<InputDTO> lstInput = inputMapper.getActiveTest(problemDTO.getId());
+        problemDTO.setLstInput(lstInput);
+    }
     public void getAllTest(ProblemTestVO problemTestVO){
         List<InputDTO> lstInput = inputMapper.getAllTest(problemTestVO.getId());
         problemTestVO.setLstInput(lstInput);
@@ -124,17 +124,6 @@ public class ProblemService extends BaseService<ProblemEntity> {
         if (s.length() > 100){
             s = s.substring(0,100);
             s += "...";
-        }
-        int cnt = 0;
-        for(int i = 0;i < s.length();i++){
-            if (s.charAt(i) == '\n'){
-                cnt = 0;
-            }
-            cnt++;
-            if (cnt > 43){
-                s = s.substring(0,i) + "\r\n" + s.substring(i);
-                cnt = 0;
-            }
         }
         return s;
     }

@@ -11,4 +11,12 @@
         from input where input.id in(select itId from pm_it where pmId=#{pmId})
         and deleteFlg='0'
     </select>
+    <select id="getActiveTest" resultType="InputDTO">
+        select id,input,
+        output,
+        showInput
+        from input where input.id in(select itId from pm_it where pmId=#{pmId})
+        and deleteFlg='0'
+        and showInput='1'
+    </select>
 </mapper>

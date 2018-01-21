@@ -1,5 +1,7 @@
 package com.minh.nguyen.dto;
 
+import java.util.List;
+
 /**
  * @author Mr.Minh
  * @since 01/01/2018
@@ -23,6 +25,15 @@ public class ProblemDTO extends BaseDTO {
     private String note;
     private String sourceCode;
     private String language;
+    private List<InputDTO> lstInput;
+
+    public List<InputDTO> getLstInput() {
+        return lstInput;
+    }
+
+    public void setLstInput(List<InputDTO> lstInput) {
+        this.lstInput = lstInput;
+    }
 
     public Integer getShowInput() {
         return showInput;

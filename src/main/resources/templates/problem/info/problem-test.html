@@ -91,11 +91,11 @@
                                                style="text-align: center; color: black; font-size: 14px">
                                             <thead>
                                             <tr>
-                                                <th style="text-align: center;max-width: 10%">#</th>
-                                                <th style="text-align: center;max-width: 100px">Input</th>
-                                                <th style="text-align: center;max-width: 100px">Output</th>
-                                                <th style="text-align: center;max-width: 50px">Hiển thị trong đề</th>
-                                                <th style="text-align: center;max-width: 20%"></th>
+                                                <th style="text-align: center">#</th>
+                                                <th style="text-align: center">Input</th>
+                                                <th style="text-align: center">Output</th>
+                                                <th style="text-align: center">Hiển thị trong đề</th>
+                                                <th style="text-align: center;width: 180px"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -103,8 +103,8 @@
                                                     <tr th:each="input,iter : ${problemTestVO.lstInput}">
                                                         <td th:text="${iter.index} + 1"
                                                             style="padding: 2px" class="value"></td>
-                                                        <td style="white-space: pre;text-align: left;max-width: 30%" th:text="${input.input}"></td>
-                                                        <td style="white-space: pre;text-align: left;max-width: 30%" th:text="${input.output}"></td>
+                                                        <td style="white-space: pre-line;text-align: left;max-width: 30%" th:text="${input.input}"></td>
+                                                        <td style="white-space: pre-line;text-align: left;max-width: 30%" th:text="${input.output}"></td>
                                                         <td style="width: 70px">
                                                             <th:block th:if="${input.showInput == 1}">
                                                                 <span class="label label-success">Có</span>
