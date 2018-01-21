@@ -64,6 +64,21 @@ public class ProblemService extends BaseService<ProblemEntity> {
     public void createProblem(ProblemDTO problemDTO){
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setCode(problemDTO.getCode());
+        for(int i = 0;i < problemDTO.getCode().length();i++){
+            char x = problemDTO.getCode().charAt(i);
+            if (x >= 'a' && x <= 'z'){
+                continue;
+            }
+            if (x >= 'A' && x <= 'Z'){
+                continue;
+            }
+            if (x >= '0' && x <= '9'){
+                continue;
+            }
+            if (x != '_'){
+                rollBack(Constants.MSG_TEXT_NOT_VALID);
+            }
+        }
         List<ProblemEntity> getRecord = problemMapper.selectWithExample(problemEntity);
         if (getRecord.size() > 0){
             rollBack(Constants.MSG_DUPLICATE_PROBLEM_ERR);

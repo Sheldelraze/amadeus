@@ -18,6 +18,7 @@ public @interface Format {
 
     enum FormatType {
     	NUMBER,
+		TIME,
 		DATE,
 		EMAIL,
 		PHONENUMBER

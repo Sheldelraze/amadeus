@@ -9,6 +9,7 @@ import com.minh.nguyen.validator.common.BindingResult;
 import org.aspectj.apache.bcel.classfile.Constant;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,8 @@ public class BaseController {
         exclusiveUpdateField.add("createUser");
         exclusiveUpdateField.add("createTime");
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.getConfiguration().setPropertyCondition(new Condition<Object, Object>() {
             public boolean applies(MappingContext<Object, Object> pContext) {
                 if (null == pContext.getSource() || null == pContext.getDestinationType()) {

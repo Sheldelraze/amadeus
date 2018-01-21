@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ FIELD })
 @Retention(RUNTIME)
 public @interface Number {
-    int minValue() default 1;
-    int maxValue() default 1;
+    int minValue() default -1;
+    int maxValue() default -1;
     String displayFieldName() default "N/A";
 }

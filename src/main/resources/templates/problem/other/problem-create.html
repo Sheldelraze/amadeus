@@ -70,7 +70,7 @@
                             <form th:method="post" th:action="doCreate" th:object="${problemCreateForm}">
                                 <div class="row">
                                     <div class="col-3"></div>
-                                    <div class="col-4">
+                                   N <div class="col-4">
                                         <label th:if="${#fields.hasErrors('screenMessage')}"
                                                th:class="'error'" th:errors="*{screenMessage}">Screen
                                             Error</label>
@@ -99,8 +99,8 @@
                                     <div class="col-4">
                                         <label class="text-muted db">
 
-                                            Mã bài tập bao gồm các chữ cái in thường và hoa, các
-                                            chữ số và ký tự '_', viết liền không dấu. Độ dài không quá 20
+                                            Mã bài tập bao gồm các chữ cái in thường hoặc in hoa, các
+                                            chữ số và ký tự '_', viết liền không dấu. Độ dài không quá 10
                                         </label>
                                     </div>
                                 </div>

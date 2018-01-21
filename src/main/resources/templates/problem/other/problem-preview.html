@@ -106,7 +106,7 @@
                         </button>
                         <div style="text-align: center">
                             <label style="font-weight: 900;font-size: x-large"
-                                   th:text="${problemPreviewVO}?${problemPreviewVO.name}"></label><br/>
+                                   th:text="|${problemPreviewVO.name}|"></label><br/>
                             <label th:text="|Thời gian chạy mỗi test: ${problemPreviewVO.timeLimit} ms|"></label><br/>
                             <label th:text="|Bộ nhớ tối đa mỗi test: ${problemPreviewVO.memoryLimit} MB|"></label><br/>
                         </div>

@@ -1,10 +1,17 @@
 package com.minh.nguyen.controller;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
+import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.form.contest.*;
+import com.minh.nguyen.service.ContestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -13,39 +20,64 @@ import org.springframework.web.servlet.ModelAndView;
  * Purpose:
  */
 @Controller("ContestController")
+@RequestMapping("/contest")
 public class ContestController extends BaseController {
-    public static String INFORMATION_VIEW = "contest/info/contest-information";
-    public static String PROBLEM_VIEW = "contest/info/contest-problem";
-    public static String SUBMIT_VIEW = "contest/info/contest-submit";
-    public static String SUBMISSION_MY_VIEW = "contest/info/contest-submission-my";
-    public static String SUBMISSION_ALL_VIEW = "contest/info/contest-submission-all";
-    public static String LEADERBOARD_VIEW = "contest/info/contest-leaderboard";
-    public static String SETTING_VIEW = "contest/info/contest-setting";
-    public static String ROLE_VIEW = "contest/info/contest-role";
+    private static final String INFORMATION_VIEW = "contest/info/contest-information";
+    private static final String CREATE_VIEW = "contest/other/contest-create";
+    private static final String PROBLEM_VIEW = "contest/info/contest-problem";
+    private static final String SUBMIT_VIEW = "contest/info/contest-submit";
+    private static final String SUBMISSION_MY_VIEW = "contest/info/contest-submission-my";
+    private static final String SUBMISSION_ALL_VIEW = "contest/info/contest-submission-all";
+    private static final String LEADERBOARD_VIEW = "contest/info/contest-leaderboard";
+    private static final String SETTING_VIEW = "contest/info/contest-setting";
+    private static final String ROLE_VIEW = "contest/info/contest-role";
 
-    public static String LAYOUT_FORM = "contestLayoutForm";
-    public static String INFORMATION_FORM = "contestInformationForm";
-    public static String PROBLEM_FORM = "contestProblemForm";
-    public static String SUBMIT_FORM = "contestSubmitForm";
-    public static String SUBMISSION_MY_FORM = "contestSubmissionMyForm";
-    public static String SUBMISSION_ALL_FORM = "contestSubmissionAllForm";
-    public static String LEADERBOARD_FORM = "contestLeaderboardForm";
-    public static String SETTING_FORM = "contestSettingForm";
-    public static String ROLE_FORM = "contestRoleForm";
+    private static final String LAYOUT_FORM = "contestLayoutForm";
+    private static final String INFORMATION_FORM = "contestInformationForm";
+    private static final String PROBLEM_FORM = "contestProblemForm";
+    private static final String SUBMIT_FORM = "contestSubmitForm";
+    private static final String CREATE_FORM = "contestCreateForm";
+    private static final String SUBMISSION_MY_FORM = "contestSubmissionMyForm";
+    private static final String SUBMISSION_ALL_FORM = "contestSubmissionAllForm";
+    private static final String LEADERBOARD_FORM = "contestLeaderboardForm";
+    private static final String SETTING_FORM = "contestSettingForm";
+    private static final String ROLE_FORM = "contestRoleForm";
 
-
+    @Autowired
+    private ContestService contestService;
     public ModelAndView getGeneralInfo(int pmId,ContestLayoutForm contestLayoutForm){
         ModelAndView modelAndView = new ModelAndView();
 
         return modelAndView;
     }
-    @GetMapping("/")
-    public ModelAndView getFirst() {
+    @GetMapping("/create")
+    public ModelAndView createContest(ContestCreateForm contestCreateForm){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("problem/other/problem-create-test");
+        modelAndView.setViewName(CREATE_VIEW);
+        if (null == contestCreateForm){
+            contestCreateForm = new ContestCreateForm();
+        }
+        modelAndView.addObject(CREATE_FORM, contestCreateForm);
         return modelAndView;
     }
-
+    @PostMapping("/doCreate")
+    public ModelAndView doCreate(ContestCreateForm contestCreateForm, BindingResult bindingResult){
+        ModelAndView modelAndView = new ModelAndView();
+//        validate(contestCreateForm,bindingResult);
+//        if (bindingResult.hasErrors()){
+//            return createContest(contestCreateForm);
+//        }
+        try{
+            ContestDTO contestDTO = new ContestDTO();
+            modelMapper.map(contestCreateForm,contestDTO);
+            int ctId = contestService.createContest(contestDTO);
+            return getInformation(ctId);
+        }catch(Exception e){
+            e.printStackTrace();
+            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
+            return createContest(contestCreateForm);
+        }
+    }
     @GetMapping("/{ctId}/information")
     public ModelAndView getInformation(@PathVariable("ctId") int ctId){
         ContestLayoutForm contestInformationForm = new ContestInformationForm();

@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class ProblemPreviewVO {
     private String name;
+    private String code;
     private Integer timeLimit;
     private Integer memoryLimit;
     private String statement;
@@ -18,6 +19,14 @@ public class ProblemPreviewVO {
     private String output;
     private String note;
     private List<InputDTO> lstInput;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getName() {
         return name;
