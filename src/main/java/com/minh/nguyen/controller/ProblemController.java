@@ -2,26 +2,22 @@ package com.minh.nguyen.controller;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
-import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.form.problem.*;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.vo.problem.*;
 import com.sun.javafx.beans.annotations.NonNull;
-import org.modelmapper.Condition;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.PostConstruct;
-import javax.jws.WebParam;
 import javax.persistence.RollbackException;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -31,6 +27,7 @@ import javax.persistence.RollbackException;
 @Controller
 @RequestMapping("/problem")
 public class ProblemController extends BaseController {
+    private static final String PROBLEM_LIST = "problemList";
     private static final String LAYOUT_FORM = "problemLayoutForm";
     private static final String SOLUTION_FORM = "problemSolutionForm";
     private static final String STATEMENT_FORM = "problemStatementForm";
@@ -49,6 +46,7 @@ public class ProblemController extends BaseController {
     private static final String STATEMENT_VIEW = "problem/info/problem-statement";
     private static final String TEST_VIEW = "problem/info/problem-test";
     private static final String ROLE_VIEW = "problem/info/problem-role";
+    private static final String VIEW = "problem/all/problem-view";
     private static final String UPDATE_TEST_VIEW = "problem/other/problem-update-test";
     private static final String CREATE_TEST_VIEW = "problem/other/problem-create-test";
     private static final String LIST_MY_VIEW = "problem/list/problem-list-my";
@@ -65,14 +63,21 @@ public class ProblemController extends BaseController {
 
 
     @GetMapping("/my")
-    public ModelAndView getFirst() {
+    public ModelAndView getMy() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(LIST_MY_VIEW);
+        List<ProblemDTO> lstProblem = problemService.getAllProblem();
+        modelAndView.addObject(PROBLEM_LIST,lstProblem);
+        return modelAndView;
+    }
+    @GetMapping("/all")
+    public ModelAndView getAll() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(LIST_ALL_VIEW);
 
 //        modelAndView.setViewName("share/index");
         return modelAndView;
     }
-
     @GetMapping("/create")
     public ModelAndView getCreate() {
         ModelAndView modelAndView = new ModelAndView();
@@ -136,6 +141,14 @@ public class ProblemController extends BaseController {
         modelAndView.addObject(LAYOUT_VO, problemLayoutVO);
         modelAndView.addObject(LAYOUT_FORM, problemForm);
         modelAndView.addObject(TAB, viewTab);
+        return modelAndView;
+    }
+    @GetMapping("/{pmId}/view")
+    public ModelAndView getView(@PathVariable("pmId") int pmId){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(VIEW);
+        modelAndView.addObject(TAB,1);
+        modelAndView.addObject("pmId",10);
         return modelAndView;
     }
     @GetMapping("/{pmId}/preview")

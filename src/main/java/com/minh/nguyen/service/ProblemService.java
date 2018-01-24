@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.ProblemDTO;
+import com.minh.nguyen.dto.TagDTO;
 import com.minh.nguyen.entity.InputEntity;
 import com.minh.nguyen.entity.PmItEntity;
 import com.minh.nguyen.entity.ProblemEntity;
@@ -119,6 +120,21 @@ public class ProblemService extends BaseService<ProblemEntity> {
             e.printStackTrace();
             throw e;
         }
+    }
+    public List<ProblemDTO> getAllProblem(){
+        List<ProblemDTO> lst = problemMapper.getAllProblem();
+        for(ProblemDTO problemDTO : lst){
+            StringBuilder stringBuilder = new StringBuilder();
+            List<TagDTO> lstTag = problemDTO.getLstTag();
+            for(int i = 0;i < lstTag.size();i++){
+                stringBuilder.append(lstTag.get(i).getName());
+                if (i < lstTag.size() - 1){
+                    stringBuilder.append(", ");
+                }
+            }
+            problemDTO.setTag(stringBuilder.toString());
+        }
+        return lst;
     }
     public void getActiveTest(ProblemDTO problemDTO){
         List<InputDTO> lstInput = inputMapper.getActiveTest(problemDTO.getId());

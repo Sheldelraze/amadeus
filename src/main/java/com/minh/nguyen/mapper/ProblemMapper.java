@@ -1,11 +1,14 @@
 package com.minh.nguyen.mapper;
 
+import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.provider.BaseProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 /**
@@ -19,4 +22,6 @@ public interface ProblemMapper extends BaseMapper<ProblemEntity> {
     @InsertProvider(type = BaseProvider.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Integer insertEntity(ProblemEntity record);
+
+    List<ProblemDTO> getAllProblem();
 }

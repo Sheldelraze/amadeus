@@ -1,10 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <div th:replace="layout/layout::css"></div>
 </head>
-<body>
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::preloader"></div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::topbar"></div>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::left-sidebar"></div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles">
+                <div class="col-md-5 col-8 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
+                        <li class="breadcrumb-item active">Danh sách bài tập</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-outline-info">
+                            <div class="card-header">
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách bài tập</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-bordered " style="text-align: center; color: black; font-size: 14px">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: center" width="20px">ID</th>
+                                        <th style="text-align: center">Mã bài tập</th>
+                                        <th style="text-align: center">Tên bài tập</th>
+                                        <th style="text-align: center">Môn học</th>
+                                        <th style="text-align: center" width="150px">Người tạo</th>
+                                        <th style="text-align: center">Thể loại</th>
+                                        <th style="text-align: center" width="140px" >Trạng thái</th>
+                                        <th width="100px"></th>
+                                    </tr>
+                                    </thead>
+                                    <tr>
+                                        <td>43152</td>
+                                        <td><a href="ProblemInfo.aspx">SUM</a></td>
+                                        <td>Tính tổng</td>
+                                        <td>Lập trình C++</td>
+                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
+                                        <td>Cơ bản, đồ thị</td>
+                                        <td><span class="label label-success">Đã xuất bản</span></td>
+                                        <td><button type="button" class="btn btn-outline-info">Xem thông tin</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>43152</td>
+                                        <td><a href="ProblemInfo.aspx">MINUS</a></td>
+                                        <td>Tính hiệu 2 số</td>
+                                        <td>Lập trình Java</td>
+                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
+                                        <td>Hình học, quy hoạch động</td>
+                                        <td><span class="label label-danger">Chưa xuất bản</span></td>
+                                        <td><button type="button" class="btn btn-outline-info">Xem thông tin</button></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <footer class="footer" th:fragment="footer">
+            Copyright © Nguyen Tuan Minh
+        </footer>
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::js"></div>
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
+></script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
 </body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

@@ -26,6 +26,24 @@ public class ProblemDTO extends BaseDTO {
     private String sourceCode;
     private String language;
     private List<InputDTO> lstInput;
+    private List<TagDTO> lstTag;
+    private String tag;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public List<TagDTO> getLstTag() {
+        return lstTag;
+    }
+
+    public void setLstTag(List<TagDTO> lstTag) {
+        this.lstTag = lstTag;
+    }
 
     public List<InputDTO> getLstInput() {
         return lstInput;

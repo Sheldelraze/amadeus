@@ -47,8 +47,8 @@
                 <div class="col-md-5 col-8 align-self-center">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập của tôi</a></li>
-                        <li class="breadcrumb-item active">Thêm bài tập</li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Danhh sách bài tập</a></li>
+                        <li class="breadcrumb-item active">Thông tin bài tập</li>
                     </ol>
                 </div>
             </div>
@@ -60,54 +60,19 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-outline-info">
-                            <div class="card-header">
-                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Thêm bài tập
-                                    mới</h4>
+
+                        <div th:replace="problem/all/navtab::navtab (tab = ${tab},pmId = ${pmId})"></div>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <!--second tab-->
+                            <div class="tab-pane active" id="getrole" role="tabpanel">
+
                             </div>
                         </div>
-                        <div class="card-body">
-                            <form th:method="post" th:action="doCreate" th:object="${problemCreateForm}">
-                                <div class="row">
-                                    <div class="col-3"></div>
-                                    <div class="col-4">
-                                        <label th:if="${#fields.hasErrors('screenMessage')}"
-                                               th:class="'error'" th:errors="*{screenMessage}">Screen
-                                            Error</label>
-                                    </div>
-                                </div>
-                                <div class="form-group m-t-10 row">
-                                    <div class="col-3"><h3 style="float:right">Mã bài tập</h3></div>
-                                    <div class="col-4">
-                                        <input class="form-control" type="text" style="color: black"
-                                               th:field="*{code}"/>
-                                    </div>
-                                    <div class="col-3">
-                                        <button type="submit" class="btn btn-outline-success">Tạo bài tập</button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3"></div>
-                                    <div class="col-4">
-                                        <label
-                                                th:if="${#fields.hasErrors('code')}" th:class="'error'"
-                                                th:errors="*{code}">Name Error</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3"></div>
-                                    <div class="col-4">
-                                        <label class="text-muted db">
 
-                                            Mã bài tập bao gồm các chữ cái in thường hoặc in hoa, các
-                                            chữ số và ký tự '_', viết liền không dấu. Độ dài không quá 10
-                                        </label>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 </div>
+
             </div>
             <!-- ============================================================== -->
             <!-- End PAge Content -->
@@ -137,7 +102,14 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
-
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
+></script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

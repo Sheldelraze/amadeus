@@ -75,15 +75,31 @@
                                     <thead>
                                     <tr>
                                         <th style="text-align: center" width="20px">ID</th>
-                                        <th style="text-align: center">Mã bài tập</th>
-                                        <th style="text-align: center">Tên bài tập</th>
-                                        <th style="text-align: center">Môn học</th>
-                                        <th style="text-align: center" width="150px">Người tạo</th>
-                                        <th style="text-align: center">Thể loại</th>
+                                        <th style="text-align: center" width="150px">Mã bài tập</th>
+                                        <th style="text-align: center" width="200px">Tên bài tập</th>
+                                        <th style="text-align: center" width="200px">Độ khó</th>
+                                        <th style="text-align: center" width="250px">Môn học</th>
+                                        <th style="text-align: center" width="200px">Người tạo</th>
+                                        <th style="text-align: center" width="200px">Thể loại</th>
                                         <th style="text-align: center" width="140px" >Trạng thái</th>
-                                        <th width="100px"></th>
                                     </tr>
                                     </thead>
+                                    <tbody th:remove="all-but-first">
+                                    <tr th:if="${problemList != null}" th:each="problem,iter : ${problemList}">
+                                        <td th:text="${problem.id}"></td>
+                                        <td style="font-weight: 900;font-size: large"><a th:href="|/problem/${problem.id}/view|" th:text="${problem.code}"></a></td>
+                                        <td th:text="${problem.name}"></td>
+                                        <td>
+                                            <th:block th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
+                                                <img th:src="@{/assets/images/star.png}"/>
+                                            </th:block>
+                                        </td>
+                                        <td>Lập trình C++</td>
+                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
+                                        <td th:text="${problem.tag}">Cơ bản, đồ thị</td>
+                                        <td th:if="${problem.isPublished==1}"><span class="label label-success">Đã xuất bản</span></td>
+                                        <td th:unless="${problem.isPublished==1}"><span class="label label-danger">Chưa xuất bản</span></td>
+                                    </tr>
                                     <tr>
                                         <td>43152</td>
                                         <td><a href="ProblemInfo.aspx">SUM</a></td>
@@ -92,7 +108,6 @@
                                         <td><a href="#">Nguyễn Tuấn Minh</a></td>
                                         <td>Cơ bản, đồ thị</td>
                                         <td><span class="label label-success">Đã xuất bản</span></td>
-                                        <td><button type="button" class="btn btn-outline-info">Xem thông tin</button></td>
                                     </tr>
                                     <tr>
                                         <td>43152</td>
@@ -102,8 +117,8 @@
                                         <td><a href="#">Nguyễn Tuấn Minh</a></td>
                                         <td>Hình học, quy hoạch động</td>
                                         <td><span class="label label-danger">Chưa xuất bản</span></td>
-                                        <td><button type="button" class="btn btn-outline-info">Xem thông tin</button></td>
                                     </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>

@@ -1,17 +1,23 @@
 package com.minh.nguyen.amadeus;
 
+import com.minh.nguyen.dto.ProblemDTO;
+import com.minh.nguyen.mapper.ProblemMapper;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AmadeusApplicationTests {
-
+    @Autowired
+    ProblemMapper problemMapper;
     private static ModelMapper modelMapper = new ModelMapper();
 //	static Logger logger = LoggerFactory.getLogger(AmadeusApplicationTests.class);
 	public static class A{
@@ -35,6 +41,11 @@ public class AmadeusApplicationTests {
         public void setA(int a) {
             this.a = a;
         }
+    }
+    @Test
+    public void test(){
+        List<ProblemDTO> lst = problemMapper.getAllProblem();
+        lst = null;
     }
     public static class TestRunnable implements Runnable{
 

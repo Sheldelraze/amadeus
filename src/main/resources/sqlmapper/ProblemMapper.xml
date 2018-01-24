@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minh.nguyen.mapper.ProblemMapper">
+    <select id="getAllProblem" resultMap="problem">
+      select
+          problem.difficulty as dif,
+          problem.isPublished as pub,
+          problem.id as pmId,
+          problem.code as pmCe,
+          problem.name as pmNe,
+          tag.name as tgNe,
+          tag.id as tgId
+          from
+              problem
+          left join pm_tg
+              on pm_tg.pmId = problem.id
+              and pm_tg.deleteFlg='0'
+          left join tag
+              on tag.id = pm_tg.tgId
+              and tag.deleteFlg='0'
+          where problem.deleteFlg='0'
+    </select>
+    <resultMap id="problem" type="ProblemDTO">
+        <id column="pmId" property="id"/>
+        <result column="pmCe" property="code"/>
+        <result column="pmNe" property="name"/>
+        <result column="dif" property="difficulty"/>
+        <result column="pub" property="isPublished"/>
+        <collection property="lstTag" ofType="TagDTO">
+            <id property="id" column="tgId"/>
+            <result property="name" column="tgNe"/>
+        </collection>
+    </resultMap>
+</mapper>
