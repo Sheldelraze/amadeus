@@ -20,20 +20,31 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
     @Column(name = "leId")
     private Integer leId;
 
+    @Column(name = "pmId")
+    private Integer pmId;
+
     @Column(name = "time")
     private Date time;
 
     @Column(name = "sourceCode")
     private String sourceCode;
 
-    @Column(name = "isJudged")
-    private Integer isJudged;
+    @Column(name = "judgeStatus")
+    private Integer judgeStatus;
 
     @Column(name = "verdict")
     private String verdict;
 
     @Column(name = "isPublic")
     private Integer isPublic;
+
+    public Integer getPmId() {
+        return pmId;
+    }
+
+    public void setPmId(Integer pmId) {
+        this.pmId = pmId;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -71,12 +82,12 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
         this.sourceCode = sourceCode;
     }
 
-    public Integer getIsJudged() {
-        return isJudged;
+    public Integer getJudgeStatus() {
+        return judgeStatus;
     }
 
-    public void setIsJudged(Integer isJudged) {
-        this.isJudged = isJudged;
+    public void setJudgeStatus(Integer judgeStatus) {
+        this.judgeStatus = judgeStatus;
     }
 
     public String getVerdict() {

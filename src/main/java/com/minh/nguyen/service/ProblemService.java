@@ -6,11 +6,13 @@ import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
 import com.minh.nguyen.entity.InputEntity;
+import com.minh.nguyen.entity.LanguageEntity;
 import com.minh.nguyen.entity.PmItEntity;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.form.problem.ProblemUpdateTestForm;
 import com.minh.nguyen.mapper.InputMapper;
+import com.minh.nguyen.mapper.LanguageMapper;
 import com.minh.nguyen.mapper.PmItMapper;
 import com.minh.nguyen.mapper.ProblemMapper;
 import com.minh.nguyen.util.CompileUtil;
@@ -32,7 +34,7 @@ import java.util.List;
  * @since 01/01/2018
  * Purpose:
  */
-@Service
+@Service("ProblemService")
 public class ProblemService extends BaseService<ProblemEntity> {
     @Autowired
     private FileUtil fileUtil;
@@ -50,15 +52,25 @@ public class ProblemService extends BaseService<ProblemEntity> {
     private PmItMapper pmItMapper;
 
     @Autowired
+    private LanguageMapper languageMapper;
+    @Autowired
     private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
     public void tryCompile(ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException {
-        File file = fileUtil.createFile(Constants.TEST_COMPILE_LOCATION, Constants.TEST_COMPILE_FILENAME, problemDTO.getLanguage());
-        fileUtil.writeToFile(problemDTO.getSourceCode(), file);
+        LanguageEntity languageEntity = new LanguageEntity();
+        languageEntity.setId(problemDTO.getLeId());
+        languageEntity = languageMapper.selectByPK(languageEntity);
         try {
-            compileUtil.doCompile(file,problemDTO.getLanguage());
+            compileUtil.doCompile(languageEntity,problemDTO);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
             throw e;
+        }
+    }
+    public void tryJudge(ProblemDTO problemDTO){
+        try{
+            tryCompile(problemDTO);
+        }catch(Exception e){
+
         }
     }
     @Transactional
@@ -136,8 +148,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
         }
         return lst;
     }
-    public void getActiveTest(ProblemDTO problemDTO){
-        List<InputDTO> lstInput = inputMapper.getActiveTest(problemDTO.getId());
+    public void getShowInStatementTest(ProblemDTO problemDTO){
+        List<InputDTO> lstInput = inputMapper.getShowInStatementTest(problemDTO.getId());
         problemDTO.setLstInput(lstInput);
     }
     public void getAllTest(ProblemTestVO problemTestVO){

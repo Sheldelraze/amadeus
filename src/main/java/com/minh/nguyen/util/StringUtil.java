@@ -14,6 +14,37 @@ public class StringUtil {
 
     private static final int SPACE_HEX_IN_ASCII = 0x20;
 
+    /**
+     * Loại bỏ đường dẫn khi có compile Error, ví dụ:
+     * E:\main\example\test.cpp: In function 'int main()':
+     * sẽ trở thành
+     * test.cpp: In function 'int main()':
+     * @param s
+     * @param extension
+     * @return
+     */
+    public String trimLocation(String s, String extension) {
+        String[] lines = s.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            int pos = lines[i].indexOf("." + extension);
+            for (int j = pos - 1; j >= 0; j--) {
+                if (lines[i].charAt(j) == '\\'
+                        || lines[i].charAt(j) == '/') {
+                    lines[i] = lines[i].substring(j + 1);
+                    break;
+                }
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < lines.length; i++) {
+            stringBuilder.append(lines[i]);
+            if (i != lines.length - 1) {
+                stringBuilder.append("\n");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
     public String convertNull(Object obj) {
         if (obj == null) {
             return "";
@@ -61,6 +92,7 @@ public class StringUtil {
         }
         return c;
     }
+
     public static String camelhumpToUnderline(String str) {
         final int size;
         final char[] chars;

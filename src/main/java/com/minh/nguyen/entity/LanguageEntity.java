@@ -19,6 +19,17 @@ public class LanguageEntity extends BaseEntity implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "extension")
+    private String extension;
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

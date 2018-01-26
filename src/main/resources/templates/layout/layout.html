@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
-    <div th:fragment="meta">
+    <th:block th:fragment="meta">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Tell the browser to be responsive to screen width -->
@@ -12,10 +12,10 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png" th:href="@{/assets/images/favicon.png}" >
-    </div>
+    </th:block>
     <!-- Favicon icon -->
     <title>Amadeus system</title>
-    <div th:fragment="css">
+    <th:block th:fragment="css">
         <!-- Bootstrap Core CSS -->
         <link href="../../static/assets/plugins/bootstrap/css/bootstrap.min.css" th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}"  rel="stylesheet">
         <!--This page css - Morris CSS -->
@@ -38,7 +38,7 @@
                 color: #1ed921;
             }
         </style>
-    </div>
+    </th:block>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
 <!-- ============================================================== -->

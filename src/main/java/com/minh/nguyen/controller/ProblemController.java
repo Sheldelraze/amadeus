@@ -47,6 +47,7 @@ public class ProblemController extends BaseController {
     private static final String TEST_VIEW = "problem/info/problem-test";
     private static final String ROLE_VIEW = "problem/info/problem-role";
     private static final String VIEW = "problem/all/problem-view";
+    private static final String SUBMIT_VIEW = "problem/all/problem-submit";
     private static final String UPDATE_TEST_VIEW = "problem/other/problem-update-test";
     private static final String CREATE_TEST_VIEW = "problem/other/problem-create-test";
     private static final String LIST_MY_VIEW = "problem/list/problem-list-my";
@@ -147,8 +148,26 @@ public class ProblemController extends BaseController {
     public ModelAndView getView(@PathVariable("pmId") int pmId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(VIEW);
+        ProblemDTO problemDTO = new ProblemDTO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        problemService.getShowInStatementTest(problemDTO);
+        ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
+        modelMapper.map(problemDTO,problemPreviewVO);
+        problemPreviewVO.setLstInput(problemDTO.getLstInput());
+        modelAndView.addObject(PREVIEW_VO,problemPreviewVO);
         modelAndView.addObject(TAB,1);
-        modelAndView.addObject("pmId",10);
+        modelAndView.addObject("pmId",pmId);
+        return modelAndView;
+    }
+    @GetMapping("/{pmId}/submit")
+    public ModelAndView getSubmit(@PathVariable("pmId") int pmId){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(SUBMIT_VIEW);
+
+        modelAndView.addObject(TAB,2);
+        modelAndView.addObject("problemSubmitForm", new ProblemSubmitForm());
+        modelAndView.addObject("pmId",pmId);
         return modelAndView;
     }
     @GetMapping("/{pmId}/preview")
@@ -158,12 +177,16 @@ public class ProblemController extends BaseController {
         ProblemDTO problemDTO = new ProblemDTO();
         problemDTO.setId(pmId);
         problemService.getProblemInfo(problemDTO);
-        problemService.getActiveTest(problemDTO);
+        problemService.getShowInStatementTest(problemDTO);
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
         modelMapper.map(problemDTO,problemPreviewVO);
         problemPreviewVO.setLstInput(problemDTO.getLstInput());
         modelAndView.addObject(PREVIEW_VO,problemPreviewVO);
         return modelAndView;
+    }
+    @PostMapping("/{pmId}/doSubmit")
+    public ModelAndView doSubmit(@PathVariable("pmId") int pmId, ProblemSubmitForm problemSubmitForm){
+        return null;
     }
     @GetMapping("/{pmId}/statement")
     public ModelAndView getStatement(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,

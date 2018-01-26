@@ -7,12 +7,14 @@
         <typeAlias alias="InputDTO" type="com.minh.nguyen.dto.InputDTO"/>
         <typeAlias alias="ProblemDTO" type="com.minh.nguyen.dto.ProblemDTO"/>
         <typeAlias alias="TagDTO" type="com.minh.nguyen.dto.TagDTO"/>
+        <typeAlias alias="LanguageDTO" type="com.minh.nguyen.dto.LanguageDTO"/>
     </typeAliases>
     <typeHandlers>
     </typeHandlers>
     <mappers>
         <mapper resource="sqlmapper/InputMapper.xml"/>
         <mapper resource="sqlmapper/ProblemMapper.xml"/>
+        <mapper resource="sqlmapper/LanguageMapper.xml"/>
         <!--<package name="sqlmapper"/>-->
     </mappers>
 

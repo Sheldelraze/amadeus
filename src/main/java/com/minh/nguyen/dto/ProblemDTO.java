@@ -24,10 +24,18 @@ public class ProblemDTO extends BaseDTO {
     private Integer showInput;
     private String note;
     private String sourceCode;
-    private String language;
+    private Integer leId;
     private List<InputDTO> lstInput;
     private List<TagDTO> lstTag;
     private String tag;
+
+    public Integer getLeId() {
+        return leId;
+    }
+
+    public void setLeId(Integer leId) {
+        this.leId = leId;
+    }
 
     public String getTag() {
         return tag;
@@ -67,14 +75,6 @@ public class ProblemDTO extends BaseDTO {
 
     public void setSourceCode(String sourceCode) {
         this.sourceCode = sourceCode;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public String getStatement() {

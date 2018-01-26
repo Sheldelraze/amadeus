@@ -2,20 +2,11 @@ package com.minh.nguyen.form.problem;
 
 /**
  * @author Mr.Minh
- * @since 07/01/2018
+ * @since 26/01/2018
  * Purpose:
  */
-public class ProblemSolutionForm extends ProblemLayoutForm {
+public class ProblemSubmitForm {
     private String sourceCode;
-    private String leId;
-
-    public String getLeId() {
-        return leId;
-    }
-
-    public void setLeId(String leId) {
-        this.leId = leId;
-    }
 
     public String getSourceCode() {
         return sourceCode;
