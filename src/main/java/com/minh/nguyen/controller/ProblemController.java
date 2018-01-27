@@ -185,13 +185,8 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @PostMapping("/{pmId}/doSubmit")
-<<<<<<< HEAD
-    public ModelAndView doSubmit(@PathVariable("pmId") int pmId, ProblemSubmitForm problemSubmitForm){
-
-
-=======
-    public ModelAndView doSubmit(@PathVariable("pmId") Integer pmId, ProblemSubmitForm problemSubmitForm){
->>>>>>> b2bea186eff7f2af37059b9a4cd9734b976dcfdc
+    public ModelAndView doSubmit(@PathVariable("pmId") int pmId, ProblemSubmitForm problemSubmitForm) {
+        
         return null;
     }
     @GetMapping("/{pmId}/statement")
