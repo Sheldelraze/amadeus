@@ -114,6 +114,7 @@ public class ProblemController extends BaseController {
         return new ModelAndView("redirect:/problem/" + problemDTO.getId() + "/statement");
     }
 
+    private ModelAndView getGeneralInfo(Integer pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
         ProblemLayoutVO problemLayoutVO = null;
         if (null == problemForm || null == problemForm.getId()) {
@@ -144,6 +145,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @GetMapping("/{pmId}/view")
+    public ModelAndView getView(@PathVariable("pmId") Integer pmId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -159,6 +161,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @GetMapping("/{pmId}/submit")
+    public ModelAndView getSubmit(@PathVariable("pmId") Integer pmId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMIT_VIEW);
 
@@ -168,6 +171,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @GetMapping("/{pmId}/preview")
+    public ModelAndView getPreview(@PathVariable("pmId") Integer pmId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PREVIEW_VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -186,10 +190,12 @@ public class ProblemController extends BaseController {
 
 
 =======
+    public ModelAndView doSubmit(@PathVariable("pmId") Integer pmId, ProblemSubmitForm problemSubmitForm){
 >>>>>>> b2bea186eff7f2af37059b9a4cd9734b976dcfdc
         return null;
     }
     @GetMapping("/{pmId}/statement")
+    public ModelAndView getStatement(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,
                                      boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = null;
         modelAndView = getGeneralInfo(pmId, problemLayoutForm, STATEMENT_TAB, updateGeneralSuccess);
@@ -212,7 +218,7 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/solution")
-    public ModelAndView getSolution(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemSolutionForm problemSolutionForm,
+    public ModelAndView getSolution(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemSolutionForm problemSolutionForm,
                                     boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, SOLUTION_TAB, updateGeneralSuccess);
 
@@ -239,7 +245,7 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/test")
-    public ModelAndView getTest(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm,
+    public ModelAndView getTest(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm,
                                 boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, TEST_TAB, updateGeneralSuccess);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -257,7 +263,7 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/updateTest/{itId}")
-    public ModelAndView initUpdateTest(@PathVariable("pmId") int pmId, @PathVariable("itId") int itId,
+    public ModelAndView initUpdateTest(@PathVariable("pmId") Integer pmId, @PathVariable("itId") int itId,
                                    ProblemUpdateTestForm problemUpdateTestForm,
                                    boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
@@ -275,7 +281,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @PostMapping("/{pmId}/doUpdateTest/{itId}")
-    public ModelAndView doUpdateTest(@PathVariable("pmId") int pmId,@PathVariable("itId") int itId,
+    public ModelAndView doUpdateTest(@PathVariable("pmId") Integer pmId,@PathVariable("itId") int itId,
                                      ProblemUpdateTestForm problemUpdateTestForm,
                                      BindingResult bindingResult){
         validate(problemUpdateTestForm,bindingResult);
@@ -294,12 +300,12 @@ public class ProblemController extends BaseController {
         return initUpdateTest(pmId,itId,problemUpdateTestForm,true);
     }
     @GetMapping("/{pmId}/deleteTest/{itId}")
-    public ModelAndView deleteTest(@PathVariable("pmId") int pmId,@PathVariable("itId") int itId) {
+    public ModelAndView deleteTest(@PathVariable("pmId") Integer pmId,@PathVariable("itId") int itId) {
         problemService.deleteTest(itId);
         return getTest(pmId,null,false,true);
     }
     @GetMapping("/{pmId}/role")
-    public ModelAndView getRole(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemRoleForm problemRoleForm,
+    public ModelAndView getRole(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemRoleForm problemRoleForm,
                                 boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, ROLE_TAB, updateGeneralSuccess);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -320,7 +326,7 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/createTest")
-    public ModelAndView createTest(@PathVariable("pmId") int pmId, ProblemCreateTestForm problemCreateTestForm,
+    public ModelAndView createTest(@PathVariable("pmId") Integer pmId, ProblemCreateTestForm problemCreateTestForm,
                                    boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
         if (null == problemCreateTestForm || null == problemCreateTestForm.getId()) {
@@ -335,7 +341,7 @@ public class ProblemController extends BaseController {
     }
 
     @PostMapping("/{pmId}/addTest")
-    public ModelAndView addTest(@PathVariable("pmId") int pmId, ProblemCreateTestForm problemCreateTestForm,
+    public ModelAndView addTest(@PathVariable("pmId") Integer pmId, ProblemCreateTestForm problemCreateTestForm,
                                 BindingResult bindingResult) {
         validate(problemCreateTestForm, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -360,7 +366,7 @@ public class ProblemController extends BaseController {
     }
 
     @PostMapping("/{pmId}/updateGeneral/{tab}")
-    public ModelAndView updateGeneral(@PathVariable("pmId") int pmId,
+    public ModelAndView updateGeneral(@PathVariable("pmId") Integer pmId,
                                       @PathVariable("tab") int tab,
                                       ProblemLayoutForm problemLayoutForm, BindingResult result) {
         ModelAndView modelAndView = new ModelAndView();
@@ -413,7 +419,7 @@ public class ProblemController extends BaseController {
     }
 
     @PostMapping("/{pmId}/updateStatement")
-    public ModelAndView updateStatement(@PathVariable("pmId") int pmId,
+    public ModelAndView updateStatement(@PathVariable("pmId") Integer pmId,
                                         @NonNull ProblemStatementForm problemStatementForm,
                                         BindingResult result) {
         ModelAndView modelAndView = null;
@@ -441,7 +447,7 @@ public class ProblemController extends BaseController {
     }
 
     @PostMapping("/{pmId}/updateSolution")
-    public ModelAndView updateSolution(@PathVariable("pmId") int pmId,
+    public ModelAndView updateSolution(@PathVariable("pmId") Integer pmId,
                                        @NonNull ProblemSolutionForm problemSolutionForm,
                                        BindingResult bindingResult) {
         ModelAndView modelAndView = null;
@@ -470,7 +476,7 @@ public class ProblemController extends BaseController {
     }
 
     @PostMapping("/{pmId}/updateRole")
-    public ModelAndView updateRole(@PathVariable("pmId") int pmId, @NonNull ProblemRoleForm problemRoleForm) {
+    public ModelAndView updateRole(@PathVariable("pmId") Integer pmId, @NonNull ProblemRoleForm problemRoleForm) {
         ModelAndView modelAndView = null;
 
         return modelAndView;
