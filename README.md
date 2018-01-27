@@ -8,5 +8,6 @@ Framework used:
 + Security: Spring security + AspectJ
 + Testing tool: logback + AOP
 
-IDE: Intellij IDEA 2017.3.1 (Ultimate Edition)
+IDE: Intellij IDEA 2017.3.1 (Ultimate Edition).
+
 If you want to contribute to this repository, feel free to contact me at minh891996@gmail.com
