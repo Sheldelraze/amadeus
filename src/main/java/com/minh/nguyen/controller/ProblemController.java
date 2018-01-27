@@ -3,6 +3,7 @@ package com.minh.nguyen.controller;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.ProblemDTO;
+import com.minh.nguyen.entity.LanguageEntity;
 import com.minh.nguyen.form.problem.*;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.vo.problem.*;
@@ -185,9 +186,11 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @PostMapping("/{pmId}/doSubmit")
-    public ModelAndView doSubmit(@PathVariable("pmId") int pmId, ProblemSubmitForm problemSubmitForm) {
-        
-        return null;
+    public ModelAndView doSubmit(@PathVariable("pmId") Integer pmId, ProblemSubmitForm problemSubmitForm) {
+        problemService.tryJudge(pmId,problemSubmitForm);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/status");
+        return modelAndView;
     }
     @GetMapping("/{pmId}/statement")
     public ModelAndView getStatement(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,

@@ -7,6 +7,15 @@ package com.minh.nguyen.form.problem;
  */
 public class ProblemSubmitForm {
     private String sourceCode;
+    private Integer leId;
+
+    public Integer getLeId() {
+        return leId;
+    }
+
+    public void setLeId(Integer leId) {
+        this.leId = leId;
+    }
 
     public String getSourceCode() {
         return sourceCode;

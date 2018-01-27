@@ -23,8 +23,11 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
     @Column(name = "pmId")
     private Integer pmId;
 
-    @Column(name = "time")
-    private Date time;
+    @Column(name = "timeRun")
+    private Integer timeRun;
+
+    @Column(name = "memoryUsed")
+    private Integer memoryUsed;
 
     @Column(name = "sourceCode")
     private String sourceCode;
@@ -37,6 +40,22 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
 
     @Column(name = "isPublic")
     private Integer isPublic;
+
+    public Integer getTimeRun() {
+        return timeRun;
+    }
+
+    public void setTimeRun(Integer timeRun) {
+        this.timeRun = timeRun;
+    }
+
+    public Integer getMemoryUsed() {
+        return memoryUsed;
+    }
+
+    public void setMemoryUsed(Integer memoryUsed) {
+        this.memoryUsed = memoryUsed;
+    }
 
     public Integer getPmId() {
         return pmId;
@@ -66,13 +85,6 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
         this.leId = leId;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     public String getSourceCode() {
         return sourceCode;

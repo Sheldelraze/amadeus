@@ -8,6 +8,19 @@
     <!-- Favicon icon -->
     <title>Amadeus system</title>
     <div th:replace="layout/layout::css"></div>
+    <style>
+        .judging{
+            color: slategray;
+        }
+        .fail{
+            color: red;
+            font-weight: 500;
+        }
+        .accepted{
+            color: lawngreen;
+            font-weight: 800;
+        }
+    </style>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
 <!-- ============================================================== -->
@@ -46,8 +59,8 @@
             <div class="row page-titles">
                 <div class="col-md-5 col-8 align-self-center">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
-                        <li class="breadcrumb-item active">Danh sách bài tập</li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                        <li class="breadcrumb-item active">Bảng chấm bài</li>
                     </ol>
                 </div>
             </div>
@@ -61,7 +74,7 @@
                     <div class="card">
                         <div class="card-outline-info">
                             <div class="card-header">
-                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách bài tập</h4>
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách 100 bài nộp gần đây nhát</h4>
                             </div>
                         </div>
                         <div class="card-body">
@@ -79,7 +92,25 @@
                                         <th style="text-align: center">Ngôn ngữ</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody th:remove="all-but-first">
+                                    <tr th:each="submissionDTO : ${statusVO.lstSubmission}">
+                                        <td><b><a th:href="|/submission/${submissionDTO.id}|" th:text="${submissionDTO.id}">132</a></b></td>
+                                        <td><b><a href="#">Makise Kurisu</a></b></td>
+                                        <td><b><a href="#" th:text="${submissionDTO.pmNm}">Tính tổng 2 số</a></b></td>
+                                        <td><label th:text="${submissionDTO.memoryUsed}">256KB</label>MB</td>
+                                        <td><label th:text="${submissionDTO.timeRun}"></label>ms </td>
+                                        <td><label th:text="${submissionDTO.submitTime}"></label></td>
+                                        <th:block th:if="${submissionDTO.judgeStatus==0}">
+                                            <td><label th:text="${submissionDTO.verdict}" class="judging"></label></td>
+                                        </th:block>
+                                        <th:block th:if="${submissionDTO.judgeStatus==6}">
+                                            <td><label th:text="${submissionDTO.verdict}" class="accepted"></label></td>
+                                        </th:block>
+                                        <th:block th:if="${submissionDTO.judgeStatus!=6 && submissionDTO.judgeStatus!=0}">
+                                            <td><label th:text="${submissionDTO.verdict}" class="fail"></label></td>
+                                        </th:block>
+                                        <td>C++ </td>
+                                    </tr>
                                     <tr>
                                         <td><b><a href="SubmissionInfo.aspx">132</a></b></td>
                                         <td><b><a href="#">Makise Kurisu</a></b></td>

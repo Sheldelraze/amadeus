@@ -19,6 +19,7 @@ import com.minh.nguyen.util.Runner.Params;
 import com.minh.nguyen.util.Runner.ProcessRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -37,14 +38,7 @@ public class CompileUtil {
     private FileUtil fileUtil;
 
 
-    @Autowired
-    private SubmitDetailMapper submitDetailMapper;
 
-    @Autowired
-    private SnSDlMapper snSDlMapper;
-
-    @Autowired
-    private SubmissionMapper submissionMapper;
 
     @Autowired
     private StringUtil stringUtil;
@@ -70,34 +64,6 @@ public class CompileUtil {
         command = stringBuilder.toString();
         Outcome outcome =  ProcessRunner.run(command,builder.newInstance());
         return outcome;
-    }
-    public void judge(LanguageEntity languageEntity, ProblemDTO problemDTO) throws CompileErrorException {
-        SubmissionEntity submissionEntity = new SubmissionEntity();
-        submissionEntity.setLeId(languageEntity.getId());
-        submissionEntity.setPmId(problemDTO.getId());
-        submissionMapper.insertSubmission(submissionEntity);
-        File file = fileUtil.createFile(Constants.TEST_COMPILE_LOCATION,
-                Constants.TEST_COMPILE_FILENAME,languageEntity.getExtension());
-        fileUtil.writeToFile(problemDTO.getSourceCode(), file);
-        try {
-            doCompile(languageEntity,problemDTO);
-        } catch (CompileErrorException | UncheckedTimeoutException e) {
-            //compile error
-            submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
-            submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
-            SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
-            submitDetailEntity.setResult(e.getMessage());
-            submitDetailMapper.insertSubmitDetail(submitDetailEntity);
-
-            SnSDlEntity snSDlEntity = new SnSDlEntity();
-            snSDlEntity.setsDlId(submitDetailEntity.getId());
-            snSDlEntity.setSnId(submissionEntity.getId());
-            snSDlMapper.insert(snSDlEntity);
-            return;
-        }
-        for(InputDTO inputDTO: problemDTO.getLstInput()){
-
-        }
     }
     public File createFile(ProblemDTO problemDTO,LanguageEntity languageEntity,String location,String filename){
         File file = fileUtil.createFile(location,filename,languageEntity.getExtension());

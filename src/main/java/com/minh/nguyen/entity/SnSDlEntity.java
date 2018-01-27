@@ -3,6 +3,7 @@ package com.minh.nguyen.entity;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * @author Mr.Minh
@@ -10,7 +11,7 @@ import javax.persistence.Table;
  * Purpose:
  */
 @Table(name = "sn_sDl")
-public class SnSDlEntity {
+public class SnSDlEntity extends BaseEntity  implements Serializable {
     static final long serialVersionUID = 6421133943L;
     @Id
     @Column(name = "snId")

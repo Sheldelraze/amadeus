@@ -5,16 +5,11 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
-import com.minh.nguyen.entity.InputEntity;
-import com.minh.nguyen.entity.LanguageEntity;
-import com.minh.nguyen.entity.PmItEntity;
-import com.minh.nguyen.entity.ProblemEntity;
+import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.CompileErrorException;
+import com.minh.nguyen.form.problem.ProblemSubmitForm;
 import com.minh.nguyen.form.problem.ProblemUpdateTestForm;
-import com.minh.nguyen.mapper.InputMapper;
-import com.minh.nguyen.mapper.LanguageMapper;
-import com.minh.nguyen.mapper.PmItMapper;
-import com.minh.nguyen.mapper.ProblemMapper;
+import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CompileUtil;
 import com.minh.nguyen.util.ExceptionUtil;
 import com.minh.nguyen.util.FileUtil;
@@ -36,8 +31,6 @@ import java.util.List;
  */
 @Service("ProblemService")
 public class ProblemService extends BaseService<ProblemEntity> {
-    @Autowired
-    private FileUtil fileUtil;
 
     @Autowired
     private CompileUtil compileUtil;
@@ -53,6 +46,16 @@ public class ProblemService extends BaseService<ProblemEntity> {
 
     @Autowired
     private LanguageMapper languageMapper;
+
+    @Autowired
+    private SubmitDetailMapper submitDetailMapper;
+
+    @Autowired
+    private SnSDlMapper snSDlMapper;
+
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
     @Autowired
     private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
@@ -66,10 +69,52 @@ public class ProblemService extends BaseService<ProblemEntity> {
             throw e;
         }
     }
-    public void tryJudge(ProblemDTO problemDTO){
-        try{
-            tryCompile(problemDTO);
-        }catch(Exception e){
+    public void tryJudge(Integer pmId,ProblemSubmitForm problemSubmitForm){
+        LanguageEntity languageEntity = new LanguageEntity();
+        languageEntity.setId(problemSubmitForm.getLeId());
+        languageEntity = languageMapper.selectByPK(languageEntity);
+        ProblemDTO problemDTO = new ProblemDTO();
+        problemDTO.setId(pmId);
+        getProblemInfo(problemDTO);
+        List<InputDTO> lstInput = inputMapper.getAllTest(pmId);
+        problemDTO.setLstInput(lstInput);
+        problemDTO.setSourceCode(problemSubmitForm.getSourceCode());
+
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setLeId(languageEntity.getId());
+        submissionEntity.setSourceCode(problemSubmitForm.getSourceCode());
+        submissionEntity.setPmId(problemDTO.getId());
+        submissionEntity.setTimeRun(0);
+        submissionEntity.setMemoryUsed(0);
+        submissionEntity.setVerdict(Constants.VERDICT_JUDGING);
+        submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
+        setUpdateInfo(submissionEntity);
+        setCreateInfo(submissionEntity);
+        submissionMapper.insertSubmission(submissionEntity);
+
+        try {
+            compileUtil.doCompile(languageEntity, problemDTO);
+        }catch (CompileErrorException | UncheckedTimeoutException e) {
+            submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
+            submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
+            SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
+            submitDetailEntity.setResult(e.getMessage());
+            setUpdateInfo(submitDetailEntity);
+            setCreateInfo(submitDetailEntity);
+            submitDetailMapper.insertSubmitDetail(submitDetailEntity);
+            SnSDlEntity snSDlEntity = new SnSDlEntity();
+            snSDlEntity.setsDlId(submitDetailEntity.getId());
+            snSDlEntity.setSnId(submissionEntity.getId());
+            setUpdateInfo(snSDlEntity);
+            setCreateInfo(snSDlEntity);
+            snSDlMapper.insert(snSDlEntity);
+
+            submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
+            submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
+            submissionMapper.updateByPK(submissionEntity);
+            return;
+        }
+        for(InputDTO inputDTO : problemDTO.getLstInput()){
 
         }
     }
