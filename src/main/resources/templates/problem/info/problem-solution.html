@@ -110,8 +110,7 @@
                                                 <option value="2">Java</option>
                                             </select>
                                         </div>
-                                        <label
-                                                th:if="${#fields.hasErrors('sourceCode')}" th:class="'error'"
+                                        <label th:if="${#fields.hasErrors('sourceCode')}" th:class="'error'"
                                                 th:errors="*{sourceCode}" style="white-space: pre;">Name Error</label>
                                         <input type="hidden" th:field="*{sourceCode}"/>
                                         <pre id="editor" ><label th:text="${problemSolutionVO}?${problemSolutionVO.sourceCode}"></label></pre>

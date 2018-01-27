@@ -126,7 +126,7 @@ public class ProcessRunner {
         int exitCode = -1;
 
         try {
-            //processBuilder = new ProcessBuilder("E:\\C++\\test\\main.exe");
+
             process = processBuilder.start();
 
             Thread writeInputThread = null;
