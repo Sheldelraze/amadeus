@@ -1,5 +1,6 @@
 package com.minh.nguyen.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -16,7 +17,6 @@ public class PropertiesUtil {
     public static final String MESSAGE_PROP = "messages.properties.xml";
 
     public static final String ITEMS_PROP = "items";
-
     private Properties messageProp;
 
     public PropertiesUtil() {

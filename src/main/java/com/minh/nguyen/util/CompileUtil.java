@@ -61,12 +61,13 @@ public class CompileUtil {
             stringBuilder.append(file.getPath());
             stringBuilder.append(" ");
             stringBuilder.append(Constants.CPP_ARGS);
-            command = stringBuilder.toString();
+
         }else if (Constants.JAVA_EXTENSION.equals(extension)){
             stringBuilder.append(Constants.JAVA_COMPILER);
             stringBuilder.append(" ");
             stringBuilder.append(file.getPath());
         }
+        command = stringBuilder.toString();
         Outcome outcome =  ProcessRunner.run(command,builder.newInstance());
         return outcome;
     }
@@ -108,7 +109,7 @@ public class CompileUtil {
                 Constants.TEST_COMPILE_LOCATION,
                 Constants.TEST_COMPILE_FILENAME);
         TimeLimiter timeLimiter = new SimpleTimeLimiter();
-        ComplieState state = new ComplieState();
+        CompileState state = new CompileState();
         state.setFile(file);
         state.setExtension(languageEntity.getExtension());
         try {
@@ -127,7 +128,7 @@ public class CompileUtil {
             e.printStackTrace();
         }
     }
-    public class ComplieState implements Callable<Void> {
+    public class CompileState implements Callable<Void> {
         File file;
         String extension;
         Outcome outcome = null;

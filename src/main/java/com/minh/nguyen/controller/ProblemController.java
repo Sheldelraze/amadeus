@@ -114,7 +114,6 @@ public class ProblemController extends BaseController {
         return new ModelAndView("redirect:/problem/" + problemDTO.getId() + "/statement");
     }
 
-    private ModelAndView getGeneralInfo(int pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
         ProblemLayoutVO problemLayoutVO = null;
         if (null == problemForm || null == problemForm.getId()) {
@@ -145,7 +144,6 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @GetMapping("/{pmId}/view")
-    public ModelAndView getView(@PathVariable("pmId") int pmId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -161,7 +159,6 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @GetMapping("/{pmId}/submit")
-    public ModelAndView getSubmit(@PathVariable("pmId") int pmId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMIT_VIEW);
 
@@ -171,7 +168,6 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @GetMapping("/{pmId}/preview")
-    public ModelAndView getPreview(@PathVariable("pmId") int pmId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PREVIEW_VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -185,13 +181,15 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
     @PostMapping("/{pmId}/doSubmit")
+<<<<<<< HEAD
     public ModelAndView doSubmit(@PathVariable("pmId") int pmId, ProblemSubmitForm problemSubmitForm){
 
 
+=======
+>>>>>>> b2bea186eff7f2af37059b9a4cd9734b976dcfdc
         return null;
     }
     @GetMapping("/{pmId}/statement")
-    public ModelAndView getStatement(@PathVariable("pmId") int pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,
                                      boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = null;
         modelAndView = getGeneralInfo(pmId, problemLayoutForm, STATEMENT_TAB, updateGeneralSuccess);
