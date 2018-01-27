@@ -1,4 +1,16 @@
 package com.minh.nguyen.mapper;
 
-public interface SubmissionMapper {
+import com.minh.nguyen.entity.SubmissionEntity;
+import com.minh.nguyen.provider.BaseProvider;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.springframework.stereotype.Component;
+
+@Component("SubmissionMapper")
+@Mapper
+public interface SubmissionMapper extends BaseMapper<SubmissionEntity> {
+    @InsertProvider(type = BaseProvider.class, method = "insert")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    Integer insertSubmission(SubmissionEntity record);
 }

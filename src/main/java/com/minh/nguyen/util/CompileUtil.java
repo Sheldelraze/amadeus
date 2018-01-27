@@ -12,6 +12,7 @@ import com.minh.nguyen.entity.SubmissionEntity;
 import com.minh.nguyen.entity.SubmitDetailEntity;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.mapper.SnSDlMapper;
+import com.minh.nguyen.mapper.SubmissionMapper;
 import com.minh.nguyen.mapper.SubmitDetailMapper;
 import com.minh.nguyen.util.Runner.Outcome;
 import com.minh.nguyen.util.Runner.Params;
@@ -35,11 +36,16 @@ public class CompileUtil {
     @Autowired
     private FileUtil fileUtil;
 
+
     @Autowired
     private SubmitDetailMapper submitDetailMapper;
 
     @Autowired
     private SnSDlMapper snSDlMapper;
+
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
     @Autowired
     private StringUtil stringUtil;
     public Outcome tryCompile(File file,String extension) throws CompileErrorException{
@@ -68,16 +74,24 @@ public class CompileUtil {
         SubmissionEntity submissionEntity = new SubmissionEntity();
         submissionEntity.setLeId(languageEntity.getId());
         submissionEntity.setPmId(problemDTO.getId());
+        submissionMapper.insertSubmission(submissionEntity);
         File file = fileUtil.createFile(Constants.TEST_COMPILE_LOCATION,
                 Constants.TEST_COMPILE_FILENAME,languageEntity.getExtension());
         fileUtil.writeToFile(problemDTO.getSourceCode(), file);
         try {
             doCompile(languageEntity,problemDTO);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
+            //compile error
             submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
             submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
             SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
             submitDetailEntity.setResult(e.getMessage());
+            submitDetailMapper.insertSubmitDetail(submitDetailEntity);
+
+            SnSDlEntity snSDlEntity = new SnSDlEntity();
+            snSDlEntity.setsDlId(submitDetailEntity.getId());
+            snSDlEntity.setSnId(submissionEntity.getId());
+            snSDlMapper.insert(snSDlEntity);
             return;
         }
         for(InputDTO inputDTO: problemDTO.getLstInput()){
