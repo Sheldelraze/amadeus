@@ -4,10 +4,15 @@ import com.google.common.util.concurrent.SimpleTimeLimiter;
 import com.google.common.util.concurrent.TimeLimiter;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.minh.nguyen.constants.Constants;
+import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.entity.LanguageEntity;
+import com.minh.nguyen.entity.SnSDlEntity;
 import com.minh.nguyen.entity.SubmissionEntity;
+import com.minh.nguyen.entity.SubmitDetailEntity;
 import com.minh.nguyen.exception.CompileErrorException;
+import com.minh.nguyen.mapper.SnSDlMapper;
+import com.minh.nguyen.mapper.SubmitDetailMapper;
 import com.minh.nguyen.util.Runner.Outcome;
 import com.minh.nguyen.util.Runner.Params;
 import com.minh.nguyen.util.Runner.ProcessRunner;
@@ -30,6 +35,11 @@ public class CompileUtil {
     @Autowired
     private FileUtil fileUtil;
 
+    @Autowired
+    private SubmitDetailMapper submitDetailMapper;
+
+    @Autowired
+    private SnSDlMapper snSDlMapper;
     @Autowired
     private StringUtil stringUtil;
     public Outcome tryCompile(File file,String extension) throws CompileErrorException{
@@ -66,7 +76,12 @@ public class CompileUtil {
         } catch (CompileErrorException | UncheckedTimeoutException e) {
             submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
             submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
+            SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
+            submitDetailEntity.setResult(e.getMessage());
             return;
+        }
+        for(InputDTO inputDTO: problemDTO.getLstInput()){
+
         }
     }
     public File createFile(ProblemDTO problemDTO,LanguageEntity languageEntity,String location,String filename){
@@ -79,7 +94,7 @@ public class CompileUtil {
                 Constants.TEST_COMPILE_LOCATION,
                 Constants.TEST_COMPILE_FILENAME);
         TimeLimiter timeLimiter = new SimpleTimeLimiter();
-        State state = new State();
+        ComplieState state = new ComplieState();
         state.setFile(file);
         state.setExtension(languageEntity.getExtension());
         try {
@@ -98,7 +113,7 @@ public class CompileUtil {
             e.printStackTrace();
         }
     }
-    public class State implements Callable<Void> {
+    public class ComplieState implements Callable<Void> {
         File file;
         String extension;
         Outcome outcome = null;
