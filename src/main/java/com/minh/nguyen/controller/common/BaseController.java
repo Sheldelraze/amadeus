@@ -42,12 +42,6 @@ public class BaseController {
     protected HttpServletRequest request;
 
     @Autowired
-    protected StringUtil strUtil;
-
-    @Autowired
-    protected CheckUtil checkUtil;
-
-    @Autowired
     protected BindingResult bindingResult;
 
     protected ModelMapper modelMapper;
@@ -82,7 +76,7 @@ public class BaseController {
                 if (pContext.getSourceType().equals(String.class)
                         && (Integer.class.equals(pContext.getDestinationType())
                         || int.class.equals(pContext.getDestinationType()))) {
-                    if (checkUtil.isInteger(pContext.getSource().toString())) {
+                    if (CheckUtil.isInteger(pContext.getSource().toString())) {
                         return true;
                     }
                     return false;

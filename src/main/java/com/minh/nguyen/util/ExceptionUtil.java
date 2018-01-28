@@ -1,7 +1,6 @@
 package com.minh.nguyen.util;
 
 import com.sun.javafx.beans.annotations.NonNull;
-import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,10 +10,9 @@ import java.util.Set;
  * @since 04/01/2018
  * Purpose:
  */
-@Service
 public class ExceptionUtil {
 
-    public String getMessage(@NonNull Throwable t) {
+    public static String getMessage(@NonNull Throwable t) {
         String message = t.getMessage();
 
         while (message == null) {
@@ -28,7 +26,7 @@ public class ExceptionUtil {
         return message;
     }
 
-    public String toString(Throwable e) {
+    public static String toString(Throwable e) {
         Set<Throwable> used = new HashSet<>();
         StringBuilder sb = new StringBuilder();
 

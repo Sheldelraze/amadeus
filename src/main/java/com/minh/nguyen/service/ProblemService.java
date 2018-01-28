@@ -126,11 +126,6 @@ public class ProblemService extends BaseService<ProblemEntity> {
     @Autowired
     private SubmissionMapper submissionMapper;
 
-    @Autowired
-    private StringUtil stringUtil;
-
-    @Autowired
-    private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
     public void tryCompile(ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException {
         LanguageEntity languageEntity = new LanguageEntity();
@@ -203,8 +198,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
         setCreateInfo(inputEntity);
         setCreateInfo(pmItEntity);
         setUpdateInfo(pmItEntity);
-        inputEntity.setInput(stringUtil.convertToWellForm(inputEntity.getInput()));
-        inputEntity.setOutput(stringUtil.convertToWellForm(inputEntity.getOutput()));
+        inputEntity.setInput(StringUtil.convertToWellForm(inputEntity.getInput()));
+        inputEntity.setOutput(StringUtil.convertToWellForm(inputEntity.getOutput()));
         modelMapper.map(problemDTO,inputEntity);
         try{
             inputEntity.setId(null);
@@ -248,8 +243,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
         List<InputDTO> lstInput = inputMapper.getAllTest(problemTestVO.getId());
         problemTestVO.setLstInput(lstInput);
         for(InputDTO inputDTO : lstInput){
-            inputDTO.setInput(stringUtil.trimString(inputDTO.getInput()));
-            inputDTO.setOutput(stringUtil.trimString(inputDTO.getOutput()));
+            inputDTO.setInput(StringUtil.trimString(inputDTO.getInput()));
+            inputDTO.setOutput(StringUtil.trimString(inputDTO.getOutput()));
         }
     }
 
@@ -257,7 +252,7 @@ public class ProblemService extends BaseService<ProblemEntity> {
     public void updateProblem(ProblemDTO problemDTO){
         if (null != problemDTO.getSourceCode()
                 && !Constants.BLANK.equals(problemDTO.getSourceCode())){
-            problemDTO.setSourceCode(stringUtil.convertToWellForm(problemDTO.getSourceCode()));
+            problemDTO.setSourceCode(StringUtil.convertToWellForm(problemDTO.getSourceCode()));
         }
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setId(problemDTO.getId());
@@ -314,8 +309,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
     }
     public void updateTest(ProblemUpdateTestForm problemUpdateTestForm){
         InputEntity inputEntity = new InputEntity();
-        problemUpdateTestForm.setInput(stringUtil.convertToWellForm(problemUpdateTestForm.getInput()));
-        problemUpdateTestForm.setOutput(stringUtil.convertToWellForm(problemUpdateTestForm.getOutput()));
+        problemUpdateTestForm.setInput(StringUtil.convertToWellForm(problemUpdateTestForm.getInput()));
+        problemUpdateTestForm.setOutput(StringUtil.convertToWellForm(problemUpdateTestForm.getOutput()));
         modelMapper.map(problemUpdateTestForm,inputEntity);
         try{
             inputMapper.updateByPKExceptFields(inputEntity);

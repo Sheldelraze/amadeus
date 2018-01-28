@@ -27,9 +27,7 @@ public class BaseService<T> {
     protected ModelMapper modelMapper;
 
     protected List<String> exclusiveUpdateField;
-
-    @Autowired
-    private CheckUtil checkUtil;
+    
     @PostConstruct
     private void init() {
         modelMapper = new ModelMapper();
@@ -78,7 +76,7 @@ public class BaseService<T> {
                 if (pContext.getSourceType().equals(String.class)
                         && (pContext.getDestinationType().equals(Integer.class))
                         || int.class.equals(pContext.getDestinationType())) {
-                    if (checkUtil.isInteger(pContext.getSource().toString())) {
+                    if (CheckUtil.isInteger(pContext.getSource().toString())) {
                         return true;
                     }
                     return false;

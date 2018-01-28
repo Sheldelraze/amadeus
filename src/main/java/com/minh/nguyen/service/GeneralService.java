@@ -18,8 +18,6 @@ import java.util.List;
  */
 @Component("GeneralService")
 public class GeneralService extends BaseService {
-    @Autowired
-    private StringUtil stringUtil;
 
     @Autowired
     private SubmissionMapper submissionMapper;
@@ -42,9 +40,9 @@ public class GeneralService extends BaseService {
         List<SubmitDetailDTO> lst = submit.getLstSubmitDetail();
         for(int i = 0;i < lst.size();i++){
             SubmitDetailDTO detail = lst.get(i);
-            detail.setInput(stringUtil.trimString(detail.getInput()));
-            detail.setOutput(stringUtil.trimString(detail.getOutput()));
-            detail.setAnswer(stringUtil.trimString(detail.getAnswer()));
+            detail.setInput(StringUtil.trimString(detail.getInput()));
+            detail.setOutput(StringUtil.trimString(detail.getOutput()));
+            detail.setAnswer(StringUtil.trimString(detail.getAnswer()));
             String res = detail.getResult();
             res = res.replaceAll(" ","&ensp;");
             detail.setResult(res);

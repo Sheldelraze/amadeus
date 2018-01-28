@@ -21,11 +21,6 @@ import java.util.List;
  */
 @Component("commonValidator")
 public class CommonValidator {
-    @Autowired
-    protected StringUtil strUtil;
-
-    @Autowired
-    protected CheckUtil checkUtil;
 
     public void validateWithAnnotation(Field field, String fieldVal,
             List<String> errorItemNameList) throws Exception {
@@ -33,7 +28,7 @@ public class CommonValidator {
 
         // Check require
         if (field.isAnnotationPresent(Required.class)
-                && strUtil.isNull(fieldVal)) {
+                && StringUtil.isNull(fieldVal)) {
             InputCheckException ex = new InputCheckException(
                     Constants.MSG_REQUIRED_INPUT_ERR,
                     new String[] { field.getAnnotation(Required.class)
@@ -46,7 +41,7 @@ public class CommonValidator {
         // Check length
         if (field.isAnnotationPresent(MaxLength.class)) {
             MaxLength anno = field.getAnnotation(MaxLength.class);
-            if (!strUtil.isNull(val) && val.length() > anno.maxlength()) {
+            if (!StringUtil.isNull(val) && val.length() > anno.maxlength()) {
                 InputCheckException ex = new InputCheckException(
                         Constants.MSG_LENGTH_INPUT_ERR,
                         new String[] { anno.displayFieldName() });
@@ -63,7 +58,7 @@ public class CommonValidator {
 
             // Check date format
             if (anno.type().equals(Format.FormatType.DATE)) {
-                boolean isValidDate = checkUtil.isDateFormat(fieldVal,
+                boolean isValidDate = CheckUtil.isDateFormat(fieldVal,
                         anno.pattern());
                 if (!isValidDate) {
                     InputCheckException ex = new InputCheckException(
@@ -75,7 +70,7 @@ public class CommonValidator {
                 }
             }
             if (anno.type().equals(Format.FormatType.TIME)) {
-                boolean isValidTime = checkUtil.isDateFormat(fieldVal,
+                boolean isValidTime = CheckUtil.isDateFormat(fieldVal,
                         anno.pattern());
                 if (!isValidTime) {
                     InputCheckException ex = new InputCheckException(
@@ -87,7 +82,7 @@ public class CommonValidator {
                 }
             }
             else  if (anno.type().equals(Format.FormatType.EMAIL)) {
-                boolean isValidEmail = checkUtil.isValidEmailAddress(fieldVal);
+                boolean isValidEmail = CheckUtil.isValidEmailAddress(fieldVal);
                 if (!isValidEmail) {
                     InputCheckException ex = new InputCheckException(
                             Constants.MSG_EMAIL_FORMAT_INPUT_ERR, new String[] {
@@ -101,7 +96,7 @@ public class CommonValidator {
 
         //Check if fieldVal is integer
         if (field.isAnnotationPresent(Number.class)
-                && !checkUtil.isSignNumber(fieldVal)) {
+                && !CheckUtil.isSignNumber(fieldVal)) {
             InputCheckException ex = new InputCheckException(
                     Constants.MSG_NUMBER_FORMAT_INPUT_ERR,
                     new String[] { field.getAnnotation(Number.class)
@@ -114,6 +109,17 @@ public class CommonValidator {
         //check if integer too small or too big
         if (field.isAnnotationPresent(Number.class)){
             Number anno = field.getAnnotation(Number.class);
+            try{
+                int test = Integer.parseInt(fieldVal);
+            }catch (Exception e){
+                InputCheckException ex = new InputCheckException(
+                        Constants.MSG_NUMBER_TOO_BIG_ERR,
+                        new String[] { field.getAnnotation(Number.class)
+                                .displayFieldName() });
+                ex.setFieldName(field.getName());
+                errorItemNameList.add(field.getName());
+                throw ex;
+            }
             int curValue = Integer.parseInt(fieldVal);
             if (-1 != anno.minValue() && curValue < anno.minValue()){
                 InputCheckException ex = new InputCheckException(

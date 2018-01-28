@@ -34,16 +34,12 @@ public abstract class BaseValidator {
 
     protected static Logger logger = LoggerFactory.getLogger(BaseValidator.class);
 
-    @Autowired
-    protected StringUtil strUtil;
 
     @Autowired
     protected CommonValidator commonValidator;
 
     protected ModelMapper modelMapper = new ModelMapper();
     private List<String> errorItemNameList;
-    @Autowired
-    private CheckUtil checkUtil;
 
     public abstract void validateField(String fieldName, String fieldValue,
             BindingResult errors);
@@ -97,7 +93,7 @@ public abstract class BaseValidator {
 
                 try {
                     field.setAccessible(true);
-                    fieldVal = strUtil.convertNull(field.get(targetObj));
+                    fieldVal = StringUtil.convertNull(field.get(targetObj));
                 } catch (Exception e) {
                     logger.debug("Can not to get data for Field [" + property
                             + "].");
@@ -125,7 +121,7 @@ public abstract class BaseValidator {
             commonValidator.validateWithAnnotation(field, fieldVal,
                     errorItemNameList);
 
-            if (!strUtil.isNull(fieldVal)) {
+            if (!StringUtil.isNull(fieldVal)) {
                 validateField(property, fieldVal, errors);
             }
         } catch (Throwable ex) {

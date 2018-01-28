@@ -9,7 +9,6 @@ import java.math.BigInteger;
  * @since 09/01/2018
  * Purpose:
  */
-@Component("StringUtil")
 public class StringUtil {
 
     private static final int SPACE_HEX_IN_ASCII = 0x20;
@@ -127,7 +126,7 @@ public class StringUtil {
             return 0L;
         }
     }
-    public String trimString(String s){
+    public static String trimString(String s){
         if (null == s){
             return null;
         }

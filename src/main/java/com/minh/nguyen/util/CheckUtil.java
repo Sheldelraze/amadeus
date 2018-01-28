@@ -15,10 +15,9 @@ import java.util.regex.Pattern;
  * @since 06/01/2018
  * Purpose:
  */
-@Component("CheckUtil")
 public class CheckUtil {
 
-    public boolean isDateFormat(String dateString, String formatString) {
+    public static boolean isDateFormat(String dateString, String formatString) {
         DateFormat formatter = new SimpleDateFormat(formatString);
         try {
             Date date = formatter.parse(dateString);
@@ -27,7 +26,7 @@ public class CheckUtil {
             return false;
         }
     }
-    public boolean isValidEmailAddress(String email) {
+    public static boolean isValidEmailAddress(String email) {
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\"
                 + ".[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         Pattern p = Pattern.compile(ePattern);
@@ -35,18 +34,18 @@ public class CheckUtil {
         return m.matches();
     }
 
-    public boolean isSignNumber(String number) {
+    public static boolean isSignNumber(String number) {
         if (isNull(number)) {
             return true;
         }
         return isInteger(number);
     }
 
-    public boolean isInteger(String s) {
+    public static boolean isInteger(String s) {
         return isInteger(s,10);
     }
 
-    public boolean isInteger(String s, int radix) {
+    public static boolean isInteger(String s, int radix) {
         if(s.isEmpty()) return false;
         for(int i = 0; i < s.length(); i++) {
             if(i == 0 && s.charAt(i) == '-') {
@@ -57,11 +56,11 @@ public class CheckUtil {
         }
         return true;
     }
-    public boolean isNull(String str) {
+    public static boolean isNull(String str) {
         return (str == null || str.length() <= 0);
     }
 
-    public boolean isDigit(char c) {
+    public static boolean isDigit(char c) {
         int x = (int) c;
         if ((x >= 48 && x <= 57) || x == 45) {
             return true;

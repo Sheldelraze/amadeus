@@ -1,7 +1,5 @@
 package com.minh.nguyen.util;
 
-import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,7 +10,6 @@ import java.io.PrintWriter;
  * @since 07/01/2018
  * Purpose:
  */
-@Service
 public class FileUtil {
     public static void writeToFile(String text,final File file){
         try {
