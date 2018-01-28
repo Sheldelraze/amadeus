@@ -20,6 +20,7 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,75 +36,6 @@ import java.util.List;
  */
 @Service("ProblemService")
 public class ProblemService extends BaseService<ProblemEntity> {
-
-    public class Judger implements Runnable{
-
-        private ProblemDTO problemDTO;
-        private LanguageDTO languageDTO;
-
-
-        public Judger(ProblemDTO problemDTO, LanguageDTO languageDTO) {
-            this.problemDTO = problemDTO;
-            this.languageDTO = languageDTO;
-        }
-
-        public ProblemDTO getProblemDTO() {
-            return problemDTO;
-        }
-
-        public void setProblemDTO(ProblemDTO problemDTO) {
-            this.problemDTO = problemDTO;
-        }
-
-        public LanguageDTO getLanguageDTO() {
-            return languageDTO;
-        }
-
-        public void setLanguageDTO(LanguageDTO languageDTO) {
-            this.languageDTO = languageDTO;
-        }
-
-        @Override
-        public void run() {
-            SubmissionEntity submissionEntity = new SubmissionEntity();
-            submissionEntity.setLeId(languageDTO.getId());
-            submissionEntity.setSourceCode(problemDTO.getSourceCode());
-            submissionEntity.setPmId(problemDTO.getId());
-            submissionEntity.setTimeRun(0);
-            submissionEntity.setMemoryUsed(0);
-            submissionEntity.setVerdict(Constants.VERDICT_JUDGING);
-            submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
-            setUpdateInfo(submissionEntity);
-            setCreateInfo(submissionEntity);
-            submissionMapper.insertSubmission(submissionEntity);
-
-            try {
-                CompileUtil.doCompile(languageDTO, problemDTO);
-            }catch (CompileErrorException | UncheckedTimeoutException e) {
-                submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
-                submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
-                SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
-                submitDetailEntity.setResult(e.getMessage());
-                setUpdateInfo(submitDetailEntity);
-                setCreateInfo(submitDetailEntity);
-                submitDetailMapper.insertSubmitDetail(submitDetailEntity);
-                SnSDlEntity snSDlEntity = new SnSDlEntity();
-                snSDlEntity.setsDlId(submitDetailEntity.getId());
-                snSDlEntity.setSnId(submissionEntity.getId());
-                setUpdateInfo(snSDlEntity);
-                setCreateInfo(snSDlEntity);
-                snSDlMapper.insert(snSDlEntity);
-
-                submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
-                submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
-                submissionMapper.updateByPK(submissionEntity);
-                return;
-            }
-            for(InputDTO inputDTO : problemDTO.getLstInput()){
-
-            }
-        }
-    }
 
     @Autowired
     private ProblemMapper problemMapper;
@@ -126,7 +58,10 @@ public class ProblemService extends BaseService<ProblemEntity> {
     @Autowired
     private SubmissionMapper submissionMapper;
 
+    @Autowired
+    private JudgeService judgeService;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
+
     public void tryCompile(ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException {
         LanguageEntity languageEntity = new LanguageEntity();
         languageEntity.setId(problemDTO.getLeId());
@@ -151,12 +86,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
         List<InputDTO> lstInput = inputMapper.getAllTest(pmId);
         problemDTO.setLstInput(lstInput);
         problemDTO.setSourceCode(problemSubmitForm.getSourceCode());
+        judgeService.judge(problemDTO,languageDTO);
 
-        Judger judge = new Judger(problemDTO,languageDTO);
-        Thread thread = new Thread(null,judge,
-                "Do the judge magic!!", problemDTO.getMemoryLimit() * 1024);
-        thread.setDaemon(false);
-        thread.start();
     }
     @Transactional
     public void createProblem(ProblemDTO problemDTO){

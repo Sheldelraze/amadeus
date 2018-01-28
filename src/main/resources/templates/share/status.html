@@ -86,7 +86,7 @@
                                         <th style="text-align: center">Người nộp</th>
                                         <th style="text-align: center">Tên bài</th>
                                         <th style="text-align: center">Bộ nhớ</th>
-                                        <th style="text-align: center">Thời gian chạy</th>
+                                        <th style="text-align: center" class="sorting_desc">Thời gian chạy</th>
                                         <th style="text-align: center">Nộp lúc</th>
                                         <th style="text-align: center">Kết quả</th>
                                         <th style="text-align: center">Ngôn ngữ</th>
@@ -172,7 +172,9 @@
 ></script>
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').dataTable( {
+            "bSort": false
+        } );
     });
 </script>
 </body>

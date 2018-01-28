@@ -22,6 +22,7 @@
                 ON submission.leId = language.id
                    AND language.deleteFlg = '0'
         WHERE submission.deleteFlg = '0'
+            ORDER BY submission.createTime DESC
         LIMIT 100
     </select>
     <select id="getSubmitDetail" resultMap="submission">
