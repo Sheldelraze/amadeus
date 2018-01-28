@@ -14,7 +14,7 @@ import java.io.PrintWriter;
  */
 @Service
 public class FileUtil {
-    public void writeToFile(String text,final File file){
+    public static void writeToFile(String text,final File file){
         try {
             PrintWriter out = new PrintWriter(file);
             out.println(text);
@@ -23,7 +23,7 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-    public void writeToFile(String[] text, File file){
+    public static void writeToFile(String[] text, File file){
         try {
             PrintWriter out = new PrintWriter(file);
             for(int i = 0;i < text.length;i++) {
@@ -34,7 +34,7 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-    public File createFile(String location, String fileName,String extension){
+    public static File createFile(String location, String fileName,String extension){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(location);
         if (location.charAt(location.length() - 1) != '\\') {

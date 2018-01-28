@@ -1,5 +1,6 @@
 package com.minh.nguyen.controller;
 
+import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.vo.StatusVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class GeneralController {
     public ModelAndView getSubmission(@PathVariable("snId") Integer snId){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("submission/submission");
-
+        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId);
+        modelAndView.addObject("submitDetail",submissionDTO);
         return modelAndView;
     }
 }

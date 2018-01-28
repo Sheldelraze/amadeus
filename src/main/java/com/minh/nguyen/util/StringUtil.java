@@ -23,7 +23,7 @@ public class StringUtil {
      * @param extension
      * @return
      */
-    public String trimLocation(String s, String extension) {
+    public static String trimLocation(String s, String extension) {
         String[] lines = s.split("\n");
         for (int i = 0; i < lines.length; i++) {
             int pos = lines[i].indexOf("." + extension);
@@ -44,19 +44,21 @@ public class StringUtil {
         }
         return stringBuilder.toString();
     }
-
-    public String convertNull(Object obj) {
+    public static String convertToWellForm(String s){
+        return s.replaceAll("\r","");
+    }
+    public static String convertNull(Object obj) {
         if (obj == null) {
             return "";
         }
         return obj.toString();
     }
 
-    public boolean isNull(Object str) {
+    public static boolean isNull(Object str) {
         return str == null || str.toString().length() <= 0;
     }
 
-    public String trimStr(String str) {
+    public static String trimStr(String str) {
         if (str != null) {
             return str.trim();
         }
@@ -125,7 +127,16 @@ public class StringUtil {
             return 0L;
         }
     }
-
+    public String trimString(String s){
+        if (null == s){
+            return null;
+        }
+        if (s.length() > 100){
+            s = s.substring(0,100);
+            s += "...";
+        }
+        return s;
+    }
     public static BigInteger toBigInteger(String str) {
         if (str != null && str.length() > 0) {
             return new BigInteger(str);

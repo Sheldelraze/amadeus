@@ -3,6 +3,7 @@ package com.minh.nguyen.service;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
+import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
 import com.minh.nguyen.entity.*;
@@ -13,7 +14,9 @@ import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CompileUtil;
 import com.minh.nguyen.util.ExceptionUtil;
 import com.minh.nguyen.util.FileUtil;
+import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.vo.problem.ProblemTestVO;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.RollbackException;
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -32,8 +36,74 @@ import java.util.List;
 @Service("ProblemService")
 public class ProblemService extends BaseService<ProblemEntity> {
 
-    @Autowired
-    private CompileUtil compileUtil;
+    public class Judger implements Runnable{
+
+        private ProblemDTO problemDTO;
+        private LanguageDTO languageDTO;
+
+
+        public Judger(ProblemDTO problemDTO, LanguageDTO languageDTO) {
+            this.problemDTO = problemDTO;
+            this.languageDTO = languageDTO;
+        }
+
+        public ProblemDTO getProblemDTO() {
+            return problemDTO;
+        }
+
+        public void setProblemDTO(ProblemDTO problemDTO) {
+            this.problemDTO = problemDTO;
+        }
+
+        public LanguageDTO getLanguageDTO() {
+            return languageDTO;
+        }
+
+        public void setLanguageDTO(LanguageDTO languageDTO) {
+            this.languageDTO = languageDTO;
+        }
+
+        @Override
+        public void run() {
+            SubmissionEntity submissionEntity = new SubmissionEntity();
+            submissionEntity.setLeId(languageDTO.getId());
+            submissionEntity.setSourceCode(problemDTO.getSourceCode());
+            submissionEntity.setPmId(problemDTO.getId());
+            submissionEntity.setTimeRun(0);
+            submissionEntity.setMemoryUsed(0);
+            submissionEntity.setVerdict(Constants.VERDICT_JUDGING);
+            submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
+            setUpdateInfo(submissionEntity);
+            setCreateInfo(submissionEntity);
+            submissionMapper.insertSubmission(submissionEntity);
+
+            try {
+                CompileUtil.doCompile(languageDTO, problemDTO);
+            }catch (CompileErrorException | UncheckedTimeoutException e) {
+                submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
+                submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
+                SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
+                submitDetailEntity.setResult(e.getMessage());
+                setUpdateInfo(submitDetailEntity);
+                setCreateInfo(submitDetailEntity);
+                submitDetailMapper.insertSubmitDetail(submitDetailEntity);
+                SnSDlEntity snSDlEntity = new SnSDlEntity();
+                snSDlEntity.setsDlId(submitDetailEntity.getId());
+                snSDlEntity.setSnId(submissionEntity.getId());
+                setUpdateInfo(snSDlEntity);
+                setCreateInfo(snSDlEntity);
+                snSDlMapper.insert(snSDlEntity);
+
+                submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
+                submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
+                submissionMapper.updateByPK(submissionEntity);
+                return;
+            }
+            for(InputDTO inputDTO : problemDTO.getLstInput()){
+
+            }
+        }
+    }
 
     @Autowired
     private ProblemMapper problemMapper;
@@ -57,14 +127,19 @@ public class ProblemService extends BaseService<ProblemEntity> {
     private SubmissionMapper submissionMapper;
 
     @Autowired
+    private StringUtil stringUtil;
+
+    @Autowired
     private ExceptionUtil exceptionUtil;
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
     public void tryCompile(ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException {
         LanguageEntity languageEntity = new LanguageEntity();
         languageEntity.setId(problemDTO.getLeId());
         languageEntity = languageMapper.selectByPK(languageEntity);
+        LanguageDTO languageDTO = new LanguageDTO();
+        modelMapper.map(languageEntity,languageDTO);
         try {
-            compileUtil.doCompile(languageEntity,problemDTO);
+            CompileUtil.doCompile(languageDTO,problemDTO);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
             throw e;
         }
@@ -73,6 +148,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
         LanguageEntity languageEntity = new LanguageEntity();
         languageEntity.setId(problemSubmitForm.getLeId());
         languageEntity = languageMapper.selectByPK(languageEntity);
+        LanguageDTO languageDTO = new LanguageDTO();
+        modelMapper.map(languageEntity,languageDTO);
         ProblemDTO problemDTO = new ProblemDTO();
         problemDTO.setId(pmId);
         getProblemInfo(problemDTO);
@@ -80,43 +157,11 @@ public class ProblemService extends BaseService<ProblemEntity> {
         problemDTO.setLstInput(lstInput);
         problemDTO.setSourceCode(problemSubmitForm.getSourceCode());
 
-        SubmissionEntity submissionEntity = new SubmissionEntity();
-        submissionEntity.setLeId(languageEntity.getId());
-        submissionEntity.setSourceCode(problemSubmitForm.getSourceCode());
-        submissionEntity.setPmId(problemDTO.getId());
-        submissionEntity.setTimeRun(0);
-        submissionEntity.setMemoryUsed(0);
-        submissionEntity.setVerdict(Constants.VERDICT_JUDGING);
-        submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
-        setUpdateInfo(submissionEntity);
-        setCreateInfo(submissionEntity);
-        submissionMapper.insertSubmission(submissionEntity);
-
-        try {
-            compileUtil.doCompile(languageEntity, problemDTO);
-        }catch (CompileErrorException | UncheckedTimeoutException e) {
-            submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
-            submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
-            SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
-            submitDetailEntity.setResult(e.getMessage());
-            setUpdateInfo(submitDetailEntity);
-            setCreateInfo(submitDetailEntity);
-            submitDetailMapper.insertSubmitDetail(submitDetailEntity);
-            SnSDlEntity snSDlEntity = new SnSDlEntity();
-            snSDlEntity.setsDlId(submitDetailEntity.getId());
-            snSDlEntity.setSnId(submissionEntity.getId());
-            setUpdateInfo(snSDlEntity);
-            setCreateInfo(snSDlEntity);
-            snSDlMapper.insert(snSDlEntity);
-
-            submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
-            submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
-            submissionMapper.updateByPK(submissionEntity);
-            return;
-        }
-        for(InputDTO inputDTO : problemDTO.getLstInput()){
-
-        }
+        Judger judge = new Judger(problemDTO,languageDTO);
+        Thread thread = new Thread(null,judge,
+                "Do the judge magic!!", problemDTO.getMemoryLimit() * 1024);
+        thread.setDaemon(false);
+        thread.start();
     }
     @Transactional
     public void createProblem(ProblemDTO problemDTO){
@@ -158,6 +203,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
         setCreateInfo(inputEntity);
         setCreateInfo(pmItEntity);
         setUpdateInfo(pmItEntity);
+        inputEntity.setInput(stringUtil.convertToWellForm(inputEntity.getInput()));
+        inputEntity.setOutput(stringUtil.convertToWellForm(inputEntity.getOutput()));
         modelMapper.map(problemDTO,inputEntity);
         try{
             inputEntity.setId(null);
@@ -201,22 +248,17 @@ public class ProblemService extends BaseService<ProblemEntity> {
         List<InputDTO> lstInput = inputMapper.getAllTest(problemTestVO.getId());
         problemTestVO.setLstInput(lstInput);
         for(InputDTO inputDTO : lstInput){
-            inputDTO.setInput(trimString(inputDTO.getInput()));
-            inputDTO.setOutput(trimString(inputDTO.getOutput()));
+            inputDTO.setInput(stringUtil.trimString(inputDTO.getInput()));
+            inputDTO.setOutput(stringUtil.trimString(inputDTO.getOutput()));
         }
     }
-    public String trimString(String s){
-        if (null == s){
-            return null;
-        }
-        if (s.length() > 100){
-            s = s.substring(0,100);
-            s += "...";
-        }
-        return s;
-    }
+
     @Transactional
     public void updateProblem(ProblemDTO problemDTO){
+        if (null != problemDTO.getSourceCode()
+                && !Constants.BLANK.equals(problemDTO.getSourceCode())){
+            problemDTO.setSourceCode(stringUtil.convertToWellForm(problemDTO.getSourceCode()));
+        }
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setId(problemDTO.getId());
         try {
@@ -237,6 +279,12 @@ public class ProblemService extends BaseService<ProblemEntity> {
         if (recordCnt != 1){
             rollBack(Constants.MSG_UPDATE_ERR);
         }
+    }
+    public List<LanguageDTO> getAllLanguage(){
+        List<LanguageEntity> lst = languageMapper.selectAll(LanguageEntity.class);
+        Type listType = new TypeToken<List<LanguageDTO>>() {}.getType();
+        List<LanguageDTO> lstLanguage = modelMapper.map(lst, listType);
+        return lstLanguage;
     }
     public void deleteTest(int itId){
         InputEntity inputEntity = new InputEntity();
@@ -266,6 +314,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
     }
     public void updateTest(ProblemUpdateTestForm problemUpdateTestForm){
         InputEntity inputEntity = new InputEntity();
+        problemUpdateTestForm.setInput(stringUtil.convertToWellForm(problemUpdateTestForm.getInput()));
+        problemUpdateTestForm.setOutput(stringUtil.convertToWellForm(problemUpdateTestForm.getOutput()));
         modelMapper.map(problemUpdateTestForm,inputEntity);
         try{
             inputMapper.updateByPKExceptFields(inputEntity);

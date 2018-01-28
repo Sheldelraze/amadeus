@@ -2,6 +2,7 @@ package com.minh.nguyen.controller;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
+import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.entity.LanguageEntity;
 import com.minh.nguyen.form.problem.*;
@@ -168,6 +169,8 @@ public class ProblemController extends BaseController {
 
         modelAndView.addObject(TAB,2);
         modelAndView.addObject("problemSubmitForm", new ProblemSubmitForm());
+        List<LanguageDTO> lstLanguage = problemService.getAllLanguage();
+        modelAndView.addObject("lstLanguage",lstLanguage);
         modelAndView.addObject("pmId",pmId);
         return modelAndView;
     }
@@ -225,6 +228,7 @@ public class ProblemController extends BaseController {
         problemDTO.setId(pmId);
         problemService.getProblemInfo(problemDTO);
         modelMapper.map(problemDTO, problemSolutionVO);
+        problemSolutionVO.setLstLanguage(problemService.getAllLanguage());
         modelAndView.addObject(SOLUTION_VO, problemSolutionVO);
         if (null != problemSolutionForm
                 && null != problemSolutionForm.getSourceCode()

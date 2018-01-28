@@ -12,10 +12,28 @@ public class SubmissionDTO extends BaseDTO {
     private String pmNm;
     private Integer timeRun;
     private Integer memoryUsed;
+    private String sourceCode;
     private String verdict;
     private Integer judgeStatus;
     private String submitTime;
     private String leNm;
+    private List<SubmitDetailDTO> lstSubmitDetail;
+
+    public String getSourceCode() {
+        return sourceCode;
+    }
+
+    public void setSourceCode(String sourceCode) {
+        this.sourceCode = sourceCode;
+    }
+
+    public List<SubmitDetailDTO> getLstSubmitDetail() {
+        return lstSubmitDetail;
+    }
+
+    public void setLstSubmitDetail(List<SubmitDetailDTO> lstSubmitDetail) {
+        this.lstSubmitDetail = lstSubmitDetail;
+    }
 
     public String getSubmitTime() {
         return submitTime;

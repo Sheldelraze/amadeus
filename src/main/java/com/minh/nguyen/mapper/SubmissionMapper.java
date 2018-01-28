@@ -6,6 +6,7 @@ import com.minh.nguyen.provider.BaseProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface SubmissionMapper extends BaseMapper<SubmissionEntity> {
     Integer insertSubmission(SubmissionEntity record);
 
     List<SubmissionDTO> getSubmission();
+    List<SubmissionDTO> getSubmitDetail(@Param("snId")Integer snId);
 }

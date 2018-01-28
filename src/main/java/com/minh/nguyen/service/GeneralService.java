@@ -1,7 +1,9 @@
 package com.minh.nguyen.service;
 
 import com.minh.nguyen.dto.SubmissionDTO;
+import com.minh.nguyen.dto.SubmitDetailDTO;
 import com.minh.nguyen.mapper.SubmissionMapper;
+import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,11 @@ import java.util.List;
 @Component("GeneralService")
 public class GeneralService extends BaseService {
     @Autowired
+    private StringUtil stringUtil;
+
+    @Autowired
     private SubmissionMapper submissionMapper;
+
     public List<SubmissionDTO> getSubmission(){
         List<SubmissionDTO> lstSubmission = submissionMapper.getSubmission();
         for(SubmissionDTO submissionDTO : lstSubmission){
@@ -26,5 +32,23 @@ public class GeneralService extends BaseService {
             submissionDTO.setSubmitTime(strDate);
         }
         return lstSubmission;
+    }
+    public SubmissionDTO getSubmitDetail(int snId){
+        List<SubmissionDTO> lstSubmit = submissionMapper.getSubmitDetail(snId);
+        SubmissionDTO submit = lstSubmit.get(0);
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        String strDate = dateFormat.format(submit.getCreateTime());
+        submit.setSubmitTime(strDate);
+        List<SubmitDetailDTO> lst = submit.getLstSubmitDetail();
+        for(int i = 0;i < lst.size();i++){
+            SubmitDetailDTO detail = lst.get(i);
+            detail.setInput(stringUtil.trimString(detail.getInput()));
+            detail.setOutput(stringUtil.trimString(detail.getOutput()));
+            detail.setAnswer(stringUtil.trimString(detail.getAnswer()));
+            String res = detail.getResult();
+            res = res.replaceAll(" ","&ensp;");
+            detail.setResult(res);
+        }
+        return submit;
     }
 }

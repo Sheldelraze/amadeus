@@ -9,6 +9,7 @@
         <typeAlias alias="TagDTO" type="com.minh.nguyen.dto.TagDTO"/>
         <typeAlias alias="LanguageDTO" type="com.minh.nguyen.dto.LanguageDTO"/>
         <typeAlias alias="SubmissionDTO" type="com.minh.nguyen.dto.SubmissionDTO"/>
+        <typeAlias alias="SubmitDetailDTO" type="com.minh.nguyen.dto.SubmitDetailDTO"/>
     </typeAliases>
     <typeHandlers>
     </typeHandlers>

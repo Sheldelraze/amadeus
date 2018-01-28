@@ -106,11 +106,13 @@
                                             <b style="color: black;">Chọn ngôn ngữ</b>
                                             <select class="select2" th:field="*{leId}"
                                                     style="width: 30%; color: black">
-                                                <option value="1">C++</option>
-                                                <option value="2">Java</option>
+                                                <option th:each="language : ${problemSolutionVO.lstLanguage}"
+                                                        th:value="${language.id}"
+                                                        th:text="${language.name}">
+                                                </option>
                                             </select>
                                         </div>
-                                        <label th:if="${#fields.hasErrors('sourceCode')}" th:class="'error'"
+                                        <label th:if="${#fields.hasErrors('sourceCode')}" th:class="'error'" id="compileErr"
                                                 th:errors="*{sourceCode}" style="white-space: pre;">Name Error</label>
                                         <input type="hidden" th:field="*{sourceCode}"/>
                                         <pre id="editor" ><label th:text="${problemSolutionVO}?${problemSolutionVO.sourceCode}"></label></pre>
@@ -168,6 +170,7 @@
 <script src="../../../static/ace/ace.js" th:src="@{/ace/ace.js}"></script>
 <script src="../../../static/ace/ext-themelist.js" th:src="@{/ace/ext-themelist.js}"></script>
 <script>
+
     function doSubmit() {
         var editor = ace.edit("editor");
         var code = editor.getValue();
@@ -194,6 +197,13 @@
     });
 </script>
 <div th:replace="layout/layout::js"></div>
+<script>
+    var str = document.getElementById("compileErr");
+    if (null != str) {
+        var value = $("#compileErr").text().replace(/ /g, "&ensp;");
+        str.innerHTML = value.toString();
+    }
+</script>
 <!-- load ace -->
 
 <script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"

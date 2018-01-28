@@ -1,5 +1,9 @@
 package com.minh.nguyen.vo.problem;
 
+import com.minh.nguyen.dto.LanguageDTO;
+
+import java.util.List;
+
 /**
  * @author Mr.Minh
  * @since 14/01/2018
@@ -8,6 +12,15 @@ package com.minh.nguyen.vo.problem;
 public class ProblemSolutionVO extends  ProblemLayoutVO {
     private String sourceCode;
     private String language;
+    private List<LanguageDTO> lstLanguage;
+
+    public List<LanguageDTO> getLstLanguage() {
+        return lstLanguage;
+    }
+
+    public void setLstLanguage(List<LanguageDTO> lstLanguage) {
+        this.lstLanguage = lstLanguage;
+    }
 
     public String getLanguage() {
         return language;

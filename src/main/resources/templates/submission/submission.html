@@ -15,6 +15,17 @@
             margin: auto;
             width: 100%;
         }
+         .judging{
+             color: slategray;
+         }
+        .fail{
+            color: red;
+            font-weight: 500;
+        }
+        .accepted{
+            color: lawngreen;
+            font-weight: 800;
+        }
     </style>
 </head>
 
@@ -88,15 +99,23 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td>132</td>
+                                        <td th:text="${submitDetail.id}"></td>
                                         <td><b><a href="#">Makise Kurisu</a></b></td>
                                         <td><b><a href="#">Lập trình hướng đối tượng</a></b></td>
-                                        <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                        <td>02:20:30</td>
-                                        <td>30KB</td>
-                                        <td>25ms</td>
-                                        <td><b style="color: red; font-weight: 500">Kết quả sai</b></td>
-                                        <td>C++</td>
+                                        <td><b><a href="#" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                        <td th:text="${submitDetail.submitTime}">02:20:30</td>
+                                        <td><label th:text="${submitDetail.memoryUsed}"></label>MB</td>
+                                        <td><label th:text="${submitDetail.timeRun}"></label>ms</td>
+                                        <th:block th:if="${submitDetail.judgeStatus==0}">
+                                            <td><label th:text="${submitDetail.verdict}" class="judging"></label></td>
+                                        </th:block>
+                                        <th:block th:if="${submitDetail.judgeStatus==6}">
+                                            <td><label th:text="${submitDetail.verdict}" class="accepted"></label></td>
+                                        </th:block>
+                                        <th:block th:if="${submitDetail.judgeStatus!=6 && submitDetail.judgeStatus!=0}">
+                                            <td><label th:text="${submitDetail.verdict}" class="fail"></label></td>
+                                        </th:block>
+                                        <td th:text="${submitDetail.leNm}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -109,73 +128,67 @@
                     <h4>Mã nguồn</h4>
                     <div class="card">
                         <div class="card-body">
-                            <div id="editor" style="height:300px">#include &lt;bits/stdc++.h&gt;
-                                using namespace std;
-                                int main(){
-                                int a,b;
-                                cin &gt;&gt; a &gt; &gt; b;
-                                cout &lt;&lt; a + b;
-                                }
+                            <div id="editor" style="height:300px" th:text="${submitDetail.sourceCode}">
                             </div>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <h4>Test #1</h4>
+                <div class="col-md-12" style="color:black" th:each="detail,iter : ${submitDetail.lstSubmitDetail}">
+                    <h4>Test #<label th:text="${iter.count}"></label></h4>
                     <div class="card">
                         <div class="card-header">
                             Input
                         </div>
                         <div class="card-body" style="color: black">
-                            5 3
+                            <label style="white-space: pre" th:text="${detail.input}"></label>
                         </div>
                         <div class="card-header">
                             Output
                         </div>
                         <div class="card-body" style="color: black">
-                            8
+                            <label style="white-space: pre" th:text="${detail.output}"></label>
                         </div>
                         <div class="card-header">
                             Đáp án
                         </div>
                         <div class="card-body" style="color: black">
-                            8
+                            <label style="white-space: pre" th:text="${detail.answer}"></label>
                         </div>
                         <div class="card-header">
                             Kết quả
                         </div>
                         <div class="card-body">
-                            <b style="color:green;font-size:larger;font-weight:700">Đúng</b>
+                            <label style="white-space: pre" th:utext="${detail.result}" th:classappend="${submitDetail.judgeStatus == 1}?'fail'"></label>
                         </div>
                     </div>
-                    <h4>Test #2</h4>
-                    <div class="card">
-                        <div class="card-header">
-                            Input
-                        </div>
-                        <div class="card-body" style="color: black">
-                            10 12
-                        </div>
-                        <div class="card-header">
-                            Output
-                        </div>
-                        <div class="card-body" style="color: black">
-                            20
-                        </div>
-                        <div class="card-header">
-                            Đáp án
-                        </div>
-                        <div class="card-body" style="color: black">
-                            22
-                        </div>
-                        <div class="card-header">
-                            Kết quả
-                        </div>
-                        <div class="card-body">
-                            <b style="color:red;font-size:larger;font-weight:700">Sai</b>
-                        </div>
-                    </div>
+                    <!--<h4>Test #2</h4>-->
+                    <!--<div class="card">-->
+                        <!--<div class="card-header">-->
+                            <!--Input-->
+                        <!--</div>-->
+                        <!--<div class="card-body" style="color: black">-->
+                            <!--10 12-->
+                        <!--</div>-->
+                        <!--<div class="card-header">-->
+                            <!--Output-->
+                        <!--</div>-->
+                        <!--<div class="card-body" style="color: black">-->
+                            <!--20-->
+                        <!--</div>-->
+                        <!--<div class="card-header">-->
+                            <!--Đáp án-->
+                        <!--</div>-->
+                        <!--<div class="card-body" style="color: black">-->
+                            <!--22-->
+                        <!--</div>-->
+                        <!--<div class="card-header">-->
+                            <!--Kết quả-->
+                        <!--</div>-->
+                        <!--<div class="card-body">-->
+                            <!--<b style="color:red;font-size:larger;font-weight:700">Sai</b>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
                 <!-- Column -->
             </div>

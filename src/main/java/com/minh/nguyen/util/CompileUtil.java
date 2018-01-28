@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.TimeLimiter;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
+import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.entity.LanguageEntity;
 import com.minh.nguyen.entity.SnSDlEntity;
@@ -31,18 +32,9 @@ import java.util.concurrent.TimeoutException;
  * @since 04/01/2018
  * Purpose:
  */
-@Service
 public class CompileUtil {
-
-    @Autowired
-    private FileUtil fileUtil;
-
-
-
-
-    @Autowired
-    private StringUtil stringUtil;
-    public Outcome tryCompile(File file,String extension) throws CompileErrorException{
+    
+    public static Outcome tryCompile(File file,String extension) throws CompileErrorException{
         Params.Builder builder = new Params.Builder();
        // builder.setRedirectErrorFile(new File(Constants.TEST_ERROR_LOCATION));
         builder.setTimeLimit(5000);
@@ -65,24 +57,24 @@ public class CompileUtil {
         Outcome outcome =  ProcessRunner.run(command,builder.newInstance());
         return outcome;
     }
-    public File createFile(ProblemDTO problemDTO,LanguageEntity languageEntity,String location,String filename){
-        File file = fileUtil.createFile(location,filename,languageEntity.getExtension());
-        fileUtil.writeToFile(problemDTO.getSourceCode(), file);
+    public static File createFile(ProblemDTO problemDTO,LanguageDTO languageDTO,String location,String filename){
+        File file = FileUtil.createFile(location,filename,languageDTO.getExtension());
+        FileUtil.writeToFile(problemDTO.getSourceCode(), file);
         return file;
     }
-    public void doCompile(LanguageEntity languageEntity,ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException{
-        File file = createFile(problemDTO,languageEntity,
+    public static void doCompile(LanguageDTO languageDTO, ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException{
+        File file = createFile(problemDTO,languageDTO,
                 Constants.TEST_COMPILE_LOCATION,
                 Constants.TEST_COMPILE_FILENAME);
         TimeLimiter timeLimiter = new SimpleTimeLimiter();
         CompileState state = new CompileState();
         state.setFile(file);
-        state.setExtension(languageEntity.getExtension());
+        state.setExtension(languageDTO.getExtension());
         try {
             timeLimiter.callWithTimeout(state,5,TimeUnit.SECONDS,true);
             String err = state.getOutcome().getError();
             if (null != err && !Constants.BLANK.equals(err)){
-                err = stringUtil.trimLocation(err,languageEntity.getExtension());
+                err = StringUtil.trimLocation(err,languageDTO.getExtension());
                 throw new CompileErrorException(err);
             }
         } catch (TimeoutException | UncheckedTimeoutException e) {
@@ -94,7 +86,7 @@ public class CompileUtil {
             e.printStackTrace();
         }
     }
-    public class CompileState implements Callable<Void> {
+    public static class CompileState implements Callable<Void> {
         File file;
         String extension;
         Outcome outcome = null;
@@ -103,7 +95,7 @@ public class CompileUtil {
             return outcome;
         }
 
-        public void setOutcome(Outcome outcome) {
+        public  void setOutcome(Outcome outcome) {
             this.outcome = outcome;
         }
 
@@ -111,7 +103,7 @@ public class CompileUtil {
             return file;
         }
 
-        public void setFile(File file) {
+        public  void setFile(File file) {
             this.file = file;
         }
 
@@ -119,7 +111,7 @@ public class CompileUtil {
             return extension;
         }
 
-        public void setExtension(String extension) {
+        public  void setExtension(String extension) {
             this.extension = extension;
         }
 
