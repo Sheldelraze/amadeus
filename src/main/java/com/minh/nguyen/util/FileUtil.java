@@ -1,5 +1,8 @@
 package com.minh.nguyen.util;
 
+import com.minh.nguyen.dto.LanguageDTO;
+import com.minh.nguyen.dto.ProblemDTO;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,6 +49,14 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return file;
+    }
+    public static File createFileWithContent(ProblemDTO problemDTO, LanguageDTO languageDTO, String location, String filename){
+        return createFileWithContent(location,filename,languageDTO.getExtension(),problemDTO.getSourceCode());
+    }
+    public static File createFileWithContent(String location,String filename,String extension,String content){
+        File file = FileUtil.createFile(location,filename,extension);
+        FileUtil.writeToFile(content, file);
         return file;
     }
 }

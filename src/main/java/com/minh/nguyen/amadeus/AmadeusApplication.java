@@ -25,7 +25,7 @@ public class AmadeusApplication {
 		executor.setCorePoolSize(5);
 		executor.setMaxPoolSize(100);
 		executor.setQueueCapacity(500);
-		executor.setThreadNamePrefix("Judger");
+		executor.setThreadNamePrefix("Judge");
 		executor.initialize();
 		return executor;
 	}

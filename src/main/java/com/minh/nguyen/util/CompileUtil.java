@@ -33,19 +33,25 @@ import java.util.concurrent.TimeoutException;
  * Purpose:
  */
 public class CompileUtil {
-    
-    public static Outcome tryCompile(File file,String extension) throws CompileErrorException{
+    public static Outcome tryRun(File file,String extension,String fileName) throws CompileErrorException{
+
+        return null;
+    }
+    public static Outcome tryCompile(File file,String extension,String fileName) throws CompileErrorException{
         Params.Builder builder = new Params.Builder();
        // builder.setRedirectErrorFile(new File(Constants.TEST_ERROR_LOCATION));
         builder.setTimeLimit(5000);
         StringBuilder stringBuilder = new StringBuilder();
-        String command = "";
-
+        String command;
         if (Constants.CPP_EXTENSION.equals(extension)){
             stringBuilder.append(Constants.CPP_COMPILER);
             stringBuilder.append(" ");
             stringBuilder.append(file.getPath());
-            stringBuilder.append(" ");
+            stringBuilder.append(" -o ");
+            stringBuilder.append(file.getParent());
+            stringBuilder.append("\\");
+            stringBuilder.append(fileName);
+            stringBuilder.append(".exe ");
             stringBuilder.append(Constants.CPP_ARGS);
 
         }else if (Constants.JAVA_EXTENSION.equals(extension)){
@@ -54,21 +60,20 @@ public class CompileUtil {
             stringBuilder.append(file.getPath());
         }
         command = stringBuilder.toString();
-        Outcome outcome =  ProcessRunner.run(command,builder.newInstance());
-        return outcome;
+        return ProcessRunner.run(command,builder.newInstance());
     }
-    public static File createFile(ProblemDTO problemDTO,LanguageDTO languageDTO,String location,String filename){
-        File file = FileUtil.createFile(location,filename,languageDTO.getExtension());
-        FileUtil.writeToFile(problemDTO.getSourceCode(), file);
-        return file;
+
+    public static void doRun(ProblemDTO problemDTO,InputDTO inputDTO,int timeLimit,int memoryLimit){
+
     }
-    public static void doCompile(LanguageDTO languageDTO, ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException{
-        File file = createFile(problemDTO,languageDTO,
-                Constants.TEST_COMPILE_LOCATION,
-                Constants.TEST_COMPILE_FILENAME);
+    public static void doCompile(LanguageDTO languageDTO, ProblemDTO problemDTO,String location,String fileName) throws CompileErrorException,UncheckedTimeoutException{
+        File file = FileUtil.createFileWithContent(problemDTO,languageDTO,
+                location,
+                fileName);
         TimeLimiter timeLimiter = new SimpleTimeLimiter();
         CompileState state = new CompileState();
         state.setFile(file);
+        state.setFileName(fileName);
         state.setExtension(languageDTO.getExtension());
         try {
             timeLimiter.callWithTimeout(state,5,TimeUnit.SECONDS,true);
@@ -86,10 +91,26 @@ public class CompileUtil {
             e.printStackTrace();
         }
     }
+    public static class RunState implements Callable<Void>{
+
+        @Override
+        public Void call() throws Exception {
+            return null;
+        }
+    }
     public static class CompileState implements Callable<Void> {
         File file;
+        String fileName;
         String extension;
         Outcome outcome = null;
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
 
         public Outcome getOutcome() {
             return outcome;
@@ -117,7 +138,7 @@ public class CompileUtil {
 
         @Override
         public Void call() throws Exception {
-            outcome = tryCompile(file,extension);
+            outcome = tryCompile(file,extension,fileName);
             return null;
         }
     }

@@ -15,6 +15,8 @@ public class Constants {
     public static final String TEST_COMPILE_LOCATION = "E:\\compile\\";
     public static final String TEST_COMPILE_FILENAME = "test";
     public static final String TEST_ERROR_LOCATION = TEST_COMPILE_LOCATION + "error.txt";
+    public static final String PROBLEM_LOCATION = "E:\\problem\\";
+    public static final String SUBMISSION_LOCATION = "E:\\submission\\";
     public static final String BLANK = "";
 
     public static final String MSG_TOTAL_ERR = "msg000";
@@ -42,7 +44,8 @@ public class Constants {
     public static final Integer STATUS_WRONG_ANSWER = 5;
     public static final Integer STATUS_ACCEPTED = 6;
 
-    public static final String VERDICT_JUDGING = "Đang chấm...";
+    public static final String VERDICT_COMPILING = "Đang biên dịch...";
+    public static final String VERDICT_JUDGING = "Đang chấm test ";
     public static final String VERDICT_COMPILE_ERROR = "Lỗi biên dịch";
     public static final String VERDICT_RUNTIME_ERROR = "Lỗi runtime";
     public static final String VERDICT_TIME_LIMIT_EXCEEDED = "Lỗi quá thời gian chạy.";

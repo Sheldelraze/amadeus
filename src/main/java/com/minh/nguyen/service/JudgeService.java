@@ -57,14 +57,17 @@ public class JudgeService extends BaseService {
         submissionEntity.setPmId(problemDTO.getId());
         submissionEntity.setTimeRun(0);
         submissionEntity.setMemoryUsed(0);
-        submissionEntity.setVerdict(Constants.VERDICT_JUDGING);
+        submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
         submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
         setUpdateInfo(submissionEntity);
         setCreateInfo(submissionEntity);
         submissionMapper.insertSubmission(submissionEntity);
 
         try {
-            CompileUtil.doCompile(languageDTO, problemDTO);
+            String fileName = ("Submission-" + submissionEntity.getId())
+                                + "-" + problemDTO.getCode();
+            String location = Constants.SUBMISSION_LOCATION;
+            CompileUtil.doCompile(languageDTO, problemDTO,location,fileName);
         }catch (CompileErrorException | UncheckedTimeoutException e) {
             submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
             submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
@@ -85,8 +88,14 @@ public class JudgeService extends BaseService {
             submissionMapper.updateByPK(submissionEntity);
             return;
         }
-        for(InputDTO inputDTO : problemDTO.getLstInput()){
+        for(int i = 0;i < problemDTO.getLstInput().size();i++){
+            InputDTO inputDTO = problemDTO.getLstInput().get(i);
+            submissionEntity.setVerdict(Constants.VERDICT_JUDGING + (i +1));
+            try{
+                CompileUtil.doRun(problemDTO,inputDTO,problemDTO.getTimeLimit(),problemDTO.getMemoryLimit());
+            }catch(Exception e){
 
+            }
         }
     }
 }

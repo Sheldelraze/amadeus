@@ -291,6 +291,10 @@ public class ProblemController extends BaseController {
             return initUpdateTest(pmId,itId,problemUpdateTestForm,false);
         }
         try{
+            ProblemDTO problemDTO = new ProblemDTO();
+            problemDTO.setId(pmId);
+            problemService.getProblemInfo(problemDTO);
+            problemUpdateTestForm.setCode(problemDTO.getCode());
             problemUpdateTestForm.setId(itId);
             problemService.updateTest(problemUpdateTestForm);
         }catch(Exception e){
@@ -353,6 +357,7 @@ public class ProblemController extends BaseController {
         try {
             ProblemDTO problemDTO = new ProblemDTO();
             problemDTO.setId(pmId);
+            problemService.getProblemInfo(problemDTO);
             modelMapper.map(problemCreateTestForm, problemDTO);
             problemService.createTest(problemDTO);
         } catch (RollbackException ex) {
@@ -452,14 +457,17 @@ public class ProblemController extends BaseController {
     public ModelAndView updateSolution(@PathVariable("pmId") Integer pmId,
                                        @NonNull ProblemSolutionForm problemSolutionForm,
                                        BindingResult bindingResult) {
-        ModelAndView modelAndView = null;
         problemSolutionForm.setScreenName("problemSolutionScreen");
+        ProblemDTO problemDTO = new ProblemDTO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        problemSolutionForm.setId(pmId);
+        problemSolutionForm.setCode(problemDTO.getCode());
         validate(problemSolutionForm, bindingResult);
         if (bindingResult.hasErrors()) {
             problemSolutionForm.setId(pmId);
             return getSolution(pmId, null, problemSolutionForm, false, false);
         }
-        ProblemDTO problemDTO = new ProblemDTO();
         modelMapper.map(problemSolutionForm, problemDTO);
         problemDTO.setId(pmId);
         try {

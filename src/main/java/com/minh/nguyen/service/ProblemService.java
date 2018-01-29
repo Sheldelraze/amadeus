@@ -6,13 +6,16 @@ import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
-import com.minh.nguyen.entity.*;
+import com.minh.nguyen.entity.InputEntity;
+import com.minh.nguyen.entity.LanguageEntity;
+import com.minh.nguyen.entity.PmItEntity;
+import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.CompileErrorException;
+import com.minh.nguyen.form.problem.ProblemCreateTestForm;
 import com.minh.nguyen.form.problem.ProblemSubmitForm;
 import com.minh.nguyen.form.problem.ProblemUpdateTestForm;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CompileUtil;
-import com.minh.nguyen.util.ExceptionUtil;
 import com.minh.nguyen.util.FileUtil;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.vo.problem.ProblemTestVO;
@@ -20,7 +23,6 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +71,11 @@ public class ProblemService extends BaseService<ProblemEntity> {
         LanguageDTO languageDTO = new LanguageDTO();
         modelMapper.map(languageEntity,languageDTO);
         try {
-            CompileUtil.doCompile(languageDTO,problemDTO);
+            String fileName = "Solution-" + problemDTO.getId() + "-" + problemDTO.getCode();
+            String location = Constants.PROBLEM_LOCATION + problemDTO.getCode();
+            File dir = new File(location);
+            dir.mkdir();
+            CompileUtil.doCompile(languageDTO,problemDTO,location + "\\",fileName);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
             throw e;
         }
@@ -129,8 +135,8 @@ public class ProblemService extends BaseService<ProblemEntity> {
         setCreateInfo(inputEntity);
         setCreateInfo(pmItEntity);
         setUpdateInfo(pmItEntity);
-        inputEntity.setInput(StringUtil.convertToWellForm(inputEntity.getInput()));
-        inputEntity.setOutput(StringUtil.convertToWellForm(inputEntity.getOutput()));
+        inputEntity.setInput(StringUtil.convertToWellForm(problemDTO.getInput()));
+        inputEntity.setOutput(StringUtil.convertToWellForm(problemDTO.getOutput()));
         modelMapper.map(problemDTO,inputEntity);
         try{
             inputEntity.setId(null);
@@ -150,6 +156,11 @@ public class ProblemService extends BaseService<ProblemEntity> {
             e.printStackTrace();
             throw e;
         }
+        String location = Constants.PROBLEM_LOCATION + problemDTO.getCode()
+                + "\\";
+        String filename = "inputId-" + inputEntity.getId();
+        FileUtil.createFileWithContent(location, filename, "txt",
+                inputEntity.getInput());
     }
     public List<ProblemDTO> getAllProblem(){
         List<ProblemDTO> lst = problemMapper.getAllProblem();
@@ -238,17 +249,22 @@ public class ProblemService extends BaseService<ProblemEntity> {
         inputEntity = inputMapper.selectByPK(inputEntity);
         modelMapper.map(inputEntity,problemUpdateTestForm);
     }
-    public void updateTest(ProblemUpdateTestForm problemUpdateTestForm){
+    public void updateTest(ProblemUpdateTestForm problemUpdateTestForm) {
         InputEntity inputEntity = new InputEntity();
         problemUpdateTestForm.setInput(StringUtil.convertToWellForm(problemUpdateTestForm.getInput()));
         problemUpdateTestForm.setOutput(StringUtil.convertToWellForm(problemUpdateTestForm.getOutput()));
-        modelMapper.map(problemUpdateTestForm,inputEntity);
-        try{
+        modelMapper.map(problemUpdateTestForm, inputEntity);
+        try {
             inputMapper.updateByPKExceptFields(inputEntity);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
+        String location = Constants.PROBLEM_LOCATION + problemUpdateTestForm.getCode()
+                + "\\";
+        String filename = "inputId-" + inputEntity.getId();
+        FileUtil.createFileWithContent(location, filename, "txt",
+                inputEntity.getInput());
     }
 
 }
