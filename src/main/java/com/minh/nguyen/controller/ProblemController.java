@@ -219,7 +219,8 @@ public class ProblemController extends BaseController {
     }
 
     @GetMapping("/{pmId}/solution")
-    public ModelAndView getSolution(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemSolutionForm problemSolutionForm,
+    public ModelAndView getSolution(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm,
+                                    ProblemSolutionForm problemSolutionForm,
                                     boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, SOLUTION_TAB, updateGeneralSuccess);
 

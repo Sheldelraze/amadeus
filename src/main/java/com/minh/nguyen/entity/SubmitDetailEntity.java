@@ -22,6 +22,26 @@ public class SubmitDetailEntity extends BaseEntity {
     private String answer;
     @Column(name = "result")
     private String result;
+    @Column(name = "timeRun")
+    private int timeRun;
+    @Column(name = "memoryUsed")
+    private int memoryUsed;
+
+    public int getTimeRun() {
+        return timeRun;
+    }
+
+    public void setTimeRun(int timeRun) {
+        this.timeRun = timeRun;
+    }
+
+    public int getMemoryUsed() {
+        return memoryUsed;
+    }
+
+    public void setMemoryUsed(int memoryUsed) {
+        this.memoryUsed = memoryUsed;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

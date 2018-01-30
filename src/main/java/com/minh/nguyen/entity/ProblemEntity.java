@@ -45,8 +45,8 @@ public class ProblemEntity extends BaseEntity implements Serializable {
     private Integer difficulty;
     @Column(name = "sourceCode")
     private String sourceCode;
-    @Column(name = "language")
-    private String language;
+    @Column(name = "leId")
+    private Integer leId;
 
     public String getSourceCode() {
         return sourceCode;
@@ -56,12 +56,12 @@ public class ProblemEntity extends BaseEntity implements Serializable {
         this.sourceCode = sourceCode;
     }
 
-    public String getLanguage() {
-        return language;
+    public Integer getLeId() {
+        return leId;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLeId(Integer leId) {
+        this.leId = leId;
     }
 
     public String getInput() {

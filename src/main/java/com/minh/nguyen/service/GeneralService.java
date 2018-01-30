@@ -44,8 +44,10 @@ public class GeneralService extends BaseService {
             detail.setOutput(StringUtil.trimString(detail.getOutput()));
             detail.setAnswer(StringUtil.trimString(detail.getAnswer()));
             String res = detail.getResult();
-            res = res.replaceAll(" ","&ensp;");
-            detail.setResult(res);
+            if (null != res) {
+                res = res.replaceAll(" ", "&ensp;");
+                detail.setResult(res);
+            }
         }
         return submit;
     }

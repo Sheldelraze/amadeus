@@ -43,9 +43,6 @@ public class StringUtil {
         }
         return stringBuilder.toString();
     }
-    public static String convertToWellForm(String s){
-        return s.replaceAll("\r","");
-    }
     public static String convertNull(Object obj) {
         if (obj == null) {
             return "";

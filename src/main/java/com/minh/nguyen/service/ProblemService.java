@@ -11,7 +11,6 @@ import com.minh.nguyen.entity.LanguageEntity;
 import com.minh.nguyen.entity.PmItEntity;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.CompileErrorException;
-import com.minh.nguyen.form.problem.ProblemCreateTestForm;
 import com.minh.nguyen.form.problem.ProblemSubmitForm;
 import com.minh.nguyen.form.problem.ProblemUpdateTestForm;
 import com.minh.nguyen.mapper.*;
@@ -135,8 +134,6 @@ public class ProblemService extends BaseService<ProblemEntity> {
         setCreateInfo(inputEntity);
         setCreateInfo(pmItEntity);
         setUpdateInfo(pmItEntity);
-        inputEntity.setInput(StringUtil.convertToWellForm(problemDTO.getInput()));
-        inputEntity.setOutput(StringUtil.convertToWellForm(problemDTO.getOutput()));
         modelMapper.map(problemDTO,inputEntity);
         try{
             inputEntity.setId(null);
@@ -158,7 +155,7 @@ public class ProblemService extends BaseService<ProblemEntity> {
         }
         String location = Constants.PROBLEM_LOCATION + problemDTO.getCode()
                 + "\\";
-        String filename = "inputId-" + inputEntity.getId();
+        String filename = "input-itId-" + inputEntity.getId();
         FileUtil.createFileWithContent(location, filename, "txt",
                 inputEntity.getInput());
     }
@@ -192,10 +189,6 @@ public class ProblemService extends BaseService<ProblemEntity> {
 
     @Transactional
     public void updateProblem(ProblemDTO problemDTO){
-        if (null != problemDTO.getSourceCode()
-                && !Constants.BLANK.equals(problemDTO.getSourceCode())){
-            problemDTO.setSourceCode(StringUtil.convertToWellForm(problemDTO.getSourceCode()));
-        }
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setId(problemDTO.getId());
         try {
@@ -251,8 +244,6 @@ public class ProblemService extends BaseService<ProblemEntity> {
     }
     public void updateTest(ProblemUpdateTestForm problemUpdateTestForm) {
         InputEntity inputEntity = new InputEntity();
-        problemUpdateTestForm.setInput(StringUtil.convertToWellForm(problemUpdateTestForm.getInput()));
-        problemUpdateTestForm.setOutput(StringUtil.convertToWellForm(problemUpdateTestForm.getOutput()));
         modelMapper.map(problemUpdateTestForm, inputEntity);
         try {
             inputMapper.updateByPKExceptFields(inputEntity);
@@ -262,7 +253,7 @@ public class ProblemService extends BaseService<ProblemEntity> {
         }
         String location = Constants.PROBLEM_LOCATION + problemUpdateTestForm.getCode()
                 + "\\";
-        String filename = "inputId-" + inputEntity.getId();
+        String filename = "input-itId-" + inputEntity.getId();
         FileUtil.createFileWithContent(location, filename, "txt",
                 inputEntity.getInput());
     }

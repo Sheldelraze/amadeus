@@ -12,9 +12,6 @@ public class Constants {
     public static final String JAVA_COMPILER = "javac";
     public static final String JAVA_EXECUTOR = "java";
     public static final String JAVA_EXTENSION = "java";
-    public static final String TEST_COMPILE_LOCATION = "E:\\compile\\";
-    public static final String TEST_COMPILE_FILENAME = "test";
-    public static final String TEST_ERROR_LOCATION = TEST_COMPILE_LOCATION + "error.txt";
     public static final String PROBLEM_LOCATION = "E:\\problem\\";
     public static final String SUBMISSION_LOCATION = "E:\\submission\\";
     public static final String BLANK = "";

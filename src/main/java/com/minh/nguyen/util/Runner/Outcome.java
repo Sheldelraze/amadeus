@@ -28,6 +28,16 @@ public class Outcome {
      */
     private final String comment;
 
+    private long timeElapsed;
+
+    public long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+    public void setTimeElapsed(long timeElapsed) {
+        this.timeElapsed = timeElapsed;
+    }
+
     Outcome(int exitCode, String output, String error, List<String> errors) {
         this.exitCode = errors.isEmpty() ? exitCode : -1;
         this.output = output;

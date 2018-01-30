@@ -12,12 +12,14 @@ import com.minh.nguyen.entity.SubmitDetailEntity;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CompileUtil;
+import com.minh.nguyen.util.Runner.Outcome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Mr.Minh
@@ -49,9 +51,12 @@ public class JudgeService extends BaseService {
     private SubmissionMapper submissionMapper;
 
     @Async
+    @Transactional
     public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO){
         logger.info("hallo from judge");
         SubmissionEntity submissionEntity = new SubmissionEntity();
+        SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
+        SnSDlEntity snSDlEntity = new SnSDlEntity();
         submissionEntity.setLeId(languageDTO.getId());
         submissionEntity.setSourceCode(problemDTO.getSourceCode());
         submissionEntity.setPmId(problemDTO.getId());
@@ -64,27 +69,22 @@ public class JudgeService extends BaseService {
         submissionMapper.insertSubmission(submissionEntity);
 
         try {
-            String fileName = ("Submission-" + submissionEntity.getId())
+            String fileName = ("submission-snId-" + submissionEntity.getId())
                                 + "-" + problemDTO.getCode();
             String location = Constants.SUBMISSION_LOCATION;
             CompileUtil.doCompile(languageDTO, problemDTO,location,fileName);
         }catch (CompileErrorException | UncheckedTimeoutException e) {
             submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
             submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
-            SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
             submitDetailEntity.setResult(e.getMessage());
             setUpdateInfo(submitDetailEntity);
             setCreateInfo(submitDetailEntity);
             submitDetailMapper.insertSubmitDetail(submitDetailEntity);
-            SnSDlEntity snSDlEntity = new SnSDlEntity();
             snSDlEntity.setsDlId(submitDetailEntity.getId());
             snSDlEntity.setSnId(submissionEntity.getId());
             setUpdateInfo(snSDlEntity);
             setCreateInfo(snSDlEntity);
             snSDlMapper.insert(snSDlEntity);
-
-            submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
-            submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
             submissionMapper.updateByPK(submissionEntity);
             return;
         }
@@ -92,10 +92,17 @@ public class JudgeService extends BaseService {
             InputDTO inputDTO = problemDTO.getLstInput().get(i);
             submissionEntity.setVerdict(Constants.VERDICT_JUDGING + (i +1));
             try{
-                CompileUtil.doRun(problemDTO,inputDTO,problemDTO.getTimeLimit(),problemDTO.getMemoryLimit());
-            }catch(Exception e){
+                Outcome outcome = CompileUtil.doRun(languageDTO,problemDTO,inputDTO
+                                ,submissionEntity.getId());
+                //run time err
+                if (outcome.getExitCode() == -1){
 
+                }
+                //run success
+            }catch(UncheckedTimeoutException e){
+                //time limit err
             }
+
         }
     }
 }

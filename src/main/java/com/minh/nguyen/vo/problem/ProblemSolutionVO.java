@@ -12,6 +12,16 @@ import java.util.List;
 public class ProblemSolutionVO extends  ProblemLayoutVO {
     private String sourceCode;
     private String language;
+    private int leId;
+
+    public int getLeId() {
+        return leId;
+    }
+
+    public void setLeId(int leId) {
+        this.leId = leId;
+    }
+
     private List<LanguageDTO> lstLanguage;
 
     public List<LanguageDTO> getLstLanguage() {
