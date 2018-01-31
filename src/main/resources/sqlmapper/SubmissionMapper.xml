@@ -22,25 +22,28 @@
                 ON submission.leId = language.id
                    AND language.deleteFlg = '0'
         WHERE submission.deleteFlg = '0'
-            ORDER BY submission.createTime DESC
+        ORDER BY submission.createTime DESC
         LIMIT 100
     </select>
     <select id="getSubmitDetail" resultMap="submission">
         SELECT
-            submission.id          AS id,
-            problem.name           AS pmNm,
-            submission.memoryUsed  AS memoryUsed,
-            submission.timeRun     AS timeRun,
-            submission.createTime  AS createTime,
-            submission.judgeStatus AS judgeStatus,
-            submission.verdict     AS verdict,
-            submission.sourceCode  AS sourceCode,
-            language.name          AS leNm,
-            submitdetail.id     AS sDlId,
-            submitdetail.input     AS input,
-            submitdetail.output    AS output,
-            submitdetail.result    AS result,
-            submitdetail.answer    AS answer
+            submission.id           AS id,
+            problem.name            AS pmNm,
+            submission.memoryUsed   AS memoryUsed,
+            submission.timeRun      AS timeRun,
+            submission.createTime   AS createTime,
+            submission.judgeStatus  AS judgeStatus,
+            submission.verdict      AS verdict,
+            submission.sourceCode   AS sourceCode,
+            language.name           AS leNm,
+            submitdetail.id         AS sDlId,
+            submitdetail.input      AS input,
+            submitdetail.output     AS output,
+            submitdetail.result     AS result,
+            submitdetail.answer     AS answer,
+            submitdetail.timeRun    AS detailTimeRun,
+            submitdetail.memoryUsed AS detailMemoryUsed,
+            submitdetail.status AS detailStatus
         FROM submission
             LEFT JOIN problem
                 ON submission.pmId = problem.id
@@ -50,11 +53,11 @@
                    AND language.deleteFlg = '0'
             LEFT JOIN sn_sdl
                 ON submission.id = sn_sdl.snId
-                AND sn_sdl.deleteFlg = '0'
+                   AND sn_sdl.deleteFlg = '0'
             LEFT JOIN submitdetail
-                on sn_sdl.sDlId = submitdetail.id
+                ON sn_sdl.sDlId = submitdetail.id
         WHERE submission.deleteFlg = '0'
-            AND submission.id=#{snId}
+              AND submission.id = #{snId}
     </select>
     <resultMap id="submission" type="SubmissionDTO">
         <id column="id" property="id"/>
@@ -73,6 +76,9 @@
             <result column="output" property="output"/>
             <result column="result" property="result"/>
             <result column="answer" property="answer"/>
+            <result column="detailTimeRun" property="timeRun"/>
+            <result column="detailMemoryUsed" property="memoryUsed"/>
+            <result column="detailStatus" property="status"/>
         </collection>
     </resultMap>
 </mapper>

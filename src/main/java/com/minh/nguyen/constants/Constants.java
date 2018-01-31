@@ -45,8 +45,8 @@ public class Constants {
     public static final String VERDICT_JUDGING = "Đang chấm test ";
     public static final String VERDICT_COMPILE_ERROR = "Lỗi biên dịch";
     public static final String VERDICT_RUNTIME_ERROR = "Lỗi runtime";
-    public static final String VERDICT_TIME_LIMIT_EXCEEDED = "Lỗi quá thời gian chạy.";
-    public static final String VERDICT_MEMORY_LIMIT_EXCEEDED = "Lỗi quá bộ nhớ.";
-    public static final String VERDICT_WRONG_ANSWER = "Sai";
+    public static final String VERDICT_TIME_LIMIT_EXCEEDED = "Lỗi quá thời gian chạy";
+    public static final String VERDICT_MEMORY_LIMIT_EXCEEDED = "Lỗi quá bộ nhớ";
+    public static final String VERDICT_WRONG_ANSWER = "Sai kết quả";
     public static final String VERDICT_ACCEPTED = "Đúng";
 }

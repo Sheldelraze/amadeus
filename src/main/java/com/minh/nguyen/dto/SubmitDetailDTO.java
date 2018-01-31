@@ -11,6 +11,33 @@ public class SubmitDetailDTO extends BaseDTO {
     private String output;
     private String result;
     private String answer;
+    private Integer status;
+    private Integer timeRun;
+    private Integer memoryUsed;
+
+    public int getTimeRun() {
+        return timeRun;
+    }
+
+    public void setTimeRun(int timeRun) {
+        this.timeRun = timeRun;
+    }
+
+    public int getMemoryUsed() {
+        return memoryUsed;
+    }
+
+    public void setMemoryUsed(int memoryUsed) {
+        this.memoryUsed = memoryUsed;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;

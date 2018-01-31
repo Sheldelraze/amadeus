@@ -40,9 +40,9 @@ public class GeneralService extends BaseService {
         List<SubmitDetailDTO> lst = submit.getLstSubmitDetail();
         for(int i = 0;i < lst.size();i++){
             SubmitDetailDTO detail = lst.get(i);
-            detail.setInput(StringUtil.trimString(detail.getInput()));
-            detail.setOutput(StringUtil.trimString(detail.getOutput()));
-            detail.setAnswer(StringUtil.trimString(detail.getAnswer()));
+            detail.setInput(detail.getInput());
+            detail.setOutput(detail.getOutput());
+            detail.setAnswer(detail.getAnswer());
             String res = detail.getResult();
             if (null != res) {
                 res = res.replaceAll(" ", "&ensp;");

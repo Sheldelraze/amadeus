@@ -26,6 +26,16 @@ public class SubmitDetailEntity extends BaseEntity {
     private int timeRun;
     @Column(name = "memoryUsed")
     private int memoryUsed;
+    @Column(name = "status")
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getTimeRun() {
         return timeRun;
