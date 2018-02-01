@@ -23,18 +23,13 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class BaseService<T> {
-    protected ModelMapper modelMapper;
+public class BaseService {
+    public ModelMapper modelMapper;
 
-    protected List<String> exclusiveUpdateField;
     
     @PostConstruct
     private void init() {
         modelMapper = new ModelMapper();
-        exclusiveUpdateField = new ArrayList<>();
-        exclusiveUpdateField.add("createClass");
-        exclusiveUpdateField.add("createUser");
-        exclusiveUpdateField.add("createTime");
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);

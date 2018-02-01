@@ -6,11 +6,105 @@ package com.minh.nguyen.dto;
  * Purpose:
  */
 public class ContestDTO {
+    private Integer id;
     private String name;
     private String date;
     private String time;
-    private String duration;
+    private Integer duration;
     private String startTime;
+    private String description;
+    private String prize;
+    private String requirement;
+    private Integer isPublished;
+    private Integer showTest;
+    private Integer showSubmit;
+    private Integer judgeType;
+    private Integer showStatus;
+    private Integer canPractice;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPrize() {
+        return prize;
+    }
+
+    public void setPrize(String prize) {
+        this.prize = prize;
+    }
+
+    public String getRequirement() {
+        return requirement;
+    }
+
+    public void setRequirement(String requirement) {
+        this.requirement = requirement;
+    }
+
+    public Integer getIsPublished() {
+        return isPublished;
+    }
+
+    public void setIsPublished(Integer isPublished) {
+        this.isPublished = isPublished;
+    }
+
+    public Integer getShowTest() {
+        return showTest;
+    }
+
+    public void setShowTest(Integer showTest) {
+        this.showTest = showTest;
+    }
+
+    public Integer getShowSubmit() {
+        return showSubmit;
+    }
+
+    public void setShowSubmit(Integer showSubmit) {
+        this.showSubmit = showSubmit;
+    }
+
+    public Integer getJudgeType() {
+        return judgeType;
+    }
+
+    public void setJudgeType(Integer judgeType) {
+        this.judgeType = judgeType;
+    }
+
+    public Integer getShowStatus() {
+        return showStatus;
+    }
+
+    public void setShowStatus(Integer showStatus) {
+        this.showStatus = showStatus;
+    }
+
+    public Integer getCanPractice() {
+        return canPractice;
+    }
+
+    public void setCanPractice(Integer canPractice) {
+        this.canPractice = canPractice;
+    }
 
     public String getName() {
         return name;
@@ -36,12 +130,8 @@ public class ContestDTO {
         this.time = time;
     }
 
-    public String getDuration() {
+    public Integer getDuration() {
         return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
     }
 
     public String getStartTime() {

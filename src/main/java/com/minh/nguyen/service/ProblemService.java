@@ -36,7 +36,7 @@ import java.util.List;
  * Purpose:
  */
 @Service("ProblemService")
-public class ProblemService extends BaseService<ProblemEntity> {
+public class ProblemService extends BaseService{
 
     @Autowired
     private ProblemMapper problemMapper;

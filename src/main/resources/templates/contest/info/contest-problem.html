@@ -68,7 +68,7 @@
                     <div class="card">
                         <div class="card-body">
                             <ul class="nav nav-pills m-t-30 m-b-30"
-                                th:replace="contest/info/contest-layout::navtab"></ul>
+                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
                             <div id="problem" class="tab-pane active">
                                 <div class="table-responsive">
                                     <table class="table" style="color: black; text-align: center">

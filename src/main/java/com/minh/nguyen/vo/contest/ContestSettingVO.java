@@ -1,24 +1,50 @@
-package com.minh.nguyen.form.contest;
+package com.minh.nguyen.vo.contest;
 
 /**
  * @author Mr.Minh
- * @since 07/01/2018
+ * @since 01/02/2018
  * Purpose:
  */
-public class ContestSettingForm  extends  ContestLayoutForm{
+public class ContestSettingVO {
     private Integer id;
     private String name;
-    private String duration;
+    private Integer duration;
+    private String date;
+    private String time;
     private String startTime;
     private String description;
     private String prize;
     private String requirement;
-    private String isPublished;
-    private String showTest;
-    private String showSubmit;
-    private String judgeType;
-    private String showStatus;
-    private String canPractice;
+    private Integer isPublished;
+    private Integer showTest;
+    private Integer showSubmit;
+    private Integer judgeType;
+    private Integer showStatus;
+    private Integer canPractice;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
 
     public Integer getId() {
         return id;
@@ -36,20 +62,12 @@ public class ContestSettingForm  extends  ContestLayoutForm{
         this.name = name;
     }
 
-    public String getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
     }
 
     public String getDescription() {
@@ -76,51 +94,51 @@ public class ContestSettingForm  extends  ContestLayoutForm{
         this.requirement = requirement;
     }
 
-    public String getIsPublished() {
+    public Integer getIsPublished() {
         return isPublished;
     }
 
-    public void setIsPublished(String isPublished) {
+    public void setIsPublished(Integer isPublished) {
         this.isPublished = isPublished;
     }
 
-    public String getShowTest() {
+    public Integer getShowTest() {
         return showTest;
     }
 
-    public void setShowTest(String showTest) {
+    public void setShowTest(Integer showTest) {
         this.showTest = showTest;
     }
 
-    public String getShowSubmit() {
+    public Integer getShowSubmit() {
         return showSubmit;
     }
 
-    public void setShowSubmit(String showSubmit) {
+    public void setShowSubmit(Integer showSubmit) {
         this.showSubmit = showSubmit;
     }
 
-    public String getJudgeType() {
+    public Integer getJudgeType() {
         return judgeType;
     }
 
-    public void setJudgeType(String judgeType) {
+    public void setJudgeType(Integer judgeType) {
         this.judgeType = judgeType;
     }
 
-    public String getShowStatus() {
+    public Integer getShowStatus() {
         return showStatus;
     }
 
-    public void setShowStatus(String showStatus) {
+    public void setShowStatus(Integer showStatus) {
         this.showStatus = showStatus;
     }
 
-    public String getCanPractice() {
+    public Integer getCanPractice() {
         return canPractice;
     }
 
-    public void setCanPractice(String canPractice) {
+    public void setCanPractice(Integer canPractice) {
         this.canPractice = canPractice;
     }
 }

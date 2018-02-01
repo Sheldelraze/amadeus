@@ -5,6 +5,7 @@ import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
+import com.minh.nguyen.vo.contest.ContestSettingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,8 +31,8 @@ public class ContestController extends BaseController {
     private static final String SUBMISSION_ALL_VIEW = "contest/info/contest-submission-all";
     private static final String LEADERBOARD_VIEW = "contest/info/contest-leaderboard";
     private static final String SETTING_VIEW = "contest/info/contest-setting";
+    private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announcement";
     private static final String ROLE_VIEW = "contest/info/contest-role";
-
     private static final String LAYOUT_FORM = "contestLayoutForm";
     private static final String INFORMATION_FORM = "contestInformationForm";
     private static final String PROBLEM_FORM = "contestProblemForm";
@@ -42,119 +43,149 @@ public class ContestController extends BaseController {
     private static final String LEADERBOARD_FORM = "contestLeaderboardForm";
     private static final String SETTING_FORM = "contestSettingForm";
     private static final String ROLE_FORM = "contestRoleForm";
+    private static final String TAB = "tab";
+    private static final String CONTEST_ID = "ctId";
 
     @Autowired
     private ContestService contestService;
-    public ModelAndView getGeneralInfo(int pmId,ContestLayoutForm contestLayoutForm){
-        ModelAndView modelAndView = new ModelAndView();
 
-        return modelAndView;
-    }
     @GetMapping("/create")
-    public ModelAndView createContest(ContestCreateForm contestCreateForm){
+    public ModelAndView createContest(ContestCreateForm contestCreateForm) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(CREATE_VIEW);
-        if (null == contestCreateForm){
+        if (null == contestCreateForm) {
             contestCreateForm = new ContestCreateForm();
         }
         modelAndView.addObject(CREATE_FORM, contestCreateForm);
         return modelAndView;
     }
+
     @PostMapping("/doCreate")
-    public ModelAndView doCreate(ContestCreateForm contestCreateForm, BindingResult bindingResult){
+    public ModelAndView doCreate(ContestCreateForm contestCreateForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
 //        validate(contestCreateForm,bindingResult);
 //        if (bindingResult.hasErrors()){
 //            return createContest(contestCreateForm);
 //        }
-        try{
+        try {
             ContestDTO contestDTO = new ContestDTO();
-            modelMapper.map(contestCreateForm,contestDTO);
+            modelMapper.map(contestCreateForm, contestDTO);
             int ctId = contestService.createContest(contestDTO);
             return getInformation(ctId);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
             return createContest(contestCreateForm);
         }
     }
-    @GetMapping("/{ctId}/information")
-    public ModelAndView getInformation(@PathVariable("ctId") int ctId){
-        ContestLayoutForm contestInformationForm = new ContestInformationForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestInformationForm);
-        modelAndView.setViewName(INFORMATION_VIEW);
-        modelAndView.addObject(INFORMATION_FORM,contestInformationForm);
 
+    @GetMapping({"/{ctId}/information","/{ctId}/","/{ctId}"})
+    public ModelAndView getInformation(@PathVariable("ctId") int ctId) {
+        ContestLayoutForm contestInformationForm = new ContestInformationForm();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(INFORMATION_VIEW);
+        modelAndView.addObject(INFORMATION_FORM, contestInformationForm);
+        modelAndView.addObject(TAB, 1);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @GetMapping("/{ctId}/problem")
-    public ModelAndView getProblem(@PathVariable("ctId") int ctId){
+    public ModelAndView getProblem(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestProblemForm = new ContestProblemForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestProblemForm);
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PROBLEM_VIEW);
-        modelAndView.addObject(PROBLEM_FORM,contestProblemForm);
-
+        modelAndView.addObject(PROBLEM_FORM, contestProblemForm);
+        modelAndView.addObject(TAB, 2);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @GetMapping("/{ctId}/submit")
-    public ModelAndView getSubmit(@PathVariable("ctId") int ctId){
+    public ModelAndView getSubmit(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestSubmitForm = new ContestSubmitForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestSubmitForm);
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMIT_VIEW);
-        modelAndView.addObject(SUBMIT_FORM,contestSubmitForm);
-
+        modelAndView.addObject(SUBMIT_FORM, contestSubmitForm);
+        modelAndView.addObject(TAB, 3);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @GetMapping("/{ctId}/my")
-    public ModelAndView getMy(@PathVariable("ctId") int ctId){
+    public ModelAndView getMy(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestSubmissionMyForm = new ContestSubmissionMyForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestSubmissionMyForm);
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMISSION_MY_VIEW);
-        modelAndView.addObject(SUBMISSION_MY_FORM,contestSubmissionMyForm);
-
+        modelAndView.addObject(SUBMISSION_MY_FORM, contestSubmissionMyForm);
+        modelAndView.addObject(TAB, 4);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @GetMapping("/{ctId}/all")
-    public ModelAndView getAll(@PathVariable("ctId") int ctId){
+    public ModelAndView getAll(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestSubmissionAllForm = new ContestSubmissionAllForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestSubmissionAllForm);
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMISSION_ALL_VIEW);
-        modelAndView.addObject(SUBMISSION_ALL_FORM,contestSubmissionAllForm);
-
+        modelAndView.addObject(SUBMISSION_ALL_FORM, contestSubmissionAllForm);
+        modelAndView.addObject(TAB, 5);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @GetMapping("/{ctId}/leaderboard")
-    public ModelAndView getLeaderboard(@PathVariable("ctId") int ctId){
+    public ModelAndView getLeaderboard(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestLeaderboardForm = new ContestLeaderboardForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestLeaderboardForm);
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(LEADERBOARD_VIEW);
-        modelAndView.addObject(LEADERBOARD_FORM,contestLeaderboardForm);
+        modelAndView.addObject(LEADERBOARD_FORM, contestLeaderboardForm);
+        modelAndView.addObject(TAB, 6);
+        modelAndView.addObject(CONTEST_ID, ctId);
+        return modelAndView;
+    }
 
+    @GetMapping("/{ctId}/announcement")
+    public ModelAndView getAnnouncement(@PathVariable("ctId") int ctId) {
+        ContestLayoutForm contestSettingForm = new ContestSettingForm();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ANNOUNCEMENT_VIEW);
+
+        modelAndView.addObject(TAB, 7);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @GetMapping("/{ctId}/setting")
-    public ModelAndView getSetting(@PathVariable("ctId") int ctId){
-        ContestLayoutForm contestSettingForm = new ContestSettingForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestSettingForm);
+    public ModelAndView getSetting(@PathVariable("ctId") int ctId,ContestLayoutForm contestSettingForm,boolean updateSuccess) {
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SETTING_VIEW);
-        modelAndView.addObject(SETTING_FORM,contestSettingForm);
-
+        if (null == contestSettingForm){
+            contestSettingForm = new ContestSettingForm();
+        }
+        modelAndView.addObject("updateSuccess",updateSuccess);
+        modelAndView.addObject(SETTING_FORM, contestSettingForm);
+        modelAndView.addObject(TAB, 8);
+        modelAndView.addObject(CONTEST_ID, ctId);
+        ContestDTO contestDTO = contestService.getContestInfo(ctId);
+        ContestSettingVO contestSettingVO = new ContestSettingVO();
+        contestService.modelMapper.map(contestDTO,contestSettingVO);
+        modelAndView.addObject("contestSettingVO",contestSettingVO);
         return modelAndView;
     }
 
+    @PostMapping("/{ctId}/setting")
+    public ModelAndView updateSetting(@PathVariable("ctId") int ctId,ContestLayoutForm contestSettingForm,BindingResult bindingResult){
+        return  getSetting(ctId,contestSettingForm,true);
+    }
     @GetMapping("/{ctId}/role")
-    public ModelAndView getRole(@PathVariable("ctId") int ctId){
+    public ModelAndView getRole(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestRoleForm = new ContestRoleForm();
-        ModelAndView modelAndView = getGeneralInfo(ctId,contestRoleForm);
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(ROLE_VIEW);
-        modelAndView.addObject(ROLE_FORM,contestRoleForm);
-
+        modelAndView.addObject(ROLE_FORM, contestRoleForm);
+        modelAndView.addObject(TAB, 9);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 

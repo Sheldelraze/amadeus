@@ -45,6 +45,39 @@ public class ContestEntity extends BaseEntity implements Serializable {
     @Column(name="showSubmit")
     private Integer showSubmit;
 
+    @Column(name="judgeType")
+    private Integer judgeType;
+
+    @Column(name="showStatus")
+    private Integer showStatus;
+
+    @Column(name="canPractice")
+    private Integer canPractice;
+
+    public Integer getJudgeType() {
+        return judgeType;
+    }
+
+    public void setJudgeType(Integer judgeType) {
+        this.judgeType = judgeType;
+    }
+
+    public Integer getShowStatus() {
+        return showStatus;
+    }
+
+    public void setShowStatus(Integer showStatus) {
+        this.showStatus = showStatus;
+    }
+
+    public Integer getCanPractice() {
+        return canPractice;
+    }
+
+    public void setCanPractice(Integer canPractice) {
+        this.canPractice = canPractice;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

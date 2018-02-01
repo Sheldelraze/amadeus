@@ -7,6 +7,7 @@ package com.minh.nguyen.dto;
  */
 public class SubmitDetailDTO extends BaseDTO {
     private Integer id;
+    private String name;
     private String input;
     private String output;
     private String result;
@@ -14,6 +15,26 @@ public class SubmitDetailDTO extends BaseDTO {
     private Integer status;
     private Integer timeRun;
     private Integer memoryUsed;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setTimeRun(Integer timeRun) {
+        this.timeRun = timeRun;
+    }
+
+    public void setMemoryUsed(Integer memoryUsed) {
+        this.memoryUsed = memoryUsed;
+    }
 
     public int getTimeRun() {
         return timeRun;
