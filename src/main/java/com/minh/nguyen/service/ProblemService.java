@@ -200,7 +200,7 @@ public class ProblemService extends BaseService{
         setUpdateInfo(problemEntity);
         int recordCnt = 0;
         try {
-            recordCnt = problemMapper.updateByPKExceptFields(problemEntity);
+            recordCnt = problemMapper.updateByPKExceptNullFields(problemEntity);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -246,7 +246,7 @@ public class ProblemService extends BaseService{
         InputEntity inputEntity = new InputEntity();
         modelMapper.map(problemUpdateTestForm, inputEntity);
         try {
-            inputMapper.updateByPKExceptFields(inputEntity);
+            inputMapper.updateByPKExceptNullFields(inputEntity);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

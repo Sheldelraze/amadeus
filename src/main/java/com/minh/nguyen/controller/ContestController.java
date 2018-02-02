@@ -157,25 +157,41 @@ public class ContestController extends BaseController {
     }
 
     @GetMapping("/{ctId}/setting")
-    public ModelAndView getSetting(@PathVariable("ctId") int ctId,ContestLayoutForm contestSettingForm,boolean updateSuccess) {
+    public ModelAndView getSetting(@PathVariable("ctId") int ctId,ContestSettingForm contestSettingForm,boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SETTING_VIEW);
-        if (null == contestSettingForm){
+        ContestSettingVO contestSettingVO = new ContestSettingVO();
+        if (null == contestSettingForm.getId()){
             contestSettingForm = new ContestSettingForm();
+            ContestDTO contestDTO = contestService.getContestInfo(ctId);
+            contestService.modelMapper.map(contestDTO,contestSettingVO);
+        }
+        else{
+            contestService.modelMapper.map(contestSettingForm,contestSettingVO);
         }
         modelAndView.addObject("updateSuccess",updateSuccess);
         modelAndView.addObject(SETTING_FORM, contestSettingForm);
         modelAndView.addObject(TAB, 8);
         modelAndView.addObject(CONTEST_ID, ctId);
-        ContestDTO contestDTO = contestService.getContestInfo(ctId);
-        ContestSettingVO contestSettingVO = new ContestSettingVO();
-        contestService.modelMapper.map(contestDTO,contestSettingVO);
         modelAndView.addObject("contestSettingVO",contestSettingVO);
+        modelAndView.addObject("contestSettingForm",contestSettingForm);
         return modelAndView;
     }
 
     @PostMapping("/{ctId}/setting")
-    public ModelAndView updateSetting(@PathVariable("ctId") int ctId,ContestLayoutForm contestSettingForm,BindingResult bindingResult){
+    public ModelAndView updateSetting(@PathVariable("ctId") int ctId,ContestSettingForm contestSettingForm,BindingResult bindingResult){
+        validate(contestSettingForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            contestSettingForm.setId(ctId);
+            return  getSetting(ctId,contestSettingForm,false);
+        }
+        try{
+            contestSettingForm.setId(ctId);
+            contestService.updateContest(contestSettingForm);
+        }catch(Exception e){
+            e.printStackTrace();
+            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
+        }
         return  getSetting(ctId,contestSettingForm,true);
     }
     @GetMapping("/{ctId}/role")

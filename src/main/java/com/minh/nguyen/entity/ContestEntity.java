@@ -18,41 +18,63 @@ public class ContestEntity extends BaseEntity implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="startTime")
+    @Column(name = "startTime")
     private Date startTime;
 
     @Column(name = "duration")
     private Integer duration;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="isPublished")
+    @Column(name = "isPublished")
     private Integer isPublished;
 
-    @Column(name="requirement")
+    @Column(name = "requirement")
     private String requirement;
 
-    @Column(name="prize")
+    @Column(name = "prize")
     private String prize;
 
-    @Column(name="showTest")
+    @Column(name = "showTest")
     private Integer showTest;
 
-    @Column(name="showSubmit")
+    @Column(name = "showSubmit")
     private Integer showSubmit;
 
-    @Column(name="judgeType")
+    @Column(name = "judgeType")
     private Integer judgeType;
 
-    @Column(name="showStatus")
+    @Column(name = "showStatus")
     private Integer showStatus;
 
-    @Column(name="canPractice")
+    @Column(name = "canPractice")
     private Integer canPractice;
+
+    @Column(name = "isPublic")
+    private Integer isPublic;
+
+    @Column(name = "showToAll")
+    private Integer showToAll;
+
+    public Integer getShowToAll() {
+        return showToAll;
+    }
+
+    public void setShowToAll(Integer showToAll) {
+        this.showToAll = showToAll;
+    }
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
+    }
 
     public Integer getJudgeType() {
         return judgeType;

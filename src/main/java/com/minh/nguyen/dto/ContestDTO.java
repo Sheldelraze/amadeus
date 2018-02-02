@@ -21,6 +21,24 @@ public class ContestDTO {
     private Integer judgeType;
     private Integer showStatus;
     private Integer canPractice;
+    private Integer isPublic;
+    private Integer showToAll;
+
+    public Integer getShowToAll() {
+        return showToAll;
+    }
+
+    public void setShowToAll(Integer showToAll) {
+        this.showToAll = showToAll;
+    }
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
+    }
 
     public Integer getId() {
         return id;
