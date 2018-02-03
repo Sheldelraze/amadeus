@@ -6,6 +6,7 @@ import com.minh.nguyen.provider.BaseProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface ProblemMapper extends BaseMapper<ProblemEntity> {
     Integer insertEntity(ProblemEntity record);
 
     List<ProblemDTO> getAllProblem();
+
+    List<ProblemDTO> getProblemForContest(@Param("ctId") Integer ctId);
 }

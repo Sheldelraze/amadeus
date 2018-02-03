@@ -5,7 +5,6 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.entity.SnSDlEntity;
 import com.minh.nguyen.entity.SubmissionEntity;
 import com.minh.nguyen.entity.SubmitDetailEntity;
@@ -17,10 +16,8 @@ import com.minh.nguyen.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Mr.Minh
@@ -100,8 +97,8 @@ public class JudgeService extends BaseService {
             submissionMapper.updateByPK(submissionEntity);
             //set id = null de insert = BaseMapper không bị lỗi
             submitDetailEntity.setId(null);
-            submitDetailEntity.setInput(StringUtil.trimString(inputDTO.getInput()));
-            submitDetailEntity.setAnswer(StringUtil.trimString(inputDTO.getOutput()));
+            submitDetailEntity.setInput(StringUtil.getFirst100Chars(inputDTO.getInput()));
+            submitDetailEntity.setAnswer(StringUtil.getFirst100Chars(inputDTO.getOutput()));
             try {
                 Outcome outcome = CompileUtil.doRun(languageDTO, problemDTO, inputDTO
                         , submissionEntity.getId());
@@ -121,7 +118,7 @@ public class JudgeService extends BaseService {
                     submitDetailEntity.setStatus(compareResult.getStatus());
 
 
-                    submitDetailEntity.setOutput(StringUtil.trimString(outcome.getOutput()));
+                    submitDetailEntity.setOutput(StringUtil.getFirst100Chars(outcome.getOutput()));
                     if (compareResult.getStatus() == Constants.STATUS_WRONG_ANSWER) {
                         wrongAns = true;
                     }

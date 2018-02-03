@@ -3,14 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <typeAliases>
-        <typeAlias alias="InputDTO" type="com.minh.nguyen.dto.InputDTO"/>
-        <typeAlias alias="ProblemDTO" type="com.minh.nguyen.dto.ProblemDTO"/>
-        <typeAlias alias="TagDTO" type="com.minh.nguyen.dto.TagDTO"/>
-        <typeAlias alias="LanguageDTO" type="com.minh.nguyen.dto.LanguageDTO"/>
-        <typeAlias alias="SubmissionDTO" type="com.minh.nguyen.dto.SubmissionDTO"/>
-        <typeAlias alias="SubmitDetailDTO" type="com.minh.nguyen.dto.SubmitDetailDTO"/>
-    </typeAliases>
     <typeHandlers>
     </typeHandlers>
     <mappers>

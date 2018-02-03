@@ -3,6 +3,7 @@ package com.minh.nguyen.controller;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.ContestDTO;
+import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.util.DateUtils;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -30,6 +32,7 @@ public class ContestController extends BaseController {
     private static final String INFORMATION_VIEW = "contest/info/contest-information";
     private static final String CREATE_VIEW = "contest/other/contest-create";
     private static final String PROBLEM_VIEW = "contest/info/contest-problem";
+    private static final String ADD_PROBLEM_VIEW = "contest/other/contest-add-problem";
     private static final String SUBMIT_VIEW = "contest/info/contest-submit";
     private static final String SUBMISSION_MY_VIEW = "contest/info/contest-submission-my";
     private static final String SUBMISSION_ALL_VIEW = "contest/info/contest-submission-all";
@@ -93,7 +96,36 @@ public class ContestController extends BaseController {
         modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
-
+    @GetMapping("/{ctId}/addProblem")
+    public ModelAndView initAddProblem(@PathVariable("ctId") int ctId,ContestAddProblemForm contestAddProblemForm,
+                                       Boolean updateSuccess) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ADD_PROBLEM_VIEW);
+        if (null == contestAddProblemForm){
+            contestAddProblemForm = new ContestAddProblemForm();
+        }
+        List<ProblemDTO> lstProblemDTO = contestService.getProblemToAdd(ctId);
+        contestAddProblemForm.setLstProblemDTO(lstProblemDTO);
+        modelAndView.addObject("updateSuccess",updateSuccess);
+        modelAndView.addObject("ctId",ctId);
+        modelAndView.addObject("contestAddProblemForm",contestAddProblemForm);
+        return modelAndView;
+    }
+    @PostMapping("/{ctId}/addProblem")
+    public ModelAndView doAddProblem(@PathVariable("ctId") int ctId,
+                                     ContestAddProblemForm contestAddProblemForm,
+                                     BindingResult bindingResult){
+        try{
+            contestService.addProblemToContest(contestAddProblemForm.getLstPmId());
+        }catch (Exception e){
+            e.printStackTrace();
+            addLogicError(bindingResult,Constants.MSG_SYSTEM_ERR);
+        }
+        if (bindingResult.hasErrors()){
+            return initAddProblem(ctId,contestAddProblemForm,false);
+        }
+        return initAddProblem(ctId,contestAddProblemForm,true);
+    }
     @GetMapping("/{ctId}/problem")
     public ModelAndView getProblem(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestProblemForm = new ContestProblemForm();

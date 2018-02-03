@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../static/assets/images/favicon.png"
+          th:href="@{/assets/images/favicon.png}">
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+
+    <link href="../../../static/assets/plugins/bootstrap/css/bootstrap.min.css"
+          th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="../../../static/css/colors/blue.css" th:href="@{/css/colors/blue.css}" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+</head>
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <div class="row" style="margin-top:30px;color:black">
+            <!-- Column -->
+            <!-- Column -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form th:action="|/contest/${ctId}/addProblem|"
+                              th:object="${contestAddProblemForm}" method="post">
+                            <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                <div class="alert alert-danger">
+                                    ✘ <label th:errors="*{screenMessage}"></label>
+                                </div>
+                            </th:block>
+                            <th:block th:if="${updateSuccess}">
+                                <div class="alert alert-success">
+                                    ✔ Cập nhật thành công
+                                </div>
+                            </th:block>
+                            <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()"
+                                    style="margin-left: 50px">Đóng cứa sổ
+                            </button>
+                            <div style="text-align: center">
+                                <h3>Thêm bài tập</h3>
+                            </div>
+                            <table id="myTable" class="table table-bordered "
+                                   style="text-align: center; color: black; font-size: 14px">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center" width="20px">ID</th>
+                                    <th style="text-align: center" width="150px">Mã bài tập</th>
+                                    <th style="text-align: center" width="200px">Tên bài tập</th>
+                                    <th style="text-align: center" width="200px">Độ khó</th>
+                                    <th style="text-align: center" width="250px">Môn học</th>
+                                    <th style="text-align: center" width="200px">Người tạo</th>
+                                    <th style="text-align: center" width="200px">Thể loại</th>
+                                    <th style="text-align: center" width="200px">Thêm</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${contestAddProblemForm.lstProblemDTO != null}"
+                                    th:each="problem,iter : ${contestAddProblemForm.lstProblemDTO}">
+                                    <td th:text="${problem.id}"></td>
+                                    <td style="font-weight: 900;font-size: large"><a
+                                            th:href="|/problem/${problem.id}/view|" th:text="${problem.code}"></a>
+                                    </td>
+                                    <td th:text="${problem.name}"></td>
+                                    <td>
+                                        <th:block th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
+                                            <img th:src="@{/assets/images/star.png}"/>
+                                        </th:block>
+                                    </td>
+                                    <td>Lập trình C++</td>
+                                    <td><a href="#">Nguyễn Tuấn Minh</a></td>
+                                    <td th:text="${problem.tag}">Cơ bản, đồ thị</td>
+
+                                    <td>
+                                        <div class="checkbox checkbox-single">
+                                            <input th:value="${problem.id}"
+                                                   type="checkbox"
+                                                   th:id="|lstPmId${__${problem.id}__}|" name="lstPmId"/>
+                                            <label th:for="|lstPmId${__${problem.id}__}|"></label>
+                                        </div>
+                                       </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <div style="margin-left: 42%">
+                                <button type="submit" class="btn btn-success" style="margin-left: 50px">Thêm bài tập
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Container fluid  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+
+<script>
+    function CloseMySelf() {
+        try {
+            window.opener.HandlePopupResult();
+        }
+        catch (err) {
+        }
+        window.close();
+        return false;
+    }
+</script>
+<script src="../../../static/assets/plugins/jquery/jquery.min.js"
+        th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
+></script>
+<!--Custom JavaScript -->
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--c3 JavaScript -->
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

@@ -5,23 +5,46 @@
 
 <mapper namespace="com.minh.nguyen.mapper.ProblemMapper">
     <select id="getAllProblem" resultMap="problem">
-      select
-          problem.difficulty as dif,
-          problem.isPublished as pub,
-          problem.id as pmId,
-          problem.code as pmCe,
-          problem.name as pmNe,
-          tag.name as tgNe,
-          tag.id as tgId
-          from
-              problem
-          left join pm_tg
-              on pm_tg.pmId = problem.id
-              and pm_tg.deleteFlg='0'
-          left join tag
-              on tag.id = pm_tg.tgId
-              and tag.deleteFlg='0'
-          where problem.deleteFlg='0'
+        SELECT
+            problem.difficulty  AS dif,
+            problem.isPublished AS pub,
+            problem.id          AS pmId,
+            problem.code        AS pmCe,
+            problem.name        AS pmNe,
+            tag.name            AS tgNe,
+            tag.id              AS tgId
+        FROM
+            problem
+            LEFT JOIN pm_tg
+                ON pm_tg.pmId = problem.id
+                   AND pm_tg.deleteFlg = '0'
+            LEFT JOIN tag
+                ON tag.id = pm_tg.tgId
+                   AND tag.deleteFlg = '0'
+        WHERE problem.deleteFlg = '0'
+    </select>
+    <select id="getProblemForContest" resultMap="problem">
+        SELECT
+            problem.difficulty  AS dif,
+            problem.isPublished AS pub,
+            problem.id          AS pmId,
+            problem.code        AS pmCe,
+            problem.name        AS pmNe,
+            tag.name            AS tgNe,
+            tag.id              AS tgId
+        FROM
+            problem
+            LEFT JOIN pm_tg
+                ON pm_tg.pmId = problem.id
+                   AND pm_tg.deleteFlg = '0'
+            LEFT JOIN tag
+                ON tag.id = pm_tg.tgId
+                   AND tag.deleteFlg = '0'
+        WHERE problem.deleteFlg = '0'
+              AND problem.id not in (
+            select pmId from ct_pm
+              where ctId = #{ctId}
+        )
     </select>
     <resultMap id="problem" type="ProblemDTO">
         <id column="pmId" property="id"/>

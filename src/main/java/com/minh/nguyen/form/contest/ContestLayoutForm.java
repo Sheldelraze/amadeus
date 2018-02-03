@@ -8,7 +8,16 @@ import com.minh.nguyen.form.BaseForm;
  * Purpose:
  */
 public class ContestLayoutForm extends BaseForm {
+    protected Integer id;
     private Integer viewTab;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getViewTab() {
         return viewTab;

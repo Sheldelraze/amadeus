@@ -11,7 +11,6 @@ import com.minh.nguyen.validator.annotation.Required;
  * Purpose:
  */
 public class ContestSettingForm  extends ContestLayoutForm{
-    private Integer id;
     @Required(displayFieldName = "name")
     @MaxLength(displayFieldName = "name", maxlength = 50)
     private String name;
@@ -67,14 +66,6 @@ public class ContestSettingForm  extends ContestLayoutForm{
 
     public void setIsPublic(String isPublic) {
         this.isPublic = isPublic;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

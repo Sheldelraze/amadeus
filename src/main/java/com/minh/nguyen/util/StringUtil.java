@@ -91,10 +91,10 @@ public class StringUtil {
                             .append(i + 1)
                             .append(":\r\n")
                             .append("Output: ")
-                            .append(out[i])
+                            .append(getFirst100Chars(out[i]))
                             .append("\r\n")
                             .append("Kết quả: ")
-                            .append(ans[i]).toString();
+                            .append(getFirst100Chars(ans[i])).toString();
                     compareResult.setStatus(Constants.STATUS_WRONG_ANSWER);
                     correct = false;
                     break;
@@ -193,7 +193,7 @@ public class StringUtil {
         }
     }
 
-    public static String trimString(String s) {
+    public static String getFirst100Chars(String s) {
         if (null == s) {
             return null;
         }
