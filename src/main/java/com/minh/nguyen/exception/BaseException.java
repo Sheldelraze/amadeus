@@ -1,10 +1,9 @@
 package com.minh.nguyen.exception;
 
 /**
- * <p>ファイル名 : BaseException</p>
- * <p>説明 : BaseException</p>
- * @author bp.truong.pq
- * @since 2017/11/25
+ * @author Mr.Minh
+ * @since 07/01/2018
+ * Purpose:
  */
 public class BaseException extends Exception {
 

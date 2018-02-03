@@ -5,6 +5,7 @@ import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
+import com.minh.nguyen.vo.contest.ContestInformationVO;
 import com.minh.nguyen.vo.contest.ContestSettingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.DateUtils;
+
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -81,10 +85,10 @@ public class ContestController extends BaseController {
 
     @GetMapping({"/{ctId}/information","/{ctId}/","/{ctId}"})
     public ModelAndView getInformation(@PathVariable("ctId") int ctId) {
-        ContestLayoutForm contestInformationForm = new ContestInformationForm();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(INFORMATION_VIEW);
-        modelAndView.addObject(INFORMATION_FORM, contestInformationForm);
+        ContestInformationVO contestInformationVO = contestService.getInformation(ctId);
+        modelAndView.addObject("contestInformationVO",contestInformationVO);
         modelAndView.addObject(TAB, 1);
         modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;

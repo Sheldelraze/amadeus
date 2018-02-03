@@ -20,7 +20,7 @@
 <!-- ============================================================== -->
 <!-- Main wrapper - style you can find in pages.scss -->
 <!-- ============================================================== -->
-<div id="main-wrapper">
+<div id="main-wrapper" >
     <!-- ============================================================== -->
     <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
@@ -59,55 +59,49 @@
             <!-- ============================================================== -->
             <!-- ============================================================== -->
             <!-- Start Page Content -->
-            <div class="row">
+            <div class="row" >
                 <!-- Column -->
                 <!-- Column -->
                 <div class="col-lg-12 col-xlg-12 col-md-12" th:replace="contest/info/contest-layout::time"></div>
                 <div class="col-lg-12 col-xlg-12 col-md-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body" >
                             <ul class="nav nav-pills m-t-30 m-b-30" th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
-                            <div id="infomation" class="tab-pane">
+                            <div id="infomation" class="tab-pane" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                                 <div class="form-group row" style="color:black">
                                     <label class="col-3 col-form-label text-right">Tên cuộc thi</label>
                                     <div class="col-9">
-                                        <label class="col-form-label text-right" style="font-weight:700">Lập trình hướng đổi tượng</label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" style="color:black">
-                                    <label class="col-3 col-form-label text-right">Môn học</label>
-                                    <div class="col-9">
-                                        <label class="col-form-label text-right" style="font-weight:700">Trí tuệ nhân tạo</label>
+                                        <label class="col-form-label" style="font-weight:700" th:text="${contestInformationVO.name}">Lập trình hướng đổi tượng</label>
                                     </div>
                                 </div>
                                 <div class="form-group row" style="color:black">
                                     <label class="col-3 col-form-label text-right">Thời gian bắt đầu</label>
                                     <div class="col-9">
-                                        <label class="col-form-label text-right" style="font-weight:700">30/02/2017 16:00</label>
+                                        <label class="col-form-label" style="font-weight:700" th:text="${contestInformationVO.start}">30/02/2017 16:00</label>
                                     </div>
                                 </div>
                                 <div class="form-group row" style="color:black">
                                     <label class="col-3 col-form-label text-right">Thời gian kết thúc</label>
                                     <div class="col-9">
-                                        <label class="col-form-label text-right" style="font-weight:700">31/02/2017 19:00</label>
+                                        <label class="col-form-label" style="font-weight:700" th:text="${contestInformationVO.end}">31/02/2017 19:00</label>
                                     </div>
                                 </div>
                                 <div class="form-group row" style="color:black">
                                     <label class="col-3 col-form-label text-right">Yêu cầu</label>
                                     <div class="col-9">
-                                        <label class="col-form-label text-right" style="font-weight:700">Tốt nghiệp mẫu giáo bé</label>
+                                        <label class="col-form-label" style="font-weight:700;white-space: pre-line" th:text="${contestInformationVO.requirement}">Tốt nghiệp mẫu giáo bé</label>
                                     </div>
                                 </div>
                                 <div class="form-group row" style="color:black">
                                     <label class="col-3 col-form-label text-right">Mô tả</label>
                                     <div class="col-9">
-                                        <label class="col-form-label text-right" style="font-weight:700">Kiểm tra hệ số 1 môn thể dục của giáo sư PVH</label>
+                                        <label class="col-form-label" style="font-weight:700;white-space: pre-line" th:text="${contestInformationVO.description}">Kiểm tra hệ số 1 môn thể dục của giáo sư PVH</label>
                                     </div>
                                 </div>
                                 <div class="form-group row" style="color:black">
                                     <label class="col-3 col-form-label text-right">Giải thưởng</label>
                                     <div class="col-9">
-                                        <label class="col-form-label text-right" style="font-weight:700">Giải nhất, nhì, ba: Một tràng pháo tay thật to</label>
+                                        <label class="col-form-label" style="font-weight:700;white-space: pre-line" th:text="${contestInformationVO.prize}">Giải nhất, nhì, ba: Một tràng pháo tay thật to</label>
                                     </div>
                                 </div>
                             </div>

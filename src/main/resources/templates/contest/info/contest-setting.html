@@ -205,7 +205,8 @@
                                             tả</label>
                                         <div class="col-10">
                                             <textarea class="form-control" id="description" name="description"
-                                                      th:value="${contestSettingVO.description}" rows="5"></textarea>
+                                                      style="white-space: pre;color:black"
+                                                      rows="5" th:inline="text">[[${contestSettingVO.description}]]</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group  row">
@@ -214,8 +215,8 @@
                                         <div class="col-10">
                                             <textarea class="form-control"
                                                       id="requirement" name="requirement"
-                                                      th:value="${contestSettingVO.requirement}"
-                                                      rows="5"></textarea>
+                                                      style="white-space: pre;color:black"
+                                                      rows="5" th:inline="text">[[${contestSettingVO.requirement}]]</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group  row">
@@ -224,8 +225,8 @@
                                         <div class="col-10">
                                             <textarea class="form-control"
                                                       id="prize" name="prize"
-                                                      th:value="${contestSettingVO.prize}"
-                                                      rows="5"></textarea>
+                                                      style="white-space: pre;color:black"
+                                                      rows="5" th:inline="text">[[${contestSettingVO.prize}]]</textarea>
                                         </div>
                                     </div>
                                     <hr style="width: 100%"/>

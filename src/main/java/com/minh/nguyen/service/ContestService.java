@@ -4,11 +4,14 @@ import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.entity.ContestEntity;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.ContestMapper;
+import com.minh.nguyen.vo.contest.ContestInformationVO;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -59,7 +62,19 @@ public class ContestService extends BaseService {
         contestDTO.setTime(timeFormat.format(contestEntity.getStartTime()));
         return contestDTO;
     }
-
+    public ContestInformationVO getInformation(int ctId){
+        ContestInformationVO contestInformationVO = new ContestInformationVO();
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setId(ctId);
+        contestEntity = contestMapper.selectByPK(contestEntity);
+        modelMapper.map(contestEntity,contestInformationVO);
+        Date startTime = contestEntity.getStartTime();
+        SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        contestInformationVO.setStart(sdfr.format(startTime));
+        Date endTime = DateUtils.addMinutes(startTime,contestEntity.getDuration());
+        contestInformationVO.setEnd(sdfr.format(endTime));
+        return contestInformationVO;
+    }
     public void updateContest(ContestSettingForm contestSettingForm) throws Exception{
         try {
             ContestEntity contestEntity = new ContestEntity();
