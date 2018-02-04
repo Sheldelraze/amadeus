@@ -27,7 +27,7 @@ import java.util.List;
  * Purpose:
  */
 @Controller
-@RequestMapping("/problem")
+@RequestMapping("/problem/info/")
 public class ProblemController extends BaseController {
     private static final String PROBLEM_LIST = "problemList";
     private static final String LAYOUT_FORM = "problemLayoutForm";
@@ -217,7 +217,6 @@ public class ProblemController extends BaseController {
         modelAndView.setViewName(STATEMENT_VIEW);
         return modelAndView;
     }
-
     @GetMapping("/{pmId}/solution")
     public ModelAndView getSolution(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm,
                                     ProblemSolutionForm problemSolutionForm,

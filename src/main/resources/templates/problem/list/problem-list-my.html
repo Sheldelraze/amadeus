@@ -87,7 +87,7 @@
                                     <tbody th:remove="all-but-first">
                                     <tr th:if="${problemList != null}" th:each="problem,iter : ${problemList}">
                                         <td th:text="${problem.id}"></td>
-                                        <td style="font-weight: 900;font-size: large"><a th:href="|/problem/${problem.id}/view|" th:text="${problem.code}"></a></td>
+                                        <td style="font-weight: 900;font-size: large"><a th:href="|/problem/info/${problem.id}/view|" th:text="${problem.code}"></a></td>
                                         <td th:text="${problem.name}"></td>
                                         <td>
                                             <th:block th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
@@ -96,7 +96,7 @@
                                         </td>
                                         <td>Lập trình C++</td>
                                         <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                        <td th:text="${problem.tag}">Cơ bản, đồ thị</td>
+                                        <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị</td>
                                         <td th:if="${problem.isPublished==1}"><span class="label label-success">Đã xuất bản</span></td>
                                         <td th:unless="${problem.isPublished==1}"><span class="label label-danger">Chưa xuất bản</span></td>
                                     </tr>

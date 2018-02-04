@@ -83,7 +83,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div id="settings" class="tab-pane active" style="color: black">
-                            <form th:action="|/problem/${pmId}/doUpdateTest/${problemUpdateTestForm.id}|" th:object="${problemUpdateTestForm}" method="post">
+                            <form th:action="|/problem/info/${pmId}/doUpdateTest/${problemUpdateTestForm.id}|" th:object="${problemUpdateTestForm}" method="post">
                                 <th:block th:if="${#fields.hasErrors('screenMessage')}">
 
                                     <div class="alert alert-danger">
@@ -140,7 +140,7 @@
                                         <label for="showInput">Sử dụng trong đề bài</label>
                                     </div>
                                 </div>
-                                <div style="margin-left: 35%">
+                                <div style="text-align: center">
                                     <button type="submit" class="btn btn-success" style="margin-left: 50px">Cập nhật bộ test
                                     </button>
                                 </div>

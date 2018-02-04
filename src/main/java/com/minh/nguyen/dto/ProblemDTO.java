@@ -28,6 +28,33 @@ public class ProblemDTO extends BaseDTO {
     private List<InputDTO> lstInput;
     private List<TagDTO> lstTag;
     private String tag;
+    private Integer isHidden;
+    private Integer solveCnt;
+    private Integer alias;
+
+    public Integer getAlias() {
+        return alias;
+    }
+
+    public void setAlias(Integer alias) {
+        this.alias = alias;
+    }
+
+    public Integer getSolveCnt() {
+        return solveCnt;
+    }
+
+    public void setSolveCnt(Integer solveCnt) {
+        this.solveCnt = solveCnt;
+    }
+
+    public Integer getIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(Integer isHidden) {
+        this.isHidden = isHidden;
+    }
 
     public Integer getLeId() {
         return leId;

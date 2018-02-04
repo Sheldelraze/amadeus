@@ -76,7 +76,7 @@
                             <div class="tab-pane active" role="tabpanel">
                                 <div class="card-body">
                                     <form th:object="${problemStatementForm}" th:method="post"
-                                          th:action="|/problem/${problemStatementVO.id}/updateStatement|">
+                                          th:action="|/problem/info/${problemStatementVO.id}/updateStatement|">
                                         <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                             <div class="alert alert-danger">
                                                 ✘ <label th:errors="*{screenMessage}"></label>
@@ -120,7 +120,7 @@
                                                 th:if="${#fields.hasErrors('note')}" th:class="'error'"
                                                 th:errors="*{note}">Name Error</label>
                                         <br/>
-                                        <div style="margin-top: 20px">
+                                        <div style="text-align: center">
                                             <button type="submit" class="btn btn-outline-success">Lưu thay đổi</button>
                                         </div>
                                     </form>

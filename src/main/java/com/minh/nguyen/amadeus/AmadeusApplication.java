@@ -8,10 +8,11 @@ import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import java.util.concurrent.Executor;
 
-@SpringBootApplication(scanBasePackages = {"com.minh.nguyen"},exclude = {SecurityAutoConfiguration.class })
+@SpringBootApplication(scanBasePackages = {"com.minh.nguyen"})
 @MapperScan({ "com.minh.nguyen.mapper" })
 @EnableAsync
 public class AmadeusApplication {

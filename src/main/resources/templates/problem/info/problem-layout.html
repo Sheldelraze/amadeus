@@ -67,7 +67,7 @@
                     <div class="card">
                         <form th:method="post"
                               th:object="${problemLayoutForm}"
-                              th:action="|/problem/${pmId}/updateGeneral/${tab}|">
+                              th:action="|/problem/info/${pmId}/updateGeneral/${tab}|">
                             <div class="card-outline-info">
                                 <div class="card-header">
                                     <h4 class="m-b-0 text-white">Thông tin chung</h4>
@@ -161,17 +161,17 @@
                         <div th:fragment="navtab (pmId, tab)">
                             <ul class="nav nav-tabs profile-tab" role="tablist">
                                 <li class="nav-item"><a class="nav-link"
-                                                        th:href="${tab==1}?'#':@{|/problem/${pmId}/statement|}"
+                                                        th:href="${tab==1}?'#':@{|/problem/info/${pmId}/statement|}"
                                                         th:classappend="${tab==1}?'active'"
                                 >Đề bài</a></li>
                                 <li class="nav-item"><a class="nav-link "
-                                                        th:href="${tab==2}?'#':@{|/problem/${pmId}/solution|}"
+                                                        th:href="${tab==2}?'#':@{|/problem/info/${pmId}/solution|}"
                                                         th:classappend="${tab==2}?'active'">Đáp án</a></li>
                                 <li class="nav-item"><a class="nav-link"
-                                                        th:href="${tab==3}?'#':@{|/problem/${pmId}/test|}"
+                                                        th:href="${tab==3}?'#':@{|/problem/info/${pmId}/test|}"
                                                         th:classappend="${tab==3}?'active'">Bộ test</a></li>
                                 <li class="nav-item"><a class="nav-link "
-                                                        th:href="${tab==4}?'#':@{|/problem/${pmId}/role|}"
+                                                        th:href="${tab==4}?'#':@{|/problem/info/${pmId}/role|}"
                                                         th:classappend="${tab==4}?'active'">Phân quyền</a></li>
                             </ul>
                         </div>

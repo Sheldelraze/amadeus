@@ -171,6 +171,9 @@ public class ProblemService extends BaseService{
                 }
             }
             problemDTO.setTag(stringBuilder.toString());
+            if (Constants.BLANK.equals(stringBuilder.toString())){
+                problemDTO.setTag(null);
+            }
         }
         return lst;
     }
@@ -245,6 +248,7 @@ public class ProblemService extends BaseService{
     public void updateTest(ProblemUpdateTestForm problemUpdateTestForm) {
         InputEntity inputEntity = new InputEntity();
         modelMapper.map(problemUpdateTestForm, inputEntity);
+        setUpdateInfo(inputEntity);
         try {
             inputMapper.updateByPKExceptNullFields(inputEntity);
         } catch (Exception e) {

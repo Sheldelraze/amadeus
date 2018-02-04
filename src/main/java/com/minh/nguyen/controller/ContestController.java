@@ -7,8 +7,11 @@ import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
+import com.minh.nguyen.vo.contest.ContestProblemVO;
 import com.minh.nguyen.vo.contest.ContestSettingVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +43,6 @@ public class ContestController extends BaseController {
     private static final String SETTING_VIEW = "contest/info/contest-setting";
     private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announcement";
     private static final String ROLE_VIEW = "contest/info/contest-role";
-    private static final String LAYOUT_FORM = "contestLayoutForm";
-    private static final String INFORMATION_FORM = "contestInformationForm";
-    private static final String PROBLEM_FORM = "contestProblemForm";
     private static final String SUBMIT_FORM = "contestSubmitForm";
     private static final String CREATE_FORM = "contestCreateForm";
     private static final String SUBMISSION_MY_FORM = "contestSubmissionMyForm";
@@ -56,6 +56,8 @@ public class ContestController extends BaseController {
     @Autowired
     private ContestService contestService;
 
+
+    @PostAuthorize("hasAnyRole('ADMIN','STUDENT') && @PermissionAuthentication.checkPermission(authentication,'ADMIN')")
     @GetMapping("/create")
     public ModelAndView createContest(ContestCreateForm contestCreateForm) {
         ModelAndView modelAndView = new ModelAndView();
@@ -116,7 +118,7 @@ public class ContestController extends BaseController {
                                      ContestAddProblemForm contestAddProblemForm,
                                      BindingResult bindingResult){
         try{
-            contestService.addProblemToContest(contestAddProblemForm.getLstPmId());
+            contestService.addProblemToContest(ctId,contestAddProblemForm.getLstPmId());
         }catch (Exception e){
             e.printStackTrace();
             addLogicError(bindingResult,Constants.MSG_SYSTEM_ERR);
@@ -126,13 +128,25 @@ public class ContestController extends BaseController {
         }
         return initAddProblem(ctId,contestAddProblemForm,true);
     }
+    @GetMapping("/{ctId}/showProblem/{pmId}")
+    public ModelAndView showProblem(@PathVariable("ctId") int ctId,@PathVariable("pmId") int pmId) {
+        contestService.setProblemHiddenStatus(ctId,pmId,Constants.STATUS_SHOW);
+        return getProblem(ctId);
+    }
+    @GetMapping("/{ctId}/hideProblem/{pmId}")
+    public ModelAndView hideProblem(@PathVariable("ctId") int ctId,@PathVariable("pmId") int pmId) {
+        contestService.setProblemHiddenStatus(ctId,pmId,Constants.STATUS_HIDDEN);
+        return getProblem(ctId);
+    }
     @GetMapping("/{ctId}/problem")
     public ModelAndView getProblem(@PathVariable("ctId") int ctId) {
-        ContestLayoutForm contestProblemForm = new ContestProblemForm();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PROBLEM_VIEW);
-        modelAndView.addObject(PROBLEM_FORM, contestProblemForm);
+        List<ProblemDTO> lstProblemDTO = contestService.getProblemToDisplay(ctId);
+        ContestProblemVO contestProblemVO = new ContestProblemVO();
+        contestProblemVO.setLstProblemDTO(lstProblemDTO);
         modelAndView.addObject(TAB, 2);
+        modelAndView.addObject("contestProblemVO", contestProblemVO);
         modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }

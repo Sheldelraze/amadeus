@@ -81,7 +81,27 @@
                                             <th style="text-align: center">Ẩn/Hiện</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody th:remove="all-but-first">
+                                        <tr th:if="${null != contestProblemVO.lstProblemDTO}"
+                                            th:each="problem : ${contestProblemVO.lstProblemDTO}"
+                                            th:style="${problem.isHidden}?'background-color: #e8e8e8'">
+                                            <td th:text="${problem.alias}"></td>
+                                            <td><b><a href="#" th:text="${problem.name}"></a></b></td>
+                                            <td><label th:text="${problem.timeLimit}"></label>s</td>
+                                            <td><label th:text="${problem.memoryLimit}"></label>MB</td>
+                                            <td>
+                                                <th:block th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
+                                                    <img th:src="@{/assets/images/star.png}"/>
+                                                </th:block>
+                                            </td>
+                                            <td><i class="mdi mdi-account"></i>x<label th:text="${problem.solveCnt}"></label></td>
+                                            <td th:if="${problem.isHidden==0}">
+                                                <button type="button" th:onclick="|hideProblem(${ctId},${problem.id})|" class="btn btn-outline-danger">Ẩn đi</button>
+                                            </td>
+                                            <td th:if="${problem.isHidden==1}">
+                                                <button type="button" th:onclick="|showProblem(${ctId},${problem.id})|" class="btn btn-outline-success">Hiện</button>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>1</td>
                                             <td><b><a href="#">Tính tổng 2 số</a></b></td>
@@ -190,6 +210,18 @@
     }
     function HandlePopupResult() {
         location.reload();
+    }
+    function showProblem(ctId,pmId){
+        if (!confirm("Bạn có chắc không?")){
+            return false;
+        }
+        window.location.replace("/contest/" + ctId + "/showProblem/" + pmId);
+    }
+    function hideProblem(ctId,pmId){
+        if (!confirm("Bạn có chắc không?")){
+            return false;
+        }
+        window.location.replace("/contest/" + ctId + "/hideProblem/" + pmId);
     }
 </script>
 </body>

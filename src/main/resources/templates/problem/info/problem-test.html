@@ -91,7 +91,7 @@
                                                style="text-align: center; color: black; font-size: 14px">
                                             <thead>
                                             <tr>
-                                                <th style="text-align: center">#</th>
+                                                <th style="text-align: center;width:50px">#</th>
                                                 <th style="text-align: center">Input</th>
                                                 <th style="text-align: center">Output</th>
                                                 <th style="text-align: center">Hiển thị trong đề</th>
@@ -168,13 +168,13 @@
 <!-- load ace -->
 <script>
     function popup(pmId){
-        var url = '/problem/' + pmId + '/createTest';
+        var url = '/problem/info/' + pmId + '/createTest';
         window.open(url,
             '1426494439650',
             'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
     }
     function popupUpdate(pmId,itId){
-        var url = '/problem/' + pmId + '/updateTest/' + itId;
+        var url = '/problem/info/' + pmId + '/updateTest/' + itId;
         window.open(url,
             '1426494439650',
             'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
@@ -186,7 +186,7 @@
         if (!confirm("Bạn có chắc là muốn xóa không?")){
             return false;
         }
-        window.location.replace('/problem/' + pmId + '/deleteTest/' + itId);
+        window.location.replace('/problem/info/' + pmId + '/deleteTest/' + itId);
     }
 </script>
 <script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"

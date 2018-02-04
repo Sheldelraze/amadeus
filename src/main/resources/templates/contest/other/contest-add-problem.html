@@ -99,7 +99,7 @@
                                     <th style="text-align: center" width="250px">Môn học</th>
                                     <th style="text-align: center" width="200px">Người tạo</th>
                                     <th style="text-align: center" width="200px">Thể loại</th>
-                                    <th style="text-align: center" width="200px">Thêm</th>
+                                    <th style="text-align: center" width="100px">Thêm</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -117,7 +117,7 @@
                                     </td>
                                     <td>Lập trình C++</td>
                                     <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                    <td th:text="${problem.tag}">Cơ bản, đồ thị</td>
+                                    <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị</td>
 
                                     <td>
                                         <div class="checkbox checkbox-single">

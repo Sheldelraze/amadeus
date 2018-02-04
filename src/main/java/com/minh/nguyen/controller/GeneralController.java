@@ -16,14 +16,26 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 public class GeneralController {
+
     @Autowired
     GeneralService generalService;
 
+    @GetMapping({"/login","/login/"})
+    public ModelAndView getLogin(Boolean logout) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("logout",logout);
+        modelAndView.setViewName("share/login");
+        return modelAndView;
+    }
     @GetMapping("/")
     public ModelAndView getIndex() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("share/index");
         return modelAndView;
+    }
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+        return getLogin(true);
     }
     @GetMapping("/status")
     public ModelAndView getStatus() {

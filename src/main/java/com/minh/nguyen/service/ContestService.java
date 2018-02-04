@@ -1,11 +1,14 @@
 package com.minh.nguyen.service;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
 import com.minh.nguyen.entity.ContestEntity;
+import com.minh.nguyen.entity.CtPmEntity;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.ContestMapper;
+import com.minh.nguyen.mapper.CtPmMapper;
 import com.minh.nguyen.mapper.ProblemMapper;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
 import org.apache.commons.lang3.time.DateUtils;
@@ -29,6 +32,10 @@ public class ContestService extends BaseService {
 
     @Autowired
     private ProblemMapper problemMapper;
+
+    @Autowired
+    private CtPmMapper ctPmMapper;
+
     public int createContest(ContestDTO contestDTO) {
         ContestEntity contestEntity = new ContestEntity();
         StringBuilder stringBuilder = new StringBuilder();
@@ -81,18 +88,51 @@ public class ContestService extends BaseService {
                 }
             }
             problemDTO.setTag(stringBuilder.toString());
+            if(Constants.BLANK.equals(stringBuilder.toString())){
+                problemDTO.setTag(null);
+            }
         }
         return lst;
     }
-    public void addProblemToContest(String[] lstPmId) throws Exception{
+    public void setProblemHiddenStatus(Integer ctId,Integer pmId,Integer status){
+        CtPmEntity ctPmEntity = new CtPmEntity();
+        ctPmEntity.setCtId(ctId);
+        ctPmEntity.setPmId(pmId);
+        ctPmEntity.setIsHidden(status);
+        setUpdateInfo(ctPmEntity);
+        ctPmMapper.updateByPKExceptNullFields(ctPmEntity);
+    }
+    public void addProblemToContest(Integer ctId, String[] lstPmId) throws Exception{
         try {
             for (String pmId : lstPmId) {
-
+                CtPmEntity ctPmEntity = new CtPmEntity();
+                ctPmEntity.setCtId(ctId);
+                ctPmEntity.setPmId(Integer.parseInt(pmId));
+                ctPmEntity.setSolveCnt(0);
+                ctPmEntity.setTotalSubmission(0);
+                ctPmEntity.setIsHidden(0);
+                setUpdateInfo(ctPmEntity);
+                setCreateInfo(ctPmEntity);
+                ctPmMapper.insert(ctPmEntity);
             }
         }
         catch(Exception e){
             throw e;
         }
+    }
+
+    public List<ProblemDTO> getProblemToDisplay(Integer ctId){
+        List<ProblemDTO> lst = problemMapper.getProblemToDisplay(ctId);
+        int cnt = 0;
+        for(ProblemDTO problemDTO : lst){
+            if (problemDTO.getIsHidden() == 0){
+                problemDTO.setAlias(++cnt);
+            }
+            else{
+                problemDTO.setAlias(-1);
+            }
+        }
+        return lst;
     }
     public ContestInformationVO getInformation(int ctId){
         ContestInformationVO contestInformationVO = new ContestInformationVO();

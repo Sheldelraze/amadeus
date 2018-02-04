@@ -49,4 +49,7 @@ public class Constants {
     public static final String VERDICT_MEMORY_LIMIT_EXCEEDED = "Lỗi quá bộ nhớ";
     public static final String VERDICT_WRONG_ANSWER = "Sai kết quả";
     public static final String VERDICT_ACCEPTED = "Đúng";
+
+    public static final Integer STATUS_HIDDEN = 1;
+    public static final Integer STATUS_SHOW = 0;
 }

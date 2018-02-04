@@ -41,10 +41,28 @@
                 ON tag.id = pm_tg.tgId
                    AND tag.deleteFlg = '0'
         WHERE problem.deleteFlg = '0'
-              AND problem.id not in (
-            select pmId from ct_pm
-              where ctId = #{ctId}
+              AND problem.id NOT IN (
+            SELECT pmId
+            FROM ct_pm
+            WHERE ctId = #{ctId}
         )
+    </select>
+    <select id="getProblemToDisplay" resultType="ProblemDTO">
+        SELECT
+            problem.id,
+            problem.name,
+            problem.timeLimit,
+            problem.memoryLimit,
+            problem.difficulty,
+            ct_pm.solveCnt,
+            ct_pm.isHidden
+        FROM problem
+            INNER JOIN ct_pm
+                ON problem.id = ct_pm.pmId
+                   AND ct_pm.ctId = #{ctId}
+                   AND ct_pm.deleteFlg = '0'
+        WHERE
+            problem.deleteFlg = '0'
     </select>
     <resultMap id="problem" type="ProblemDTO">
         <id column="pmId" property="id"/>
