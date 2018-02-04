@@ -27,7 +27,7 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
                 = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null) {
-            logger.info("User '" + auth.getName()
+            logger.warn("User '" + auth.getName()
                     + "' attempted to access the protected URL: "
                     + httpServletRequest.getRequestURI());
         }

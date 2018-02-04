@@ -6,10 +6,7 @@ import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
-import com.minh.nguyen.entity.InputEntity;
-import com.minh.nguyen.entity.LanguageEntity;
-import com.minh.nguyen.entity.PmItEntity;
-import com.minh.nguyen.entity.ProblemEntity;
+import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.form.problem.ProblemSubmitForm;
 import com.minh.nguyen.form.problem.ProblemUpdateTestForm;
@@ -22,12 +19,16 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.RollbackException;
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -261,5 +262,24 @@ public class ProblemService extends BaseService{
         FileUtil.createFileWithContent(location, filename, "txt",
                 inputEntity.getInput());
     }
+    void setCreateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setCreateClass(ProblemService.class.getName());
+        entity.setCreateTime(time);
+        entity.setCreateUser(currentUser);
+        entity.setDeleteFlg("0");
+    }
 
+    void setUpdateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setUpdateClass(ProblemService.class.getName());
+        entity.setUpdateTime(time);
+        entity.setUpdateUser(currentUser);
+    }
 }

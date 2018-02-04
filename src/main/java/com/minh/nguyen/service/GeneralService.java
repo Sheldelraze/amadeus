@@ -2,13 +2,18 @@ package com.minh.nguyen.service;
 
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.dto.SubmitDetailDTO;
+import com.minh.nguyen.entity.BaseEntity;
 import com.minh.nguyen.mapper.SubmissionMapper;
 import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,5 +55,25 @@ public class GeneralService extends BaseService {
             }
         }
         return submit;
+    }
+    void setCreateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setCreateClass(GeneralService.class.getName());
+        entity.setCreateTime(time);
+        entity.setCreateUser(currentUser);
+        entity.setDeleteFlg("0");
+    }
+
+    void setUpdateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setUpdateClass(GeneralService.class.getName());
+        entity.setUpdateTime(time);
+        entity.setUpdateUser(currentUser);
     }
 }

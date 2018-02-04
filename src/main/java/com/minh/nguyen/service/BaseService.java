@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -83,19 +85,23 @@ public class BaseService {
 
     }
     void setCreateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
         Calendar today = Calendar.getInstance();
         Date time = today.getTime();
-        entity.setCreateClass(BaseService.class.toString());
+        entity.setCreateClass(BaseService.class.getName());
         entity.setCreateTime(time);
-        entity.setCreateUser("minh.nt");
+        entity.setCreateUser(currentUser);
         entity.setDeleteFlg("0");
     }
     void setUpdateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
         Calendar today = Calendar.getInstance();
         Date time = today.getTime();
-        entity.setUpdateClass(BaseService.class.toString());
+        entity.setUpdateClass(BaseService.class.getName());
         entity.setUpdateTime(time);
-        entity.setUpdateUser("minh.nt");
+        entity.setUpdateUser(currentUser);
     }
     public void rollBack(String errMessage) {
         RollbackException ex = new RollbackException(errMessage);

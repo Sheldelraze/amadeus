@@ -5,6 +5,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
+import com.minh.nguyen.entity.BaseEntity;
 import com.minh.nguyen.entity.SnSDlEntity;
 import com.minh.nguyen.entity.SubmissionEntity;
 import com.minh.nguyen.entity.SubmitDetailEntity;
@@ -17,7 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -162,5 +168,26 @@ public class JudgeService extends BaseService {
         }
         submissionEntity.setTimeRun(timeTotal);
         submissionMapper.updateByPK(submissionEntity);
+    }
+
+    void setCreateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setCreateClass(JudgeService.class.getName());
+        entity.setCreateTime(time);
+        entity.setCreateUser(currentUser);
+        entity.setDeleteFlg("0");
+    }
+
+    void setUpdateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setUpdateClass(JudgeService.class.getName());
+        entity.setUpdateTime(time);
+        entity.setUpdateUser(currentUser);
     }
 }

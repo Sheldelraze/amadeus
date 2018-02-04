@@ -4,6 +4,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
+import com.minh.nguyen.entity.BaseEntity;
 import com.minh.nguyen.entity.ContestEntity;
 import com.minh.nguyen.entity.CtPmEntity;
 import com.minh.nguyen.form.contest.ContestSettingForm;
@@ -13,10 +14,13 @@ import com.minh.nguyen.mapper.ProblemMapper;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -158,5 +162,26 @@ public class ContestService extends BaseService {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    void setCreateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setCreateClass(ContestService.class.getName());
+        entity.setCreateTime(time);
+        entity.setCreateUser(currentUser);
+        entity.setDeleteFlg("0");
+    }
+
+    void setUpdateInfo(BaseEntity entity){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        Calendar today = Calendar.getInstance();
+        Date time = today.getTime();
+        entity.setUpdateClass(ContestService.class.getName());
+        entity.setUpdateTime(time);
+        entity.setUpdateUser(currentUser);
     }
 }
