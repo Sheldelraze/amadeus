@@ -10,6 +10,7 @@ import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.vo.problem.*;
 import com.sun.javafx.beans.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,6 +82,7 @@ public class ProblemController extends BaseController {
 //        modelAndView.setViewName("share/index");
         return modelAndView;
     }
+    @PreAuthorize("hasAuthority('CAN_CREATE_PROBLEM')")
     @GetMapping("/create")
     public ModelAndView getCreate() {
         ModelAndView modelAndView = new ModelAndView();

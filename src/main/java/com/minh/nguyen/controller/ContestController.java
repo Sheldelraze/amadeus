@@ -56,8 +56,7 @@ public class ContestController extends BaseController {
     @Autowired
     private ContestService contestService;
 
-
-    @PostAuthorize("hasAnyRole('ADMIN','STUDENT') && @PermissionAuthentication.checkPermission(authentication,'ADMIN')")
+    @PreAuthorize("hasAuthority('CAN_CREATE_CONTEST')")
     @GetMapping("/create")
     public ModelAndView createContest(ContestCreateForm contestCreateForm) {
         ModelAndView modelAndView = new ModelAndView();
@@ -71,11 +70,10 @@ public class ContestController extends BaseController {
 
     @PostMapping("/doCreate")
     public ModelAndView doCreate(ContestCreateForm contestCreateForm, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-//        validate(contestCreateForm,bindingResult);
-//        if (bindingResult.hasErrors()){
-//            return createContest(contestCreateForm);
-//        }
+        validate(contestCreateForm,bindingResult);
+        if (bindingResult.hasErrors()){
+            return createContest(contestCreateForm);
+        }
         try {
             ContestDTO contestDTO = new ContestDTO();
             modelMapper.map(contestCreateForm, contestDTO);

@@ -200,17 +200,9 @@ public class BaseProvider {
                 field.setAccessible(true);
                 if (field.isAnnotationPresent(Column.class)) {
                     if (field.get(entity) != null) {
-                        if (field.isAnnotationPresent(Column.class)) {
-                            WHERE(field.getAnnotation(Column.class).name()
-                                    + FORMAT_STRING_SQL_1 + field.getName()
-                                    + FORMAT_STRING_SQL_2);
-
-                        } else {
-                            WHERE(field.getAnnotation(Column.class).name()
-                                    + FORMAT_STRING_SQL_1 + field.getName()
-                                    + FORMAT_STRING_SQL_2);
-
-                        }
+                        WHERE(field.getAnnotation(Column.class).name()
+                                + FORMAT_STRING_SQL_1 + field.getName()
+                                + FORMAT_STRING_SQL_2);
                     }
                 }
 
@@ -246,7 +238,7 @@ public class BaseProvider {
                 }
 
                 for (Field field : table.getSuperclass().getDeclaredFields()) {
-                    if (field.getName().equals("deleteTime")){
+                    if (field.getName().equals("deleteTime")) {
                         SET("deleteTime=#{deleteTime}");
                     }
                     if (field.isAnnotationPresent(Id.class)) {
@@ -274,7 +266,7 @@ public class BaseProvider {
 
                 for (Field field : entity.getClass().getSuperclass()
                         .getDeclaredFields()) {
-                    if (field.getName().equals("deleteTime")){
+                    if (field.getName().equals("deleteTime")) {
                         SET("deleteTime=#{deleteTime}");
                     }
                     genSqlForDeleteWithExample(entity, field);
@@ -368,13 +360,13 @@ public class BaseProvider {
                 while (table != null) {
                     for (Field field : table.getDeclaredFields()) {
                         field.setAccessible(true);
-                        genSqlForUpdate(entity,field);
+                        genSqlForUpdate(entity, field);
                     }
                     table = table.getSuperclass();
                 }
             }
 
-            private void genSqlForUpdate(Object entity,Field field) throws IllegalAccessException {
+            private void genSqlForUpdate(Object entity, Field field) throws IllegalAccessException {
                 if (field.isAnnotationPresent(Id.class)) {
                     WHERE(field.getAnnotation(Column.class).name()
                             + FORMAT_STRING_SQL_1 + field.getName()

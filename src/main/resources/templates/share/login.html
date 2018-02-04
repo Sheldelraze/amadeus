@@ -39,6 +39,16 @@
     <div class="login-box card">
         <div class="card-body">
             <form th:action="@{/login}" method="post"  class="form-horizontal form-material" id="loginform">
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">
+                        Sai tên hoặc mật khẩu!
+                    </div>
+                </div>
+                <div th:if="${param.logout}">
+                    <div class="alert alert-info">
+                        Bạn đã đăng xuất!
+                    </div>
+                </div>
                 <div style="text-align: center">
                     <img th:src="@{/assets/images/index.png}"/>
                     <h3 style="font-weight: 900">AMADEUS SYSTEM</h3>

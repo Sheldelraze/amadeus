@@ -10,6 +10,7 @@
         <mapper resource="sqlmapper/ProblemMapper.xml"/>
         <mapper resource="sqlmapper/LanguageMapper.xml"/>
         <mapper resource="sqlmapper/SubmissionMapper.xml"/>
+        <mapper resource="sqlmapper/UserMapper.xml"/>
         <!--<package name="sqlmapper"/>-->
     </mappers>
 

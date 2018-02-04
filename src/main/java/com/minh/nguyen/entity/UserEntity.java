@@ -53,6 +53,9 @@ public class UserEntity extends BaseEntity implements Serializable {
     @Column(name = "isLocked")
     private Integer isLocked;
 
+    @Column(name = "reId")
+    private Integer reId;
+
     @Column(name = "lastLogin")
     private Date lastLogin;
 
@@ -61,6 +64,18 @@ public class UserEntity extends BaseEntity implements Serializable {
 
     @Column(name = "accountType")
     private Integer accountType;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getReId() {
+        return reId;
+    }
+
+    public void setReId(Integer reId) {
+        this.reId = reId;
+    }
 
     public Integer getId() {
         return id;

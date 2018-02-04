@@ -52,4 +52,22 @@ public class Constants {
 
     public static final Integer STATUS_HIDDEN = 1;
     public static final Integer STATUS_SHOW = 0;
+
+    public static final Integer ROLE_ADMIN = 1;
+    public static final Integer ROLE_LECTURER = 2;
+    public static final Integer ROLE_STUDENT = 3;
+    public static final Integer ROLE_SUPERVISOR = 4;
+
+    public static final Integer AUTH_CREATE_USER = 1;
+    public static final Integer AUTH_EDIT_USER = 2;
+    public static final Integer AUTH_CREATE_PROBLEM = 3;
+    public static final Integer AUTH_EDIT_PROBLEM = 4;
+    public static final Integer AUTH_VIEW_PROBLEM = 5;
+    public static final Integer AUTH_CREATE_CONTEST = 6;
+    public static final Integer AUTH_EDIT_CONTEST = 7;
+    public static final Integer AUTH_VIEW_CONTEST = 8;
+    public static final Integer AUTH_PARTICIPATE_CONTEST = 9;
+    public static final Integer AUTH_VIEW_ALL_PROBLEM = 10;
+    public static final Integer AUTH_VIEW_ALL_CONTEST = 11;
+
 }

@@ -9,6 +9,7 @@ import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -18,7 +19,7 @@ import java.util.Objects;
  * @since 11/01/2018
  * Purpose:
  */
-@Service
+@Service("ProblemValidator")
 public class ProblemValidator extends BaseValidator {
 
     @Autowired
@@ -37,7 +38,6 @@ public class ProblemValidator extends BaseValidator {
 
         }
     }
-
     public void validateUpdateSolution(ProblemDTO problemDTO,BindingResult bindingResult){
         try{
             problemService.tryCompile(problemDTO);

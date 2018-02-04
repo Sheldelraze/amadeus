@@ -33,9 +33,11 @@ public class GeneralController {
         modelAndView.setViewName("share/index");
         return modelAndView;
     }
-    @GetMapping("/logout")
-    public ModelAndView logout() {
-        return getLogin(true);
+    @GetMapping("/403")
+    public ModelAndView get404() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("share/403");
+        return modelAndView;
     }
     @GetMapping("/status")
     public ModelAndView getStatus() {

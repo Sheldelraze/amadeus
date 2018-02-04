@@ -11,7 +11,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -27,21 +30,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
     private AccessDeniedHandler accessDeniedHandler;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.
                 authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/403").permitAll()
-                .antMatchers("/contest/create").hasRole("ADMIN")
                 .and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()
-                .logout().logoutUrl("/logout").deleteCookies("remove")
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true).permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
@@ -53,6 +59,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/css/**",
                         "/js/**", "/nicEdit/**", "/scss/**"
                         ,"/assets/**");
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.
+                userDetailsService(userDetailsService)
+                .passwordEncoder(bCryptPasswordEncoder);
     }
 }
 

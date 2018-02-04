@@ -13,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Target({ FIELD })
 @Retention(RUNTIME)
-public @interface Format {
+public @interface Format  {
     public static final String N_A = "N/A";
 
     enum FormatType {
