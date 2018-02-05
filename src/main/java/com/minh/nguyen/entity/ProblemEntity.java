@@ -27,8 +27,10 @@ public class ProblemEntity extends BaseEntity implements Serializable {
 
     @Column(name = "input")
     private String input;
+
     @Column(name = "output")
     private String output;
+
     @Column(name = "note")
     private String note;
 
@@ -41,12 +43,25 @@ public class ProblemEntity extends BaseEntity implements Serializable {
     @Column(name = "isPublished")
     private Integer isPublished;
 
+    @Column(name = "isPublic")
+    private Integer isPublic;
+
     @Column(name = "difficulty")
     private Integer difficulty;
+
     @Column(name = "sourceCode")
     private String sourceCode;
+
     @Column(name = "leId")
     private Integer leId;
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
+    }
 
     public String getSourceCode() {
         return sourceCode;

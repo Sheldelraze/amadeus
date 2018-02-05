@@ -1,5 +1,6 @@
 package com.minh.nguyen.config;
 
+import com.minh.nguyen.exception.NoSuchPageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -32,7 +33,12 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
                     + httpServletRequest.getRequestURI());
         }
 
-        httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
 
+        if (e instanceof NoSuchPageException){
+            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/404");
+        }
+        else{
+            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
+        }
     }
 }

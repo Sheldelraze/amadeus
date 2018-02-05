@@ -4,7 +4,6 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.entity.LanguageEntity;
 import com.minh.nguyen.form.problem.*;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.vo.problem.*;
@@ -28,7 +27,7 @@ import java.util.List;
  * Purpose:
  */
 @Controller
-@RequestMapping("/problem/info/")
+@RequestMapping("/problem/info")
 public class ProblemController extends BaseController {
     private static final String PROBLEM_LIST = "problemList";
     private static final String LAYOUT_FORM = "problemLayoutForm";
@@ -65,7 +64,7 @@ public class ProblemController extends BaseController {
     @Autowired
     private ProblemService problemService;
 
-
+    @PreAuthorize("hasAuthority('CAN_CREATE_PROBLEM')")
     @GetMapping("/my")
     public ModelAndView getMy() {
         ModelAndView modelAndView = new ModelAndView();
@@ -91,6 +90,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
+    @PreAuthorize("hasAuthority('CAN_CREATE_PROBLEM')")
     @PostMapping("/doCreate")
     public ModelAndView doCreate(ProblemCreateForm problemCreateForm, BindingResult result) {
         ModelAndView modelAndView = new ModelAndView();
@@ -148,6 +148,8 @@ public class ProblemController extends BaseController {
         modelAndView.addObject(TAB, viewTab);
         return modelAndView;
     }
+
+    @PreAuthorize(value="@ProblemValidator.checkPublic(#pmId) || hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
     @GetMapping("/{pmId}/view")
     public ModelAndView getView(@PathVariable("pmId") Integer pmId){
         ModelAndView modelAndView = new ModelAndView();

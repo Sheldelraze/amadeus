@@ -1,21 +1,15 @@
 package com.minh.nguyen.exception;
 
-
 import java.io.Serializable;
+import org.springframework.security.access.AccessDeniedException;
 
 /**
  * @author Mr.Minh
- * @since 07/01/2018
+ * @since 05/02/2018
  * Purpose:
  */
-public class CompileErrorException extends Exception implements Serializable{
+public class NoSuchPageException extends AccessDeniedException implements Serializable{
     private static final long serialVersionUID = 41231534L;
-
-    /**
-     * Constructs a <tt>CompileErrorException</tt> with no specified detail
-     * message.
-     */
-    public CompileErrorException() {}
 
     /**
      * Constructs a <tt>CompileErrorException</tt> with the specified detail
@@ -23,7 +17,7 @@ public class CompileErrorException extends Exception implements Serializable{
      *
      * @param message the detail message
      */
-    public CompileErrorException(String message) {
+    public NoSuchPageException(String message) {
         super(message);
     }
 }

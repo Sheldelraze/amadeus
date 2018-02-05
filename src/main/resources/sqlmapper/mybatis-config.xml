@@ -11,6 +11,8 @@
         <mapper resource="sqlmapper/LanguageMapper.xml"/>
         <mapper resource="sqlmapper/SubmissionMapper.xml"/>
         <mapper resource="sqlmapper/UserMapper.xml"/>
+        <mapper resource="sqlmapper/AuthorityMapper.xml"/>
+        <mapper resource="sqlmapper/ContestMapper.xml"/>
         <!--<package name="sqlmapper"/>-->
     </mappers>
 

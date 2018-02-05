@@ -4,10 +4,14 @@ import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.vo.StatusVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
  * @author Mr.Minh
@@ -34,9 +38,15 @@ public class GeneralController {
         return modelAndView;
     }
     @GetMapping("/403")
-    public ModelAndView get404() {
+    public ModelAndView get403() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("share/403");
+        return modelAndView;
+    }
+    @GetMapping("/404")
+    public ModelAndView get404() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("share/404");
         return modelAndView;
     }
     @GetMapping("/status")
