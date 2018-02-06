@@ -61,12 +61,15 @@
             <div class="row">
 
                 <!-- Column -->
-                <div th:replace="problem/info/problem-layout::left-bar"></div>
+                <div th:replace="problem/info/problem-layout::left-bar (pmId = ${problemLayoutVO.id},
+                                                                    problemLayoutVO = ${problemLayoutVO},
+                                                                    problemLayoutForm=${problemLayoutForm},
+                                                                    tab='1')"></div>
                 <div class="col-lg-9 col-xlg-9 col-md-7">
                     <div class="card">
                         <!-- Nav tabs -->
 
-                        <div th:replace="problem/info/problem-layout::navtab"></div>
+                        <div th:replace="problem/info/problem-layout::navtab (tab = ${tab},pmId = ${problemLayoutVO.id})"></div>
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <!--second tab-->

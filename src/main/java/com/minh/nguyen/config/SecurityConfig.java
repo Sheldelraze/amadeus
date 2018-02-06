@@ -4,6 +4,8 @@ package com.minh.nguyen.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,6 +17,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -23,19 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("admin").password("123").roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("lecturer").password("123").roles("LECTURER");
-        auth.inMemoryAuthentication().withUser("student").password("123").roles("STUDENT");
-    }
-
-    @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -52,14 +57,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers( "/css/**",
-                        "/js/**", "/nicEdit/**", "/scss/**"
-                        ,"/assets/**");
-    }
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web
+//                .ignoring()
+//                .antMatchers( "/css/**",
+//                        "/js/**", "/nicEdit/**", "/scss/**"
+//                        ,"/assets/**","/resources/**","/static/**");
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

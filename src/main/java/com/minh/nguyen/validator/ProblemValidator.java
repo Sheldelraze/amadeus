@@ -16,6 +16,7 @@ import com.minh.nguyen.validator.common.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -27,7 +28,7 @@ import java.util.Objects;
  * @since 11/01/2018
  * Purpose:
  */
-@Service("ProblemValidator")
+@Component("ProblemValidator")
 public class ProblemValidator extends BaseValidator {
 
     @Autowired
@@ -66,6 +67,19 @@ public class ProblemValidator extends BaseValidator {
             if(authorityDTO.getName().equals(authority)){
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean checkOwner(Authentication auth,Integer pmId) throws NoSuchPageException{
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setId(pmId);
+        problemEntity = problemMapper.selectByPK(problemEntity);
+        if (null == problemEntity){
+            throw new NoSuchPageException("Problem not found!");
+        }
+        if (problemEntity.getCreateUser().equals(auth.getName())){
+            return true;
         }
         return false;
     }

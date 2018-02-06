@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Amadeus - 404 Nothing here</title>
+    <title>Amadeus - System Error</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>
@@ -13,10 +13,9 @@
         }
 
         .message h2 {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .message h3 a{
-            margin-bottom: 24px;
             color:#ccc
         }
         .message {
@@ -55,9 +54,10 @@
 </div>
 
 <div class="message">
-    <h1>404</h1>
-    <h2>Có vẻ như là bạn đã vào nhầm trang...</h2>
-    <h3>Không có gì ở đây cả</h3>
+    <h1>500</h1>
+    <h2>Oops, có vẻ như là đã có lỗi gì đấy xảy ra...</h2>
+    <h3>Rất mong bạn hãy báo với người quản lý để trang web được hoàn thiện hơn</h3>
+    <h3>Lỗi: <label th:text="${error}"></label></h3>
     <h3><a href="/">Trở lại trang chủ</a></h3>
 </div><!-- / message -->
 
