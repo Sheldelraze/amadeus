@@ -3,7 +3,7 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.minh.nguyen.mapper.AuthorityMapper" >
+<mapper namespace="com.minh.nguyen.mapper.AuthorityMapper">
     <select id="getProblemAuthority" resultType="AuthorityDTO">
         SELECT
             authority.id,
@@ -12,8 +12,23 @@
             INNER JOIN ur_pm_auy
                 ON authority.id = ur_pm_auy.auyId
                    AND ur_pm_auy.pmId = #{pmId}
+                   AND ur_pm_auy.deleteFlg = '0'
             INNER JOIN user
                 ON ur_pm_auy.urId = user.id
+                   AND user.handle = #{handle}
+        WHERE authority.deleteFlg = '0'
+    </select>
+    <select id="getContestAuthority" resultType="AuthorityDTO">
+        SELECT
+            authority.id,
+            authority.name
+        FROM authority
+            INNER JOIN ur_ct_auy
+                ON authority.id = ur_ct_auy.auyId
+                   AND ur_ct_auy.ctId = #{ctId}
+                   AND ur_pm_auy.deleteFlg = '0'
+            INNER JOIN user
+                ON ur_ct_auy.urId = user.id
                    AND user.handle = #{handle}
         WHERE authority.deleteFlg = '0'
     </select>

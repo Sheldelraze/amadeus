@@ -15,11 +15,10 @@ import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +43,7 @@ public class ProblemValidator extends BaseValidator {
 
     }
     public boolean checkPublic(Integer pmId) throws NoSuchPageException{
+
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setId(pmId);
         problemEntity = problemMapper.selectByPK(problemEntity);
@@ -70,7 +70,9 @@ public class ProblemValidator extends BaseValidator {
         }
         return false;
     }
-
+    public boolean checkNotNull(Integer pmId){
+        return true;
+    }
     public boolean checkOwner(Authentication auth,Integer pmId) throws NoSuchPageException{
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setId(pmId);
@@ -90,8 +92,6 @@ public class ProblemValidator extends BaseValidator {
         modelMapper.map(clazz,problemDTO);
         if (Objects.equals("problemSolutionScreen", clazz.getScreenName())) {
             validateUpdateSolution(problemDTO,errors);
-        } else if (Objects.equals("makerAdd", clazz.getScreenName())) {
-
         }
     }
     public void validateUpdateSolution(ProblemDTO problemDTO,BindingResult bindingResult){

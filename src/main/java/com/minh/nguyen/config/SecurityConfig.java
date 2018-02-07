@@ -57,14 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web
-//                .ignoring()
-//                .antMatchers( "/css/**",
-//                        "/js/**", "/nicEdit/**", "/scss/**"
-//                        ,"/assets/**","/resources/**","/static/**");
-//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

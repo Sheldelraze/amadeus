@@ -38,6 +38,8 @@ import java.util.List;
  */
 @Service("ProblemService")
 public class ProblemService extends BaseService{
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private ProblemMapper problemMapper;
@@ -52,13 +54,7 @@ public class ProblemService extends BaseService{
     private LanguageMapper languageMapper;
 
     @Autowired
-    private SubmitDetailMapper submitDetailMapper;
-
-    @Autowired
-    private SnSDlMapper snSDlMapper;
-
-    @Autowired
-    private SubmissionMapper submissionMapper;
+    private UrPmAuyMapper urPmAuyMapper;
 
     @Autowired
     private JudgeService judgeService;
@@ -95,8 +91,11 @@ public class ProblemService extends BaseService{
         judgeService.judge(problemDTO,languageDTO);
 
     }
+
     @Transactional
     public void createProblem(ProblemDTO problemDTO){
+
+        //check if problem code existed
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setCode(problemDTO.getCode());
         for(int i = 0;i < problemDTO.getCode().length();i++){
@@ -118,6 +117,8 @@ public class ProblemService extends BaseService{
         if (getRecord.size() > 0){
             rollBack(Constants.MSG_DUPLICATE_PROBLEM_ERR);
         }
+
+        //insert problem
         setCreateInfo(problemEntity);
         setUpdateInfo(problemEntity);
         setCreateProblemInfo(problemEntity);
@@ -125,6 +126,40 @@ public class ProblemService extends BaseService{
         if (insertRecord != 1){
             rollBack(Constants.MSG_SYSTEM_ERR);
         }
+
+        //get current loggin user
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setHandle(auth.getName());
+        List<UserEntity> lstUser = userMapper.selectWithExample(userEntity);
+
+        //assume that only 1 user has current handle
+        if(lstUser.size() != 1){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+        userEntity = lstUser.get(0);
+
+        //insert view problem authority
+        UrPmAuyEntity urPmAuyEntity = new UrPmAuyEntity();
+        urPmAuyEntity.setPmId(problemEntity.getId());
+        urPmAuyEntity.setUrId(userEntity.getId());
+        urPmAuyEntity.setAuyId(Constants.AUTH_VIEW_PROBLEM);
+        setCreateInfo(urPmAuyEntity);
+        setUpdateInfo(urPmAuyEntity);
+        insertRecord = urPmAuyMapper.insert(urPmAuyEntity);
+
+        //assume that insert success
+        if (insertRecord != 1){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+
+        //insert edit problem authority
+        urPmAuyEntity.setAuyId(Constants.AUTH_EDIT_PROBLEM);
+        insertRecord = urPmAuyMapper.insert(urPmAuyEntity);
+        if (insertRecord != 1){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+
         problemDTO.setId(problemEntity.getId());
     }
     @Transactional

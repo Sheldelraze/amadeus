@@ -86,6 +86,7 @@ public class ContestController extends BaseController {
         }
     }
 
+
     @GetMapping({"/{ctId}/information","/{ctId}/","/{ctId}"})
     public ModelAndView getInformation(@PathVariable("ctId") int ctId) {
         ModelAndView modelAndView = new ModelAndView();

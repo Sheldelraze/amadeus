@@ -6,6 +6,7 @@ import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.form.problem.*;
 import com.minh.nguyen.service.ProblemService;
+import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.vo.problem.*;
 import com.sun.javafx.beans.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,9 +71,10 @@ public class ProblemController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(LIST_MY_VIEW);
         List<ProblemDTO> lstProblem = problemService.getAllProblem();
-        modelAndView.addObject(PROBLEM_LIST,lstProblem);
+        modelAndView.addObject(PROBLEM_LIST, lstProblem);
         return modelAndView;
     }
+
     @GetMapping("/all")
     public ModelAndView getAll() {
         ModelAndView modelAndView = new ModelAndView();
@@ -81,6 +83,7 @@ public class ProblemController extends BaseController {
 //        modelAndView.setViewName("share/index");
         return modelAndView;
     }
+
     @PreAuthorize("hasAuthority('CAN_CREATE_PROBLEM')")
     @GetMapping("/create")
     public ModelAndView getCreate() {
@@ -115,7 +118,7 @@ public class ProblemController extends BaseController {
             modelAndView.addObject(CREATE_FORM, problemCreateForm);
             return modelAndView;
         }
-        return new ModelAndView("redirect:/problem/" + problemDTO.getId() + "/statement");
+        return new ModelAndView("redirect:/problem/info/" + problemDTO.getId() + "/statement");
     }
 
     private ModelAndView getGeneralInfo(Integer pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
@@ -149,9 +152,9 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize(value="@ProblemValidator.checkPublic(#pmId) || hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
+    @PreAuthorize(value = "@ProblemValidator.checkPublic(#pmId) || hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
     @GetMapping("/{pmId}/view")
-    public ModelAndView getView(@PathVariable("pmId") Integer pmId){
+    public ModelAndView getView(@PathVariable("pmId") Integer pmId) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -159,30 +162,32 @@ public class ProblemController extends BaseController {
         problemService.getProblemInfo(problemDTO);
         problemService.getShowInStatementTest(problemDTO);
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
-        modelMapper.map(problemDTO,problemPreviewVO);
+        modelMapper.map(problemDTO, problemPreviewVO);
         problemPreviewVO.setLstInput(problemDTO.getLstInput());
-        modelAndView.addObject(PREVIEW_VO,problemPreviewVO);
-        modelAndView.addObject(TAB,1);
-        modelAndView.addObject("pmId",pmId);
+        modelAndView.addObject(PREVIEW_VO, problemPreviewVO);
+        modelAndView.addObject(TAB, 1);
+        modelAndView.addObject("pmId", pmId);
         return modelAndView;
     }
 
-    @PreAuthorize(value="@ProblemValidator.checkPublic(#pmId) || (isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM'))")
+    @PreAuthorize(value = "@ProblemValidator.checkPublic(#pmId) || (isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM'))")
     @GetMapping("/{pmId}/submit")
-    public ModelAndView getSubmit(@PathVariable("pmId") Integer pmId){
+    public ModelAndView getSubmit(@PathVariable("pmId") Integer pmId) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMIT_VIEW);
 
-        modelAndView.addObject(TAB,2);
+        modelAndView.addObject(TAB, 2);
         modelAndView.addObject("problemSubmitForm", new ProblemSubmitForm());
         List<LanguageDTO> lstLanguage = problemService.getAllLanguage();
-        modelAndView.addObject("lstLanguage",lstLanguage);
-        modelAndView.addObject("pmId",pmId);
+        modelAndView.addObject("lstLanguage", lstLanguage);
+        modelAndView.addObject("pmId", pmId);
         return modelAndView;
     }
-    @PreAuthorize(value="hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
+
+    @CheckNotNullFirst
+    @PreAuthorize(value = "hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
     @GetMapping("/{pmId}/preview")
-    public ModelAndView getPreview(@PathVariable("pmId") Integer pmId){
+    public ModelAndView getPreview(@PathVariable("pmId") Integer pmId) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PREVIEW_VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -190,20 +195,23 @@ public class ProblemController extends BaseController {
         problemService.getProblemInfo(problemDTO);
         problemService.getShowInStatementTest(problemDTO);
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
-        modelMapper.map(problemDTO,problemPreviewVO);
+        modelMapper.map(problemDTO, problemPreviewVO);
         problemPreviewVO.setLstInput(problemDTO.getLstInput());
-        modelAndView.addObject(PREVIEW_VO,problemPreviewVO);
+        modelAndView.addObject(PREVIEW_VO, problemPreviewVO);
         return modelAndView;
     }
-    @PreAuthorize(value="@ProblemValidator.checkPublic(#pmId) || (isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM'))")
+
+    @PreAuthorize(value = "@ProblemValidator.checkPublic(#pmId) || (isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM'))")
     @PostMapping("/{pmId}/doSubmit")
     public ModelAndView doSubmit(@PathVariable("pmId") Integer pmId, ProblemSubmitForm problemSubmitForm) {
-        problemService.tryJudge(pmId,problemSubmitForm);
+        problemService.tryJudge(pmId, problemSubmitForm);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/status");
         return modelAndView;
     }
-    @PreAuthorize(value="hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
+
+    @CheckNotNullFirst
+    @PreAuthorize(value = "hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
     @GetMapping("/{pmId}/statement")
     public ModelAndView getStatement(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,
                                      boolean updateGeneralSuccess, boolean updateSuccess) {
@@ -226,7 +234,9 @@ public class ProblemController extends BaseController {
         modelAndView.setViewName(STATEMENT_VIEW);
         return modelAndView;
     }
-    @PreAuthorize(value="hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
+
+    @CheckNotNullFirst
+    @PreAuthorize(value = "hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
     @GetMapping("/{pmId}/solution")
     public ModelAndView getSolution(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm,
                                     ProblemSolutionForm problemSolutionForm,
@@ -256,7 +266,8 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize(value="hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
+    @CheckNotNullFirst
+    @PreAuthorize(value = "hasAuthority('CAN_VIEW_ALL_PROBLEM') || @ProblemValidator.checkPermission(authentication,#pmId,'CAN_VIEW_PROBLEM')")
     @GetMapping("/{pmId}/test")
     public ModelAndView getTest(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm,
                                 boolean updateGeneralSuccess, boolean updateSuccess) {
@@ -275,11 +286,11 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @GetMapping("/{pmId}/updateTest/{itId}")
     public ModelAndView initUpdateTest(@PathVariable("pmId") Integer pmId, @PathVariable("itId") int itId,
-                                   ProblemUpdateTestForm problemUpdateTestForm,
-                                   boolean updateSuccess) {
+                                       ProblemUpdateTestForm problemUpdateTestForm,
+                                       boolean updateSuccess) {
         ModelAndView modelAndView = new ModelAndView();
         if (null == problemUpdateTestForm || null == problemUpdateTestForm.getId()) {
             problemUpdateTestForm = new ProblemUpdateTestForm();
@@ -287,7 +298,7 @@ public class ProblemController extends BaseController {
         problemUpdateTestForm.setId(itId);
         problemService.getTestCase(problemUpdateTestForm);
         modelAndView.addObject(UPDATE_TEST_FORM, problemUpdateTestForm);
-        modelAndView.addObject("pmId",pmId);
+        modelAndView.addObject("pmId", pmId);
         modelAndView.setViewName(UPDATE_TEST_VIEW);
         if (updateSuccess) {
             modelAndView.addObject(UPDATE_SUCCESS, true);
@@ -295,39 +306,39 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @PostMapping("/{pmId}/doUpdateTest/{itId}")
-    public ModelAndView doUpdateTest(@PathVariable("pmId") Integer pmId,@PathVariable("itId") int itId,
+    public ModelAndView doUpdateTest(@PathVariable("pmId") Integer pmId, @PathVariable("itId") int itId,
                                      ProblemUpdateTestForm problemUpdateTestForm,
-                                     BindingResult bindingResult){
-        validate(problemUpdateTestForm,bindingResult);
-        if (bindingResult.hasErrors()){
-            return initUpdateTest(pmId,itId,problemUpdateTestForm,false);
+                                     BindingResult bindingResult) {
+        validate(problemUpdateTestForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return initUpdateTest(pmId, itId, problemUpdateTestForm, false);
         }
-        try{
+        try {
             ProblemDTO problemDTO = new ProblemDTO();
             problemDTO.setId(pmId);
             problemService.getProblemInfo(problemDTO);
             problemUpdateTestForm.setCode(problemDTO.getCode());
             problemUpdateTestForm.setId(itId);
             problemService.updateTest(problemUpdateTestForm);
-        }catch(Exception e){
+        } catch (Exception e) {
             addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
         }
-        if (bindingResult.hasErrors()){
-            return initUpdateTest(pmId,itId,problemUpdateTestForm,false);
+        if (bindingResult.hasErrors()) {
+            return initUpdateTest(pmId, itId, problemUpdateTestForm, false);
         }
-        return initUpdateTest(pmId,itId,problemUpdateTestForm,true);
+        return initUpdateTest(pmId, itId, problemUpdateTestForm, true);
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @GetMapping("/{pmId}/deleteTest/{itId}")
-    public ModelAndView deleteTest(@PathVariable("pmId") Integer pmId,@PathVariable("itId") int itId) {
+    public ModelAndView deleteTest(@PathVariable("pmId") Integer pmId, @PathVariable("itId") int itId) {
         problemService.deleteTest(itId);
-        return getTest(pmId,null,false,true);
+        return getTest(pmId, null, false, true);
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
     @GetMapping("/{pmId}/role")
     public ModelAndView getRole(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemRoleForm problemRoleForm,
                                 boolean updateGeneralSuccess, boolean updateSuccess) {
@@ -349,7 +360,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @GetMapping("/{pmId}/createTest")
     public ModelAndView createTest(@PathVariable("pmId") Integer pmId, ProblemCreateTestForm problemCreateTestForm,
                                    boolean updateSuccess) {
@@ -365,7 +376,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @PostMapping("/{pmId}/addTest")
     public ModelAndView addTest(@PathVariable("pmId") Integer pmId, ProblemCreateTestForm problemCreateTestForm,
                                 BindingResult bindingResult) {
@@ -392,7 +403,7 @@ public class ProblemController extends BaseController {
         return createTest(pmId, null, true);
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @PostMapping("/{pmId}/updateGeneral/{tab}")
     public ModelAndView updateGeneral(@PathVariable("pmId") Integer pmId,
                                       @PathVariable("tab") int tab,
@@ -446,7 +457,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @PostMapping("/{pmId}/updateStatement")
     public ModelAndView updateStatement(@PathVariable("pmId") Integer pmId,
                                         @NonNull ProblemStatementForm problemStatementForm,
@@ -475,7 +486,7 @@ public class ProblemController extends BaseController {
         return getStatement(pmId, null, problemStatementForm, false, true);
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @PostMapping("/{pmId}/updateSolution")
     public ModelAndView updateSolution(@PathVariable("pmId") Integer pmId,
                                        @NonNull ProblemSolutionForm problemSolutionForm,
@@ -508,7 +519,7 @@ public class ProblemController extends BaseController {
         return getSolution(pmId, null, problemSolutionForm, false, true);
     }
 
-    @PreAuthorize(value="isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
     @PostMapping("/{pmId}/updateRole")
     public ModelAndView updateRole(@PathVariable("pmId") Integer pmId, @NonNull ProblemRoleForm problemRoleForm) {
         ModelAndView modelAndView = null;

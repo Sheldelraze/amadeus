@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -24,11 +25,13 @@ import java.util.concurrent.Executor;
 @SpringBootApplication(scanBasePackages = {"com.minh.nguyen"})
 @MapperScan({ "com.minh.nguyen.mapper" })
 @EnableAsync
+
 public class AmadeusApplication {
     private static Logger logger = LoggerFactory.getLogger(AmadeusApplication.class);
 	public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(AmadeusApplication.class, args);
 	}
+
 	@Bean
 	public Executor asyncExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

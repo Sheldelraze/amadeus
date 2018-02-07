@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,7 +36,7 @@ import java.util.List;
 public class AdviceController {
     private static final Logger logger = LoggerFactory.getLogger(AdviceController.class);
 
-    @ExceptionHandler({NoSuchPageException.class,NoHandlerFoundException.class})
+    @ExceptionHandler({NoSuchPageException.class,NoHandlerFoundException.class,HttpRequestMethodNotSupportedException.class})
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("share/404");
