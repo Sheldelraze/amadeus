@@ -60,7 +60,7 @@ public class ContestEntity extends BaseEntity implements Serializable {
     @Column(name = "showToAll")
     private Integer showToAll;
 
-    public Integer getShowToAll() {
+    public Integer getShowInforToAll() {
         return showToAll;
     }
 
@@ -68,7 +68,7 @@ public class ContestEntity extends BaseEntity implements Serializable {
         this.showToAll = showToAll;
     }
 
-    public Integer getIsPublic() {
+    public Integer getIsAnyoneCanParticipate() {
         return isPublic;
     }
 

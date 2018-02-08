@@ -4,13 +4,9 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.TagDTO;
-import com.minh.nguyen.entity.BaseEntity;
-import com.minh.nguyen.entity.ContestEntity;
-import com.minh.nguyen.entity.CtPmEntity;
+import com.minh.nguyen.entity.*;
 import com.minh.nguyen.form.contest.ContestSettingForm;
-import com.minh.nguyen.mapper.ContestMapper;
-import com.minh.nguyen.mapper.CtPmMapper;
-import com.minh.nguyen.mapper.ProblemMapper;
+import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +31,13 @@ public class ContestService extends BaseService {
     private ContestMapper contestMapper;
 
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private ProblemMapper problemMapper;
+
+    @Autowired
+    private UrCtAuyMapper urCtAuyMapper;
 
     @Autowired
     private CtPmMapper ctPmMapper;
@@ -49,6 +51,7 @@ public class ContestService extends BaseService {
         contestDTO.setStartTime(stringBuilder.toString());
         modelMapper.map(contestDTO, contestEntity);
         try {
+            //set initial contest info and insert
             setCreateInfo(contestEntity);
             setUpdateInfo(contestEntity);
             contestEntity.setIsPublic(1);
@@ -59,7 +62,44 @@ public class ContestService extends BaseService {
             contestEntity.setShowTest(3);
             contestEntity.setShowSubmit(3);
             contestEntity.setShowToAll(1);
-            contestMapper.insertContest(contestEntity);
+            int insertRecord = contestMapper.insertContest(contestEntity);
+            if (insertRecord == 0){
+                rollBack(Constants.MSG_INSERT_ERR);
+            }
+
+            //get current loggin user
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserEntity userEntity = new UserEntity();
+            userEntity.setHandle(auth.getName());
+            List<UserEntity> lstUser = userMapper.selectWithExample(userEntity);
+
+            //assume that only 1 user has current handle
+            if(lstUser.size() != 1){
+                rollBack(Constants.MSG_SYSTEM_ERR);
+            }
+            userEntity = lstUser.get(0);
+
+            //insert view contest authority
+            UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
+            urCtAuyEntity.setUrId(userEntity.getId());
+            urCtAuyEntity.setCtId(contestEntity.getId());
+            urCtAuyEntity.setAuyId(Constants.AUTH_VIEW_CONTEST);
+            setCreateInfo(urCtAuyEntity);
+            setUpdateInfo(urCtAuyEntity);
+            insertRecord = urCtAuyMapper.insert(urCtAuyEntity);
+
+            //assume that insert success
+            if (insertRecord != 1){
+                rollBack(Constants.MSG_INSERT_ERR);
+            }
+
+            //insert edit contest authority
+            urCtAuyEntity.setAuyId(Constants.AUTH_EDIT_CONTEST);
+            insertRecord = urCtAuyMapper.insert(urCtAuyEntity);
+            if (insertRecord != 1){
+                rollBack(Constants.MSG_SYSTEM_ERR);
+            }
+
             return contestEntity.getId();
         } catch (Exception e) {
             e.printStackTrace();

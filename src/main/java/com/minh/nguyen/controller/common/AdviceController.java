@@ -37,14 +37,14 @@ public class AdviceController {
     private static final Logger logger = LoggerFactory.getLogger(AdviceController.class);
 
     @ExceptionHandler({NoSuchPageException.class,NoHandlerFoundException.class,HttpRequestMethodNotSupportedException.class})
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public ModelAndView pageNotFoundHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("share/404");
         return mav;
     }
 
     @ExceptionHandler({AccessDeniedException.class})
-    public ModelAndView acccesDeniedHandler(HttpServletRequest req, Exception e) throws Exception {
+    public ModelAndView accessDeniedHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("share/403");
         return mav;

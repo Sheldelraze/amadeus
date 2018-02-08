@@ -68,5 +68,6 @@ public class Constants {
     public static final Integer AUTH_PARTICIPATE_CONTEST = 9;
     public static final Integer AUTH_VIEW_ALL_PROBLEM = 10;
     public static final Integer AUTH_VIEW_ALL_CONTEST = 11;
+    public static final Integer AUTH_SUBMIT_PROBLEM= 12;
 
 }

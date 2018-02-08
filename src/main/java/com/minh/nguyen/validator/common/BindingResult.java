@@ -1,6 +1,5 @@
 package com.minh.nguyen.validator.common;
 
-import com.minh.nguyen.util.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +14,9 @@ import java.util.List;
  * Purpose:
  */
 @Component
-// @Scope("request")
 public class BindingResult implements Serializable {
 
     private static final long serialVersionUID = 5093266952737916926L;
-
-    @Autowired
-    protected MessageUtil msgUtil;
-
 
     protected List<Throwable> errors = new LinkedList<Throwable>();
 
@@ -40,10 +34,6 @@ public class BindingResult implements Serializable {
 
     public List<Throwable> getAllErrors() {
         return Collections.unmodifiableList(this.errors);
-    }
-
-    public List<ErrorInfoValue> getMessages() {
-        return msgUtil.getMessageList(this);
     }
 
     public void clearErrors() {

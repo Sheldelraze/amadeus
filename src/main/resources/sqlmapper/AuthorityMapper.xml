@@ -26,7 +26,7 @@
             INNER JOIN ur_ct_auy
                 ON authority.id = ur_ct_auy.auyId
                    AND ur_ct_auy.ctId = #{ctId}
-                   AND ur_pm_auy.deleteFlg = '0'
+                   AND ur_ct_auy.deleteFlg = '0'
             INNER JOIN user
                 ON ur_ct_auy.urId = user.id
                    AND user.handle = #{handle}

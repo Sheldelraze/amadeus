@@ -33,9 +33,12 @@ public class AdviceAspect {
     public void contestController(){}
 
     @Pointcut("@annotation(com.minh.nguyen.validator.annotation.CheckNotNullFirst)")
-    public void checkNotNull(){}
+    public void checkNotNullFirst(){}
 
-    @Before("problemController() && checkNotNull()")
+    @Pointcut("@annotation(com.minh.nguyen.validator.annotation.CheckNotNullThird)")
+    public void checkNotNullThird(){}
+
+    @Before("problemController() && checkNotNullFirst()")
     public void ensureProblemNotNull(JoinPoint joinPoint){
         Object[] args = joinPoint.getArgs();
         Integer pmId = (Integer) args[0];
@@ -47,7 +50,7 @@ public class AdviceAspect {
         }
     }
 
-    @Before("contestController() && checkNotNull()")
+    @Before("contestController() && checkNotNullFirst()")
     public void ensureContestNotNull(JoinPoint joinPoint){
         Object[] args = joinPoint.getArgs();
         Integer ctId = (Integer) args[0];
@@ -58,4 +61,17 @@ public class AdviceAspect {
             throw new NoSuchPageException("Contest not found!");
         }
     }
+
+    @Before("contestController() && checkNotNullThird()")
+    public void ensureProblemInContestNotNull(JoinPoint joinPoint){
+        Object[] args = joinPoint.getArgs();
+        Integer pmId = (Integer) args[1];
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setId(pmId);
+        problemEntity = problemMapper.selectByPK(problemEntity);
+        if (null == problemEntity){
+            throw new NoSuchPageException("Problem not found!");
+        }
+    }
+
 }

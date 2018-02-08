@@ -55,23 +55,16 @@ public class ProblemValidator extends BaseValidator {
         }
         return false;
     }
-    public boolean checkPermission(Authentication auth,Integer pmId,String authority) throws NoSuchPageException{
-        ProblemEntity problemEntity = new ProblemEntity();
-        problemEntity.setId(pmId);
-        problemEntity = problemMapper.selectByPK(problemEntity);
-        if (null == problemEntity){
-            throw new NoSuchPageException("Problem not found!");
-        }
+    public boolean checkPermission(Authentication auth,Integer pmId,String... authority) throws NoSuchPageException{
         List<AuthorityDTO> lstAuthority = authorityMapper.getProblemAuthority(pmId, auth.getName());
-        for(AuthorityDTO authorityDTO : lstAuthority){
-            if(authorityDTO.getName().equals(authority)){
-                return true;
+        for(AuthorityDTO curAuth : lstAuthority){
+            for(String requireAuth : authority){
+                if (requireAuth.equals(curAuth.getName())){
+                    return true;
+                }
             }
         }
         return false;
-    }
-    public boolean checkNotNull(Integer pmId){
-        return true;
     }
     public boolean checkOwner(Authentication auth,Integer pmId) throws NoSuchPageException{
         ProblemEntity problemEntity = new ProblemEntity();
