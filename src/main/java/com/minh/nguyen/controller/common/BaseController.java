@@ -89,8 +89,7 @@ public class BaseController {
 
     private void invokeValidator() {
         String validateName = this.getClass().getSimpleName();
-        validateName = validateName.substring(0, 1).toLowerCase()
-                + validateName.substring(1, validateName.indexOf("Controller"))
+        validateName = validateName.substring(0, validateName.indexOf("Controller"))
                 + "Validator";
 
         try {
@@ -125,18 +124,13 @@ public class BaseController {
                                 "Screen error!");
                         while (ite.hasNext()) {
                             ex = (BaseException) ite.next();
-                            if (ex.getMessageId().startsWith(Constants.MSG_COMPILE_ERR)){
-                                String message = ex.getMessageId();
-                                int pos = message.indexOf(":");
-                                message = message.substring(pos + 1);
-                                result.rejectValue(ex.getFieldName(),
-                                        Constants.MSG_COMPILE_ERR,
-                                        new String[]{"\r\n" + message},
-                                        "Screen error!");
-                            }
-                            else {
+                            if (ex.getParam() == null){
                                 result.rejectValue(ex.getFieldName(),
                                         ex.getMessageId(), "Error!");
+                            }
+                            else{
+                                result.rejectValue(ex.getFieldName(),
+                                        ex.getMessageId(),ex.getParam(), "Error!");
                             }
                         }
 

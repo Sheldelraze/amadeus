@@ -90,7 +90,7 @@
                                        th:classappend="${tab==1}?'active'"
                                        class="nav-link">Thông tin</a></li>
                                 <li class="nav-item">
-                                    <a th:href="${tab==2}?'#':@{|/contest/${ctId}/problem|}"
+                                    <a th:href="@{|/contest/${ctId}/problem|}"
                                        th:classappend="${tab==2}?'active'"
                                        class="nav-link">Bài tập</a></li>
                                 <li class="nav-item">

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <div th:replace="layout/layout::css"></div>
+    <style>
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: #1ed921;
+        }
+
+        table, td, tr {
+            border: 1px solid black;
+        }
+
+        table {
+            margin-bottom: 20px;
+        }
+
+        th {
+            padding-left: 5px;
+            font-weight: bolder;
+            font-size: large;
+        }
+
+        td {
+            padding-left: 5px;
+            background-color: #efefef;
+            color: #800
+        }
+    </style>
+
+</head>
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::preloader"></div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::topbar"></div>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::left-sidebar"></div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles">
+                <div class="col-md-5 col-8 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Kỳ thi</a></li>
+                        <li class="breadcrumb-item active">Thông tin kỳ thi</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <div class="row">
+                <!-- Column -->
+                <!-- Column -->
+                <div class="col-lg-12 col-xlg-12 col-md-12" th:replace="contest/info/contest-layout::time"></div>
+                <div class="col-lg-12 col-xlg-12 col-md-12">
+                    <div class="card">
+                        <div class="card-body" style="font-family: verdana,arial,sans-serif;color:black">
+                            <ul class="nav nav-pills m-t-30 m-b-30"
+                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                            <div id="problem" class="tab-pane active">
+                                <div style="text-align: center">
+                                    <label style="font-weight: 900;font-size: x-large"
+                                           th:text="|${problemVO.name}|"></label><br/>
+                                    <label th:text="|Thời gian chạy mỗi test: ${problemVO.timeLimit} ms|"></label><br/>
+                                    <label th:text="|Bộ nhớ tối đa mỗi test: ${problemVO.memoryLimit} MB|"></label><br/>
+                                </div>
+                                <div th:remove="tag" th:utext="${problemVO}?${problemVO.statement}"
+                                     style="white-space: pre-line">
+                                </div>
+                                <label style="font-weight: 900;font-size: large">Input</label><br/>
+                                <div th:remove="tag" th:utext="${problemVO}?${problemVO.input}"
+                                     style="white-space: pre-line"></div>
+                                <label style="font-weight: 900;font-size: large">Output</label><br/>
+                                <div th:remove="tag" th:utext="${problemVO}?${problemVO.output}"
+                                     style="white-space: pre-line"></div>
+
+                                <br/><label style="font-weight: 900;font-size: large">Ví dụ</label><br/>
+                                <th:block th:if="${problemVO}?${problemVO.lstInput != null}">
+
+                                    <table th:each="input : ${problemVO.lstInput}" style="width: 90%">
+                                        <tr>
+                                            <th>
+                                                Input
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td style="white-space: pre-line" th:utext="${input.input}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Output
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td style="white-space: pre-line" th:utext="${input.output}">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </th:block>
+                                <th:block th:if="${problemVO}?${problemVO.note != null}">
+                                    <label style="font-weight: 900;font-size: large">Ghi chú</label><br/>
+                                    <div th:remove="tag" th:utext="${problemVO}?${problemVO.note}"
+                                         style="white-space: pre-line"></div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="layout/layout::footer"></div>
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::js"></div>
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

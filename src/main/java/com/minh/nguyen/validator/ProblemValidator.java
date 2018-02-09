@@ -92,7 +92,7 @@ public class ProblemValidator extends BaseValidator {
             problemService.tryCompile(problemDTO);
         }catch (CompileErrorException e){
             bindingResult.addError(new InputCheckException(
-                    Constants.MSG_COMPILE_ERR + ":" + e.getMessage(),"sourceCode"));
+                    Constants.MSG_COMPILE_ERR,new String[]{e.getMessage()},"sourceCode"));
         }
     }
     public void validateCreate(BindingResult errors){

@@ -86,7 +86,7 @@
                                             th:each="problem : ${contestProblemVO.lstProblemDTO}"
                                             th:style="${problem.isHidden}?'background-color: #e8e8e8'">
                                             <td th:text="${problem.alias}"></td>
-                                            <td><b><a href="#" th:text="${problem.name}"></a></b></td>
+                                            <td><b><a href="#" th:href="|/contest/${ctId}/problem/${problem.id}/view|" th:text="${problem.name}"></a></b></td>
                                             <td><label th:text="${problem.timeLimit}"></label>s</td>
                                             <td><label th:text="${problem.memoryLimit}"></label>MB</td>
                                             <td>

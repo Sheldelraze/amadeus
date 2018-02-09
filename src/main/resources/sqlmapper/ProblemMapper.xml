@@ -64,6 +64,19 @@
         WHERE
             problem.deleteFlg = '0'
     </select>
+    <select id="getProblemToSubmit" resultType="ProblemDTO">
+        SELECT
+            problem.id,
+            problem.name
+        FROM problem
+            INNER JOIN ct_pm
+                ON problem.id = ct_pm.pmId
+                   AND ct_pm.ctId = #{ctId}
+                   AND ct_pm.isHidden=0
+                   AND ct_pm.deleteFlg = '0'
+        WHERE
+            problem.deleteFlg = '0'
+    </select>
     <resultMap id="problem" type="ProblemDTO">
         <id column="pmId" property="id"/>
         <result column="pmCe" property="code"/>

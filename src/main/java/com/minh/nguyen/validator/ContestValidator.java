@@ -3,8 +3,10 @@ package com.minh.nguyen.validator;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
 import com.minh.nguyen.entity.ContestEntity;
+import com.minh.nguyen.exception.InputCheckException;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.form.BaseForm;
+import com.minh.nguyen.form.contest.ContestSubmitForm;
 import com.minh.nguyen.mapper.AuthorityMapper;
 import com.minh.nguyen.mapper.ContestMapper;
 import com.minh.nguyen.validator.common.BaseValidator;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -106,6 +109,22 @@ public class ContestValidator extends BaseValidator {
 
     @Override
     public void validateLogic(BaseForm clazz, BindingResult errors) {
+        if(clazz.getScreenName().equals("submitForm")){
+            ContestSubmitForm contestSubmitForm = (ContestSubmitForm)clazz;
+            validateSourceCode(contestSubmitForm.getSourceCode(),errors);
+        }
+    }
 
+    public void validateSourceCode(String source,BindingResult bindingResult){
+        final byte[] utf8Bytes;
+        try {
+            utf8Bytes = source.getBytes("UTF-8");
+            if (utf8Bytes.length > 1024 * 256){
+                bindingResult.addError(new InputCheckException(
+                        Constants.MSG_FILE_TOO_LARGE_ERR,"sourceCode"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }

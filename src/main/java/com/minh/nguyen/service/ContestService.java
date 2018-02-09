@@ -178,6 +178,15 @@ public class ContestService extends BaseService {
         }
         return lst;
     }
+    public List<ProblemDTO> getProblemToSubmit(Integer ctId){
+        List<ProblemDTO> lst = problemMapper.getProblemToSubmit(ctId);
+        int cnt = 0;
+        for(ProblemDTO problemDTO : lst){
+            String name = ++cnt + ". " + problemDTO.getName();
+            problemDTO.setName(name);
+        }
+        return lst;
+    }
     public ContestInformationVO getInformation(int ctId){
         ContestInformationVO contestInformationVO = new ContestInformationVO();
         ContestEntity contestEntity = new ContestEntity();

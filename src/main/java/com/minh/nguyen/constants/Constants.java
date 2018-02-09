@@ -31,6 +31,7 @@ public class Constants {
     public static final String MSG_UPDATE_ERR = "msg010";
     public static final String MSG_INSERT_ERR = "msg012";
     public static final String MSG_COMPILE_ERR = "msg011";
+    public static final String MSG_FILE_TOO_LARGE_ERR = "msg015";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;

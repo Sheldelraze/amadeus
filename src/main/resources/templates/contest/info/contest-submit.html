@@ -77,43 +77,59 @@
                 <div class="col-lg-12 col-xlg-12 col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <ul class="nav nav-pills m-t-30 m-b-30" th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                            <ul class="nav nav-pills m-t-30 m-b-30"
+                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
                             <div id="submit" class="tab-pane">
                                 <div class="card-body">
-                                    <div style="margin-bottom: 20px">
-                                        <b style="color: black;">Bài tập</b><br />
-                                        <select class="select2" style="width: 50%; color: black">
-                                            <option value="CPP">1. Tính tổng 2 số</option>
-                                            <option value="JAVA">2. Tính hiệu 2 số</option>
-                                        </select>
-                                        <br />
-                                        <br />
-                                        <b style="color: black;">Chọn ngôn ngữ</b>
-                                        <br />
-                                        <select class="select2" style="width: 30%; color: black">
-                                            <option value="CPP">C++</option>
-                                            <option value="JAVA">Java</option>
-                                        </select>
-                                    </div>
-                                    <b style="color: black;">Nhập mã nguồn</b>
-                                    <pre id="editor">#include &lt;bits/stdc++.h&gt;
-using namespace std;
-int main(){
-    int a,b;
-    cin &gt;&gt; a &gt; &gt; b;
-    cout &lt;&lt; a + b;
-}
-                            </pre>
-                                    <div style="margin-bottom: 20px; margin-top: 20px">
-                                        <b style="color: black;">Hoặc tải từ máy lên (coming soon)</b>
+                                    <form id="submitForm" method="post" th:action="|/contest/${ctId}/submit|" th:object="${contestSubmitForm}">
+                                        <div style="margin-bottom: 20px">
+                                            <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                                <div class="alert alert-danger">
+                                                    ✘ <label th:errors="*{screenMessage}"></label>
+                                                </div>
+                                            </th:block>
+                                            <b style="color: black;">Bài tập</b><br/>
+                                            <select class="select2" style="width: 50%; color: black"
+                                                    th:field="*{pmId}"
+                                                    th:remove="all-but-first">
+                                                <option th:each="problem : ${contestSubmitVO.lstProblem}"
+                                                        th:value="${problem.id}"
+                                                        th:text="${problem.name}"></option>
+                                                <option value="CPP">1. Tính tổng 2 số</option>
+                                                <option value="JAVA">2. Tính hiệu 2 số</option>
+                                            </select>
+                                            <br/>
+                                            <br/>
+                                            <b style="color: black;">Chọn ngôn ngữ</b>
+                                            <br/>
+                                            <select class="select2" th:field="*{leId}" style="width: 30%; color: black">
+                                                <option th:each="language : ${contestSubmitVO.lstLanguage}"
+                                                        th:value="${language.id}"
+                                                        th:text="${language.name}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <b style="color: black;">Nhập mã nguồn (không quá 256KB)</b>
+                                        <th:block th:if="${#fields.hasErrors('sourceCode')}">
+                                            <br/>
+                                            <label  th:class="'error'" id="compileErr"
+                                                    th:errors="*{sourceCode}" style="white-space: pre;">Name Error</label>
+                                        </th:block>
 
-                                    </div>
-                                    <input type="file" id="input-file-now" class="dropify" />
-                                    <div style="float: left; margin-top: 20px; margin-bottom: 20px">
+                                        <input type="hidden" th:field="*{sourceCode}"/>
+                                        <pre id="editor"><label th:text="${contestSubmitVO}?${contestSubmitVO.sourceCode}"></pre>
+                                        <div style="margin-bottom: 20px; margin-top: 20px">
+                                            <b style="color: black;">Hoặc tải từ máy lên (coming soon)</b>
 
-                                        <button type="button" class="btn btn-block btn-outline-success">Nộp bài</button>
-                                    </div>
+                                        </div>
+                                        <input type="file" id="input-file-now" class="dropify"/>
+                                        <div style="float: left; margin-top: 20px; margin-bottom: 20px">
 
+                                            <button type="button" onclick="doSubmit();return false;"
+                                                    class="btn btn-block btn-outline-success">Nộp bài
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -151,6 +167,13 @@ int main(){
 <script src="../../../static/ace/ace.js" th:src="@{/ace/ace.js}"></script>
 <script src="../../../static/ace/ext-themelist.js" th:src="@{/ace/ext-themelist.js}"></script>
 <script>
+    function doSubmit() {
+        var editor = ace.edit("editor");
+        var code = editor.getValue();
+        document.getElementById("sourceCode").value = code;
+        document.getElementById("submitForm").submit();
+    }
+
     var $ = document.getElementById.bind(document);
     var dom = require("ace/lib/dom");
 
