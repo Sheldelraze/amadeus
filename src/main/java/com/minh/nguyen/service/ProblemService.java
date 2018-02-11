@@ -57,7 +57,11 @@ public class ProblemService extends BaseService{
     private UrPmAuyMapper urPmAuyMapper;
 
     @Autowired
+    private SubmissionMapper submissionMapper;
+
+    @Autowired
     private JudgeService judgeService;
+
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
 
     public void tryCompile(ProblemDTO problemDTO) throws CompileErrorException,UncheckedTimeoutException {
@@ -77,6 +81,7 @@ public class ProblemService extends BaseService{
         }
     }
     public void tryJudge(Integer pmId,ProblemSubmitForm problemSubmitForm){
+        //init problem and language information
         LanguageEntity languageEntity = new LanguageEntity();
         languageEntity.setId(problemSubmitForm.getLeId());
         languageEntity = languageMapper.selectByPK(languageEntity);
@@ -88,7 +93,20 @@ public class ProblemService extends BaseService{
         List<InputDTO> lstInput = inputMapper.getAllTest(pmId);
         problemDTO.setLstInput(lstInput);
         problemDTO.setSourceCode(problemSubmitForm.getSourceCode());
-        judgeService.judge(problemDTO,languageDTO);
+
+        //init and insert submission information
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setLeId(languageDTO.getId());
+        submissionEntity.setSourceCode(problemDTO.getSourceCode());
+        submissionEntity.setPmId(problemDTO.getId());
+        submissionEntity.setTimeRun(0);
+        submissionEntity.setMemoryUsed(0);
+        submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
+        submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
+        setUpdateInfo(submissionEntity);
+        setCreateInfo(submissionEntity);
+        submissionMapper.insertSubmission(submissionEntity);
+        judgeService.judge(problemDTO,languageDTO,submissionEntity);
 
     }
 
@@ -296,25 +314,5 @@ public class ProblemService extends BaseService{
         String filename = "input-itId-" + inputEntity.getId();
         FileUtil.createFileWithContent(location, filename, "txt",
                 inputEntity.getInput());
-    }
-    void setCreateInfo(BaseEntity entity){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        Calendar today = Calendar.getInstance();
-        Date time = today.getTime();
-        entity.setCreateClass(ProblemService.class.getName());
-        entity.setCreateTime(time);
-        entity.setCreateUser(currentUser);
-        entity.setDeleteFlg("0");
-    }
-
-    void setUpdateInfo(BaseEntity entity){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        Calendar today = Calendar.getInstance();
-        Date time = today.getTime();
-        entity.setUpdateClass(ProblemService.class.getName());
-        entity.setUpdateTime(time);
-        entity.setUpdateUser(currentUser);
     }
 }

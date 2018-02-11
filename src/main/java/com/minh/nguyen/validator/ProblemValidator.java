@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Objects;
 
@@ -90,12 +91,23 @@ public class ProblemValidator extends BaseValidator {
     public void validateUpdateSolution(ProblemDTO problemDTO,BindingResult bindingResult){
         try{
             problemService.tryCompile(problemDTO);
+            validateSourceCode(problemDTO.getSourceCode(),bindingResult);
         }catch (CompileErrorException e){
             bindingResult.addError(new InputCheckException(
                     Constants.MSG_COMPILE_ERR,new String[]{e.getMessage()},"sourceCode"));
         }
     }
-    public void validateCreate(BindingResult errors){
 
+    public void validateSourceCode(String source,BindingResult bindingResult){
+        final byte[] utf8Bytes;
+        try {
+            utf8Bytes = source.getBytes("UTF-8");
+            if (utf8Bytes.length > 2048 * 256){
+                bindingResult.addError(new InputCheckException(
+                        Constants.MSG_FILE_TOO_LARGE_ERR,"sourceCode"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }

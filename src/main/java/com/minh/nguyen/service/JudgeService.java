@@ -55,27 +55,16 @@ public class JudgeService extends BaseService {
     private SubmissionMapper submissionMapper;
 
     @Async
-    public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO) {
+    public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO,SubmissionEntity submissionEntity) {
         logger.info("hallo from judge");
         boolean runTimeErr = false;
         boolean wrongAns = false;
         boolean timeLimitErr = false;
         int timeTotal = 0;
         int testCount = 0;
-        SubmissionEntity submissionEntity = new SubmissionEntity();
-        SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
-        SnSDlEntity snSDlEntity = new SnSDlEntity();
-        submissionEntity.setLeId(languageDTO.getId());
-        submissionEntity.setSourceCode(problemDTO.getSourceCode());
-        submissionEntity.setPmId(problemDTO.getId());
-        submissionEntity.setTimeRun(0);
-        submissionEntity.setMemoryUsed(0);
-        submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
-        submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
-        setUpdateInfo(submissionEntity);
-        setCreateInfo(submissionEntity);
-        submissionMapper.insertSubmission(submissionEntity);
 
+        SnSDlEntity snSDlEntity = new SnSDlEntity();
+        SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
         try {
             String fileName = ("submission-snId-" + submissionEntity.getId())
                     + "-" + problemDTO.getCode();

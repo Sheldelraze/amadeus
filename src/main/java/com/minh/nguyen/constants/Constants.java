@@ -6,6 +6,8 @@ package com.minh.nguyen.constants;
  * Purpose:
  */
 public class Constants {
+    public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
+
     public static final String CPP_ARGS = "-g -O2 -static -std=gnu++11";
     public static final String CPP_COMPILER = "g++";
     public static final String CPP_EXTENSION = "cpp";
@@ -32,6 +34,7 @@ public class Constants {
     public static final String MSG_INSERT_ERR = "msg012";
     public static final String MSG_COMPILE_ERR = "msg011";
     public static final String MSG_FILE_TOO_LARGE_ERR = "msg015";
+    public static final String MSG_SESSION_TIMEOUT = "msg016";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;
@@ -69,6 +72,7 @@ public class Constants {
     public static final Integer AUTH_PARTICIPATE_CONTEST = 9;
     public static final Integer AUTH_VIEW_ALL_PROBLEM = 10;
     public static final Integer AUTH_VIEW_ALL_CONTEST = 11;
-    public static final Integer AUTH_SUBMIT_PROBLEM= 12;
+    public static final Integer AUTH_SUBMIT_PROBLEM = 12;
+    public static final Integer AUTH_VIEW_ALL_SUBMISSION = 13;
 
 }

@@ -222,8 +222,7 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
-            "|| @ContestValidator.checkParticipate(authentication,#ctId)")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkParticipate(authentication,#ctId)")
     @PostMapping("/{ctId}/submit")
     public ModelAndView doSubmit(@PathVariable("ctId") int ctId,ContestSubmitForm contestSubmitForm,BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
@@ -233,6 +232,9 @@ public class ContestController extends BaseController {
             contestSubmitForm.setId(ctId);
             return getSubmit(ctId,contestSubmitForm);
         }
+        contestService.doSubmit(contestSubmitForm.getSourceCode(),ctId,
+                contestSubmitForm.getLeId(),
+                contestSubmitForm.getPmId());
         modelAndView.setViewName(SUBMISSION_MY_VIEW);
         return modelAndView;
     }

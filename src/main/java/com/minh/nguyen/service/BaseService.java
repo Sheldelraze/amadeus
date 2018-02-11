@@ -89,7 +89,7 @@ public class BaseService {
         String currentUser = authentication.getName();
         Calendar today = Calendar.getInstance();
         Date time = today.getTime();
-        entity.setCreateClass(BaseService.class.getName());
+        entity.setCreateClass(this.getClass().getName());
         entity.setCreateTime(time);
         entity.setCreateUser(currentUser);
         entity.setDeleteFlg("0");
@@ -99,7 +99,7 @@ public class BaseService {
         String currentUser = authentication.getName();
         Calendar today = Calendar.getInstance();
         Date time = today.getTime();
-        entity.setUpdateClass(BaseService.class.getName());
+        entity.setUpdateClass(this.getClass().getName());
         entity.setUpdateTime(time);
         entity.setUpdateUser(currentUser);
     }

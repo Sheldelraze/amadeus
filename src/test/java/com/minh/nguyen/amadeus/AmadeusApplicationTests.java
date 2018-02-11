@@ -20,32 +20,10 @@ public class AmadeusApplicationTests {
     ProblemMapper problemMapper;
     private static ModelMapper modelMapper = new ModelMapper();
 //	static Logger logger = LoggerFactory.getLogger(AmadeusApplicationTests.class);
-	public static class A{
-	    String a;
 
-        public String getA() {
-            return a;
-        }
-
-        public void setA(String a) {
-            this.a = a;
-        }
-    }
-    public static class B extends A{
-        public int a;
-
-        public int getB() {
-            return a;
-        }
-
-        public void setA(int a) {
-            this.a = a;
-        }
-    }
     @Test
     public void test(){
-        List<ProblemDTO> lst = problemMapper.getAllProblem();
-        lst = null;
+
     }
     public static class TestRunnable implements Runnable{
 

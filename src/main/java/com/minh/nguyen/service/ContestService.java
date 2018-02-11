@@ -1,9 +1,7 @@
 package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
-import com.minh.nguyen.dto.ContestDTO;
-import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.dto.TagDTO;
+import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.*;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.*;
@@ -14,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,6 +41,26 @@ public class ContestService extends BaseService {
     @Autowired
     private CtPmMapper ctPmMapper;
 
+    @Autowired
+    private ProblemService problemService;
+
+    @Autowired
+    private JudgeService judgeService;
+
+    @Autowired
+    private InputMapper inputMapper;
+
+    @Autowired
+    private LanguageMapper languageMapper;
+
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private CtUrSnMapper ctUrSnMapper;
+
+    @Autowired
+    private HttpSession httpSession;
     public int createContest(ContestDTO contestDTO) {
         ContestEntity contestEntity = new ContestEntity();
         StringBuilder stringBuilder = new StringBuilder();
@@ -213,24 +232,43 @@ public class ContestService extends BaseService {
         }
     }
 
-    void setCreateInfo(BaseEntity entity){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        Calendar today = Calendar.getInstance();
-        Date time = today.getTime();
-        entity.setCreateClass(ContestService.class.getName());
-        entity.setCreateTime(time);
-        entity.setCreateUser(currentUser);
-        entity.setDeleteFlg("0");
-    }
+    //execute submission in contest
+    public void doSubmit(String sourceCode,Integer ctId, Integer leId,Integer pmId){
+        LanguageEntity languageEntity = new LanguageEntity();
+        languageEntity.setId(leId);
+        languageEntity = languageMapper.selectByPK(languageEntity);
+        LanguageDTO languageDTO = new LanguageDTO();
+        modelMapper.map(languageEntity,languageDTO);
+        ProblemDTO problemDTO = new ProblemDTO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        List<InputDTO> lstInput = inputMapper.getAllTest(pmId);
+        problemDTO.setLstInput(lstInput);
+        problemDTO.setSourceCode(sourceCode);
+        Integer urId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (urId == null){
+            rollBack(Constants.MSG_SESSION_TIMEOUT);
+        }
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setLeId(languageDTO.getId());
+        submissionEntity.setSourceCode(problemDTO.getSourceCode());
+        submissionEntity.setPmId(problemDTO.getId());
+        submissionEntity.setTimeRun(0);
+        submissionEntity.setMemoryUsed(0);
+        submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
+        submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
+        setUpdateInfo(submissionEntity);
+        setCreateInfo(submissionEntity);
+        submissionMapper.insertSubmission(submissionEntity);
 
-    void setUpdateInfo(BaseEntity entity){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        Calendar today = Calendar.getInstance();
-        Date time = today.getTime();
-        entity.setUpdateClass(ContestService.class.getName());
-        entity.setUpdateTime(time);
-        entity.setUpdateUser(currentUser);
+        CtUrSnEntity ctUrSnEntity = new CtUrSnEntity();
+        ctUrSnEntity.setCtId(ctId);
+        ctUrSnEntity.setSnId(submissionEntity.getId());
+        ctUrSnEntity.setUrId(urId);
+        setCreateInfo(ctUrSnEntity);
+        setUpdateInfo(ctUrSnEntity);
+        ctUrSnMapper.insert(ctUrSnEntity);
+
+        judgeService.judge(problemDTO,languageDTO,submissionEntity);
     }
 }
