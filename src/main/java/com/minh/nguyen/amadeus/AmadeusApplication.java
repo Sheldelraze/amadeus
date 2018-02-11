@@ -29,25 +29,7 @@ import java.util.concurrent.Executor;
 public class AmadeusApplication {
     private static Logger logger = LoggerFactory.getLogger(AmadeusApplication.class);
 	public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(AmadeusApplication.class, args);
+        SpringApplication.run(AmadeusApplication.class, args);
 	}
-
-	@Bean
-	public Executor asyncExecutor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(5);
-		executor.setMaxPoolSize(100);
-		executor.setQueueCapacity(500);
-		executor.setThreadNamePrefix("Judge");
-		executor.initialize();
-		return executor;
-	}
-    @Bean
-    public ServletRegistrationBean dispatcherRegistration(DispatcherServlet dispatcherServlet) {
-        ServletRegistrationBean registration = new ServletRegistrationBean(
-                dispatcherServlet);
-        dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
-        return registration;
-    }
 
 }

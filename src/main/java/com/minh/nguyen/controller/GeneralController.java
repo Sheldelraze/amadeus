@@ -34,7 +34,7 @@ public class GeneralController {
         modelAndView.setViewName("share/login");
         return modelAndView;
     }
-    @GetMapping("/")
+    @GetMapping({"/",""})
     public ModelAndView getIndex() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("share/index");

@@ -4,6 +4,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.dto.ProblemDTO;
+import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.service.ProblemService;
@@ -51,6 +52,7 @@ public class ContestController extends BaseController {
     private static final String CREATE_FORM = "contestCreateForm";
     private static final String SUBMISSION_MY_FORM = "contestSubmissionMyForm";
     private static final String SUBMISSION_ALL_FORM = "contestSubmissionAllForm";
+    private static final String SUBMISSION_LIST = "lstSubmission";
     private static final String LEADERBOARD_FORM = "contestLeaderboardForm";
     private static final String SETTING_FORM = "contestSettingForm";
     private static final String ROLE_FORM = "contestRoleForm";
@@ -235,7 +237,7 @@ public class ContestController extends BaseController {
         contestService.doSubmit(contestSubmitForm.getSourceCode(),ctId,
                 contestSubmitForm.getLeId(),
                 contestSubmitForm.getPmId());
-        modelAndView.setViewName(SUBMISSION_MY_VIEW);
+        modelAndView.setViewName("redirect:/contest/" + ctId + "/my");
         return modelAndView;
     }
 
@@ -247,8 +249,10 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMISSION_MY_VIEW);
         modelAndView.addObject(SUBMISSION_MY_FORM, contestSubmissionMyForm);
+        List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId,false);
         modelAndView.addObject(TAB, 4);
         modelAndView.addObject(CONTEST_ID, ctId);
+        modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
         return modelAndView;
     }
 
@@ -261,6 +265,8 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMISSION_ALL_VIEW);
         modelAndView.addObject(SUBMISSION_ALL_FORM, contestSubmissionAllForm);
+        List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId,true);
+        modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
         modelAndView.addObject(TAB, 5);
         modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
@@ -293,6 +299,16 @@ public class ContestController extends BaseController {
 
         modelAndView.addObject(TAB, 7);
         modelAndView.addObject(CONTEST_ID, ctId);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+            "|| @ContestValidator.checkShowSubmitPolicy(#ctId,#snId)")
+    @GetMapping("/{ctId}/submission/{snId}")
+    public ModelAndView getSubmission(@PathVariable("ctId") int ctId,@PathVariable("snId") int snId) {
+        ModelAndView modelAndView = new ModelAndView();
+
         return modelAndView;
     }
 

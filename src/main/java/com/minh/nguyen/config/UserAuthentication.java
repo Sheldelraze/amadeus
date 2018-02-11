@@ -37,6 +37,7 @@ public class UserAuthentication implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ID,lst.get(0).getId());
+        httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_HANDLE,lst.get(0).getHandle());
         UserDTO user = lstUser.get(0);
         List<AuthorityDTO> lstAuthority = user.getLstAuthority();
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

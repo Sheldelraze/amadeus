@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +57,7 @@ public class JudgeService extends BaseService {
 
     @Async
     public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO,SubmissionEntity submissionEntity) {
-        logger.info("hallo from judge");
+        logger.debug("Doing me a heavy discomfort judging....");
         boolean runTimeErr = false;
         boolean wrongAns = false;
         boolean timeLimitErr = false;
@@ -159,24 +160,4 @@ public class JudgeService extends BaseService {
         submissionMapper.updateByPK(submissionEntity);
     }
 
-    void setCreateInfo(BaseEntity entity){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        Calendar today = Calendar.getInstance();
-        Date time = today.getTime();
-        entity.setCreateClass(JudgeService.class.getName());
-        entity.setCreateTime(time);
-        entity.setCreateUser(currentUser);
-        entity.setDeleteFlg("0");
-    }
-
-    void setUpdateInfo(BaseEntity entity){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        Calendar today = Calendar.getInstance();
-        Date time = today.getTime();
-        entity.setUpdateClass(JudgeService.class.getName());
-        entity.setUpdateTime(time);
-        entity.setUpdateUser(currentUser);
-    }
 }

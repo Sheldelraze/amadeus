@@ -11,6 +11,19 @@
           th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
 
     <div th:replace="layout/layout::css"></div>
+    <style>
+        .judging{
+            color: slategray;
+        }
+        .fail{
+            color: red;
+            font-weight: 500;
+        }
+        .accepted{
+            color: limegreen;
+            font-weight: 800;
+        }
+    </style>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
 <!-- ============================================================== -->
@@ -82,7 +95,25 @@
                                             <th style="text-align: center">Ngôn ngữ</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody th:remove="all-but-first">
+                                        <tr th:each="submission : ${lstSubmission}">
+                                            <td><b><a  th:href="|/contest/${ctId}/submission/${submission.id}|"  th:text="${submission.id}">132</a></b></td>
+                                            <td><b><a href="#" th:text="${submission?.user?.fullname}">Makise Kurisu</a></b></td>
+                                            <td><b><a href="#" th:text="${submission.pmNm}">Tính tổng 2 số</a></b></td>
+                                            <td th:text="|${submission.memoryUsed}MB|">256KB</td>
+                                            <td th:text="|${submission.timeRun}ms|">25ms</td>
+                                            <td th:text="${submission.submitTime}">1:20:25</td>
+                                            <th:block th:if="${submission.judgeStatus==0}">
+                                                <td><label th:text="${submission.verdict}" class="judging"></label></td>
+                                            </th:block>
+                                            <th:block th:if="${submission.judgeStatus==6}">
+                                                <td><label th:text="${submission.verdict}" class="accepted"></label></td>
+                                            </th:block>
+                                            <th:block th:if="${submission.judgeStatus!=6 && submission.judgeStatus!=0}">
+                                                <td><label th:text="${submission.verdict}" class="fail"></label></td>
+                                            </th:block>
+                                            <td th:text="${submission.leNm}">C++ </td>
+                                        </tr>
                                         <tr>
                                             <td><b><a href="SubmissionInfo.aspx">132</a></b></td>
                                             <td><b><a href="#">Makise Kurisu</a></b></td>
@@ -144,7 +175,9 @@
 <script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js" th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}" ></script>
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').dataTable( {
+            "bSort": false
+        } );
     });
 </script>
 </body>

@@ -160,7 +160,7 @@
                         </div>
                         <div class="card-body" style="font-family: verdana,arial,sans-serif">
 
-                            <label style="white-space: pre;font-weight: bolder" th:utext="${detail.result}" th:classappend="${submitDetail.judgeStatus == 6}?'accepted':'fail'"></label>
+                            <label style="white-space: pre;font-weight: bolder" th:utext="${detail.result}" th:classappend="${detail.result == 'Đúng'}?'accepted':'fail'"></label>
                         </div>
                     </div>
                 </div>

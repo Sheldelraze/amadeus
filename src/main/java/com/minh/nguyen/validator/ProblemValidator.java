@@ -51,11 +51,12 @@ public class ProblemValidator extends BaseValidator {
         if (null == problemEntity){
             throw new NoSuchPageException("Problem not found!");
         }
-        if (problemEntity.getIsPublic() == 1){
+        if (problemEntity.getIsPublic().equals(1)){
             return true;
         }
         return false;
     }
+
     public boolean checkPermission(Authentication auth,Integer pmId,String... authority) throws NoSuchPageException{
         List<AuthorityDTO> lstAuthority = authorityMapper.getProblemAuthority(pmId, auth.getName());
         for(AuthorityDTO curAuth : lstAuthority){

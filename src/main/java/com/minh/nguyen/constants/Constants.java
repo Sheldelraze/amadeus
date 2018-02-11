@@ -7,6 +7,7 @@ package com.minh.nguyen.constants;
  */
 public class Constants {
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
+    public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";
 
     public static final String CPP_ARGS = "-g -O2 -static -std=gnu++11";
     public static final String CPP_COMPILER = "g++";
@@ -75,4 +76,11 @@ public class Constants {
     public static final Integer AUTH_SUBMIT_PROBLEM = 12;
     public static final Integer AUTH_VIEW_ALL_SUBMISSION = 13;
 
+    public static final Integer SHOW_SUBMIT_ALL = 1;
+    public static final Integer SHOW_SUBMIT_SOLVED = 1;
+    public static final Integer SHOW_SUBMIT_PERSONAL = 1;
+
+    public static final Integer SHOW_TEST_ALL = 1;
+    public static final Integer SHOW_TEST_SOLVED = 1;
+    public static final Integer SHOW_TEST_PERSONAL = 1;
 }

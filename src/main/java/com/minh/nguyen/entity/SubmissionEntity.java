@@ -23,6 +23,9 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
     @Column(name = "pmId")
     private Integer pmId;
 
+    @Column(name = "urId")
+    private Integer urId;
+
     @Column(name = "timeRun")
     private Integer timeRun;
 
@@ -40,6 +43,14 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
 
     @Column(name = "isPublic")
     private Integer isPublic;
+
+    public Integer getUrId() {
+        return urId;
+    }
+
+    public void setUrId(Integer urId) {
+        this.urId = urId;
+    }
 
     public Integer getTimeRun() {
         return timeRun;

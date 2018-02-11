@@ -1,6 +1,6 @@
 package com.minh.nguyen.mapper;
 
-import com.minh.nguyen.entity.CtUrSnEntity;
+import com.minh.nguyen.entity.CtSnEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @since 11/02/2018
  * Purpose:
  */
-@Component("CtUrSnMapper")
+@Component("CtSnMapper")
 @Mapper
-public interface CtUrSnMapper extends BaseMapper<CtUrSnEntity> {
+public interface CtSnMapper extends BaseMapper<CtSnEntity> {
 }

@@ -11,11 +11,13 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.RollbackException;
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +30,6 @@ import java.util.List;
 public class BaseService {
     public ModelMapper modelMapper;
 
-    
     @PostConstruct
     private void init() {
         modelMapper = new ModelMapper();
@@ -95,6 +96,7 @@ public class BaseService {
         entity.setDeleteFlg("0");
     }
     void setUpdateInfo(BaseEntity entity){
+        SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
         Calendar today = Calendar.getInstance();

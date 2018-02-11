@@ -10,6 +10,7 @@ import java.util.List;
 public class SubmissionDTO extends BaseDTO {
     private Integer id;
     private String pmNm;
+    private String handle;
     private Integer timeRun;
     private Integer memoryUsed;
     private String sourceCode;
@@ -18,6 +19,23 @@ public class SubmissionDTO extends BaseDTO {
     private String submitTime;
     private String leNm;
     private List<SubmitDetailDTO> lstSubmitDetail;
+    private UserDTO user;
+
+    public String getHandle() {
+        return handle;
+    }
+
+    public void setHandle(String handle) {
+        this.handle = handle;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
 
     public String getSourceCode() {
         return sourceCode;

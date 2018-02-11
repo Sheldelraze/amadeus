@@ -2,13 +2,17 @@ package com.minh.nguyen.validator;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
+import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.entity.ContestEntity;
+import com.minh.nguyen.entity.SubmissionEntity;
 import com.minh.nguyen.exception.InputCheckException;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.form.BaseForm;
 import com.minh.nguyen.form.contest.ContestSubmitForm;
 import com.minh.nguyen.mapper.AuthorityMapper;
 import com.minh.nguyen.mapper.ContestMapper;
+import com.minh.nguyen.mapper.SubmissionMapper;
+import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
 import org.apache.commons.lang3.time.DateUtils;
@@ -16,6 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
@@ -34,13 +43,60 @@ public class ContestValidator extends BaseValidator {
     @Autowired
     private AuthorityMapper authorityMapper;
 
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private HttpSession httpSession;
+
     //check if user outside contest can view problem (only work when contest is public)
-    public boolean checkPublic(Integer ctId) throws NoSuchPageException {
+    public boolean checkPublic(Integer ctId) throws NoSuchPageException, IOException, ServletException {
         ContestEntity contestEntity = getContestById(ctId);
-        return contestEntity.getIsAnyoneCanParticipate().equals(1)
-                && contestEntity.getShowInforToAll().equals(1);
+        if (contestEntity.getIsAnyoneCanParticipate().equals(1)
+                && contestEntity.getShowInforToAll().equals(1)){
+            return true;
+        }
+        return true;
     }
 
+    //check if user can view submission base on current contest's policy
+    public boolean checkShowSubmitPolicy(Integer ctId,Integer snId){
+
+        //check if participator first
+        String handle = (String)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        boolean flag = false;
+        List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, handle);
+        for (AuthorityDTO curAuth : lstAuthority) {
+            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST)) {
+                flag = true;
+            }
+        }
+        if (!flag){
+            return false;
+        }
+
+        //then check policy
+        ContestEntity contestEntity = getContestById(ctId);
+        if (contestEntity.getShowSubmit().equals(Constants.SHOW_SUBMIT_ALL)){
+            return true;
+        }
+
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setId(snId);
+        List<SubmissionEntity> lstSubmission = submissionMapper.selectWithExample(submissionEntity);
+        if (lstSubmission.size() != 1){
+            throw new NoSuchPageException("Submission not found!");
+        }
+        Integer currentUserId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (submissionEntity.getUrId().equals(currentUserId)){
+            return true;
+        }
+        if (contestEntity.getShowSubmit().equals(Constants.SHOW_SUBMIT_SOLVED)){
+            Integer solveCnt = submissionMapper.checkSolvedStatus(ctId,submissionEntity.getPmId(),submissionEntity.getUrId());
+            return solveCnt > 0;
+        }
+        return false;
+    }
     //check if curent user has any authority in current contest
     public boolean checkPermission(Authentication auth, Integer ctId, String... authority) throws NoSuchPageException {
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, auth.getName());

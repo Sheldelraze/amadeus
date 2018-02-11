@@ -1,5 +1,6 @@
 package com.minh.nguyen.controller.common;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.util.ExceptionUtil;
 import org.slf4j.Logger;
@@ -46,7 +47,12 @@ public class AdviceController {
     @ExceptionHandler(Exception.class)
     public ModelAndView globalErrorHandle(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
-        mav.addObject("warn", e.toString());
+        if (null == e.toString() || Constants.BLANK.equals(e.toString())){
+            mav.addObject("warn", ExceptionUtil.getMessage(e));
+        }
+        else {
+            mav.addObject("warn", e.toString());
+        }
         logger.warn("Request: " + req.getRequestURL());
         logger.warn("warn: " + ExceptionUtil.toString(e));
         mav.setViewName("share/500");

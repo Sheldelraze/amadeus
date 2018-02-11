@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.RollbackException;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.Calendar;
@@ -61,6 +62,9 @@ public class ProblemService extends BaseService{
 
     @Autowired
     private JudgeService judgeService;
+
+    @Autowired
+    private HttpSession httpSession;
 
     private static Logger logger = LoggerFactory.getLogger(ProblemService.class);
 
@@ -103,6 +107,8 @@ public class ProblemService extends BaseService{
         submissionEntity.setMemoryUsed(0);
         submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
         submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
+        Integer urId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        submissionEntity.setUrId(urId);
         setUpdateInfo(submissionEntity);
         setCreateInfo(submissionEntity);
         submissionMapper.insertSubmission(submissionEntity);
@@ -140,6 +146,7 @@ public class ProblemService extends BaseService{
         setCreateInfo(problemEntity);
         setUpdateInfo(problemEntity);
         setCreateProblemInfo(problemEntity);
+        problemEntity.setIsPublic(0);
         int insertRecord = problemMapper.insertEntity(problemEntity);
         if (insertRecord != 1){
             rollBack(Constants.MSG_SYSTEM_ERR);

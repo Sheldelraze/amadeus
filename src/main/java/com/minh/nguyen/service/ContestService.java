@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class ContestService extends BaseService {
     private SubmissionMapper submissionMapper;
 
     @Autowired
-    private CtUrSnMapper ctUrSnMapper;
+    private CtSnMapper ctSnMapper;
 
     @Autowired
     private HttpSession httpSession;
@@ -231,7 +230,21 @@ public class ContestService extends BaseService {
             throw e;
         }
     }
-
+    public List<SubmissionDTO> getSubmissionInContest(Integer ctId, boolean getAll){
+        List<SubmissionDTO> lst = null;
+        if (getAll){
+            lst = submissionMapper.getSubmissionInContest(ctId,null);
+        }else{
+            String handle = (String)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+            lst =  submissionMapper.getSubmissionInContest(ctId,handle);
+        }
+        for(SubmissionDTO submissionDTO : lst){
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            String strDate = dateFormat.format(submissionDTO.getCreateTime());
+            submissionDTO.setSubmitTime(strDate);
+        }
+        return lst;
+    }
     //execute submission in contest
     public void doSubmit(String sourceCode,Integer ctId, Integer leId,Integer pmId){
         LanguageEntity languageEntity = new LanguageEntity();
@@ -257,17 +270,17 @@ public class ContestService extends BaseService {
         submissionEntity.setMemoryUsed(0);
         submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
         submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
+        submissionEntity.setUrId(urId);
         setUpdateInfo(submissionEntity);
         setCreateInfo(submissionEntity);
         submissionMapper.insertSubmission(submissionEntity);
 
-        CtUrSnEntity ctUrSnEntity = new CtUrSnEntity();
-        ctUrSnEntity.setCtId(ctId);
-        ctUrSnEntity.setSnId(submissionEntity.getId());
-        ctUrSnEntity.setUrId(urId);
-        setCreateInfo(ctUrSnEntity);
-        setUpdateInfo(ctUrSnEntity);
-        ctUrSnMapper.insert(ctUrSnEntity);
+        CtSnEntity ctSnEntity = new CtSnEntity();
+        ctSnEntity.setCtId(ctId);
+        ctSnEntity.setSnId(submissionEntity.getId());
+        setCreateInfo(ctSnEntity);
+        setUpdateInfo(ctSnEntity);
+        ctSnMapper.insert(ctSnEntity);
 
         judgeService.judge(problemDTO,languageDTO,submissionEntity);
     }

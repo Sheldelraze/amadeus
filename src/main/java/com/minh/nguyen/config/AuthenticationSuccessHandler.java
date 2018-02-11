@@ -5,9 +5,14 @@ import com.minh.nguyen.entity.UserEntity;
 import com.minh.nguyen.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +27,9 @@ import java.util.List;
  */
 public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    public final Integer SESSION_TIMEOUT_IN_SECONDS = 30;
+    public final Integer SESSION_TIMEOUT_IN_SECONDS = 30 * 60;
+
+    private RequestCache requestCache = new HttpSessionRequestCache();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -30,6 +37,23 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
                                         Authentication authentication)
             throws ServletException, IOException {
         request.getSession().setMaxInactiveInterval(SESSION_TIMEOUT_IN_SECONDS);
-        super.onAuthenticationSuccess(request,response,authentication);
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        if (savedRequest == null) {
+            handle(request, response, authentication);
+            return;
+        }
+        String targetUrlParameter = getTargetUrlParameter();
+        if (isAlwaysUseDefaultTargetUrl()
+                || (targetUrlParameter != null && StringUtils.hasText(request
+                .getParameter(targetUrlParameter)))) {
+            requestCache.removeRequest(request, response);
+            handle(request, response, authentication);
+            return;
+        }
+
+        // Use the DefaultSavedRequest URL
+        String targetUrl = savedRequest.getRedirectUrl();
+        logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

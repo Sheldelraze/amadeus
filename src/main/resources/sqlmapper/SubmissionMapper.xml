@@ -4,9 +4,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.SubmissionMapper">
-    <select id="getSubmission" resultType="SubmissionDTO">
+    <select id="getSubmission" resultMap="submission">
         SELECT
             submission.id          AS id,
+            user.id                AS urId,
+            user.fullname            AS fullname,
             problem.name           AS pmNm,
             submission.memoryUsed  AS memoryUsed,
             submission.timeRun     AS timeRun,
@@ -15,6 +17,9 @@
             submission.verdict     AS verdict,
             language.name          AS leNm
         FROM submission
+            LEFT JOIN user
+                on submission.urId = user.id
+                   AND user.deleteFlg = '0'
             LEFT JOIN problem
                 ON submission.pmId = problem.id
                    AND submission.deleteFlg = '0'
@@ -25,9 +30,53 @@
         ORDER BY submission.createTime DESC
         LIMIT 100
     </select>
+    <select id="checkSolvedStatus" resultType="java.lang.Integer">
+      select count(*)
+      from submission
+        INNER JOIN ct_sn
+            ON submission.id = ct_sn.snId
+               AND ct_sn.ctId = #{ctId}
+      WHERE submission.deleteFlg = '0'
+          AND submission.pmId=#{pmId}
+          AND submission.urId=#{urId}
+          AND submission.judgeStatus=6
+    </select>
+    <select id="getSubmissionInContest" resultMap="submission">
+        SELECT
+            submission.id          AS id,
+            problem.name           AS pmNm,
+            user.id               AS urId,
+            user.fullname            AS fullname,
+            submission.memoryUsed  AS memoryUsed,
+            submission.timeRun     AS timeRun,
+            submission.createTime  AS createTime,
+            submission.judgeStatus AS judgeStatus,
+            submission.verdict     AS verdict,
+            language.name          AS leNm
+        FROM submission
+            INNER JOIN ct_sn
+                ON submission.id = ct_sn.snId
+                   AND ct_sn.ctId = #{ctId}
+           INNER JOIN user
+                on submission.urId = user.id
+                   AND user.deleteFlg = '0'
+            <if test="handle != null and handle.length > 0">
+                   AND user.handle=#{handle}
+            </if>
+            LEFT JOIN problem
+                ON submission.pmId = problem.id
+                   AND submission.deleteFlg = '0'
+            LEFT JOIN language
+                ON submission.leId = language.id
+                   AND language.deleteFlg = '0'
+        WHERE submission.deleteFlg = '0'
+        ORDER BY submission.createTime DESC
+    </select>
     <select id="getSubmitDetail" resultMap="submission">
         SELECT
             submission.id           AS id,
+            user.id                AS urId,
+            user.fullname            AS fullname,
             problem.name            AS pmNm,
             submission.memoryUsed   AS memoryUsed,
             submission.timeRun      AS timeRun,
@@ -43,11 +92,14 @@
             submitdetail.answer     AS answer,
             submitdetail.timeRun    AS detailTimeRun,
             submitdetail.memoryUsed AS detailMemoryUsed,
-            submitdetail.status AS detailStatus
+            submitdetail.status     AS detailStatus
         FROM submission
             LEFT JOIN problem
                 ON submission.pmId = problem.id
                    AND submission.deleteFlg = '0'
+            LEFT JOIN user
+                on submission.urId = user.id
+                    AND user.deleteFlg = '0'
             LEFT JOIN language
                 ON submission.leId = language.id
                    AND language.deleteFlg = '0'
@@ -70,6 +122,10 @@
         <result column="judgeStatus" property="judgeStatus"/>
         <result column="submitTime" property="submitTime"/>
         <result column="leNm" property="leNm"/>
+        <association property="user" javaType="userDTO">
+            <id property="id" column="urId"/>
+            <result property="fullname" column="fullname"/>
+        </association>
         <collection property="lstSubmitDetail" ofType="SubmitDetailDTO">
             <id column="sDlId" property="id"/>
             <result column="input" property="input"/>

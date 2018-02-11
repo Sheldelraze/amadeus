@@ -10,18 +10,14 @@ import java.io.Serializable;
  * @since 11/02/2018
  * Purpose:
  */
-@Table(name="ct_ur_sn")
-public class CtUrSnEntity extends BaseEntity implements Serializable {
+@Table(name="ct_sn")
+public class CtSnEntity extends BaseEntity implements Serializable {
 
     static final long serialVersionUID = 4432523333187634L;
 
     @Id
     @Column(name = "ctId")
     private Integer ctId;
-
-    @Id
-    @Column(name = "urId")
-    private Integer urId;
 
     @Id
     @Column(name = "snId")
@@ -37,14 +33,6 @@ public class CtUrSnEntity extends BaseEntity implements Serializable {
 
     public void setCtId(Integer ctId) {
         this.ctId = ctId;
-    }
-
-    public Integer getUrId() {
-        return urId;
-    }
-
-    public void setUrId(Integer urId) {
-        this.urId = urId;
     }
 
     public Integer getSnId() {
