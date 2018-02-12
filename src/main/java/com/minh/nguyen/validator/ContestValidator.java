@@ -87,16 +87,22 @@ public class ContestValidator extends BaseValidator {
         if (lstSubmission.size() != 1){
             throw new NoSuchPageException("Submission not found!");
         }
+
+        //check if submission is from current user
+        submissionEntity = lstSubmission.get(0);
         Integer currentUserId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
         if (submissionEntity.getUrId().equals(currentUserId)){
             return true;
         }
+
+        //else check current user has solved this problem and this contests allow to view solved problem's solutions
         if (contestEntity.getShowSubmit().equals(Constants.SHOW_SUBMIT_SOLVED)){
             Integer solveCnt = submissionMapper.checkSolvedStatus(ctId,submissionEntity.getPmId(),submissionEntity.getUrId());
             return solveCnt > 0;
         }
         return false;
     }
+
     //check if curent user has any authority in current contest
     public boolean checkPermission(Authentication auth, Integer ctId, String... authority) throws NoSuchPageException {
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, auth.getName());
@@ -113,9 +119,12 @@ public class ContestValidator extends BaseValidator {
     //if contest is public, outsider can view contest's information only when contest has started
     public boolean checkOutsiderPermission(Authentication authentication,Integer ctId){
         ContestEntity contestEntity = getContestById(ctId);
+        //contest must be public(anyone can participate) and contest creator allows everyone to see
         if (!contestEntity.getIsAnyoneCanParticipate().equals(1) || !contestEntity.getShowInforToAll().equals(1)){
             return false;
         }
+
+        //if so allows only when contest has started
         Date currentTime = new Date();
         Date startTime = contestEntity.getStartTime();
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, authentication.getName());
@@ -142,9 +151,10 @@ public class ContestValidator extends BaseValidator {
         return contestEntity;
     }
 
-    //check if user is participator, then allow to view only when contest is started
-    //else if normal user allow when contest has finished
+    //check if user is participator, then allow to view only when contest is started or if contest's creator allow praticing
+    //(which means participators can submit problem after contest has finished)
     public boolean checkParticipate(Authentication auth, Integer ctId) throws NoSuchPageException {
+        //check if participator
         ContestEntity contestEntity = getContestById(ctId);
         Date currentTime = new Date();
         Date startTime = contestEntity.getStartTime();
@@ -152,11 +162,18 @@ public class ContestValidator extends BaseValidator {
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, auth.getName());
         for (AuthorityDTO curAuth : lstAuthority) {
             if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST)) {
-                return currentTime.compareTo(startTime) >= 0;
+                //if so then check conditions mentioned above
+                if (currentTime.compareTo(startTime) >= 0
+                        && currentTime.compareTo(endTime) <= 0){
+                    return true;
+                }else if(currentTime.compareTo(endTime) > 0
+                        && contestEntity.getCanPractice().equals(1)){
+                    return true;
+                }
             }
         }
-        return currentTime.compareTo(endTime) > 0
-                && contestEntity.getCanPractice().equals(1);
+        //not participator
+        return false;
     }
     @Override
     public void validateField(String fieldName, String fieldValue, BindingResult errors) {
@@ -165,9 +182,11 @@ public class ContestValidator extends BaseValidator {
 
     @Override
     public void validateLogic(BaseForm clazz, BindingResult errors) {
-        if(clazz.getScreenName().equals("submitForm")){
-            ContestSubmitForm contestSubmitForm = (ContestSubmitForm)clazz;
-            validateSourceCode(contestSubmitForm.getSourceCode(),errors);
+        if (null != clazz.getScreenName()) {
+            if (clazz.getScreenName().equals("submitForm")) {
+                ContestSubmitForm contestSubmitForm = (ContestSubmitForm) clazz;
+                validateSourceCode(contestSubmitForm.getSourceCode(), errors);
+            }
         }
     }
 

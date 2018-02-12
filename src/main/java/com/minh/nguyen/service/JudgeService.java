@@ -5,10 +5,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.entity.BaseEntity;
-import com.minh.nguyen.entity.SnSDlEntity;
-import com.minh.nguyen.entity.SubmissionEntity;
-import com.minh.nguyen.entity.SubmitDetailEntity;
+import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CompileUtil;
@@ -25,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -56,7 +54,7 @@ public class JudgeService extends BaseService {
     private SubmissionMapper submissionMapper;
 
     @Async
-    public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO,SubmissionEntity submissionEntity) {
+    public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO,SubmissionEntity submissionEntity,Integer urId) {
         logger.debug("Doing me a heavy discomfort judging....");
         boolean runTimeErr = false;
         boolean wrongAns = false;
@@ -99,7 +97,7 @@ public class JudgeService extends BaseService {
                 Outcome outcome = CompileUtil.doRun(languageDTO, problemDTO, inputDTO
                         , submissionEntity.getId());
                 //outcome.timeelapse là nano giây -> ms giây
-                int timeElapsed =  (int)(outcome.getTimeElapsed() / 1000000);
+                int timeElapsed =  (int)(outcome.getTimeElapsed() == null ? 0 : outcome.getTimeElapsed() / 1000000);
                 timeElapsed = Math.max(timeElapsed,15);
                 submitDetailEntity.setTimeRun(timeElapsed);
                 //run time err
@@ -155,6 +153,16 @@ public class JudgeService extends BaseService {
             submissionEntity.setJudgeStatus(Constants.STATUS_ACCEPTED);
             submissionEntity.setVerdict(Constants.VERDICT_ACCEPTED);
             timeTotal /= testCount == 0 ? 1 : testCount;
+
+            //increase solve count if this user has not solved this problem before
+            Integer cntSolvedBefore = problemMapper.checkIfSolvedBefore(problemDTO.getId(),urId);
+            if (cntSolvedBefore == 0){
+                ProblemEntity problemEntity = new ProblemEntity();
+                problemEntity.setId(problemDTO.getId());
+                problemEntity = problemMapper.selectByPK(problemEntity);
+                problemEntity.setSolveCnt(1 + problemEntity.getSolveCnt());
+                problemMapper.updateByPK(problemEntity);
+            }
         }
         submissionEntity.setTimeRun(timeTotal);
         submissionMapper.updateByPK(submissionEntity);

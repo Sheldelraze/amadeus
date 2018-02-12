@@ -52,8 +52,19 @@ public class ProblemEntity extends BaseEntity implements Serializable {
     @Column(name = "sourceCode")
     private String sourceCode;
 
+    @Column(name = "solveCnt")
+    private Integer solveCnt;
+
     @Column(name = "leId")
     private Integer leId;
+
+    public Integer getSolveCnt() {
+        return solveCnt;
+    }
+
+    public void setSolveCnt(Integer solveCnt) {
+        this.solveCnt = solveCnt;
+    }
 
     public Integer getIsPublic() {
         return isPublic;

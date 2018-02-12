@@ -44,6 +44,7 @@
     <select id="getSubmissionInContest" resultMap="submission">
         SELECT
             submission.id          AS id,
+            problem.id            AS pmId,
             problem.name           AS pmNm,
             user.id               AS urId,
             user.fullname            AS fullname,
@@ -77,6 +78,7 @@
             submission.id           AS id,
             user.id                AS urId,
             user.fullname            AS fullname,
+            submission.pmId         AS pmId,
             problem.name            AS pmNm,
             submission.memoryUsed   AS memoryUsed,
             submission.timeRun      AS timeRun,
@@ -114,6 +116,7 @@
     <resultMap id="submission" type="SubmissionDTO">
         <id column="id" property="id"/>
         <result column="pmNm" property="pmNm"/>
+        <result column="pmId" property="pmId"/>
         <result column="timeRun" property="timeRun"/>
         <result column="memoryUsed" property="memoryUsed"/>
         <result column="sourceCode" property="sourceCode"/>

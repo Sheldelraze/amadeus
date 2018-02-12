@@ -7,6 +7,7 @@ import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
+import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
@@ -45,7 +46,8 @@ public class ContestController extends BaseController {
     private static final String SUBMISSION_ALL_VIEW = "contest/info/contest-submission-all";
     private static final String LEADERBOARD_VIEW = "contest/info/contest-leaderboard";
     private static final String SETTING_VIEW = "contest/info/contest-setting";
-    private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announcement";
+    private static final String SUBMISSION_VIEW = "submission/submission";
+    private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announce";
     private static final String ROLE_VIEW = "contest/info/contest-role";
     private static final String SUBMIT_FORM = "contestSubmitForm";
     private static final String SUBMIT_VO= "contestSubmitVO";
@@ -64,6 +66,9 @@ public class ContestController extends BaseController {
 
     @Autowired
     private ProblemService problemService;
+
+    @Autowired
+    private GeneralService generalService;
 
     @PreAuthorize("hasAuthority('CAN_CREATE_CONTEST')")
     @GetMapping("/create")
@@ -308,7 +313,11 @@ public class ContestController extends BaseController {
     @GetMapping("/{ctId}/submission/{snId}")
     public ModelAndView getSubmission(@PathVariable("ctId") int ctId,@PathVariable("snId") int snId) {
         ModelAndView modelAndView = new ModelAndView();
-
+        modelAndView.setViewName(SUBMISSION_VIEW);
+        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId,ctId);
+        modelAndView.addObject("submitDetail",submissionDTO);
+        modelAndView.addObject(TAB, 0);
+        modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 

@@ -19,9 +19,6 @@ public class CtPmEntity extends BaseEntity implements Serializable{
     @Column(name = "pmId")
     private Integer pmId;
 
-    @Column(name = "solveCnt")
-    private Integer solveCnt;
-
     @Column(name = "firstSolve")
     private Date firstSolve;
 
@@ -53,14 +50,6 @@ public class CtPmEntity extends BaseEntity implements Serializable{
 
     public void setPmId(Integer pmId) {
         this.pmId = pmId;
-    }
-
-    public Integer getSolveCnt() {
-        return solveCnt;
-    }
-
-    public void setSolveCnt(Integer solveCnt) {
-        this.solveCnt = solveCnt;
     }
 
     public Date getFirstSolve() {

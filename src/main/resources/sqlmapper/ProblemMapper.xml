@@ -54,7 +54,7 @@
             problem.timeLimit,
             problem.memoryLimit,
             problem.difficulty,
-            ct_pm.solveCnt,
+            problem.solveCnt,
             ct_pm.isHidden
         FROM problem
             INNER JOIN ct_pm
@@ -63,6 +63,14 @@
                    AND ct_pm.deleteFlg = '0'
         WHERE
             problem.deleteFlg = '0'
+    </select>
+    <select id="checkIfSolvedBefore" resultType="java.lang.Integer">
+        select count(*)
+          from submission
+            where submission.urId = #{urId}
+              AND submission.pmId = #{pmId}
+              AND submission.deleteFlg='0'
+              AND submission.judgeStatus=6
     </select>
     <select id="getProblemToSubmit" resultType="ProblemDTO">
         SELECT

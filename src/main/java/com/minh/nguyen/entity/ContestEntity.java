@@ -60,6 +60,14 @@ public class ContestEntity extends BaseEntity implements Serializable {
     @Column(name = "showToAll")
     private Integer showToAll;
 
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public Integer getShowToAll() {
+        return showToAll;
+    }
+
     public Integer getShowInforToAll() {
         return showToAll;
     }

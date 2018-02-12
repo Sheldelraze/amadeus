@@ -112,7 +112,7 @@ public class ProblemService extends BaseService{
         setUpdateInfo(submissionEntity);
         setCreateInfo(submissionEntity);
         submissionMapper.insertSubmission(submissionEntity);
-        judgeService.judge(problemDTO,languageDTO,submissionEntity);
+        judgeService.judge(problemDTO,languageDTO,submissionEntity,urId);
 
     }
 
@@ -147,6 +147,7 @@ public class ProblemService extends BaseService{
         setUpdateInfo(problemEntity);
         setCreateProblemInfo(problemEntity);
         problemEntity.setIsPublic(0);
+        problemEntity.setSolveCnt(0);
         int insertRecord = problemMapper.insertEntity(problemEntity);
         if (insertRecord != 1){
             rollBack(Constants.MSG_SYSTEM_ERR);

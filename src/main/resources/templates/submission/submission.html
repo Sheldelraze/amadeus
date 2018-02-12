@@ -100,9 +100,15 @@
                                     <tbody>
                                     <tr>
                                         <td th:text="${submitDetail.id}"></td>
-                                        <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#">Lập trình hướng đối tượng</a></b></td>
-                                        <td><b><a href="#" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                        <td><b><a href="#" th:text="${submitDetail.user.fullname}">Makise Kurisu</a></b></td>
+                                        <th:block th:if="${submitDetail.contestDTO != null}">
+                                            <td><b><a th:href="|/contest/${submitDetail.contestDTO.id}|" th:text="${submitDetail.contestDTO.name}">Lập trình hướng đối tượng</a></b></td>
+                                            <td><b><a th:href="|/contest/${submitDetail.contestDTO.id}/problem/${submitDetail.pmId}/view|" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                        </th:block>
+                                        <th:block th:if="${submitDetail.contestDTO == null}">
+                                            <td><b>Bài tập tự do</b></td>
+                                            <td><b><a href="#" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                        </th:block>
                                         <td th:text="${submitDetail.submitTime}">02:20:30</td>
                                         <td><label th:text="${submitDetail.memoryUsed}"></label>MB</td>
                                         <td><label th:text="${submitDetail.timeRun}"></label>ms</td>

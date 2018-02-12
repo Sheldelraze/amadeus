@@ -1,8 +1,11 @@
 package com.minh.nguyen.service;
 
+import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.dto.SubmitDetailDTO;
 import com.minh.nguyen.entity.BaseEntity;
+import com.minh.nguyen.entity.ContestEntity;
+import com.minh.nguyen.mapper.ContestMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
 import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class GeneralService extends BaseService {
 
     @Autowired
     private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private ContestMapper contestMapper;
 
     public List<SubmissionDTO> getSubmission(){
         List<SubmissionDTO> lstSubmission = submissionMapper.getSubmission();
@@ -55,6 +61,17 @@ public class GeneralService extends BaseService {
             }
         }
         return submit;
+    }
+    public SubmissionDTO getSubmitDetail(int snId,int ctId){
+        SubmissionDTO submissionDTO = getSubmitDetail(snId);
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setId(ctId);
+        contestEntity = contestMapper.selectByPK(contestEntity);
+        ContestDTO contestDTO = new ContestDTO();
+        contestDTO.setId(ctId);
+        contestDTO.setName(contestEntity.getName());
+        submissionDTO.setContestDTO(contestDTO);
+        return submissionDTO;
     }
     void setCreateInfo(BaseEntity entity){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

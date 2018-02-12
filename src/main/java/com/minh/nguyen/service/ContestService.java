@@ -170,7 +170,6 @@ public class ContestService extends BaseService {
                 CtPmEntity ctPmEntity = new CtPmEntity();
                 ctPmEntity.setCtId(ctId);
                 ctPmEntity.setPmId(Integer.parseInt(pmId));
-                ctPmEntity.setSolveCnt(0);
                 ctPmEntity.setTotalSubmission(0);
                 ctPmEntity.setIsHidden(0);
                 setUpdateInfo(ctPmEntity);
@@ -225,6 +224,7 @@ public class ContestService extends BaseService {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
             modelMapper.map(contestSettingForm, contestEntity);
             contestEntity.setStartTime(dateFormat.parse(startTime));
+            setUpdateInfo(contestEntity);
             contestMapper.updateByPKExceptNullFields(contestEntity);
         } catch (Exception e) {
             throw e;
@@ -282,6 +282,6 @@ public class ContestService extends BaseService {
         setUpdateInfo(ctSnEntity);
         ctSnMapper.insert(ctSnEntity);
 
-        judgeService.judge(problemDTO,languageDTO,submissionEntity);
+        judgeService.judge(problemDTO,languageDTO,submissionEntity,urId);
     }
 }

@@ -101,7 +101,7 @@
                                         <tr th:each="submission : ${lstSubmission}">
                                             <td><b><a th:href="|/contest/${ctId}/submission/${submission.id}|" th:text="${submission.id}">132</a></b></td>
                                             <td><b><a href="#" th:text="${submission.user?.fullname}">Makise Kurisu</a></b></td>
-                                            <td><b><a href="#" th:text="${submission.pmNm}">Tính tổng 2 số</a></b></td>
+                                            <td><b><a th:href="|/contest/${ctId}/problem/${submission.pmId}/view|" th:text="${submission.pmNm}">Tính tổng 2 số</a></b></td>
                                             <td th:text="|${submission.memoryUsed}MB|">256KB</td>
                                             <td th:text="|${submission.timeRun}ms|">25ms</td>
                                             <td th:text="${submission.submitTime}">1:20:25</td>

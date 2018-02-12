@@ -44,7 +44,7 @@ public class CompileUtil {
 
     public static Outcome tryCompile(File file, String extension, String fileName) throws CompileErrorException {
         Params.Builder builder = new Params.Builder();
-        builder.setTimeLimit(5000);
+        builder.setTimeLimit(10000);
         StringBuilder stringBuilder = new StringBuilder();
         String command;
         if (Constants.CPP_EXTENSION.equals(extension)) {

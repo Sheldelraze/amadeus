@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class SubmissionDTO extends BaseDTO {
     private Integer id;
+    private Integer pmId;
     private String pmNm;
     private String handle;
     private Integer timeRun;
@@ -19,7 +20,24 @@ public class SubmissionDTO extends BaseDTO {
     private String submitTime;
     private String leNm;
     private List<SubmitDetailDTO> lstSubmitDetail;
+    private ContestDTO contestDTO;
     private UserDTO user;
+
+    public ContestDTO getContestDTO() {
+        return contestDTO;
+    }
+
+    public void setContestDTO(ContestDTO contestDTO) {
+        this.contestDTO = contestDTO;
+    }
+
+    public Integer getPmId() {
+        return pmId;
+    }
+
+    public void setPmId(Integer pmId) {
+        this.pmId = pmId;
+    }
 
     public String getHandle() {
         return handle;

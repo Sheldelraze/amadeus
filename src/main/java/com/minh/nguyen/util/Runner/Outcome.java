@@ -28,9 +28,9 @@ public class Outcome {
      */
     private final String comment;
 
-    private long timeElapsed;
+    private Long timeElapsed;
 
-    public long getTimeElapsed() {
+    public Long getTimeElapsed() {
         return timeElapsed;
     }
 

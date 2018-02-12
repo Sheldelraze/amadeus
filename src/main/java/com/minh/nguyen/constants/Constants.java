@@ -77,8 +77,8 @@ public class Constants {
     public static final Integer AUTH_VIEW_ALL_SUBMISSION = 13;
 
     public static final Integer SHOW_SUBMIT_ALL = 1;
-    public static final Integer SHOW_SUBMIT_SOLVED = 1;
-    public static final Integer SHOW_SUBMIT_PERSONAL = 1;
+    public static final Integer SHOW_SUBMIT_SOLVED = 2;
+    public static final Integer SHOW_SUBMIT_PERSONAL = 3;
 
     public static final Integer SHOW_TEST_ALL = 1;
     public static final Integer SHOW_TEST_SOLVED = 1;

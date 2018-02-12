@@ -31,4 +31,6 @@ public interface ProblemMapper extends BaseMapper<ProblemEntity> {
     List<ProblemDTO> getProblemToDisplay(@Param("ctId")Integer ctId);
 
     List<ProblemDTO> getProblemToSubmit(@Param("ctId")Integer ctId);
+
+    Integer checkIfSolvedBefore(@Param("pmId") Integer pmId,@Param("urId")Integer urId);
 }
