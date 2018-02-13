@@ -5,6 +5,7 @@ import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
+import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.service.GeneralService;
@@ -295,6 +296,7 @@ public class ContestController extends BaseController {
     public ModelAndView getLeaderboard(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestLeaderboardForm = new ContestLeaderboardForm();
         ModelAndView modelAndView = createGeneralModel(ctId);
+        List<UserDTO> lstUser = contestService.getLeaderboardInfor(ctId);
         modelAndView.setViewName(LEADERBOARD_VIEW);
         modelAndView.addObject(LEADERBOARD_FORM, contestLeaderboardForm);
         modelAndView.addObject(TAB, 6);

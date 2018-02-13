@@ -1,5 +1,7 @@
 package com.minh.nguyen.dto;
 
+import java.util.Date;
+
 /**
  * @author Mr.Minh
  * @since 21/01/2018
@@ -26,6 +28,7 @@ public class ContestDTO {
     private String endTime;
     private Integer doUpdateCountDown;
     private String timerMessage;
+
 
     public String getTimerMessage() {
         return timerMessage;

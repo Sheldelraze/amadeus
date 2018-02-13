@@ -10,40 +10,67 @@ import java.util.List;
  */
 public class UserDTO extends BaseDTO{
     private Integer id;
-
     private String handle;
-
     private String password;
-
     private String fullname;
-
     private String phoneNumber;
-
     private String emailAddress;
-
     private String dateOfBirth;
-
     private String avatar;
-
     private String description;
-
     private Integer loginAttempt;
-
     private Integer isOnline;
-
     private Integer isActived;
-
     private Integer isLocked;
-
     private Date lastLogin;
-
     private Date expiredDate;
-
     private Integer accountType;
-
     private RoleDTO role;
-
+    private Integer score;
+    private Integer penalty;
+    private Date contestStartTime;
+    private List<ProblemDTO> lstProblem;
     private List<AuthorityDTO> lstAuthority;
+
+    public Date getContestStartTime() {
+        return contestStartTime;
+    }
+
+    public void setContestStartTime(Date contestStartTime) {
+        this.contestStartTime = contestStartTime;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public Integer getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(Integer penalty) {
+        this.penalty = penalty;
+    }
+
+    public RoleDTO getRole() {
+        return role;
+    }
+
+    public void setRole(RoleDTO role) {
+        this.role = role;
+    }
+
+    public List<ProblemDTO> getLstProblem() {
+        return lstProblem;
+    }
+
+    public void setLstProblem(List<ProblemDTO> lstProblem) {
+        this.lstProblem = lstProblem;
+    }
 
     public List<AuthorityDTO> getLstAuthority() {
         return lstAuthority;

@@ -6,8 +6,10 @@ import com.minh.nguyen.entity.*;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
+import org.apache.catalina.User;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Mr.Minh
@@ -60,6 +63,7 @@ public class ContestService extends BaseService {
 
     @Autowired
     private HttpSession httpSession;
+
     public int createContest(ContestDTO contestDTO) {
         ContestEntity contestEntity = new ContestEntity();
         StringBuilder stringBuilder = new StringBuilder();
@@ -72,7 +76,7 @@ public class ContestService extends BaseService {
             //set initial contest info and insert
             SetCreateContestInfor(contestEntity);
             int insertRecord = contestMapper.insertContest(contestEntity);
-            if (insertRecord == 0){
+            if (insertRecord == 0) {
                 rollBack(Constants.MSG_INSERT_ERR);
             }
 
@@ -83,7 +87,7 @@ public class ContestService extends BaseService {
             List<UserEntity> lstUser = userMapper.selectWithExample(userEntity);
 
             //assume that only 1 user has current handle
-            if(lstUser.size() != 1){
+            if (lstUser.size() != 1) {
                 rollBack(Constants.MSG_SYSTEM_ERR);
             }
             userEntity = lstUser.get(0);
@@ -98,14 +102,14 @@ public class ContestService extends BaseService {
             insertRecord = urCtAuyMapper.insert(urCtAuyEntity);
 
             //assume that insert success
-            if (insertRecord != 1){
+            if (insertRecord != 1) {
                 rollBack(Constants.MSG_INSERT_ERR);
             }
 
             //insert edit contest authority
             urCtAuyEntity.setAuyId(Constants.AUTH_EDIT_CONTEST);
             insertRecord = urCtAuyMapper.insert(urCtAuyEntity);
-            if (insertRecord != 1){
+            if (insertRecord != 1) {
                 rollBack(Constants.MSG_SYSTEM_ERR);
             }
 
@@ -141,8 +145,9 @@ public class ContestService extends BaseService {
         contestDTO.setTime(timeFormat.format(contestEntity.getStartTime()));
         return contestDTO;
     }
+
     //create timer information
-    public ContestDTO getContestTime(int ctId){
+    public ContestDTO getContestTime(int ctId) {
         ContestDTO contestDTO = new ContestDTO();
         DateFormat dateFormat = new SimpleDateFormat("MMM d yyyy HH:mm:ss");
         ContestEntity contestEntity = new ContestEntity();
@@ -152,7 +157,7 @@ public class ContestService extends BaseService {
 
         //get contest's start time and end time
         Date startTime = contestEntity.getStartTime();
-        Date endTime = DateUtils.addMinutes(startTime,contestEntity.getDuration());
+        Date endTime = DateUtils.addMinutes(startTime, contestEntity.getDuration());
 
         contestDTO.setDoUpdateCountDown(0);
         contestDTO.setStartTime(dateFormat.format(startTime));
@@ -160,37 +165,71 @@ public class ContestService extends BaseService {
         contestDTO.setName(contestEntity.getName());
 
         //get current time and compare to startTime and endTime
-        if(now.compareTo(startTime) < 0) {
+        if (now.compareTo(startTime) < 0) {
             contestDTO.setTimerMessage("Kỳ thi chưa bắt đầu");
-        }else if (now.compareTo(startTime) >= 0
-                    && now.compareTo(endTime) <= 0){
+        } else if (now.compareTo(startTime) >= 0
+                && now.compareTo(endTime) <= 0) {
             contestDTO.setTimerMessage("Kỳ thi đang diễn ra");
             contestDTO.setDoUpdateCountDown(1);
-        }else{
+        } else {
             contestDTO.setTimerMessage("Kỳ thi đã kết thúc");
         }
 
         return contestDTO;
     }
-    public List<ProblemDTO> getProblemToAdd(int ctId){
+
+    public List<ProblemDTO> getProblemToAdd(int ctId) {
         List<ProblemDTO> lst = problemMapper.getProblemForContest(ctId);
-        for(ProblemDTO problemDTO : lst){
+        for (ProblemDTO problemDTO : lst) {
             StringBuilder stringBuilder = new StringBuilder();
             List<TagDTO> lstTag = problemDTO.getLstTag();
-            for(int i = 0;i < lstTag.size();++i){
+            for (int i = 0; i < lstTag.size(); ++i) {
                 stringBuilder.append(lstTag.get(i).getName());
-                if (i < lstTag.size() - 1){
+                if (i < lstTag.size() - 1) {
                     stringBuilder.append(",");
                 }
             }
             problemDTO.setTag(stringBuilder.toString());
-            if(Constants.BLANK.equals(stringBuilder.toString())){
+            if (Constants.BLANK.equals(stringBuilder.toString())) {
                 problemDTO.setTag(null);
             }
         }
         return lst;
     }
-    public void setProblemHiddenStatus(Integer ctId,Integer pmId,Integer status){
+
+    public List<UserDTO> getLeaderboardInfor(Integer ctId) {
+        List<UserDTO> lstUser = userMapper.getLeaderboardInfor(ctId, Constants.AUTH_PARTICIPATE_CONTEST);
+        for (UserDTO user : lstUser) {
+            int score = 0;
+            int penalty = 0;
+            for (ProblemDTO problem : user.getLstProblem()) {
+                int isSolved = 0;
+                int time = 0;
+                String solveTime = "--:--";
+                if (null != problem.getLstSubmission()) {
+                    for (SubmissionDTO submit : problem.getLstSubmission()) {
+                        if (0 == isSolved) {
+                            if (submit.getJudgeStatus().equals(Constants.STATUS_ACCEPTED)) {
+                                isSolved = 1;
+
+                            } else {
+                                time += 10;
+                            }
+                        }
+                    }
+                }
+                score += isSolved;
+                penalty += time;
+                problem.setIsSolved(isSolved);
+                problem.setSolveTime(solveTime);
+            }
+            user.setScore(score);
+            user.setPenalty(penalty);
+        }
+        return lstUser;
+    }
+
+    public void setProblemHiddenStatus(Integer ctId, Integer pmId, Integer status) {
         CtPmEntity ctPmEntity = new CtPmEntity();
         ctPmEntity.setCtId(ctId);
         ctPmEntity.setPmId(pmId);
@@ -198,7 +237,8 @@ public class ContestService extends BaseService {
         setUpdateInfo(ctPmEntity);
         ctPmMapper.updateByPKExceptNullFields(ctPmEntity);
     }
-    public void addProblemToContest(Integer ctId, String[] lstPmId) throws Exception{
+
+    public void addProblemToContest(Integer ctId, String[] lstPmId) throws Exception {
         try {
             for (String pmId : lstPmId) {
                 CtPmEntity ctPmEntity = new CtPmEntity();
@@ -209,48 +249,49 @@ public class ContestService extends BaseService {
                 setCreateInfo(ctPmEntity);
                 ctPmMapper.insert(ctPmEntity);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
 
-    public List<ProblemDTO> getProblemToDisplay(Integer ctId){
+    public List<ProblemDTO> getProblemToDisplay(Integer ctId) {
         List<ProblemDTO> lst = problemMapper.getProblemToDisplay(ctId);
         int cnt = 0;
-        for(ProblemDTO problemDTO : lst){
-            if (problemDTO.getIsHidden() == 0){
+        for (ProblemDTO problemDTO : lst) {
+            if (problemDTO.getIsHidden() == 0) {
                 problemDTO.setAlias(++cnt);
-            }
-            else{
+            } else {
                 problemDTO.setAlias(-1);
             }
         }
         return lst;
     }
-    public List<ProblemDTO> getProblemToSubmit(Integer ctId){
+
+    public List<ProblemDTO> getProblemToSubmit(Integer ctId) {
         List<ProblemDTO> lst = problemMapper.getProblemToSubmit(ctId);
         int cnt = 0;
-        for(ProblemDTO problemDTO : lst){
+        for (ProblemDTO problemDTO : lst) {
             String name = ++cnt + ". " + problemDTO.getName();
             problemDTO.setName(name);
         }
         return lst;
     }
-    public ContestInformationVO getInformation(int ctId){
+
+    public ContestInformationVO getInformation(int ctId) {
         ContestInformationVO contestInformationVO = new ContestInformationVO();
         ContestEntity contestEntity = new ContestEntity();
         contestEntity.setId(ctId);
         contestEntity = contestMapper.selectByPK(contestEntity);
-        modelMapper.map(contestEntity,contestInformationVO);
+        modelMapper.map(contestEntity, contestInformationVO);
         Date startTime = contestEntity.getStartTime();
         SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         contestInformationVO.setStart(sdfr.format(startTime));
-        Date endTime = DateUtils.addMinutes(startTime,contestEntity.getDuration());
+        Date endTime = DateUtils.addMinutes(startTime, contestEntity.getDuration());
         contestInformationVO.setEnd(sdfr.format(endTime));
         return contestInformationVO;
     }
-    public void updateContest(ContestSettingForm contestSettingForm) throws Exception{
+
+    public void updateContest(ContestSettingForm contestSettingForm) throws Exception {
         try {
             ContestEntity contestEntity = new ContestEntity();
             String startTime = contestSettingForm.getDate() + " " + contestSettingForm.getTime();
@@ -263,36 +304,38 @@ public class ContestService extends BaseService {
             throw e;
         }
     }
-    public List<SubmissionDTO> getSubmissionInContest(Integer ctId, boolean getAll){
+
+    public List<SubmissionDTO> getSubmissionInContest(Integer ctId, boolean getAll) {
         List<SubmissionDTO> lst = null;
-        if (getAll){
-            lst = submissionMapper.getSubmissionInContest(ctId,null);
-        }else{
-            String handle = (String)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
-            lst =  submissionMapper.getSubmissionInContest(ctId,handle);
+        if (getAll) {
+            lst = submissionMapper.getSubmissionInContest(ctId, null);
+        } else {
+            String handle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+            lst = submissionMapper.getSubmissionInContest(ctId, handle);
         }
-        for(SubmissionDTO submissionDTO : lst){
+        for (SubmissionDTO submissionDTO : lst) {
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
             String strDate = dateFormat.format(submissionDTO.getCreateTime());
             submissionDTO.setSubmitTime(strDate);
         }
         return lst;
     }
+
     //execute submission in contest
-    public void doSubmit(String sourceCode,Integer ctId, Integer leId,Integer pmId){
+    public void doSubmit(String sourceCode, Integer ctId, Integer leId, Integer pmId) {
         LanguageEntity languageEntity = new LanguageEntity();
         languageEntity.setId(leId);
         languageEntity = languageMapper.selectByPK(languageEntity);
         LanguageDTO languageDTO = new LanguageDTO();
-        modelMapper.map(languageEntity,languageDTO);
+        modelMapper.map(languageEntity, languageDTO);
         ProblemDTO problemDTO = new ProblemDTO();
         problemDTO.setId(pmId);
         problemService.getProblemInfo(problemDTO);
         List<InputDTO> lstInput = inputMapper.getAllTest(pmId);
         problemDTO.setLstInput(lstInput);
         problemDTO.setSourceCode(sourceCode);
-        Integer urId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-        if (urId == null){
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (urId == null) {
             rollBack(Constants.MSG_SESSION_TIMEOUT);
         }
         SubmissionEntity submissionEntity = new SubmissionEntity();
@@ -315,6 +358,6 @@ public class ContestService extends BaseService {
         setUpdateInfo(ctSnEntity);
         ctSnMapper.insert(ctSnEntity);
 
-        judgeService.judge(problemDTO,languageDTO,submissionEntity,urId);
+        judgeService.judge(problemDTO, languageDTO, submissionEntity, urId);
     }
 }

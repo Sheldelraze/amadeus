@@ -4,6 +4,8 @@ package com.minh.nguyen.constants;
  * @author Mr.Minh
  * @since 07/01/2018
  * Purpose: store system constants, may need to create more files in the future if needed
+ * Warning: only add constant if you feel needed, however DO NOT change order of constants which are presented before
+ * For instance, current number of authorities is 13, so if you want to add another authority, start with AUTH_XXX = 14
  */
 public class Constants {
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";

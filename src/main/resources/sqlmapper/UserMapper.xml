@@ -20,7 +20,51 @@
                 ON re_auy.auyId = authority.id
         WHERE
             user.handle = #{handle}
+            AND user.deleteFlg = '0'
     </select>
+
+    <select id="getLeaderboardInfor" resultMap="leaderboard">
+        SELECT
+            user.id                AS urId,
+            user.fullname          AS urName,
+            problem.id             AS pmId,
+            problem.name           AS pmName,
+            contest.startTime      AS startTime,
+            submission.id          AS snId,
+            submission.createTime  AS submitTime,
+            submission.judgeStatus AS judgeStatus
+        FROM user
+            INNER JOIN ur_ct_auy
+                ON user.id = ur_ct_auy.urId
+                   AND ur_ct_auy.deleteFlg = '0'
+                   AND ur_ct_auy.auyId = #{auth_participate_id}
+                   AND ur_ct_auy.ctId = #{ctId}
+            INNER JOIN contest
+                ON ur_ct_auy.ctId = contest.id
+            LEFT JOIN ct_pm
+                ON ur_ct_auy.ctId = ct_pm.ctId
+                   AND ct_pm.isHidden = 0
+            LEFT JOIN problem
+                ON ct_pm.pmId = problem.id
+            LEFT JOIN submission
+                ON problem.id = submission.pmId
+        WHERE user.deleteFlg = '0'
+        ORDER BY urId, pmId, snId
+    </select>
+    <resultMap id="leaderboard" type="UserDTO">
+        <id column="urId" property="id"/>
+        <result column="urName" property="fullname"/>
+        <result column="startTime" property="contestStartTime"/>
+        <collection property="lstProblem" ofType="ProblemDTO">
+            <id column="pmId" property="id"/>
+            <result column="pmName" property="name"/>
+            <collection property="lstSubmission" ofType="SubmissionDTO">
+                <id column="snId" property="id"/>
+                <result column="submitTime" property="createTime"/>
+                <result column="judgeStatus" property="judgeStatus"/>
+            </collection>
+        </collection>
+    </resultMap>
     <resultMap id="UserDetail" type="UserDTO">
         <id column="urId" property="id"/>
         <result column="handle" property="handle"/>

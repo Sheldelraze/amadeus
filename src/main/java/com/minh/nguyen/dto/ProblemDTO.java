@@ -31,6 +31,42 @@ public class ProblemDTO extends BaseDTO {
     private Integer isHidden;
     private Integer solveCnt;
     private Integer alias;
+    private Integer isSolved;
+    private Integer submitCnt;
+    private String solveTime;
+    private List<SubmissionDTO> lstSubmission;
+
+    public String getSolveTime() {
+        return solveTime;
+    }
+
+    public void setSolveTime(String solveTime) {
+        this.solveTime = solveTime;
+    }
+
+    public Integer getSubmitCnt() {
+        return submitCnt;
+    }
+
+    public void setSubmitCnt(Integer submitCnt) {
+        this.submitCnt = submitCnt;
+    }
+
+    public Integer getIsSolved() {
+        return isSolved;
+    }
+
+    public void setIsSolved(Integer isSolved) {
+        this.isSolved = isSolved;
+    }
+
+    public List<SubmissionDTO> getLstSubmission() {
+        return lstSubmission;
+    }
+
+    public void setLstSubmission(List<SubmissionDTO> lstSubmission) {
+        this.lstSubmission = lstSubmission;
+    }
 
     public Integer getAlias() {
         return alias;
