@@ -3,11 +3,12 @@ package com.minh.nguyen.constants;
 /**
  * @author Mr.Minh
  * @since 07/01/2018
- * Purpose:
+ * Purpose: store system constants, may need to create more files in the future if needed
  */
 public class Constants {
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";
+    public static final String CURRENT_LOGIN_USER_ROLE = "currentUserRole";
 
     public static final String CPP_ARGS = "-g -O2 -static -std=gnu++11";
     public static final String CPP_COMPILER = "g++";

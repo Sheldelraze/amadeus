@@ -17,13 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Mr.Minh
  * @since 06/02/2018
- * Purpose:
+ * Purpose: handle every error occurs in the system, add more if you feel necessary
  */
 
 @ControllerAdvice
 public class AdviceController {
     private static final Logger logger = LoggerFactory.getLogger(AdviceController.class);
 
+    //404: page not found
     @ExceptionHandler({NoSuchPageException.class,NoHandlerFoundException.class,HttpRequestMethodNotSupportedException.class})
     public ModelAndView pageNotFoundHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
@@ -34,6 +35,7 @@ public class AdviceController {
         return mav;
     }
 
+    //403: access denied
     @ExceptionHandler({AccessDeniedException.class})
     public ModelAndView accessDeniedHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
@@ -44,6 +46,7 @@ public class AdviceController {
         return mav;
     }
 
+    //500: other errors and exceptions
     @ExceptionHandler(Exception.class)
     public ModelAndView globalErrorHandle(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();

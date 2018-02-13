@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Mr.Minh
  * @since 11/01/2018
- * Purpose:
+ * Purpose: Base class for all controller
  */
 public class BaseController {
 
@@ -53,7 +53,10 @@ public class BaseController {
 
     @PostConstruct
     private void init() {
+        //init validator
         invokeValidator();
+
+        //init modelmapper setting
         modelMapper = new ModelMapper();
         exclusiveUpdateField = new ArrayList<>();
         exclusiveUpdateField.add("createClass");
@@ -87,6 +90,7 @@ public class BaseController {
         });
     }
 
+    //init validator base on controller name (ex. ContestController -> ContestValidator)
     private void invokeValidator() {
         String validateName = this.getClass().getSimpleName();
         validateName = validateName.substring(0, validateName.indexOf("Controller"))
@@ -101,6 +105,7 @@ public class BaseController {
         }
     }
 
+    //do some magic validation here, better not change anything here...
     protected void validate(Object targetObj,
                             org.springframework.validation.BindingResult result) {
 
@@ -144,13 +149,25 @@ public class BaseController {
 
     }
 
-
+    /**
+     * this will add message to 'screenMessage' which you will find in many view in form
+     * of th:error="*{screenMessage}, the message here will be the ID (not the message itself)
+     * these message and ID can be found in message.properties
+     */
     public void addLogicError(
             org.springframework.validation.BindingResult result,
             String message) {
         result.rejectValue(SCREEN_MESSAGE, message);
     }
 
+    /**
+     * likewise but for message which require parameter
+     * ex: msg00x = You have {0} errors.
+     * so if we enter parameters:
+     * + messageId = msg00x
+     * + paramMsg = new Integer[]{3}
+     * this will output -> You have 3 errors.
+     */
     public void addLogicError(
             org.springframework.validation.BindingResult result,
             String messageId, Object[] paramMsg) {

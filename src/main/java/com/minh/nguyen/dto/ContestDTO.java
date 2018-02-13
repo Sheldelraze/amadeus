@@ -23,6 +23,33 @@ public class ContestDTO {
     private Integer canPractice;
     private Integer isPublic;
     private Integer showToAll;
+    private String endTime;
+    private Integer doUpdateCountDown;
+    private String timerMessage;
+
+    public String getTimerMessage() {
+        return timerMessage;
+    }
+
+    public void setTimerMessage(String timerMessage) {
+        this.timerMessage = timerMessage;
+    }
+
+    public Integer getDoUpdateCountDown() {
+        return doUpdateCountDown;
+    }
+
+    public void setDoUpdateCountDown(Integer doUpdateCountDown) {
+        this.doUpdateCountDown = doUpdateCountDown;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public Integer getShowToAll() {
         return showToAll;

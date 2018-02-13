@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * Basic Controller which is called for unhandled errors
+ * handle /error path
  */
 @Controller
 public class AppErrorController implements ErrorController{

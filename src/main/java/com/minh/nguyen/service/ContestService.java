@@ -70,16 +70,7 @@ public class ContestService extends BaseService {
         modelMapper.map(contestDTO, contestEntity);
         try {
             //set initial contest info and insert
-            setCreateInfo(contestEntity);
-            setUpdateInfo(contestEntity);
-            contestEntity.setIsPublic(1);
-            contestEntity.setIsPublished(0);
-            contestEntity.setShowStatus(1);
-            contestEntity.setCanPractice(1);
-            contestEntity.setJudgeType(2);
-            contestEntity.setShowTest(3);
-            contestEntity.setShowSubmit(3);
-            contestEntity.setShowToAll(1);
+            SetCreateContestInfor(contestEntity);
             int insertRecord = contestMapper.insertContest(contestEntity);
             if (insertRecord == 0){
                 rollBack(Constants.MSG_INSERT_ERR);
@@ -125,6 +116,19 @@ public class ContestService extends BaseService {
         }
     }
 
+    private void SetCreateContestInfor(ContestEntity contestEntity) {
+        setCreateInfo(contestEntity);
+        setUpdateInfo(contestEntity);
+        contestEntity.setIsPublic(1);
+        contestEntity.setIsPublished(0);
+        contestEntity.setShowStatus(1);
+        contestEntity.setCanPractice(1);
+        contestEntity.setJudgeType(2);
+        contestEntity.setShowTest(3);
+        contestEntity.setShowSubmit(3);
+        contestEntity.setShowToAll(1);
+    }
+
     public ContestDTO getContestInfo(int ctId) {
         ContestDTO contestDTO = new ContestDTO();
         ContestEntity contestEntity = new ContestEntity();
@@ -137,7 +141,37 @@ public class ContestService extends BaseService {
         contestDTO.setTime(timeFormat.format(contestEntity.getStartTime()));
         return contestDTO;
     }
+    //create timer information
+    public ContestDTO getContestTime(int ctId){
+        ContestDTO contestDTO = new ContestDTO();
+        DateFormat dateFormat = new SimpleDateFormat("MMM d yyyy HH:mm:ss");
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setId(ctId);
+        contestEntity = contestMapper.selectByPK(contestEntity);
+        Date now = new Date();
 
+        //get contest's start time and end time
+        Date startTime = contestEntity.getStartTime();
+        Date endTime = DateUtils.addMinutes(startTime,contestEntity.getDuration());
+
+        contestDTO.setDoUpdateCountDown(0);
+        contestDTO.setStartTime(dateFormat.format(startTime));
+        contestDTO.setEndTime(dateFormat.format(endTime));
+        contestDTO.setName(contestEntity.getName());
+
+        //get current time and compare to startTime and endTime
+        if(now.compareTo(startTime) < 0) {
+            contestDTO.setTimerMessage("Kỳ thi chưa bắt đầu");
+        }else if (now.compareTo(startTime) >= 0
+                    && now.compareTo(endTime) <= 0){
+            contestDTO.setTimerMessage("Kỳ thi đang diễn ra");
+            contestDTO.setDoUpdateCountDown(1);
+        }else{
+            contestDTO.setTimerMessage("Kỳ thi đã kết thúc");
+        }
+
+        return contestDTO;
+    }
     public List<ProblemDTO> getProblemToAdd(int ctId){
         List<ProblemDTO> lst = problemMapper.getProblemForContest(ctId);
         for(ProblemDTO problemDTO : lst){
@@ -170,7 +204,6 @@ public class ContestService extends BaseService {
                 CtPmEntity ctPmEntity = new CtPmEntity();
                 ctPmEntity.setCtId(ctId);
                 ctPmEntity.setPmId(Integer.parseInt(pmId));
-                ctPmEntity.setTotalSubmission(0);
                 ctPmEntity.setIsHidden(0);
                 setUpdateInfo(ctPmEntity);
                 setCreateInfo(ctPmEntity);

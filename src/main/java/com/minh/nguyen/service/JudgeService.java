@@ -15,19 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Mr.Minh
  * @since 29/01/2018
- * Purpose:
+ * Purpose: Class designed for multithread judging process,
+ * you may configure more option in class SecurityConfig
  */
 @Component("JudgeService")
 public class JudgeService extends BaseService {
@@ -55,7 +51,7 @@ public class JudgeService extends BaseService {
 
     @Async
     public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO,SubmissionEntity submissionEntity,Integer urId) {
-        logger.debug("Doing me a heavy discomfort judging....");
+        logger.debug("Doing me a heavy and magical discomfort judging....");
         boolean runTimeErr = false;
         boolean wrongAns = false;
         boolean timeLimitErr = false;
@@ -138,31 +134,43 @@ public class JudgeService extends BaseService {
             }
         }
         if (runTimeErr) {
+            //RTE
             submissionEntity.setJudgeStatus(Constants.STATUS_RUNTIME_ERROR);
             submissionEntity.setVerdict(Constants.VERDICT_RUNTIME_ERROR);
             timeTotal /= testCount == 0 ? 1 : testCount;
         } else if (timeLimitErr) {
+            //TLE
             submissionEntity.setJudgeStatus(Constants.STATUS_TIME_LIMIT_EXCEEDED);
             submissionEntity.setVerdict(Constants.VERDICT_TIME_LIMIT_EXCEEDED);
             timeTotal = problemDTO.getTimeLimit();
         } else if (wrongAns) {
+            //WA
             submissionEntity.setJudgeStatus(Constants.STATUS_WRONG_ANSWER);
             submissionEntity.setVerdict(Constants.VERDICT_WRONG_ANSWER);
             timeTotal /= testCount == 0 ? 1 : testCount;
         } else {
+            //AC
             submissionEntity.setJudgeStatus(Constants.STATUS_ACCEPTED);
             submissionEntity.setVerdict(Constants.VERDICT_ACCEPTED);
             timeTotal /= testCount == 0 ? 1 : testCount;
 
             //increase solve count if this user has not solved this problem before
+            ProblemEntity problemEntity = new ProblemEntity();
+            problemEntity.setId(problemDTO.getId());
+            problemEntity = problemMapper.selectByPK(problemEntity);
             Integer cntSolvedBefore = problemMapper.checkIfSolvedBefore(problemDTO.getId(),urId);
             if (cntSolvedBefore == 0){
-                ProblemEntity problemEntity = new ProblemEntity();
-                problemEntity.setId(problemDTO.getId());
-                problemEntity = problemMapper.selectByPK(problemEntity);
                 problemEntity.setSolveCnt(1 + problemEntity.getSolveCnt());
-                problemMapper.updateByPK(problemEntity);
             }
+
+            //check if first solve
+            if(problemEntity.getFirstSolveTime() == null){
+                problemEntity.setFirstSolveTime(new Date());
+            }
+
+            //increase total submission
+            problemEntity.setTotalSubmission(1 + problemEntity.getTotalSubmission());
+            problemMapper.updateByPK(problemEntity);
         }
         submissionEntity.setTimeRun(timeTotal);
         submissionMapper.updateByPK(submissionEntity);

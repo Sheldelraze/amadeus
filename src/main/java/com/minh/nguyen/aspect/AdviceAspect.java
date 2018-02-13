@@ -16,6 +16,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
+/**
+ * @author Mr.Minh
+ * @since 11/02/2018
+ * Purpose: this class allows using AOP, mostly used to check authority and check null.
+ * So I suggest you do some search (a.k.a google 'Spring boot Aspectj') before
+ * changing anything here
+ */
 public class AdviceAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(AdviceAspect.class);

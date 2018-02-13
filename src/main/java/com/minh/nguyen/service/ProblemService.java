@@ -143,11 +143,7 @@ public class ProblemService extends BaseService{
         }
 
         //insert problem
-        setCreateInfo(problemEntity);
-        setUpdateInfo(problemEntity);
         setCreateProblemInfo(problemEntity);
-        problemEntity.setIsPublic(0);
-        problemEntity.setSolveCnt(0);
         int insertRecord = problemMapper.insertEntity(problemEntity);
         if (insertRecord != 1){
             rollBack(Constants.MSG_SYSTEM_ERR);
@@ -287,10 +283,15 @@ public class ProblemService extends BaseService{
         inputMapper.deleteByPK(inputEntity);
     }
     public void setCreateProblemInfo(ProblemEntity problemEntity){
+        setCreateInfo(problemEntity);
+        setUpdateInfo(problemEntity);
         problemEntity.setTimeLimit(2000);
         problemEntity.setMemoryLimit(64);
         problemEntity.setDifficulty(1);
         problemEntity.setIsPublished(0);
+        problemEntity.setIsPublic(0);
+        problemEntity.setSolveCnt(0);
+        problemEntity.setTotalSubmission(0);
     }
     public void getProblemInfo(ProblemDTO problemDTO){
         ProblemEntity problemEntity = new ProblemEntity();

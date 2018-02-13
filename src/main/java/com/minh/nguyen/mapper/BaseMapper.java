@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Mr.Minh
  * @since 31/12/2017
- * Purpose: provide base prepared SQL statement
+ * Purpose: provide base SQL function for every table
  */
 public interface BaseMapper<T> {
 

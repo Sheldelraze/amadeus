@@ -31,12 +31,16 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 
     private RequestCache requestCache = new HttpSessionRequestCache();
 
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication)
             throws ServletException, IOException {
+        //set session timeout duration
         request.getSession().setMaxInactiveInterval(SESSION_TIMEOUT_IN_SECONDS);
+
+        //do some magic redirect here which is to move back to the page b4 authentication
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest == null) {
             handle(request, response, authentication);

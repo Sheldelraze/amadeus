@@ -2,6 +2,7 @@ package com.minh.nguyen.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -57,6 +58,28 @@ public class ProblemEntity extends BaseEntity implements Serializable {
 
     @Column(name = "leId")
     private Integer leId;
+
+    @Column(name = "firstSolve")
+    private Date firstSolve;
+
+    @Column(name = "totalSubmission")
+    private Integer totalSubmission;
+
+    public Date getFirstSolveTime() {
+        return firstSolve;
+    }
+
+    public void setFirstSolveTime(Date firstSolve) {
+        this.firstSolve = firstSolve;
+    }
+
+    public Integer getTotalSubmission() {
+        return totalSubmission;
+    }
+
+    public void setTotalSubmission(Integer totalSubmission) {
+        this.totalSubmission = totalSubmission;
+    }
 
     public Integer getSolveCnt() {
         return solveCnt;

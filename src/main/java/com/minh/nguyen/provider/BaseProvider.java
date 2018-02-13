@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Mr.Minh
  * @since 31/12/2017
- * Purpose: provide base prepared SQL statement
+ * Purpose: provide prepared SQL statement (base on entity objects) for class BaseMapper
  */
 @Component
 public class BaseProvider {

@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Mr.Minh
  * @since 07/01/2018
- * Purpose:
+ * Purpose: controller for problem (mostly for lecturer use)
  */
 @Controller
 @RequestMapping("/problem/info")

@@ -26,6 +26,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Mr.Minh
+ * @since 06/02/2018
+ * Purpose: base class for all service class
+ */
 @Service
 public class BaseService {
     public ModelMapper modelMapper;
@@ -105,6 +110,7 @@ public class BaseService {
         entity.setUpdateTime(time);
         entity.setUpdateUser(currentUser);
     }
+
     public void rollBack(String errMessage) {
         RollbackException ex = new RollbackException(errMessage);
         throw ex;

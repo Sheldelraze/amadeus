@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * @author Mr.Minh
  * @since 07/01/2018
- * Purpose:
+ * Purpose: controller for contest
  */
 @Controller("ContestController")
 @RequestMapping("/contest")
@@ -70,6 +70,16 @@ public class ContestController extends BaseController {
     @Autowired
     private GeneralService generalService;
 
+    private ModelAndView createGeneralModel(int ctId){
+        ModelAndView modelAndView = new ModelAndView();
+        ContestDTO contestDTO = contestService.getContestTime(ctId);
+        modelAndView.addObject("startTime",contestDTO.getStartTime());
+        modelAndView.addObject("endTime",contestDTO.getEndTime());
+        modelAndView.addObject("doUpdate",contestDTO.getDoUpdateCountDown());
+        modelAndView.addObject("timerMessage",contestDTO.getTimerMessage());
+        modelAndView.addObject("contestName",contestDTO.getName());
+        return modelAndView;
+    }
     @PreAuthorize("hasAuthority('CAN_CREATE_CONTEST')")
     @GetMapping("/create")
     public ModelAndView createContest(ContestCreateForm contestCreateForm) {
@@ -106,7 +116,7 @@ public class ContestController extends BaseController {
                  "|| (hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST'))")
     @GetMapping({"/{ctId}/information","/{ctId}/","/{ctId}"})
     public ModelAndView getInformation(@PathVariable("ctId") int ctId) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(INFORMATION_VIEW);
         ContestInformationVO contestInformationVO = contestService.getInformation(ctId);
         modelAndView.addObject("contestInformationVO",contestInformationVO);
@@ -120,7 +130,7 @@ public class ContestController extends BaseController {
     @GetMapping("/{ctId}/addProblem")
     public ModelAndView initAddProblem(@PathVariable("ctId") int ctId,ContestAddProblemForm contestAddProblemForm,
                                        Boolean updateSuccess) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(ADD_PROBLEM_VIEW);
         if (null == contestAddProblemForm){
             contestAddProblemForm = new ContestAddProblemForm();
@@ -175,7 +185,7 @@ public class ContestController extends BaseController {
             "|| @ContestValidator.checkOutsiderPermission(authentication,#ctId)")
     @GetMapping("/{ctId}/problem")
     public ModelAndView getProblem(@PathVariable("ctId") int ctId) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(PROBLEM_LIST_VIEW);
         List<ProblemDTO> lstProblemDTO = contestService.getProblemToDisplay(ctId);
         ContestProblemVO contestProblemVO = new ContestProblemVO();
@@ -192,7 +202,7 @@ public class ContestController extends BaseController {
             "|| @ContestValidator.checkOutsiderPermission(authentication,#ctId)")
     @GetMapping("/{ctId}/problem/{pmId}/view")
     public ModelAndView viewProblem(@PathVariable("ctId") int ctId,@PathVariable("pmId") int pmId) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(PROBLEM_VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
         problemDTO.setId(pmId);
@@ -211,7 +221,7 @@ public class ContestController extends BaseController {
             "|| @ContestValidator.checkParticipate(authentication,#ctId)")
     @GetMapping("/{ctId}/submit")
     public ModelAndView getSubmit(@PathVariable("ctId") int ctId,ContestSubmitForm contestSubmitForm) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         ContestSubmitVO contestSubmitVO = new ContestSubmitVO();
         contestSubmitVO.setLstLanguage(problemService.getAllLanguage());
         contestSubmitVO.setLstProblem(contestService.getProblemToSubmit(ctId));
@@ -251,7 +261,7 @@ public class ContestController extends BaseController {
     @GetMapping("/{ctId}/my")
     public ModelAndView getMy(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestSubmissionMyForm = new ContestSubmissionMyForm();
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SUBMISSION_MY_VIEW);
         modelAndView.addObject(SUBMISSION_MY_FORM, contestSubmissionMyForm);
         List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId,false);
@@ -267,7 +277,7 @@ public class ContestController extends BaseController {
     @GetMapping("/{ctId}/all")
     public ModelAndView getAll(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestSubmissionAllForm = new ContestSubmissionAllForm();
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SUBMISSION_ALL_VIEW);
         modelAndView.addObject(SUBMISSION_ALL_FORM, contestSubmissionAllForm);
         List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId,true);
@@ -284,7 +294,7 @@ public class ContestController extends BaseController {
     @GetMapping("/{ctId}/leaderboard")
     public ModelAndView getLeaderboard(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestLeaderboardForm = new ContestLeaderboardForm();
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(LEADERBOARD_VIEW);
         modelAndView.addObject(LEADERBOARD_FORM, contestLeaderboardForm);
         modelAndView.addObject(TAB, 6);
@@ -299,7 +309,7 @@ public class ContestController extends BaseController {
     @GetMapping("/{ctId}/announcement")
     public ModelAndView getAnnouncement(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestSettingForm = new ContestSettingForm();
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(ANNOUNCEMENT_VIEW);
 
         modelAndView.addObject(TAB, 7);
@@ -325,7 +335,7 @@ public class ContestController extends BaseController {
     @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'CAN_EDIT_CONTEST') ")
     @GetMapping("/{ctId}/setting")
     public ModelAndView getSetting(@PathVariable("ctId") int ctId,ContestSettingForm contestSettingForm,boolean updateSuccess) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SETTING_VIEW);
         ContestSettingVO contestSettingVO = new ContestSettingVO();
         if (null == contestSettingForm.getId()){
@@ -369,7 +379,7 @@ public class ContestController extends BaseController {
     @GetMapping("/{ctId}/role")
     public ModelAndView getRole(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestRoleForm = new ContestRoleForm();
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(ROLE_VIEW);
         modelAndView.addObject(ROLE_FORM, contestRoleForm);
         modelAndView.addObject(TAB, 9);

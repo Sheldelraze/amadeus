@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * @author Mr.Minh
  * @since 01/01/2018
- * Purpose:
+ * Purpose: controller for any url anyone can access
  */
 @Controller
 public class GeneralController {

@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 // handle 403 page
+/**
+ * WARNING: THIS CLASS IS NOW DEPRECATED. ALL HANDLER NOW MOVE TO CLASS AdviceController
+ * FIXING ANYTHING HERE WONT CHANGE ANYTHING. HOWEVER I WAS NOT SURE IF DELETE THIS CLASS WILL
+ * BROKE SOMETHING SO JUST LEAVE THIS HERE.
+ */
 @Component("AccessDeniedHandler")
 public class AccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
 
@@ -24,6 +29,7 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
                        HttpServletResponse httpServletResponse,
                        AccessDeniedException e) throws IOException {
 
+        //handle access denied here
         Authentication auth
                 = SecurityContextHolder.getContext().getAuthentication();
 

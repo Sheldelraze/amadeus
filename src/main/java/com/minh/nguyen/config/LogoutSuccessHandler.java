@@ -16,6 +16,7 @@ import java.io.IOException;
  */
 public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler  {
 
+    //customize any logout success handler here if needed
     @Override
     public void onLogoutSuccess(
             HttpServletRequest request,

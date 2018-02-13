@@ -19,12 +19,6 @@ public class CtPmEntity extends BaseEntity implements Serializable{
     @Column(name = "pmId")
     private Integer pmId;
 
-    @Column(name = "firstSolve")
-    private Date firstSolve;
-
-    @Column(name = "totalSubmission")
-    private Integer totalSubmission;
-
     @Column(name = "isHidden")
     private Integer isHidden;
 
@@ -50,21 +44,5 @@ public class CtPmEntity extends BaseEntity implements Serializable{
 
     public void setPmId(Integer pmId) {
         this.pmId = pmId;
-    }
-
-    public Date getFirstSolve() {
-        return firstSolve;
-    }
-
-    public void setFirstSolve(Date firstSolve) {
-        this.firstSolve = firstSolve;
-    }
-
-    public Integer getTotalSubmission() {
-        return totalSubmission;
-    }
-
-    public void setTotalSubmission(Integer totalSubmission) {
-        this.totalSubmission = totalSubmission;
     }
 }
