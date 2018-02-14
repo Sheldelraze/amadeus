@@ -10,11 +10,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
@@ -23,13 +25,14 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 @SpringBootApplication(scanBasePackages = {"com.minh.nguyen"})
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @MapperScan({ "com.minh.nguyen.mapper" })
 @EnableAsync
-
+@EnableAspectJAutoProxy
 public class AmadeusApplication {
     private static Logger logger = LoggerFactory.getLogger(AmadeusApplication.class);
 	public static void main(String[] args) {
-        SpringApplication.run(AmadeusApplication.class, args);
+       SpringApplication.run(AmadeusApplication.class, args);
 	}
 
 }

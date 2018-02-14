@@ -7,18 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.web.http.CookieHttpSessionStrategy;
+import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.Executor;
@@ -30,7 +34,8 @@ import java.util.concurrent.Executor;
  * you are doing
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Order(1)
+@Primary
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
@@ -45,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @PostConstruct
     protected void init(){
+        //allow session to be used in multithread (a.k.a @Async) functions
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
@@ -76,10 +82,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return registration;
     }
 
-    @Bean
-    public InternalResourceViewResolver defaultViewResolver() {
-        return new InternalResourceViewResolver();
-    }
+//    @Bean
+//    public InternalResourceViewResolver defaultViewResolver() {
+//        return new InternalResourceViewResolver();
+//    }
 
     //configure security settings. Again, don't change if you don't know what you are doing
     @Override
@@ -96,7 +102,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true).permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+    }
 
+    @Bean
+    public CookieHttpSessionStrategy httpSessionStrategy() {
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+        cookieSerializer.setCookieName("X_SESSION_COOKIE");
+
+        CookieHttpSessionStrategy httpSessionStrategy = new CookieHttpSessionStrategy();
+        httpSessionStrategy.setCookieSerializer(cookieSerializer);
+
+        return httpSessionStrategy;
     }
 
     //better not touch here too...

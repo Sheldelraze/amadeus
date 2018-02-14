@@ -3,6 +3,7 @@ package com.minh.nguyen.controller.common;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.util.ExceptionUtil;
+import com.minh.nguyen.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -25,7 +26,7 @@ public class AdviceController {
     private static final Logger logger = LoggerFactory.getLogger(AdviceController.class);
 
     //404: page not found
-    @ExceptionHandler({NoSuchPageException.class,NoHandlerFoundException.class,HttpRequestMethodNotSupportedException.class})
+    @ExceptionHandler({NoSuchPageException.class, NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
     public ModelAndView pageNotFoundHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("share/404");
@@ -51,14 +52,14 @@ public class AdviceController {
     public ModelAndView globalErrorHandle(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         String err = ExceptionUtil.getMessage(e);
-        if (null == err || Constants.BLANK.equals(err)){
+        if (null == err || StringUtil.checkBlank(err)) {
             err = e.toString();
-            if (null == err || Constants.BLANK.equals(err)){
+            if (null == err || StringUtil.checkBlank(err)) {
                 err = ExceptionUtil.toString(e);
             }
         }
-        logger.warn("Request: " + req.getRequestURL());
-        logger.warn("warn: " + err);
+        logger.error("Request: " + req.getRequestURL());
+        logger.error("warn: " + err);
         mav.setViewName("share/500");
         return mav;
     }

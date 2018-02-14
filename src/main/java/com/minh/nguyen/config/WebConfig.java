@@ -1,10 +1,13 @@
 package com.minh.nguyen.config;
 
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 /**
  * @author Mr.Minh
@@ -17,7 +20,9 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
  */
 @Configuration
 @EnableWebMvc
-@EnableAspectJAutoProxy
+@ComponentScan(basePackageClasses = { SecurityConfig.class })
+@Primary
+@Order(2)
 public class WebConfig extends WebMvcAutoConfiguration {
 
 }

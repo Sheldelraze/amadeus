@@ -39,6 +39,10 @@
             tag.id              AS tgId
         FROM
             problem
+            INNER JOIN ur_pm_auy
+              ON problem.id = ur_pm_auy.pmId
+              AND ur_pm_auy.deleteFlg = '0'
+              AND ur_pm_auy.auyId = #{can_view_problem_auth}
             LEFT JOIN pm_tg
                 ON pm_tg.pmId = problem.id
                    AND pm_tg.deleteFlg = '0'

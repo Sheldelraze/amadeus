@@ -99,12 +99,15 @@
                                     <th style="text-align: center" width="250px">Môn học</th>
                                     <th style="text-align: center" width="200px">Người tạo</th>
                                     <th style="text-align: center" width="200px">Thể loại</th>
-                                    <th style="text-align: center" width="100px">Thêm</th>
+                                    <th style="text-align: center" width="150px">
+                                        <input type="checkbox" id="parent"/>
+                                        <label style="margin-bottom: -10px;margin-left: 20px" for="parent"> Thêm</label>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:if="${contestAddProblemForm.lstProblemDTO != null}"
-                                    th:each="problem,iter : ${contestAddProblemForm.lstProblemDTO}">
+                                    th:each="problem,iter : ${contestAddProblemForm.lstProblemDTO}" >
                                     <td th:text="${problem.id}"></td>
                                     <td style="font-weight: 900;font-size: large"><a
                                             th:href="|/problem/${problem.id}/view|" th:text="${problem.code}"></a>
@@ -117,7 +120,8 @@
                                     </td>
                                     <td>Lập trình C++</td>
                                     <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                    <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị</td>
+                                    <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị
+                                    </td>
 
                                     <td>
                                         <div class="checkbox checkbox-single">
@@ -126,7 +130,7 @@
                                                    th:id="|lstPmId${__${problem.id}__}|" name="lstPmId"/>
                                             <label th:for="|lstPmId${__${problem.id}__}|"></label>
                                         </div>
-                                       </td>
+                                    </td>
                                 </tr>
 
                                 </tbody>
@@ -187,6 +191,11 @@
 <script>
     $(document).ready(function () {
         $('#myTable').DataTable();
+    });
+    $(function(){
+        $('#parent').on('change',function(){
+            $('[id^=lstPmId]').prop('checked',$(this).prop('checked'));
+        });
     });
 </script>
 <!-- ============================================================== -->

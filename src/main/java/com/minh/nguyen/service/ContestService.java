@@ -192,7 +192,7 @@ public class ContestService extends BaseService {
         return lstProblem;
     }
     public List<ProblemDTO> getProblemToAdd(int ctId) {
-        List<ProblemDTO> lst = problemMapper.getProblemForContest(ctId);
+        List<ProblemDTO> lst = problemMapper.getProblemForContest(Constants.AUTH_VIEW_PROBLEM,ctId);
         for (ProblemDTO problemDTO : lst) {
             StringBuilder stringBuilder = new StringBuilder();
             List<TagDTO> lstTag = problemDTO.getLstTag();
