@@ -2,14 +2,13 @@ package com.minh.nguyen.controller;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
-import com.minh.nguyen.dto.ContestDTO;
-import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.dto.SubmissionDTO;
-import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.dto.*;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.ProblemService;
+import com.minh.nguyen.util.StringUtil;
+import com.minh.nguyen.validator.ContestValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -210,6 +210,9 @@ public class ContestController extends BaseController {
         problemService.getProblemInfo(problemDTO);
         problemService.getShowInStatementTest(problemDTO);
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
+        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())){
+            problemPreviewVO.setNote(null);
+        }
         modelMapper.map(problemDTO, problemPreviewVO);
         modelAndView.addObject(TAB, 2);
         modelAndView.addObject("problemVO", problemPreviewVO);
@@ -274,7 +277,7 @@ public class ContestController extends BaseController {
 
     @CheckNotNullFirst
     @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
-            "|| @ContestValidator.checkParticipate(authentication,#ctId) ")
+            "|| (@ContestValidator.checkParticipate(authentication,#ctId) && @ContestValidator.canViewStatus(#ctId))")
     @GetMapping("/{ctId}/all")
     public ModelAndView getAll(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestSubmissionAllForm = new ContestSubmissionAllForm();
@@ -290,13 +293,16 @@ public class ContestController extends BaseController {
 
     @CheckNotNullFirst
     @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
-            "|| @ContestValidator.checkParticipate(authentication,#ctId) " +
+            "|| (@ContestValidator.checkParticipate(authentication,#ctId) && @ContestValidator.canViewStatus(#ctId)) " +
             "|| @ContestValidator.checkOutsiderPermission(authentication,#ctId)")
     @GetMapping("/{ctId}/leaderboard")
     public ModelAndView getLeaderboard(@PathVariable("ctId") int ctId) {
         ContestLayoutForm contestLeaderboardForm = new ContestLeaderboardForm();
         ModelAndView modelAndView = createGeneralModel(ctId);
         List<UserDTO> lstUser = contestService.getLeaderboardInfor(ctId);
+        List<ProblemDTO> lstProblem = contestService.getProblemForLeaderboard(ctId);
+        modelAndView.addObject("lstUser",lstUser);
+        modelAndView.addObject("lstProb",lstProblem);
         modelAndView.setViewName(LEADERBOARD_VIEW);
         modelAndView.addObject(LEADERBOARD_FORM, contestLeaderboardForm);
         modelAndView.addObject(TAB, 6);

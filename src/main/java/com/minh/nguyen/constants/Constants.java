@@ -8,9 +8,12 @@ package com.minh.nguyen.constants;
  * For instance, current number of authorities is 13, so if you want to add another authority, start with AUTH_XXX = 14
  */
 public class Constants {
+    public static final Integer SUBMISSION_FAIL_PENALTY = 10;
+
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";
     public static final String CURRENT_LOGIN_USER_ROLE = "currentUserRole";
+    public static final String CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES = "currentUserAuthorities";
 
     public static final String CPP_ARGS = "-g -O2 -static -std=gnu++11";
     public static final String CPP_COMPILER = "g++";

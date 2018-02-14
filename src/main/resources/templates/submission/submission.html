@@ -140,33 +140,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="color:black" th:each="detail,iter : ${submitDetail.lstSubmitDetail}">
+                <div class="col-md-12" th:if="${submitDetail.lstSubmitDetail != null}" style="color:black" th:each="detail,iter : ${submitDetail.lstSubmitDetail}">
                     <h4>Test #<label th:text="${iter.count}"></label> (<label th:text="${detail.timeRun}"></label> ms,<label th:text="${detail.memoryUsed}"></label> MB)</h4>
                     <div class="card">
                         <div class="card-header">
                             Input
                         </div>
                         <div class="card-body" style="color: black">
-                            <label style="white-space: pre" th:text="${detail.input}"></label>
+                            <label th:if="${detail.input != null}" style="white-space: pre" th:text="${detail.input}"></label>
                         </div>
                         <div class="card-header">
                             Output
                         </div>
                         <div class="card-body" style="color: black">
-                            <label style="white-space: pre" th:text="${detail.output}"></label>
+                            <label th:if="${detail.output != null}" style="white-space: pre" th:text="${detail.output}"></label>
                         </div>
                         <div class="card-header">
                             Đáp án
                         </div>
                         <div class="card-body" style="color: black">
-                            <label style="white-space: pre" th:text="${detail.answer}"></label>
+                            <label th:if="${detail.answer != null}" style="white-space: pre" th:text="${detail.answer}"></label>
                         </div>
                         <div class="card-header">
                             Kết quả
                         </div>
                         <div class="card-body" style="font-family: verdana,arial,sans-serif">
-
-                            <label style="white-space: pre;font-weight: bolder" th:utext="${detail.result}" th:classappend="${detail.result == 'Đúng'}?'accepted':'fail'"></label>
+                            <label th:if="${detail.result != null}" style="white-space: pre;font-weight: bolder" th:utext="${detail.result}" th:classappend="${detail.result == 'Đúng'}?'accepted':'fail'"></label>
                         </div>
                     </div>
                 </div>

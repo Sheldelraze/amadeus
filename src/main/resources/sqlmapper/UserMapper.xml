@@ -29,6 +29,7 @@
             user.fullname          AS urName,
             problem.id             AS pmId,
             problem.name           AS pmName,
+            problem.firstSolve     AS firstSolve,
             contest.startTime      AS startTime,
             submission.id          AS snId,
             submission.createTime  AS submitTime,
@@ -48,8 +49,9 @@
                 ON ct_pm.pmId = problem.id
             LEFT JOIN submission
                 ON problem.id = submission.pmId
+                   AND user.id = submission.urId
         WHERE user.deleteFlg = '0'
-        ORDER BY urId, pmId, snId
+        ORDER BY urId, pmId, submitTime
     </select>
     <resultMap id="leaderboard" type="UserDTO">
         <id column="urId" property="id"/>
@@ -58,6 +60,7 @@
         <collection property="lstProblem" ofType="ProblemDTO">
             <id column="pmId" property="id"/>
             <result column="pmName" property="name"/>
+            <result column="firstSolve" property="firstSolveTime"/>
             <collection property="lstSubmission" ofType="SubmissionDTO">
                 <id column="snId" property="id"/>
                 <result column="submitTime" property="createTime"/>
@@ -70,7 +73,7 @@
         <result column="handle" property="handle"/>
         <result column="password" property="password"/>
         <collection property="lstAuthority" ofType="AuthorityDTO">
-            <id column="auyUd" property="id"/>
+            <id column="auyId" property="id"/>
             <result column="auyName" property="name"/>
         </collection>
     </resultMap>

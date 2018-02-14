@@ -50,14 +50,15 @@ public class AdviceController {
     @ExceptionHandler(Exception.class)
     public ModelAndView globalErrorHandle(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
-        if (null == e.toString() || Constants.BLANK.equals(e.toString())){
-            mav.addObject("warn", ExceptionUtil.getMessage(e));
-        }
-        else {
-            mav.addObject("warn", e.toString());
+        String err = ExceptionUtil.getMessage(e);
+        if (null == err || Constants.BLANK.equals(err)){
+            err = e.toString();
+            if (null == err || Constants.BLANK.equals(err)){
+                err = ExceptionUtil.toString(e);
+            }
         }
         logger.warn("Request: " + req.getRequestURL());
-        logger.warn("warn: " + ExceptionUtil.toString(e));
+        logger.warn("warn: " + err);
         mav.setViewName("share/500");
         return mav;
     }

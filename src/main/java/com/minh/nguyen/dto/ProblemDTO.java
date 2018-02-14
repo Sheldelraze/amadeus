@@ -1,5 +1,6 @@
 package com.minh.nguyen.dto;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,9 +33,45 @@ public class ProblemDTO extends BaseDTO {
     private Integer solveCnt;
     private Integer alias;
     private Integer isSolved;
+    private Integer isFirstSolve;
     private Integer submitCnt;
+    private Integer totalSubmission;
+    private String solvePercentage;
     private String solveTime;
     private List<SubmissionDTO> lstSubmission;
+    private Date firstSolveTime;
+
+    public String getSolvePercentage() {
+        return solvePercentage;
+    }
+
+    public void setSolvePercentage(String solvePercentage) {
+        this.solvePercentage = solvePercentage;
+    }
+
+    public Integer getTotalSubmission() {
+        return totalSubmission;
+    }
+
+    public void setTotalSubmission(Integer totalSubmission) {
+        this.totalSubmission = totalSubmission;
+    }
+
+    public Date getFirstSolveTime() {
+        return firstSolveTime;
+    }
+
+    public void setFirstSolveTime(Date firstSolveTime) {
+        this.firstSolveTime = firstSolveTime;
+    }
+
+    public Integer getIsFirstSolve() {
+        return isFirstSolve;
+    }
+
+    public void setIsFirstSolve(Integer isFirstSolve) {
+        this.isFirstSolve = isFirstSolve;
+    }
 
     public String getSolveTime() {
         return solveTime;

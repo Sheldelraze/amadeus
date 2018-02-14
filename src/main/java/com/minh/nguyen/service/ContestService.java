@@ -6,20 +6,19 @@ import com.minh.nguyen.entity.*;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
-import org.apache.catalina.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 /**
  * @author Mr.Minh
@@ -177,7 +176,21 @@ public class ContestService extends BaseService {
 
         return contestDTO;
     }
-
+    public List<ProblemDTO> getProblemForLeaderboard(int ctId){
+        List<ProblemDTO> lstProblem = problemMapper.getProblemForLeaderboard(ctId);
+        for(ProblemDTO problem : lstProblem){
+            int ac = problem.getSolveCnt();
+            int all = problem.getTotalSubmission();
+            if (all == 0){
+                problem.setSolvePercentage("(0%)");
+                continue;
+            }
+            NumberFormat df = new DecimalFormat("#.00");
+            double percentage = 100.0 * ac / all;
+            problem.setSolvePercentage("(" + df.format(percentage) + "%)");
+        }
+        return lstProblem;
+    }
     public List<ProblemDTO> getProblemToAdd(int ctId) {
         List<ProblemDTO> lst = problemMapper.getProblemForContest(ctId);
         for (ProblemDTO problemDTO : lst) {
@@ -197,38 +210,86 @@ public class ContestService extends BaseService {
         return lst;
     }
 
+    //get leaderboard information here
     public List<UserDTO> getLeaderboardInfor(Integer ctId) {
+
+        //1 user -> many problems
         List<UserDTO> lstUser = userMapper.getLeaderboardInfor(ctId, Constants.AUTH_PARTICIPATE_CONTEST);
         for (UserDTO user : lstUser) {
             int score = 0;
             int penalty = 0;
+
+            long start = user.getContestStartTime().getTime();
+            /**
+             * 1 problem -> many submission
+             * however, we only need to calculate number of submissions and time penalty up to the first accepted one.
+             */
             for (ProblemDTO problem : user.getLstProblem()) {
                 int isSolved = 0;
+                int submitCnt = 0;
                 int time = 0;
                 String solveTime = "--:--";
+                problem.setIsFirstSolve(0);
                 if (null != problem.getLstSubmission()) {
                     for (SubmissionDTO submit : problem.getLstSubmission()) {
+
+                        //we will ignore any submissions submitted after the first AC-ed one.
                         if (0 == isSolved) {
                             if (submit.getJudgeStatus().equals(Constants.STATUS_ACCEPTED)) {
                                 isSolved = 1;
 
+                                //calculate submit time if AC-ed
+                                long current = submit.getCreateTime().getTime();
+                                long elapsed = current - start;
+                                int minutes = (int) Math.floor((elapsed / 1000 / 60) % 60);
+                                int hours = (int) Math.floor((elapsed / (1000 * 60 * 60)));
+                                String h = StringUtils.leftPad(String.valueOf(hours), 2, "0");
+                                String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
+                                solveTime = h + ":" + m;
+                                time += (int) Math.floor((elapsed / 1000 / 60));
+
+                                //check if first solver
+                                if (null != problem.getFirstSolveTime()){
+                                    if (problem.getFirstSolveTime().equals(submit.getCreateTime())){
+                                        problem.setIsFirstSolve(1);
+                                    }
+                                }
                             } else {
-                                time += 10;
+                                //if not AC-ed
+                                time += Constants.SUBMISSION_FAIL_PENALTY;
                             }
+                            submitCnt++;
                         }
                     }
                 }
+
+                //score = number of AC-ed problems
                 score += isSolved;
-                penalty += time;
+
+                //calculate penalty only when AC-ed
+                if (isSolved == 1) {
+                    penalty += time;
+                }
+                problem.setSubmitCnt(submitCnt);
                 problem.setIsSolved(isSolved);
                 problem.setSolveTime(solveTime);
             }
             user.setScore(score);
             user.setPenalty(penalty);
         }
+        Collections.sort(lstUser,new ScoreboardComparator());
         return lstUser;
     }
+    class ScoreboardComparator implements Comparator<UserDTO> {
 
+        @Override
+        public int compare(UserDTO o1, UserDTO o2) {
+            if (o1.getScore().equals(o2.getScore())){
+                return o1.getPenalty().compareTo(o2.getPenalty());
+            }
+            return o2.getScore().compareTo(o1.getScore());
+        }
+    }
     public void setProblemHiddenStatus(Integer ctId, Integer pmId, Integer status) {
         CtPmEntity ctPmEntity = new CtPmEntity();
         ctPmEntity.setCtId(ctId);
@@ -248,6 +309,9 @@ public class ContestService extends BaseService {
                 setUpdateInfo(ctPmEntity);
                 setCreateInfo(ctPmEntity);
                 ctPmMapper.insert(ctPmEntity);
+
+                //reset firstSolve time
+                problemMapper.resetFirstSolveTime(Integer.parseInt(pmId));
             }
         } catch (Exception e) {
             throw e;

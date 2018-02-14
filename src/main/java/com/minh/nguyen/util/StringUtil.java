@@ -55,7 +55,16 @@ public class StringUtil {
     public static boolean isNull(Object str) {
         return str == null || str.toString().length() <= 0;
     }
-
+    public static boolean checkBlank(String s){
+        for(int i = 0;i < s.length();i++){
+            char x = s.charAt(i);
+            if (x == ' ' || x == '\n' || x == '\r'){
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
     public static String trimStr(String str) {
         if (str != null) {
             return str.trim();

@@ -18,6 +18,7 @@ import com.minh.nguyen.validator.common.BindingResult;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -26,8 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Mr.Minh
@@ -59,6 +59,25 @@ public class ContestValidator extends BaseValidator {
         return true;
     }
 
+    public boolean canViewTest(Integer ctId){
+        List<Integer> defaultAuth = (List<Integer>)  httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
+        if (defaultAuth.contains(Constants.AUTH_VIEW_ALL_SUBMISSION)){
+            return true;
+        }
+        ContestEntity contestEntity = getContestById(ctId);
+        Date currentTime = new Date();
+        Date startTime = contestEntity.getStartTime();
+        Date endTime = DateUtils.addMinutes(startTime, contestEntity.getDuration());
+        if (currentTime.compareTo(endTime) < 0){
+            return contestEntity.getShowTest().equals(Constants.SHOW_TEST_ALL);
+        }
+        return true;
+    }
+
+    public boolean canViewStatus(Integer ctId){
+        ContestEntity contestEntity = getContestById(ctId);
+        return contestEntity.getShowStatus().equals(1);
+    }
     //check if user can view submission base on current contest's policy
     public boolean checkShowSubmitPolicy(Integer ctId,Integer snId){
 

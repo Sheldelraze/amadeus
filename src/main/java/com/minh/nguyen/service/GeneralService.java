@@ -1,5 +1,6 @@
 package com.minh.nguyen.service;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.ContestDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.dto.SubmitDetailDTO;
@@ -8,6 +9,7 @@ import com.minh.nguyen.entity.ContestEntity;
 import com.minh.nguyen.mapper.ContestMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
 import com.minh.nguyen.util.StringUtil;
+import com.minh.nguyen.validator.ContestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +36,9 @@ public class GeneralService extends BaseService {
     @Autowired
     private ContestMapper contestMapper;
 
+    @Autowired
+    private ContestValidator contestValidator;
+
     public List<SubmissionDTO> getSubmission(){
         List<SubmissionDTO> lstSubmission = submissionMapper.getSubmission();
         for(SubmissionDTO submissionDTO : lstSubmission){
@@ -42,6 +48,8 @@ public class GeneralService extends BaseService {
         }
         return lstSubmission;
     }
+
+    //normal submission
     public SubmissionDTO getSubmitDetail(int snId){
         List<SubmissionDTO> lstSubmit = submissionMapper.getSubmitDetail(snId);
         SubmissionDTO submit = lstSubmit.get(0);
@@ -62,6 +70,8 @@ public class GeneralService extends BaseService {
         }
         return submit;
     }
+
+    //submission in contest
     public SubmissionDTO getSubmitDetail(int snId,int ctId){
         SubmissionDTO submissionDTO = getSubmitDetail(snId);
         ContestEntity contestEntity = new ContestEntity();
@@ -71,6 +81,24 @@ public class GeneralService extends BaseService {
         contestDTO.setId(ctId);
         contestDTO.setName(contestEntity.getName());
         submissionDTO.setContestDTO(contestDTO);
+
+        //if contest creator does not allow participator to view test, then show compile error message only
+        if (!contestValidator.canViewTest(ctId)){
+            if (submissionDTO.getJudgeStatus().equals(Constants.STATUS_COMPILE_ERROR)){
+                List<SubmitDetailDTO> lstSubmit = new ArrayList<>();
+                SubmitDetailDTO submit = new SubmitDetailDTO();
+                submit.setResult(submissionDTO.getLstSubmitDetail().get(0).getResult());
+                submit.setTimeRun(0);
+                submit.setMemoryUsed(0);
+                submit.setAnswer("");
+                submit.setOutput("");
+                submit.setInput("");
+                lstSubmit.add(submit);
+                submissionDTO.setLstSubmitDetail(lstSubmit);
+            }else{
+                submissionDTO.setLstSubmitDetail(null);
+            }
+        }
         return submissionDTO;
     }
     void setCreateInfo(BaseEntity entity){

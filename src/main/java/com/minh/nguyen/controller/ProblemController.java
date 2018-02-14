@@ -6,6 +6,7 @@ import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.form.problem.*;
 import com.minh.nguyen.service.ProblemService;
+import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.vo.problem.*;
 import com.sun.javafx.beans.annotations.NonNull;
@@ -164,6 +165,9 @@ public class ProblemController extends BaseController {
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
         modelMapper.map(problemDTO, problemPreviewVO);
         problemPreviewVO.setLstInput(problemDTO.getLstInput());
+        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())){
+            problemPreviewVO.setNote(null);
+        }
         modelAndView.addObject(PREVIEW_VO, problemPreviewVO);
         modelAndView.addObject(TAB, 1);
         modelAndView.addObject("pmId", pmId);
@@ -197,6 +201,9 @@ public class ProblemController extends BaseController {
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
         modelMapper.map(problemDTO, problemPreviewVO);
         problemPreviewVO.setLstInput(problemDTO.getLstInput());
+        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())){
+            problemPreviewVO.setNote(null);
+        }
         modelAndView.addObject(PREVIEW_VO, problemPreviewVO);
         return modelAndView;
     }
