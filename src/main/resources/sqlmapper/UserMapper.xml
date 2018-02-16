@@ -13,7 +13,7 @@
             authority.name AS auyName
         FROM user
             LEFT JOIN role
-                ON user.reId = role.id
+            ON user.reId = role.id
             LEFT JOIN re_auy
                 ON role.id = re_auy.reId
             LEFT JOIN authority
@@ -53,6 +53,68 @@
         WHERE user.deleteFlg = '0'
         ORDER BY urId, pmId, submitTime
     </select>
+
+    <select id="findUserForProblemRole" resultMap="userAndRole">
+        select user.id as urId,
+        user.handle,
+        user.fullname,
+        role.id as reId,
+        role.text as text
+        from user
+        LEFT JOIN
+        role
+        on user.reId = role.id
+        and role.deleteFlg = '0'
+        <where>
+            <if test="fullname != null and fullname.length > 0">
+                user.fullname like concat('%',#{fullname},'%')
+            </if>
+            <if test="reId != 0">
+                user.reId = #{reId}
+            </if>
+            <if test="1 == 1">
+                user.id not in (
+                select ur_pm_auy.urId from ur_pm_auy
+                where ur_pm_auy.pmId = #{pmId}
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="getListProblemRole" resultMap="userAndRole">
+        SELECT
+            user.id      AS urId,
+            user.handle,
+            user.fullname,
+            role.id      AS reId,
+            role.text    AS text,
+            authority.id AS auyId
+        FROM ur_pm_auy
+            INNER JOIN user
+                ON user.id = ur_pm_auy.urId
+                   AND user.id != #{urId}
+                   AND user.deleteFlg = '0'
+            LEFT JOIN role
+                ON user.reId = role.id
+                   AND role.deleteFlg = '0'
+            LEFT JOIN authority
+                ON ur_pm_auy.auyId = authority.id
+                   AND authority.deleteFlg = '0'
+        WHERE ur_pm_auy.pmId = #{pmId}
+              AND ur_pm_auy.deleteFlg = '0'
+    </select>
+    <resultMap id="userAndRole" type="UserDTO">
+        <id column="urId" property="id"/>
+        <result column="handle" property="handle"/>
+        <result column="fullname" property="fullname"/>
+        <association property="role" javaType="RoleDTO">
+            <id column="reId" property="id"/>
+            <result column="text" property="text"/>
+        </association>
+        <collection property="lstAuthority" ofType="AuthorityDTO">
+            <id column="auyId" property="id"/>
+        </collection>
+    </resultMap>
     <resultMap id="leaderboard" type="UserDTO">
         <id column="urId" property="id"/>
         <result column="urName" property="fullname"/>

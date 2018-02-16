@@ -2,10 +2,7 @@ package com.minh.nguyen.service;
 
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.minh.nguyen.constants.Constants;
-import com.minh.nguyen.dto.InputDTO;
-import com.minh.nguyen.dto.LanguageDTO;
-import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.dto.TagDTO;
+import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.form.problem.ProblemSubmitForm;
@@ -28,8 +25,6 @@ import javax.persistence.RollbackException;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -323,5 +318,51 @@ public class ProblemService extends BaseService{
         String filename = "input-itId-" + inputEntity.getId();
         FileUtil.createFileWithContent(location, filename, "txt",
                 inputEntity.getInput());
+    }
+
+    public List<UserDTO> findUserForProblemRole(String fullname, Integer reId, Integer pmId) {
+        List<UserDTO> lstUser = userMapper.findUserForProblemRole(fullname, reId, pmId);
+        return lstUser;
+    }
+
+
+    /**
+     * addRole
+     * 1 = CAN_VIEW_PROBLEM
+     * 2 = CAN_VIEW_PROBLEM + CAN_EDIT_PROBLEM
+     */
+    public void addRole(String[] urId, Integer auyId, Integer pmId) {
+        UrPmAuyEntity urPmAuyEntity = new UrPmAuyEntity();
+        setCreateInfo(urPmAuyEntity);
+        setUpdateInfo(urPmAuyEntity);
+        urPmAuyEntity.setPmId(pmId);
+        if (auyId == 1 || auyId == 2) {
+            urPmAuyEntity.setAuyId(Constants.AUTH_VIEW_PROBLEM);
+            for (String id : urId) {
+                urPmAuyEntity.setUrId(Integer.parseInt(id));
+                urPmAuyMapper.insert(urPmAuyEntity);
+            }
+        }
+        if (auyId == 2) {
+            urPmAuyEntity.setAuyId(Constants.AUTH_EDIT_PROBLEM);
+            for (String id : urId) {
+                urPmAuyEntity.setUrId(Integer.parseInt(id));
+                urPmAuyMapper.insert(urPmAuyEntity);
+            }
+        }
+    }
+
+    public List<UserDTO> getListProblemRole(Integer pmId) {
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<UserDTO> lstUser = userMapper.getListProblemRole(urId, pmId);
+
+        return lstUser;
+    }
+
+    public void deleteRole(Integer pmId, Integer urId) {
+        UrPmAuyEntity urPmAuyEntity = new UrPmAuyEntity();
+        urPmAuyEntity.setPmId(pmId);
+        urPmAuyEntity.setUrId(urId);
+        urPmAuyMapper.deleteForRealWithExample(urPmAuyEntity);
     }
 }

@@ -28,9 +28,18 @@ public class UserDTO extends BaseDTO{
     private RoleDTO role;
     private Integer score;
     private Integer penalty;
+    private String authorityName;
     private Date contestStartTime;
     private List<ProblemDTO> lstProblem;
     private List<AuthorityDTO> lstAuthority;
+
+    public String getAuthorityName() {
+        return authorityName;
+    }
+
+    public void setAuthorityName(String authorityName) {
+        this.authorityName = authorityName;
+    }
 
     public Date getContestStartTime() {
         return contestStartTime;

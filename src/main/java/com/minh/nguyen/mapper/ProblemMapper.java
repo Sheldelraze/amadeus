@@ -2,7 +2,7 @@ package com.minh.nguyen.mapper;
 
 import com.minh.nguyen.dto.ProblemDTO;
 import com.minh.nguyen.entity.ProblemEntity;
-import com.minh.nguyen.provider.BaseProvider;
+import com.minh.nguyen.mapper.provider.BaseProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;

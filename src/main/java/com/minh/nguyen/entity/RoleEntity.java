@@ -19,6 +19,17 @@ public class RoleEntity  extends BaseEntity implements Serializable{
     @Column(name = "name")
     private String name;
 
+    @Column(name = "text")
+    private String text;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

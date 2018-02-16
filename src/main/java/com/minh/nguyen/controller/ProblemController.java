@@ -4,6 +4,8 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
+import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.problem.*;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.util.StringUtil;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.RollbackException;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -54,6 +57,7 @@ public class ProblemController extends BaseController {
     private static final String SUBMIT_VIEW = "problem/all/problem-submit";
     private static final String UPDATE_TEST_VIEW = "problem/other/problem-update-test";
     private static final String CREATE_TEST_VIEW = "problem/other/problem-create-test";
+    private static final String ADD_ROLE_VIEW = "problem/other/problem-create-role";
     private static final String LIST_MY_VIEW = "problem/list/problem-list-my";
     private static final String LIST_ALL_VIEW = "problem/list/problem-list-all";
     private static final String CREATE_VIEW = "problem/other/problem-create";
@@ -65,6 +69,9 @@ public class ProblemController extends BaseController {
     private static final String TAB = "tab";
     @Autowired
     private ProblemService problemService;
+
+    @Autowired
+    private HttpSession httpSession;
 
     @PreAuthorize("hasAuthority('CAN_CREATE_PROBLEM')")
     @GetMapping("/my")
@@ -143,7 +150,7 @@ public class ProblemController extends BaseController {
         } else if (viewTab == TEST_TAB) {
             problemLayoutVO = new ProblemTestVO();
         } else if (viewTab == ROLE_TAB) {
-            problemLayoutVO = new ProblemRoleVO();
+            problemLayoutVO = new ProblemLayoutVO();
         }
         modelMapper.map(problemForm, problemLayoutVO);
         problemLayoutVO.setUpdateSuccess(updateSuccess);
@@ -351,16 +358,25 @@ public class ProblemController extends BaseController {
                                 boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, ROLE_TAB, updateGeneralSuccess);
         ProblemDTO problemDTO = new ProblemDTO();
-        ProblemRoleVO problemRoleVO = new ProblemRoleVO();
         problemDTO.setId(pmId);
         problemService.getProblemInfo(problemDTO);
-        modelMapper.map(problemDTO, problemRoleVO);
-        modelAndView.addObject(ROLE_VO, problemRoleVO);
         if (null == problemRoleForm) {
             problemRoleForm = new ProblemRoleForm();
         }
+        List<UserDTO> lstUser = problemService.getListProblemRole(pmId);
+        Integer currentUrId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        String currentUrName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
+        String currentUrHandle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        Integer currentReId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_ID);
+        String currentReName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);
+        modelAndView.addObject("lstUser", lstUser);
+        modelAndView.addObject("currentUrId", currentUrId);
+        modelAndView.addObject("currentUrName", currentUrName);
+        modelAndView.addObject("currentReId", currentReId);
+        modelAndView.addObject("currentUrHandle", currentUrHandle);
+        modelAndView.addObject("currentReName", currentReName);
         if (updateSuccess) {
-            problemRoleVO.setUpdateSuccess(true);
+            modelAndView.addObject(UPDATE_SUCCESS, true);
         }
         modelAndView.addObject(ROLE_FORM, problemRoleForm);
         modelAndView.setViewName(ROLE_VIEW);
@@ -526,11 +542,50 @@ public class ProblemController extends BaseController {
         return getSolution(pmId, null, problemSolutionForm, false, true);
     }
 
-    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
-    @PostMapping("/{pmId}/updateRole")
-    public ModelAndView updateRole(@PathVariable("pmId") Integer pmId, @NonNull ProblemRoleForm problemRoleForm) {
-        ModelAndView modelAndView = null;
-
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
+    @GetMapping("/{pmId}/addRole")
+    public ModelAndView getAddRole(@PathVariable("pmId") Integer pmId, ProblemAddRoleForm problemAddRoleForm,
+                                   boolean updateSuccess) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (null == problemAddRoleForm || null == problemAddRoleForm.getId()) {
+            problemAddRoleForm = new ProblemAddRoleForm();
+        }
+        modelAndView.setViewName(ADD_ROLE_VIEW);
+        modelAndView.addObject("pmId", pmId);
+        modelAndView.addObject("problemAddRoleForm", problemAddRoleForm);
+        if (updateSuccess) {
+            modelAndView.addObject(UPDATE_SUCCESS, true);
+        }
         return modelAndView;
+    }
+
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
+    @PostMapping("/{pmId}/findForRole")
+    public ModelAndView findForAddRole(@PathVariable("pmId") Integer pmId, ProblemAddRoleForm problemAddRoleForm) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ADD_ROLE_VIEW);
+        List<UserDTO> lstUser = problemService.findUserForProblemRole(problemAddRoleForm.getFullname(), Integer.parseInt(problemAddRoleForm.getReId()), pmId);
+        modelAndView.addObject("lstUser", lstUser);
+        return modelAndView;
+    }
+
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
+    @PostMapping("/{pmId}/addRole")
+    public ModelAndView addRole(@PathVariable("pmId") Integer pmId, ProblemAddRoleForm problemAddRoleForm) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ADD_ROLE_VIEW);
+        problemService.addRole(problemAddRoleForm.getLstUrId(), Integer.parseInt(problemAddRoleForm.getAuyId()), pmId);
+        return getAddRole(pmId, problemAddRoleForm, true);
+    }
+
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
+    @GetMapping("/{pmId}/deleteRole/{urId}")
+    public ModelAndView deleteRole(@PathVariable("pmId") Integer pmId, @PathVariable("urId") Integer urId) throws UserTryingToBeSmartException {
+        Integer currentUrId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (currentUrId.equals(urId)) {
+            throw new UserTryingToBeSmartException("Thôi đừng, không vui đâu :))");
+        }
+        problemService.deleteRole(pmId, urId);
+        return getRole(pmId, null, null, false, true);
     }
 }

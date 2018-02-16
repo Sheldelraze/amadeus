@@ -3,7 +3,9 @@ package com.minh.nguyen.config;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
 import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.entity.RoleEntity;
 import com.minh.nguyen.entity.UserEntity;
+import com.minh.nguyen.mapper.RoleMapper;
 import com.minh.nguyen.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +34,9 @@ public class UserAuthentication implements UserDetailsService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RoleMapper roleMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -56,12 +61,16 @@ public class UserAuthentication implements UserDetailsService {
 
         //save current user information for future use
         //when session expire the web will prompt user to login again so this will never be null (i hope XD)
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setId(lst.get(0).getReId());
+        roleEntity = roleMapper.selectByPK(roleEntity);
+
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ID,lst.get(0).getId());
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_HANDLE,lst.get(0).getHandle());
-        httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ROLE,lst.get(0).getReId());
+        httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME, lst.get(0).getFullname());
+        httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ROLE_ID, lst.get(0).getReId());
+        httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME, roleEntity.getText());
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES,defaultAuth);
-
-
 
         return new org.springframework.security.core.userdetails.User(user.getHandle(), user.getPassword(),
                 grantedAuthorities);

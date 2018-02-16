@@ -1,4 +1,4 @@
-package com.minh.nguyen.provider;
+package com.minh.nguyen.mapper.provider;
 
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -286,6 +285,31 @@ public class BaseProvider {
                         }
                     }
 
+                }
+            }
+        }.toString();
+        return sql;
+    }
+
+    /**
+     * delete by primary key
+     * @param entity Object
+     * @return String
+     */
+    public String deleteForRealByExample(final Object entity) throws IllegalAccessException {
+        final Class<? extends Object> table = entity.getClass();
+        final String tableName = table.getAnnotation(Table.class).name();
+
+        String sql = new SQL() {
+            {
+                DELETE_FROM(tableName);
+                for (Field field : table.getDeclaredFields()) {
+                    field.setAccessible(true);
+                    if (field.get(entity) != null && field.isAnnotationPresent(Column.class)) {
+                        WHERE(field.getAnnotation(Column.class).name()
+                                + FORMAT_STRING_SQL_1 + field.getName()
+                                + FORMAT_STRING_SQL_2);
+                    }
                 }
             }
         }.toString();

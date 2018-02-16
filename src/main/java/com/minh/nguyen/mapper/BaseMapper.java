@@ -1,7 +1,10 @@
 package com.minh.nguyen.mapper;
 
-import com.minh.nguyen.provider.BaseProvider;
-import org.apache.ibatis.annotations.*;
+import com.minh.nguyen.mapper.provider.BaseProvider;
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.util.List;
 
@@ -31,7 +34,10 @@ public interface BaseMapper<T> {
     Integer deleteByPK(T record);
 
     @DeleteProvider(type = BaseProvider.class, method = "deleteWithExample")
-    Integer deleteWithExample(T record);
+    Integer deleteLogicWithExample(T record);
+
+    @DeleteProvider(type = BaseProvider.class, method = "deleteForRealByExample")
+    Integer deleteForRealWithExample(T record);
 
     @InsertProvider(type = BaseProvider.class, method = "insert")
     Integer insert(T record);

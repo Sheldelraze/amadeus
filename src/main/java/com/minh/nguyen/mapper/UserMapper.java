@@ -14,4 +14,8 @@ public interface UserMapper extends BaseMapper<UserEntity>{
     List<UserDTO> getUserAuthority(@Param("handle") String handle);
 
     List<UserDTO> getLeaderboardInfor(@Param("ctId")Integer ctId,@Param("auth_participate_id")Integer authParticipateId);
+
+    List<UserDTO> findUserForProblemRole(@Param("fullname") String fullname, @Param("reId") Integer reId, @Param("pmId") Integer pmId);
+
+    List<UserDTO> getListProblemRole(@Param("urId") Integer urId, @Param("pmId") Integer pmId);
 }

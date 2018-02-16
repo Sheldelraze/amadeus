@@ -8,6 +8,15 @@ package com.minh.nguyen.dto;
 public class RoleDTO extends BaseDTO{
     private Integer id;
     private String name;
+    private String text;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public Integer getId() {
         return id;

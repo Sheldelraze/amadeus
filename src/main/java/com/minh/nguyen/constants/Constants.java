@@ -12,7 +12,9 @@ public class Constants {
 
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";
-    public static final String CURRENT_LOGIN_USER_ROLE = "currentUserRole";
+    public static final String CURRENT_LOGIN_USER_FULLNAME = "currentUserFullname";
+    public static final String CURRENT_LOGIN_USER_ROLE_ID = "currentUserRoleId";
+    public static final String CURRENT_LOGIN_USER_ROLE_NAME = "currentUserRoleName";
     public static final String CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES = "currentUserAuthorities";
 
     public static final String CPP_ARGS = "-g -O2 -static -std=gnu++11";

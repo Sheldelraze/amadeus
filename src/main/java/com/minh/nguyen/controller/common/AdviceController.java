@@ -1,6 +1,5 @@
 package com.minh.nguyen.controller.common;
 
-import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.util.ExceptionUtil;
 import com.minh.nguyen.util.StringUtil;
@@ -51,16 +50,19 @@ public class AdviceController {
     @ExceptionHandler(Exception.class)
     public ModelAndView globalErrorHandle(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
-        String err = ExceptionUtil.getMessage(e);
+        String err = e.toString();
         if (null == err || StringUtil.checkBlank(err)) {
-            err = e.toString();
-            if (null == err || StringUtil.checkBlank(err)) {
                 err = ExceptionUtil.toString(e);
-            }
         }
         logger.error("Request: " + req.getRequestURL());
-        logger.error("warn: " + err);
+        logger.error("warn: " + ExceptionUtil.toString(e));
+        String url = req.getHeader("referer");
+        if (StringUtil.isNull(url)) {
+            url = "";
+        }
+        mav.addObject("previous", url);
         mav.setViewName("share/500");
+        mav.addObject("error", err);
         return mav;
     }
 }
