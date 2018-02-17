@@ -1,6 +1,6 @@
 # Amadeus system
 Online auto judging system for HaUI.
-Written in Java.
+Written in Java (using JDK 1.7).
 Framework used:
 + MVC: Spring boot
 + Front-end engine: Thymeleaf + HCJ + bootstrap + jquery + AceEditor (for editing coode) + nicEdit (for editing document)
