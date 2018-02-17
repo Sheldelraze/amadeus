@@ -3,6 +3,7 @@ package com.minh.nguyen.service;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.*;
+import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
@@ -18,7 +19,10 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -423,5 +427,62 @@ public class ContestService extends BaseService {
         ctSnMapper.insert(ctSnEntity);
 
         judgeService.judge(problemDTO, languageDTO, submissionEntity, urId);
+    }
+
+    public List<UserDTO> getListContestRole(Integer ctId) {
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<UserDTO> lstUser = userMapper.getListContestRole(urId, ctId);
+        return lstUser;
+    }
+
+    public List<UserDTO> findUserForContestRole(String fullname, Integer reId, Integer ctId) {
+        List<UserDTO> lstUser = userMapper.findUserForContestRole(fullname, reId, ctId);
+        return lstUser;
+    }
+
+    /**
+     * addRole
+     * 1 = CAN_VIEW_PROBLEM
+     * 2 = CAN_VIEW_PROBLEM + CAN_EDIT_PROBLEM
+     * 3 = CAN_PARTICIPATE_CONTEST
+     */
+    public void addRole(String[] urId, Integer auyId, Integer ctId) throws UserTryingToBeSmartException {
+        UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
+        setCreateInfo(urCtAuyEntity);
+        setUpdateInfo(urCtAuyEntity);
+        urCtAuyEntity.setCtId(ctId);
+        if (auyId != 1 && auyId != 2 && auyId != 3) {
+            throw new UserTryingToBeSmartException();
+        }
+        //if auyId == 1 or 2
+        if (auyId == 1 || auyId == 2) {
+            urCtAuyEntity.setAuyId(Constants.AUTH_VIEW_CONTEST);
+            for (String id : urId) {
+                urCtAuyEntity.setUrId(Integer.parseInt(id));
+                urCtAuyMapper.insert(urCtAuyEntity);
+            }
+        }
+        if (auyId == 2) {
+            urCtAuyEntity.setAuyId(Constants.AUTH_EDIT_CONTEST);
+            for (String id : urId) {
+                urCtAuyEntity.setUrId(Integer.parseInt(id));
+                urCtAuyMapper.insert(urCtAuyEntity);
+            }
+        }
+
+        if (auyId == 3) {
+            urCtAuyEntity.setAuyId(Constants.AUTH_PARTICIPATE_CONTEST);
+            for (String id : urId) {
+                urCtAuyEntity.setUrId(Integer.parseInt(id));
+                urCtAuyMapper.insert(urCtAuyEntity);
+            }
+        }
+    }
+
+    public void deleteRole(Integer ctId, Integer urId) {
+        UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
+        urCtAuyEntity.setCtId(ctId);
+        urCtAuyEntity.setUrId(urId);
+        urCtAuyMapper.deleteForRealWithExample(urCtAuyEntity);
     }
 }

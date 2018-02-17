@@ -13,6 +13,7 @@ public class UserTryingToBeSmartException extends Exception implements Serializa
     private static final long serialVersionUID = 437941231534L;
 
     public UserTryingToBeSmartException() {
+        this.message = "Thôi đừng bạn ơi...";
     }
 
     public UserTryingToBeSmartException(String message) {

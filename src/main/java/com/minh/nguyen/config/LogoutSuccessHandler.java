@@ -1,6 +1,5 @@
 package com.minh.nguyen.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 

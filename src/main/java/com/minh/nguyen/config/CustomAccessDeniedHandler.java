@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,10 +18,10 @@ import java.io.IOException;
  * FIXING ANYTHING HERE WONT CHANGE ANYTHING. HOWEVER I WAS NOT SURE IF DELETE THIS CLASS WILL
  * BROKE SOMETHING SO JUST LEAVE THIS HERE.
  */
-@Component("AccessDeniedHandler")
-public class AccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
+@Component("CustomAccessDeniedHandler")
+public class CustomAccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
 
-    private static Logger logger = LoggerFactory.getLogger(AccessDeniedHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 
     @Override
     public void handle(HttpServletRequest httpServletRequest,

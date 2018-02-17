@@ -6,18 +6,18 @@
 <mapper namespace="com.minh.nguyen.mapper.UserMapper">
     <select id="getUserAuthority" resultMap="UserDetail">
         SELECT
-            user.id        AS urId,
-            user.handle    AS handle,
-            user.password  AS password,
-            authority.id   AS auyId,
+            user.id AS urId,
+        user.handle AS handle,
+        user.password  AS password,
+        authority.id AS auyId,
             authority.name AS auyName
         FROM user
-            LEFT JOIN role
-            ON user.reId = role.id
+        LEFT JOIN role
+        ON user.reId = role.id
             LEFT JOIN re_auy
-                ON role.id = re_auy.reId
-            LEFT JOIN authority
-                ON re_auy.auyId = authority.id
+        ON role.id = re_auy.reId
+        LEFT JOIN authority
+        ON re_auy.auyId = authority.id
         WHERE
             user.handle = #{handle}
             AND user.deleteFlg = '0'
@@ -81,6 +81,33 @@
         </where>
     </select>
 
+    <select id="findUserForContestRole" resultMap="userAndRole">
+        select user.id as urId,
+        user.handle,
+        user.fullname,
+        role.id as reId,
+        role.text as text
+        from user
+        LEFT JOIN
+        role
+        on user.reId = role.id
+        and role.deleteFlg = '0'
+        <where>
+            <if test="fullname != null and fullname.length > 0">
+                user.fullname like concat('%',#{fullname},'%')
+            </if>
+            <if test="reId != 0">
+                user.reId = #{reId}
+            </if>
+            <if test="1 == 1">
+                user.id not in (
+                select ur_ct_auy.urId from ur_ct_auy
+                where ur_ct_auy.ctId = #{ctId}
+                )
+            </if>
+        </where>
+    </select>
+
     <select id="getListProblemRole" resultMap="userAndRole">
         SELECT
             user.id      AS urId,
@@ -102,6 +129,28 @@
                    AND authority.deleteFlg = '0'
         WHERE ur_pm_auy.pmId = #{pmId}
               AND ur_pm_auy.deleteFlg = '0'
+    </select>
+    <select id="getListContestRole" resultMap="userAndRole">
+        SELECT
+            user.id      AS urId,
+            user.handle,
+            user.fullname,
+            role.id      AS reId,
+            role.text    AS text,
+            authority.id AS auyId
+        FROM ur_ct_auy
+            INNER JOIN user
+                ON user.id = ur_ct_auy.urId
+                   AND user.id != #{urId}
+                   AND user.deleteFlg = '0'
+            LEFT JOIN role
+                ON user.reId = role.id
+                   AND role.deleteFlg = '0'
+            LEFT JOIN authority
+                ON ur_ct_auy.auyId = authority.id
+                   AND authority.deleteFlg = '0'
+        WHERE ur_ct_auy.ctId = #{ctId}
+              AND ur_ct_auy.deleteFlg = '0'
     </select>
     <resultMap id="userAndRole" type="UserDTO">
         <id column="urId" property="id"/>

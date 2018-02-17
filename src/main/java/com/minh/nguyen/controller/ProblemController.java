@@ -480,6 +480,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
+    @CheckNotNullFirst
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @PostMapping("/{pmId}/updateStatement")
     public ModelAndView updateStatement(@PathVariable("pmId") Integer pmId,
@@ -509,6 +510,7 @@ public class ProblemController extends BaseController {
         return getStatement(pmId, null, problemStatementForm, false, true);
     }
 
+    @CheckNotNullFirst
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @PostMapping("/{pmId}/updateSolution")
     public ModelAndView updateSolution(@PathVariable("pmId") Integer pmId,
@@ -542,6 +544,7 @@ public class ProblemController extends BaseController {
         return getSolution(pmId, null, problemSolutionForm, false, true);
     }
 
+    @CheckNotNullFirst
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'CAN_EDIT_PROBLEM')")
     @GetMapping("/{pmId}/addRole")
     public ModelAndView getAddRole(@PathVariable("pmId") Integer pmId, ProblemAddRoleForm problemAddRoleForm,
@@ -559,6 +562,7 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
+    @CheckNotNullFirst
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
     @PostMapping("/{pmId}/findForRole")
     public ModelAndView findForAddRole(@PathVariable("pmId") Integer pmId, ProblemAddRoleForm problemAddRoleForm) {
@@ -569,21 +573,23 @@ public class ProblemController extends BaseController {
         return modelAndView;
     }
 
+    @CheckNotNullFirst
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
     @PostMapping("/{pmId}/addRole")
-    public ModelAndView addRole(@PathVariable("pmId") Integer pmId, ProblemAddRoleForm problemAddRoleForm) {
+    public ModelAndView addRole(@PathVariable("pmId") Integer pmId, ProblemAddRoleForm problemAddRoleForm) throws UserTryingToBeSmartException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(ADD_ROLE_VIEW);
         problemService.addRole(problemAddRoleForm.getLstUrId(), Integer.parseInt(problemAddRoleForm.getAuyId()), pmId);
         return getAddRole(pmId, problemAddRoleForm, true);
     }
 
+    @CheckNotNullFirst
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
     @GetMapping("/{pmId}/deleteRole/{urId}")
     public ModelAndView deleteRole(@PathVariable("pmId") Integer pmId, @PathVariable("urId") Integer urId) throws UserTryingToBeSmartException {
         Integer currentUrId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
         if (currentUrId.equals(urId)) {
-            throw new UserTryingToBeSmartException("Thôi đừng, không vui đâu :))");
+            throw new UserTryingToBeSmartException();
         }
         problemService.deleteRole(pmId, urId);
         return getRole(pmId, null, null, false, true);

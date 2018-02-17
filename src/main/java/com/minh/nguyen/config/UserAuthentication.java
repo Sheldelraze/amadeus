@@ -75,6 +75,4 @@ public class UserAuthentication implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getHandle(), user.getPassword(),
                 grantedAuthorities);
     }
-
-
 }

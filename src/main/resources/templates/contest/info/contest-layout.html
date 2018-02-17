@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -196,8 +196,8 @@
             curTime.innerText += " " + hours + ":" + minutes + ":" + seconds;
             document.getElementById("progress-bar").style.width = t.percentage + "%";
             if (t.total <= 0) {
-                alert('Cuộc thi đã kết thúc, vui lòng reload lại trang!');
                 clearInterval(timeinterval);
+                alert('Cuộc thi đã kết thúc, vui lòng reload lại trang!');
             }
         }
         function updateIncomingContestClock() {
@@ -214,8 +214,8 @@
             curTime.innerText += " " + hours + ":" + minutes + ":" + seconds;
             curTime.style.color = "#008000";
             if (t.total <= 0) {
-                alert('Cuộc thi đã bắt đầu, vui lòng reload lại trang!');
                 clearInterval(doCountdown);
+                alert('Cuộc thi đã bắt đầu, vui lòng reload lại trang!');
             }
         }
         var doUpdate = /*[[${doUpdate}]]*/ 1;

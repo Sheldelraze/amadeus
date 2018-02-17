@@ -2,13 +2,16 @@ package com.minh.nguyen.controller;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
-import com.minh.nguyen.dto.*;
+import com.minh.nguyen.dto.ContestDTO;
+import com.minh.nguyen.dto.ProblemDTO;
+import com.minh.nguyen.dto.SubmissionDTO;
+import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.util.StringUtil;
-import com.minh.nguyen.validator.ContestValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -49,6 +52,7 @@ public class ContestController extends BaseController {
     private static final String SETTING_VIEW = "contest/info/contest-setting";
     private static final String SUBMISSION_VIEW = "submission/submission";
     private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announce";
+    private static final String ADD_ROLE_VIEW = "contest/other/contest-add-role";
     private static final String ROLE_VIEW = "contest/info/contest-role";
     private static final String SUBMIT_FORM = "contestSubmitForm";
     private static final String SUBMIT_VO= "contestSubmitVO";
@@ -61,6 +65,7 @@ public class ContestController extends BaseController {
     private static final String ROLE_FORM = "contestRoleForm";
     private static final String TAB = "tab";
     private static final String CONTEST_ID = "ctId";
+    private static final String UPDATE_SUCCESS = "updateSuccess";
 
     @Autowired
     private ContestService contestService;
@@ -70,6 +75,9 @@ public class ContestController extends BaseController {
 
     @Autowired
     private GeneralService generalService;
+
+    @Autowired
+    private HttpSession httpSession;
 
     private ModelAndView createGeneralModel(int ctId){
         ModelAndView modelAndView = new ModelAndView();
@@ -385,16 +393,80 @@ public class ContestController extends BaseController {
     @CheckNotNullFirst
     @PreAuthorize("isAuthenticated() && @ContestValidator.checkCreator(authentication,#ctId)")
     @GetMapping("/{ctId}/role")
-    public ModelAndView getRole(@PathVariable("ctId") int ctId) {
+    public ModelAndView getRole(@PathVariable("ctId") int ctId, boolean updateSuccess) {
         ContestLayoutForm contestRoleForm = new ContestRoleForm();
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(ROLE_VIEW);
         modelAndView.addObject(ROLE_FORM, contestRoleForm);
         modelAndView.addObject(TAB, 9);
         modelAndView.addObject(CONTEST_ID, ctId);
+        List<UserDTO> lstUser = contestService.getListContestRole(ctId);
+        Integer currentUrId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        String currentUrName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
+        String currentUrHandle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        Integer currentReId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_ID);
+        String currentReName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);
+        modelAndView.addObject("lstUser", lstUser);
+        modelAndView.addObject("currentUrId", currentUrId);
+        modelAndView.addObject("currentUrName", currentUrName);
+        modelAndView.addObject("currentReId", currentReId);
+        modelAndView.addObject("currentUrHandle", currentUrHandle);
+        modelAndView.addObject("currentReName", currentReName);
+        if (updateSuccess) {
+            modelAndView.addObject(UPDATE_SUCCESS, true);
+        }
         return modelAndView;
     }
 
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkCreator(authentication,#ctId)")
+    @GetMapping("/{ctId}/addRole")
+    public ModelAndView getAddRole(@PathVariable("ctId") Integer ctId, ContestAddRoleForm contestAddRoleForm,
+                                   boolean updateSuccess) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (null == contestAddRoleForm || null == contestAddRoleForm.getId()) {
+            contestAddRoleForm = new ContestAddRoleForm();
+        }
+        modelAndView.setViewName(ADD_ROLE_VIEW);
+        modelAndView.addObject("ctId", ctId);
+        modelAndView.addObject("contestAddRoleForm", contestAddRoleForm);
+        if (updateSuccess) {
+            modelAndView.addObject(UPDATE_SUCCESS, true);
+        }
+        return modelAndView;
+    }
 
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkCreator(authentication,#ctId)")
+    @PostMapping("/{ctId}/findForRole")
+    public ModelAndView findForAddRole(@PathVariable("ctId") Integer ctId, ContestAddRoleForm contestAddRoleForm) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ADD_ROLE_VIEW);
+        List<UserDTO> lstUser = contestService.findUserForContestRole(contestAddRoleForm.getFullname(), Integer.parseInt(contestAddRoleForm.getReId()), ctId);
+        modelAndView.addObject("lstUser", lstUser);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkCreator(authentication,#ctId)")
+    @PostMapping("/{ctId}/addRole")
+    public ModelAndView addRole(@PathVariable("ctId") Integer ctId, ContestAddRoleForm contestAddRoleForm) throws UserTryingToBeSmartException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ADD_ROLE_VIEW);
+        contestService.addRole(contestAddRoleForm.getLstUrId(), Integer.parseInt(contestAddRoleForm.getAuyId()), ctId);
+        return getAddRole(ctId, contestAddRoleForm, true);
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkCreator(authentication,#ctId)")
+    @GetMapping("/{ctId}/deleteRole/{urId}")
+    public ModelAndView deleteRole(@PathVariable("ctId") Integer ctId, @PathVariable("urId") Integer urId) throws UserTryingToBeSmartException {
+        Integer currentUrId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (currentUrId.equals(urId)) {
+            throw new UserTryingToBeSmartException();
+        }
+        contestService.deleteRole(ctId, urId);
+        return getRole(ctId, true);
+    }
 }
 

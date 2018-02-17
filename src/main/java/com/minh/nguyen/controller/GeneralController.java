@@ -4,22 +4,15 @@ import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.vo.StatusVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.NoHandlerFoundException;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * @author Mr.Minh
  * @since 01/01/2018
- * Purpose: controller for any url anyone can access
+ * Purpose: controller for urls which anyone can access
  */
 @Controller
 public class GeneralController {
