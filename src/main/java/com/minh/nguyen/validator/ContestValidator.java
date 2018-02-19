@@ -2,7 +2,6 @@ package com.minh.nguyen.validator;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
-import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.entity.ContestEntity;
 import com.minh.nguyen.entity.SubmissionEntity;
 import com.minh.nguyen.exception.InputCheckException;
@@ -12,22 +11,19 @@ import com.minh.nguyen.form.contest.ContestSubmitForm;
 import com.minh.nguyen.mapper.AuthorityMapper;
 import com.minh.nguyen.mapper.ContestMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
-import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -61,7 +57,7 @@ public class ContestValidator extends BaseValidator {
 
     public boolean canViewTest(Integer ctId){
         List<Integer> defaultAuth = (List<Integer>)  httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
-        if (defaultAuth.contains(Constants.AUTH_VIEW_ALL_SUBMISSION)){
+        if (defaultAuth.contains(Constants.AUTH_VIEW_ALL_SUBMISSION_ID)) {
             return true;
         }
         ContestEntity contestEntity = getContestById(ctId);
@@ -86,7 +82,7 @@ public class ContestValidator extends BaseValidator {
         boolean flag = false;
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, handle);
         for (AuthorityDTO curAuth : lstAuthority) {
-            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST)) {
+            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST_ID)) {
                 flag = true;
             }
         }
@@ -148,7 +144,7 @@ public class ContestValidator extends BaseValidator {
         Date startTime = contestEntity.getStartTime();
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, authentication.getName());
         for (AuthorityDTO curAuth : lstAuthority) {
-            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST)) {
+            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST_ID)) {
                 return false;
             }
         }
@@ -180,7 +176,7 @@ public class ContestValidator extends BaseValidator {
         Date endTime = DateUtils.addMinutes(startTime, contestEntity.getDuration());
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, auth.getName());
         for (AuthorityDTO curAuth : lstAuthority) {
-            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST)) {
+            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST_ID)) {
                 //if so then check conditions mentioned above
                 if (currentTime.compareTo(startTime) >= 0
                         && currentTime.compareTo(endTime) <= 0){

@@ -13,7 +13,7 @@
         <mapper resource="sqlmapper/UserMapper.xml"/>
         <mapper resource="sqlmapper/AuthorityMapper.xml"/>
         <mapper resource="sqlmapper/ContestMapper.xml"/>
-        <!--<package name="sqlmapper"/>-->
+        <mapper resource="sqlmapper/AnnouncementMapper.xml"/>
     </mappers>
 
 </configuration>

@@ -81,6 +81,7 @@ public class ProblemService extends BaseService {
         }
     }
 
+    @Transactional
     public void tryJudge(Integer pmId, ProblemSubmitForm problemSubmitForm) {
         //init problem and language information
         LanguageEntity languageEntity = new LanguageEntity();
@@ -162,7 +163,7 @@ public class ProblemService extends BaseService {
         UrPmAuyEntity urPmAuyEntity = new UrPmAuyEntity();
         urPmAuyEntity.setPmId(problemEntity.getId());
         urPmAuyEntity.setUrId(userEntity.getId());
-        urPmAuyEntity.setAuyId(Constants.AUTH_VIEW_PROBLEM);
+        urPmAuyEntity.setAuyId(Constants.AUTH_VIEW_PROBLEM_ID);
         setCreateInfo(urPmAuyEntity);
         setUpdateInfo(urPmAuyEntity);
         insertRecord = urPmAuyMapper.insert(urPmAuyEntity);
@@ -173,7 +174,7 @@ public class ProblemService extends BaseService {
         }
 
         //insert edit problem authority
-        urPmAuyEntity.setAuyId(Constants.AUTH_EDIT_PROBLEM);
+        urPmAuyEntity.setAuyId(Constants.AUTH_EDIT_PROBLEM_ID);
         insertRecord = urPmAuyMapper.insert(urPmAuyEntity);
         if (insertRecord != 1) {
             rollBack(Constants.MSG_SYSTEM_ERR);
@@ -315,6 +316,7 @@ public class ProblemService extends BaseService {
         modelMapper.map(inputEntity, problemUpdateTestForm);
     }
 
+    @Transactional
     public void updateTest(ProblemUpdateTestForm problemUpdateTestForm) {
         InputEntity inputEntity = new InputEntity();
         modelMapper.map(problemUpdateTestForm, inputEntity);
@@ -343,6 +345,7 @@ public class ProblemService extends BaseService {
      * 1 = CAN_VIEW_PROBLEM
      * 2 = CAN_VIEW_PROBLEM + CAN_EDIT_PROBLEM
      */
+    @Transactional
     public void addRole(String[] urId, Integer auyId, Integer pmId) throws UserTryingToBeSmartException {
         UrPmAuyEntity urPmAuyEntity = new UrPmAuyEntity();
         setCreateInfo(urPmAuyEntity);
@@ -353,7 +356,7 @@ public class ProblemService extends BaseService {
         }
 
         //if auyId == 1 or 2
-        urPmAuyEntity.setAuyId(Constants.AUTH_VIEW_PROBLEM);
+        urPmAuyEntity.setAuyId(Constants.AUTH_VIEW_PROBLEM_ID);
         for (String id : urId) {
             urPmAuyEntity.setUrId(Integer.parseInt(id));
             urPmAuyMapper.insert(urPmAuyEntity);
@@ -361,7 +364,7 @@ public class ProblemService extends BaseService {
 
         //else
         if (auyId == 2) {
-            urPmAuyEntity.setAuyId(Constants.AUTH_EDIT_PROBLEM);
+            urPmAuyEntity.setAuyId(Constants.AUTH_EDIT_PROBLEM_ID);
             for (String id : urId) {
                 urPmAuyEntity.setUrId(Integer.parseInt(id));
                 urPmAuyMapper.insert(urPmAuyEntity);

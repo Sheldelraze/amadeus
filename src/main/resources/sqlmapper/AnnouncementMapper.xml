@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minh.nguyen.mapper.AnnouncementMapper">
+    <select id="getAnnouncementList" resultMap="resAnnounce">
+        SELECT
+            announcement.id,
+            announcement.pmId,
+            announcement.createTime,
+            problem.name,
+            announcement.question,
+            announcement.answer,
+            announcement.isFromCreator,
+            announcement.isHidden,
+            announcement.isAnswered
+        FROM ct_at
+            INNER JOIN announcement
+                ON ct_at.atId = announcement.id
+                   AND announcement.deleteFlg = '0'
+            LEFT JOIN problem
+                ON announcement.pmId = problem.id
+                   AND problem.deleteFlg = '0'
+        WHERE ct_at.ctId = #{ctId}
+    </select>
+    <resultMap id="resAnnounce" type="AnnouncementDTO">
+        <id column="id" property="id"/>
+        <result column="question" property="question"/>
+        <result column="answer" property="answer"/>
+        <result column="createTime" property="createTime"/>
+        <result column="isHidden" property="isHidden"/>
+        <result column="isFromCreator" property="isFromCreator"/>
+        <result column="isAnswered" property="isAnswered"/>
+        <association property="problem" javaType="ProblemDTO">
+            <id column="pmId" property="id"/>
+            <result column="name" property="name"/>
+        </association>
+    </resultMap>
+</mapper>

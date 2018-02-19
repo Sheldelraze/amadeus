@@ -1,37 +1,25 @@
-package com.minh.nguyen.entity;
-
-import javax.persistence.*;
-import java.io.Serializable;
+package com.minh.nguyen.dto;
 
 /**
  * @author Mr.Minh
- * @since 31/12/2017
+ * @since 18/02/2018
  * Purpose:
  */
-@Table(name = "announcement")
-public class AnnouncementEntity extends BaseEntity implements Serializable {
-    static final long serialVersionUID = 424412L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class AnnouncementDTO extends BaseDTO {
     private Integer id;
 
-    @Column(name = "pmId")
-    private Integer pmId;
+    private ProblemDTO problem;
 
-    @Column(name="question")
     private String question;
 
-    @Column(name="answer")
     private String answer;
 
-    @Column(name="isHidden")
+    private String timePosted;
+
     private Integer isHidden;
 
-    @Column(name = "isAnswered")
     private Integer isAnswered;
 
-    @Column(name = "isFromCreator")
     private Integer isFromCreator;
 
     public Integer getIsFromCreator() {
@@ -42,8 +30,12 @@ public class AnnouncementEntity extends BaseEntity implements Serializable {
         this.isFromCreator = isFromCreator;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Integer getIsAnswered() {
+        return isAnswered;
+    }
+
+    public void setIsAnswered(Integer isAnswered) {
+        this.isAnswered = isAnswered;
     }
 
     public Integer getId() {
@@ -54,20 +46,20 @@ public class AnnouncementEntity extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public Integer getPmId() {
-        return pmId;
+    public ProblemDTO getProblem() {
+        return problem;
     }
 
-    public void setPmId(Integer pmId) {
-        this.pmId = pmId;
+    public void setProblem(ProblemDTO problem) {
+        this.problem = problem;
     }
 
-    public Integer getIsAnswered() {
-        return isAnswered;
+    public String getTimePosted() {
+        return timePosted;
     }
 
-    public void setIsAnswered(Integer isAnswered) {
-        this.isAnswered = isAnswered;
+    public void setTimePosted(String timePosted) {
+        this.timePosted = timePosted;
     }
 
     public String getQuestion() {

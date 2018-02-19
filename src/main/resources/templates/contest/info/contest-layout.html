@@ -70,14 +70,16 @@
                             </div>
                         </div>
                         <div class="card-body" style="margin-top: -10px">
-                            <h4 class="card-text" style="text-align: center" th:text="${timerMessage}">Kỳ thi không tồn tại hehe</h4>
+                            <h4 class="card-text" style="text-align: center" th:text="${timerMessage}">Kỳ thi không tồn
+                                tại hehe</h4>
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" id="progress-bar"
                                      th:classappend="${doUpdate == 1} ? 'bg-info progress-bar-striped active' : 'bg-success'"
                                      aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
                                      style="width: 0%; height: 20px;"><span class="sr-only">0% Complete</span></div>
                             </div>
-                            <div style="color:  #4169E1; text-align: center; font-size: larger"><span id="time">05:00</span>
+                            <div style="color:  #4169E1; text-align: center; font-size: larger"><span
+                                    id="time">05:00</span>
                             </div>
                         </div>
                     </div>
@@ -128,8 +130,12 @@
                                 <li class="nav-item"><a
                                         th:href="${tab==7}?'#':@{|/contest/${ctId}/announcement|}"
                                         th:classappend="${tab==7}?'active'"
-                                        class="nav-link">Thông báo <b
-                                        style="color: red">(2)</b></a></li>
+                                        class="nav-link">Thông báo
+                                    <th:block th:if="${atCnt != null}">
+                                        <b style="color: red" th:text="|(${atCnt})|"></b>
+                                    </th:block>
+                                </a>
+                                </li>
                                 <li class="nav-item"><a
                                         th:href="${tab==8}?'#':@{|/contest/${ctId}/setting|}"
                                         th:classappend="${tab==8}?'active'"
@@ -183,14 +189,15 @@
         /*<![CDATA[*/
         var deadline = /*[[${endTime}]]*/ 'Feb 13 2018 15:46:58';
         var startTime = /*[[${startTime}]]*/ 'Feb 13 2018 12:46:58';
+
         function updateOngoingClock() {
-            var t = getTimeRemaining(startTime,deadline);
+            var t = getTimeRemaining(startTime, deadline);
             var curTime = document.getElementById('time');
             var seconds = ('0' + t.seconds).slice(-2);
             var minutes = ('0' + t.minutes).slice(-2);
             var hours = ('0' + t.hours).slice(-2);
             curTime.innerText = "";
-            if (t.days > 0){
+            if (t.days > 0) {
                 curTime.innerText += t.days + " ngày ";
             }
             curTime.innerText += " " + hours + ":" + minutes + ":" + seconds;
@@ -200,15 +207,16 @@
                 alert('Cuộc thi đã kết thúc, vui lòng reload lại trang!');
             }
         }
+
         function updateIncomingContestClock() {
             var now = new Date();
-            var t = getTimeRemaining(now,startTime);
+            var t = getTimeRemaining(now, startTime);
             var curTime = document.getElementById('time');
             var seconds = ('0' + t.seconds).slice(-2);
             var minutes = ('0' + t.minutes).slice(-2);
             var hours = ('0' + t.hours).slice(-2);
             curTime.innerText = "";
-            if (t.days > 0){
+            if (t.days > 0) {
                 curTime.innerText += t.days + " ngày ";
             }
             curTime.innerText += " " + hours + ":" + minutes + ":" + seconds;
@@ -218,19 +226,20 @@
                 alert('Cuộc thi đã bắt đầu, vui lòng reload lại trang!');
             }
         }
+
         var doUpdate = /*[[${doUpdate}]]*/ 1;
         if (doUpdate == 1) {
             updateOngoingClock(); // run function once at first to avoid delay
             var timeinterval = setInterval(updateOngoingClock, 1000);
-        }else{
+        } else {
             var start = Date.parse(startTime);
             var now = Date.parse(new Date());
             var end = Date.parse(deadline);
-            if (now < start){
+            if (now < start) {
                 updateIncomingContestClock();
                 var doCountdown = setInterval(updateIncomingContestClock, 1000);
                 document.getElementById("progress-bar").style.width = "0%";
-            }else if (now > end){
+            } else if (now > end) {
                 var curTime = document.getElementById('time');
                 curTime.innerText = "00:00:00";
                 curTime.style.color = "#20B2AA";

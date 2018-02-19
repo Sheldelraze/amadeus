@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
@@ -44,7 +45,13 @@ public class ContestService extends BaseService {
     private UrCtAuyMapper urCtAuyMapper;
 
     @Autowired
+    private AnnouncementMapper announcementMapper;
+
+    @Autowired
     private CtPmMapper ctPmMapper;
+
+    @Autowired
+    private CtAtMapper ctAtMapper;
 
     @Autowired
     private ProblemService problemService;
@@ -67,6 +74,7 @@ public class ContestService extends BaseService {
     @Autowired
     private HttpSession httpSession;
 
+    @Transactional
     public int createContest(ContestDTO contestDTO) {
         ContestEntity contestEntity = new ContestEntity();
         StringBuilder stringBuilder = new StringBuilder();
@@ -99,7 +107,7 @@ public class ContestService extends BaseService {
             UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
             urCtAuyEntity.setUrId(userEntity.getId());
             urCtAuyEntity.setCtId(contestEntity.getId());
-            urCtAuyEntity.setAuyId(Constants.AUTH_VIEW_CONTEST);
+            urCtAuyEntity.setAuyId(Constants.AUTH_VIEW_CONTEST_ID);
             setCreateInfo(urCtAuyEntity);
             setUpdateInfo(urCtAuyEntity);
             insertRecord = urCtAuyMapper.insert(urCtAuyEntity);
@@ -110,7 +118,7 @@ public class ContestService extends BaseService {
             }
 
             //insert edit contest authority
-            urCtAuyEntity.setAuyId(Constants.AUTH_EDIT_CONTEST);
+            urCtAuyEntity.setAuyId(Constants.AUTH_EDIT_CONTEST_ID);
             insertRecord = urCtAuyMapper.insert(urCtAuyEntity);
             if (insertRecord != 1) {
                 rollBack(Constants.MSG_SYSTEM_ERR);
@@ -196,7 +204,7 @@ public class ContestService extends BaseService {
         return lstProblem;
     }
     public List<ProblemDTO> getProblemToAdd(int ctId) {
-        List<ProblemDTO> lst = problemMapper.getProblemForContest(Constants.AUTH_VIEW_PROBLEM,ctId);
+        List<ProblemDTO> lst = problemMapper.getProblemForContest(Constants.AUTH_VIEW_PROBLEM_ID, ctId);
         for (ProblemDTO problemDTO : lst) {
             StringBuilder stringBuilder = new StringBuilder();
             List<TagDTO> lstTag = problemDTO.getLstTag();
@@ -218,7 +226,7 @@ public class ContestService extends BaseService {
     public List<UserDTO> getLeaderboardInfor(Integer ctId) {
 
         //1 user -> many problems
-        List<UserDTO> lstUser = userMapper.getLeaderboardInfor(ctId, Constants.AUTH_PARTICIPATE_CONTEST);
+        List<UserDTO> lstUser = userMapper.getLeaderboardInfor(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID);
         for (UserDTO user : lstUser) {
             int score = 0;
             int penalty = 0;
@@ -259,9 +267,11 @@ public class ContestService extends BaseService {
                                     }
                                 }
                             } else {
-                                //if not AC-ed
+                                //if not AC-ed then add penalty
                                 time += Constants.SUBMISSION_FAIL_PENALTY;
                             }
+
+                            //add submission count up to the first AC-ed one
                             submitCnt++;
                         }
                     }
@@ -284,6 +294,8 @@ public class ContestService extends BaseService {
         Collections.sort(lstUser,new ScoreboardComparator());
         return lstUser;
     }
+
+    //first we sort desc by score, then we sort asc by time penalty
     class ScoreboardComparator implements Comparator<UserDTO> {
 
         @Override
@@ -303,6 +315,7 @@ public class ContestService extends BaseService {
         ctPmMapper.updateByPKExceptNullFields(ctPmEntity);
     }
 
+    @Transactional
     public void addProblemToContest(Integer ctId, String[] lstPmId) throws Exception {
         try {
             for (String pmId : lstPmId) {
@@ -373,6 +386,46 @@ public class ContestService extends BaseService {
         }
     }
 
+    @Transactional
+    public void addQuestion(Integer ctId, Integer pmId, String question) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setPmId(pmId);
+        announcementEntity.setQuestion(question);
+        announcementEntity.setIsAnswered(0);
+        announcementEntity.setIsHidden(0);
+        announcementEntity.setIsFromCreator(0);
+        setUpdateInfo(announcementEntity);
+        setCreateInfo(announcementEntity);
+        announcementMapper.insertAnnouncement(announcementEntity);
+
+        CtAtEntity ctAtEntity = new CtAtEntity();
+        ctAtEntity.setCtId(ctId);
+        ctAtEntity.setAtId(announcementEntity.getId());
+        setCreateInfo(ctAtEntity);
+        setUpdateInfo(ctAtEntity);
+        ctAtMapper.insert(ctAtEntity);
+    }
+
+    @Transactional
+    public void addAnnouncement(Integer ctId, Integer pmId, String answer) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setPmId(pmId);
+        announcementEntity.setAnswer(answer);
+        announcementEntity.setIsAnswered(1);
+        announcementEntity.setIsHidden(0);
+        announcementEntity.setIsFromCreator(1);
+        setUpdateInfo(announcementEntity);
+        setCreateInfo(announcementEntity);
+        announcementMapper.insertAnnouncement(announcementEntity);
+
+        CtAtEntity ctAtEntity = new CtAtEntity();
+        ctAtEntity.setCtId(ctId);
+        ctAtEntity.setAtId(announcementEntity.getId());
+        setCreateInfo(ctAtEntity);
+        setUpdateInfo(ctAtEntity);
+        ctAtMapper.insert(ctAtEntity);
+    }
+
     public List<SubmissionDTO> getSubmissionInContest(Integer ctId, boolean getAll) {
         List<SubmissionDTO> lst = null;
         if (getAll) {
@@ -390,6 +443,7 @@ public class ContestService extends BaseService {
     }
 
     //execute submission in contest
+    @Transactional
     public void doSubmit(String sourceCode, Integer ctId, Integer leId, Integer pmId) {
         LanguageEntity languageEntity = new LanguageEntity();
         languageEntity.setId(leId);
@@ -456,14 +510,14 @@ public class ContestService extends BaseService {
         }
         //if auyId == 1 or 2
         if (auyId == 1 || auyId == 2) {
-            urCtAuyEntity.setAuyId(Constants.AUTH_VIEW_CONTEST);
+            urCtAuyEntity.setAuyId(Constants.AUTH_VIEW_CONTEST_ID);
             for (String id : urId) {
                 urCtAuyEntity.setUrId(Integer.parseInt(id));
                 urCtAuyMapper.insert(urCtAuyEntity);
             }
         }
         if (auyId == 2) {
-            urCtAuyEntity.setAuyId(Constants.AUTH_EDIT_CONTEST);
+            urCtAuyEntity.setAuyId(Constants.AUTH_EDIT_CONTEST_ID);
             for (String id : urId) {
                 urCtAuyEntity.setUrId(Integer.parseInt(id));
                 urCtAuyMapper.insert(urCtAuyEntity);
@@ -471,7 +525,7 @@ public class ContestService extends BaseService {
         }
 
         if (auyId == 3) {
-            urCtAuyEntity.setAuyId(Constants.AUTH_PARTICIPATE_CONTEST);
+            urCtAuyEntity.setAuyId(Constants.AUTH_PARTICIPATE_CONTEST_ID);
             for (String id : urId) {
                 urCtAuyEntity.setUrId(Integer.parseInt(id));
                 urCtAuyMapper.insert(urCtAuyEntity);
@@ -479,10 +533,37 @@ public class ContestService extends BaseService {
         }
     }
 
+    public List<AnnouncementDTO> getAnnouncementList(Integer ctId) {
+        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementList(ctId);
+        for (AnnouncementDTO announce : lstAnnounce) {
+            if (announce.getProblem().getId().equals(0)) {
+                announce.getProblem().setName("Thông báo chung");
+            }
+            SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            announce.setTimePosted(sdfr.format(announce.getCreateTime()));
+        }
+        return lstAnnounce;
+    }
     public void deleteRole(Integer ctId, Integer urId) {
         UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
         urCtAuyEntity.setCtId(ctId);
         urCtAuyEntity.setUrId(urId);
         urCtAuyMapper.deleteForRealWithExample(urCtAuyEntity);
+    }
+
+    public void changeAnnounceHiddenState(Integer atId, Integer newState) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setId(atId);
+        announcementEntity.setIsHidden(newState);
+        int recordCnt = announcementMapper.updateByPKExceptNullFields(announcementEntity);
+        if (recordCnt == 0) {
+            rollBack(Constants.MSG_UPDATE_ERR);
+        }
+    }
+
+    public Integer getAnnouncementCount(Integer ctId) {
+        CtAtEntity ctAtEntity = new CtAtEntity();
+        ctAtEntity.setCtId(ctId);
+        return ctAtMapper.countWithExample(ctAtEntity);
     }
 }

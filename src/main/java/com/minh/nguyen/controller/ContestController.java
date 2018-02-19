@@ -2,16 +2,14 @@ package com.minh.nguyen.controller;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
-import com.minh.nguyen.dto.ContestDTO;
-import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.dto.SubmissionDTO;
-import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.dto.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.util.StringUtil;
+import com.minh.nguyen.validator.ContestValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
@@ -21,6 +19,8 @@ import com.minh.nguyen.vo.contest.ContestSubmitVO;
 import com.minh.nguyen.vo.problem.ProblemPreviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,11 +51,11 @@ public class ContestController extends BaseController {
     private static final String LEADERBOARD_VIEW = "contest/info/contest-leaderboard";
     private static final String SETTING_VIEW = "contest/info/contest-setting";
     private static final String SUBMISSION_VIEW = "submission/submission";
-    private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announce";
+    private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announcement";
     private static final String ADD_ROLE_VIEW = "contest/other/contest-add-role";
     private static final String ROLE_VIEW = "contest/info/contest-role";
     private static final String SUBMIT_FORM = "contestSubmitForm";
-    private static final String SUBMIT_VO= "contestSubmitVO";
+    private static final String SUBMIT_VO = "contestSubmitVO";
     private static final String CREATE_FORM = "contestCreateForm";
     private static final String SUBMISSION_MY_FORM = "contestSubmissionMyForm";
     private static final String SUBMISSION_ALL_FORM = "contestSubmissionAllForm";
@@ -66,6 +66,7 @@ public class ContestController extends BaseController {
     private static final String TAB = "tab";
     private static final String CONTEST_ID = "ctId";
     private static final String UPDATE_SUCCESS = "updateSuccess";
+    private static final String AUTHORITY = "contestAuth";
 
     @Autowired
     private ContestService contestService;
@@ -79,17 +80,41 @@ public class ContestController extends BaseController {
     @Autowired
     private HttpSession httpSession;
 
-    private ModelAndView createGeneralModel(int ctId){
+    @Autowired
+    private ContestValidator contestValidator;
+
+    private ModelAndView createGeneralModel(int ctId) {
+
+        //add common information
         ModelAndView modelAndView = new ModelAndView();
         ContestDTO contestDTO = contestService.getContestTime(ctId);
-        modelAndView.addObject("startTime",contestDTO.getStartTime());
-        modelAndView.addObject("endTime",contestDTO.getEndTime());
-        modelAndView.addObject("doUpdate",contestDTO.getDoUpdateCountDown());
-        modelAndView.addObject("timerMessage",contestDTO.getTimerMessage());
-        modelAndView.addObject("contestName",contestDTO.getName());
+        modelAndView.addObject("startTime", contestDTO.getStartTime());
+        modelAndView.addObject("endTime", contestDTO.getEndTime());
+        modelAndView.addObject("doUpdate", contestDTO.getDoUpdateCountDown());
+        modelAndView.addObject("timerMessage", contestDTO.getTimerMessage());
+        modelAndView.addObject("contestName", contestDTO.getName());
+
+        //add authority of current user (CAN_VIEW and CAN_PARTICIPATE only)
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            if (contestValidator.checkPermission(auth, ctId, Constants.AUTH_EDIT_CONTEST_TEXT)) {
+                modelAndView.addObject(AUTHORITY, Constants.AUTH_EDIT_CONTEST_TEXT);
+            } else if (contestValidator.checkPermission(auth, ctId, Constants.AUTH_PARTICIPATE_CONTEST_TEXT)) {
+                modelAndView.addObject(AUTHORITY, Constants.AUTH_PARTICIPATE_CONTEST_TEXT);
+            } else {
+                modelAndView.addObject(AUTHORITY, "No special authority");
+            }
+        }
+
+        //add announcement count if any
+        Integer atCnt = contestService.getAnnouncementCount(ctId);
+        if (atCnt > 0) {
+            modelAndView.addObject("atCnt", atCnt);
+        }
         return modelAndView;
     }
-    @PreAuthorize("hasAuthority('CAN_CREATE_CONTEST')")
+
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_CONTEST_TEXT + "')")
     @GetMapping("/create")
     public ModelAndView createContest(ContestCreateForm contestCreateForm) {
         ModelAndView modelAndView = new ModelAndView();
@@ -101,11 +126,11 @@ public class ContestController extends BaseController {
         return modelAndView;
     }
 
-    @PreAuthorize("hasAuthority('CAN_CREATE_CONTEST')")
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_CONTEST_TEXT + "')")
     @PostMapping("/doCreate")
     public ModelAndView doCreate(ContestCreateForm contestCreateForm, BindingResult bindingResult) {
-        validate(contestCreateForm,bindingResult);
-        if (bindingResult.hasErrors()){
+        validate(contestCreateForm, bindingResult);
+        if (bindingResult.hasErrors()) {
             return createContest(contestCreateForm);
         }
         try {
@@ -122,74 +147,75 @@ public class ContestController extends BaseController {
 
     @CheckNotNullFirst
     @PreAuthorize("@ContestValidator.checkPublic(#ctId) " +
-                 "|| (hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST'))")
-    @GetMapping({"/{ctId}/information","/{ctId}/","/{ctId}"})
+            "|| (hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') " +
+            "|| @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "'))")
+    @GetMapping({"/{ctId}/information", "/{ctId}/", "/{ctId}"})
     public ModelAndView getInformation(@PathVariable("ctId") int ctId) {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(INFORMATION_VIEW);
         ContestInformationVO contestInformationVO = contestService.getInformation(ctId);
-        modelAndView.addObject("contestInformationVO",contestInformationVO);
+        modelAndView.addObject("contestInformationVO", contestInformationVO);
         modelAndView.addObject(TAB, 1);
         modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'CAN_EDIT_CONTEST')")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
     @GetMapping("/{ctId}/addProblem")
-    public ModelAndView initAddProblem(@PathVariable("ctId") int ctId,ContestAddProblemForm contestAddProblemForm,
+    public ModelAndView initAddProblem(@PathVariable("ctId") int ctId, ContestAddProblemForm contestAddProblemForm,
                                        Boolean updateSuccess) {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(ADD_PROBLEM_VIEW);
-        if (null == contestAddProblemForm){
+        if (null == contestAddProblemForm) {
             contestAddProblemForm = new ContestAddProblemForm();
         }
         List<ProblemDTO> lstProblemDTO = contestService.getProblemToAdd(ctId);
         contestAddProblemForm.setLstProblemDTO(lstProblemDTO);
-        modelAndView.addObject("updateSuccess",updateSuccess);
-        modelAndView.addObject("ctId",ctId);
-        modelAndView.addObject("contestAddProblemForm",contestAddProblemForm);
+        modelAndView.addObject("updateSuccess", updateSuccess);
+        modelAndView.addObject("ctId", ctId);
+        modelAndView.addObject("contestAddProblemForm", contestAddProblemForm);
         return modelAndView;
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'CAN_EDIT_CONTEST')")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
     @PostMapping("/{ctId}/addProblem")
     public ModelAndView doAddProblem(@PathVariable("ctId") int ctId,
                                      ContestAddProblemForm contestAddProblemForm,
-                                     BindingResult bindingResult){
-        try{
-            contestService.addProblemToContest(ctId,contestAddProblemForm.getLstPmId());
-        }catch (Exception e){
+                                     BindingResult bindingResult) {
+        try {
+            contestService.addProblemToContest(ctId, contestAddProblemForm.getLstPmId());
+        } catch (Exception e) {
             e.printStackTrace();
-            addLogicError(bindingResult,Constants.MSG_SYSTEM_ERR);
+            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR);
         }
-        if (bindingResult.hasErrors()){
-            return initAddProblem(ctId,contestAddProblemForm,false);
+        if (bindingResult.hasErrors()) {
+            return initAddProblem(ctId, contestAddProblemForm, false);
         }
-        return initAddProblem(ctId,contestAddProblemForm,true);
+        return initAddProblem(ctId, contestAddProblemForm, true);
     }
 
     @CheckNotNullFirst
     @CheckNotNullThird
-    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'CAN_EDIT_CONTEST')")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
     @GetMapping("/{ctId}/showProblem/{pmId}")
-    public ModelAndView showProblem(@PathVariable("ctId") int ctId,@PathVariable("pmId") int pmId) {
-        contestService.setProblemHiddenStatus(ctId,pmId,Constants.STATUS_SHOW);
+    public ModelAndView showProblem(@PathVariable("ctId") int ctId, @PathVariable("pmId") int pmId) {
+        contestService.setProblemHiddenStatus(ctId, pmId, Constants.STATUS_SHOW);
         return getProblem(ctId);
     }
 
     @CheckNotNullFirst
     @CheckNotNullThird
-    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'CAN_EDIT_CONTEST')")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
     @GetMapping("/{ctId}/hideProblem/{pmId}")
-    public ModelAndView hideProblem(@PathVariable("ctId") int ctId,@PathVariable("pmId") int pmId) {
-        contestService.setProblemHiddenStatus(ctId,pmId,Constants.STATUS_HIDDEN);
+    public ModelAndView hideProblem(@PathVariable("ctId") int ctId, @PathVariable("pmId") int pmId) {
+        contestService.setProblemHiddenStatus(ctId, pmId, Constants.STATUS_HIDDEN);
         return getProblem(ctId);
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
             "|| @ContestValidator.checkParticipate(authentication,#ctId) " +
             "|| @ContestValidator.checkOutsiderPermission(authentication,#ctId)")
     @GetMapping("/{ctId}/problem")
@@ -206,11 +232,11 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
             "|| @ContestValidator.checkParticipate(authentication,#ctId) " +
             "|| @ContestValidator.checkOutsiderPermission(authentication,#ctId)")
     @GetMapping("/{ctId}/problem/{pmId}/view")
-    public ModelAndView viewProblem(@PathVariable("ctId") int ctId,@PathVariable("pmId") int pmId) {
+    public ModelAndView viewProblem(@PathVariable("ctId") int ctId, @PathVariable("pmId") int pmId) {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(PROBLEM_VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
@@ -218,7 +244,7 @@ public class ContestController extends BaseController {
         problemService.getProblemInfo(problemDTO);
         problemService.getShowInStatementTest(problemDTO);
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
-        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())){
+        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())) {
             problemPreviewVO.setNote(null);
         }
         modelMapper.map(problemDTO, problemPreviewVO);
@@ -229,17 +255,17 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
             "|| @ContestValidator.checkParticipate(authentication,#ctId)")
     @GetMapping("/{ctId}/submit")
-    public ModelAndView getSubmit(@PathVariable("ctId") int ctId,ContestSubmitForm contestSubmitForm) {
+    public ModelAndView getSubmit(@PathVariable("ctId") int ctId, ContestSubmitForm contestSubmitForm) {
         ModelAndView modelAndView = createGeneralModel(ctId);
         ContestSubmitVO contestSubmitVO = new ContestSubmitVO();
         contestSubmitVO.setLstLanguage(problemService.getAllLanguage());
         contestSubmitVO.setLstProblem(contestService.getProblemToSubmit(ctId));
-        if(contestSubmitForm.getId() != null){
+        if (contestSubmitForm.getId() != null) {
             contestSubmitVO.setSourceCode(contestSubmitForm.getSourceCode());
-        }else{
+        } else {
             contestSubmitForm = new ContestSubmitForm();
         }
         modelAndView.setViewName(SUBMIT_VIEW);
@@ -253,15 +279,15 @@ public class ContestController extends BaseController {
     @CheckNotNullFirst
     @PreAuthorize("isAuthenticated() && @ContestValidator.checkParticipate(authentication,#ctId)")
     @PostMapping("/{ctId}/submit")
-    public ModelAndView doSubmit(@PathVariable("ctId") int ctId,ContestSubmitForm contestSubmitForm,BindingResult bindingResult) {
+    public ModelAndView doSubmit(@PathVariable("ctId") int ctId, ContestSubmitForm contestSubmitForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         contestSubmitForm.setScreenName("submitForm");
-        validate(contestSubmitForm,bindingResult);
-        if(bindingResult.hasErrors()){
+        validate(contestSubmitForm, bindingResult);
+        if (bindingResult.hasErrors()) {
             contestSubmitForm.setId(ctId);
-            return getSubmit(ctId,contestSubmitForm);
+            return getSubmit(ctId, contestSubmitForm);
         }
-        contestService.doSubmit(contestSubmitForm.getSourceCode(),ctId,
+        contestService.doSubmit(contestSubmitForm.getSourceCode(), ctId,
                 contestSubmitForm.getLeId(),
                 contestSubmitForm.getPmId());
         modelAndView.setViewName("redirect:/contest/" + ctId + "/my");
@@ -276,7 +302,7 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SUBMISSION_MY_VIEW);
         modelAndView.addObject(SUBMISSION_MY_FORM, contestSubmissionMyForm);
-        List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId,false);
+        List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId, false);
         modelAndView.addObject(TAB, 4);
         modelAndView.addObject(CONTEST_ID, ctId);
         modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
@@ -284,7 +310,7 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
             "|| (@ContestValidator.checkParticipate(authentication,#ctId) && @ContestValidator.canViewStatus(#ctId))")
     @GetMapping("/{ctId}/all")
     public ModelAndView getAll(@PathVariable("ctId") int ctId) {
@@ -292,7 +318,7 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SUBMISSION_ALL_VIEW);
         modelAndView.addObject(SUBMISSION_ALL_FORM, contestSubmissionAllForm);
-        List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId,true);
+        List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId, true);
         modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
         modelAndView.addObject(TAB, 5);
         modelAndView.addObject(CONTEST_ID, ctId);
@@ -300,7 +326,7 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
             "|| (@ContestValidator.checkParticipate(authentication,#ctId) && @ContestValidator.canViewStatus(#ctId)) " +
             "|| @ContestValidator.checkOutsiderPermission(authentication,#ctId)")
     @GetMapping("/{ctId}/leaderboard")
@@ -309,8 +335,8 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = createGeneralModel(ctId);
         List<UserDTO> lstUser = contestService.getLeaderboardInfor(ctId);
         List<ProblemDTO> lstProblem = contestService.getProblemForLeaderboard(ctId);
-        modelAndView.addObject("lstUser",lstUser);
-        modelAndView.addObject("lstProb",lstProblem);
+        modelAndView.addObject("lstUser", lstUser);
+        modelAndView.addObject("lstProb", lstProblem);
         modelAndView.setViewName(LEADERBOARD_VIEW);
         modelAndView.addObject(LEADERBOARD_FORM, contestLeaderboardForm);
         modelAndView.addObject(TAB, 6);
@@ -319,75 +345,105 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
             "|| @ContestValidator.checkParticipate(authentication,#ctId) " +
             "|| @ContestValidator.checkOutsiderPermission(authentication,#ctId)")
     @GetMapping("/{ctId}/announcement")
-    public ModelAndView getAnnouncement(@PathVariable("ctId") int ctId) {
-        ContestLayoutForm contestSettingForm = new ContestSettingForm();
+    public ModelAndView getAnnouncement(@PathVariable("ctId") int ctId, ContestAnnouncementForm contestAnnouncementForm, boolean updateSuccess) {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(ANNOUNCEMENT_VIEW);
-
+        List<ProblemDTO> lstProblem = contestService.getProblemToSubmit(ctId);
+        if (null == contestAnnouncementForm) {
+            contestAnnouncementForm = new ContestAnnouncementForm();
+        }
+        List<AnnouncementDTO> lstAnnounce = contestService.getAnnouncementList(ctId);
+        modelAndView.addObject("contestAnnouncementForm", contestAnnouncementForm);
+        modelAndView.addObject("lstProblem", lstProblem);
+        modelAndView.addObject("lstAnnounce", lstAnnounce);
         modelAndView.addObject(TAB, 7);
         modelAndView.addObject(CONTEST_ID, ctId);
+        modelAndView.addObject("updateSuccess", updateSuccess);
         return modelAndView;
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('CAN_VIEW_ALL_CONTEST') || @ContestValidator.checkPermission(authentication,#ctId,'CAN_VIEW_CONTEST') " +
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkParticipate(authentication,#ctId)")
+    @PostMapping("/{ctId}/addQuestion")
+    public ModelAndView addQuestion(@PathVariable("ctId") int ctId, ContestAnnouncementForm contestAnnouncementForm, BindingResult bindingResult) {
+        validate(contestAnnouncementForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return getAnnouncement(ctId, contestAnnouncementForm, false);
+        }
+        contestService.addQuestion(ctId, Integer.parseInt(contestAnnouncementForm.getPmId()), contestAnnouncementForm.getQuestion());
+        return getAnnouncement(ctId, contestAnnouncementForm, true);
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
+    @PostMapping("/{ctId}/addAnnouncement")
+    public ModelAndView addAnnouncement(@PathVariable("ctId") int ctId, ContestAnnouncementForm contestAnnouncementForm, BindingResult bindingResult) {
+        validate(contestAnnouncementForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return getAnnouncement(ctId, contestAnnouncementForm, false);
+        }
+        contestService.addAnnouncement(ctId, Integer.parseInt(contestAnnouncementForm.getPmId()), contestAnnouncementForm.getAnswer());
+        return getAnnouncement(ctId, contestAnnouncementForm, true);
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
             "|| @ContestValidator.checkShowSubmitPolicy(#ctId,#snId)")
     @GetMapping("/{ctId}/submission/{snId}")
-    public ModelAndView getSubmission(@PathVariable("ctId") int ctId,@PathVariable("snId") int snId) {
+    public ModelAndView getSubmission(@PathVariable("ctId") int ctId, @PathVariable("snId") int snId) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMISSION_VIEW);
-        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId,ctId);
-        modelAndView.addObject("submitDetail",submissionDTO);
+        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId, ctId);
+        modelAndView.addObject("submitDetail", submissionDTO);
         modelAndView.addObject(TAB, 0);
         modelAndView.addObject(CONTEST_ID, ctId);
         return modelAndView;
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'CAN_EDIT_CONTEST') ")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "') ")
     @GetMapping("/{ctId}/setting")
-    public ModelAndView getSetting(@PathVariable("ctId") int ctId,ContestSettingForm contestSettingForm,boolean updateSuccess) {
+    public ModelAndView getSetting(@PathVariable("ctId") int ctId, ContestSettingForm contestSettingForm, boolean updateSuccess) {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SETTING_VIEW);
         ContestSettingVO contestSettingVO = new ContestSettingVO();
-        if (null == contestSettingForm.getId()){
+        if (null == contestSettingForm.getId()) {
             contestSettingForm = new ContestSettingForm();
             ContestDTO contestDTO = contestService.getContestInfo(ctId);
-            contestService.modelMapper.map(contestDTO,contestSettingVO);
+            contestService.modelMapper.map(contestDTO, contestSettingVO);
+        } else {
+            contestService.modelMapper.map(contestSettingForm, contestSettingVO);
         }
-        else{
-            contestService.modelMapper.map(contestSettingForm,contestSettingVO);
-        }
-        modelAndView.addObject("updateSuccess",updateSuccess);
+        modelAndView.addObject("updateSuccess", updateSuccess);
         modelAndView.addObject(SETTING_FORM, contestSettingForm);
         modelAndView.addObject(TAB, 8);
         modelAndView.addObject(CONTEST_ID, ctId);
-        modelAndView.addObject("contestSettingVO",contestSettingVO);
-        modelAndView.addObject("contestSettingForm",contestSettingForm);
+        modelAndView.addObject("contestSettingVO", contestSettingVO);
+        modelAndView.addObject("contestSettingForm", contestSettingForm);
         return modelAndView;
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'CAN_EDIT_CONTEST') ")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "') ")
     @PostMapping("/{ctId}/setting")
-    public ModelAndView updateSetting(@PathVariable("ctId") int ctId,ContestSettingForm contestSettingForm,BindingResult bindingResult){
-        validate(contestSettingForm,bindingResult);
-        if(bindingResult.hasErrors()){
+    public ModelAndView updateSetting(@PathVariable("ctId") int ctId, ContestSettingForm contestSettingForm, BindingResult bindingResult) {
+        validate(contestSettingForm, bindingResult);
+        if (bindingResult.hasErrors()) {
             contestSettingForm.setId(ctId);
-            return  getSetting(ctId,contestSettingForm,false);
+            return getSetting(ctId, contestSettingForm, false);
         }
-        try{
+        try {
             contestSettingForm.setId(ctId);
             contestService.updateContest(contestSettingForm);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
         }
-        return  getSetting(ctId,contestSettingForm,true);
+        return getSetting(ctId, contestSettingForm, true);
     }
 
     @CheckNotNullFirst
@@ -468,5 +524,15 @@ public class ContestController extends BaseController {
         contestService.deleteRole(ctId, urId);
         return getRole(ctId, true);
     }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
+    @GetMapping("/{ctId}/changeAnnounceState/{atId}/to/{newState}")
+    public ModelAndView changeAnnounceState(@PathVariable("ctId") Integer ctId, @PathVariable("atId") Integer atId, @PathVariable("newState") Integer newState) {
+        contestService.changeAnnounceHiddenState(atId, newState);
+        return getAnnouncement(ctId, null, true);
+    }
+
+
 }
 
