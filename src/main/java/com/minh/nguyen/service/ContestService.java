@@ -3,6 +3,7 @@ package com.minh.nguyen.service;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.*;
+import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.*;
@@ -12,6 +13,7 @@ import com.minh.nguyen.vo.contest.ContestInformationVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ import java.util.List;
  * Purpose:
  */
 @Service
+@Primary
 public class ContestService extends BaseService {
     @Autowired
     private ContestMapper contestMapper;
@@ -559,7 +562,7 @@ public class ContestService extends BaseService {
                 announce.getProblem().setName("Thông báo chung");
             }
             SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            announce.setTimePosted(sdfr.format(announce.getCreateTime()));
+            announce.setTimePosted(sdfr.format(announce.getUpdateTime()));
         }
         return lstAnnounce;
     }
@@ -574,6 +577,7 @@ public class ContestService extends BaseService {
         AnnouncementEntity announcementEntity = new AnnouncementEntity();
         announcementEntity.setId(atId);
         announcementEntity.setIsHidden(newState);
+        setUpdateInfo(announcementEntity);
         int recordCnt = announcementMapper.updateByPKExceptNullFields(announcementEntity);
         if (recordCnt == 0) {
             rollBack(Constants.MSG_UPDATE_ERR);
@@ -589,5 +593,24 @@ public class ContestService extends BaseService {
             }
         }
         return announcementMapper.countAnnouncementList(ctId, getAllAnnouncement);
+    }
+
+    public void answerQuestion(Integer atId, String answer) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setId(atId);
+        announcementEntity.setIsAnswered(1);
+        announcementEntity.setAnswer(answer);
+        setUpdateInfo(announcementEntity);
+        announcementMapper.updateByPKExceptNullFields(announcementEntity);
+    }
+
+    public String getQuestion(Integer atId) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setId(atId);
+        announcementEntity = announcementMapper.selectByPK(announcementEntity);
+        if (announcementEntity == null) {
+            throw new NoSuchPageException("Announcement not found!");
+        }
+        return announcementEntity.getQuestion();
     }
 }

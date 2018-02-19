@@ -11,7 +11,6 @@
         and announcement.deleteFlg = '0'
         <if test="!getAllAnnounce">
             AND announcement.isHidden = 0
-            AND announcement.isAnswered = 1
         </if>
         where ct_at.ctId = #{ctId}
         AND ct_at.deleteFlg = '0'
@@ -20,7 +19,7 @@
         SELECT
             announcement.id,
             announcement.pmId,
-            announcement.createTime,
+        announcement.updateTime,
             problem.name,
             announcement.question,
             announcement.answer,
@@ -37,14 +36,14 @@
         WHERE ct_at.ctId = #{ctId}
         <if test="!getAllAnnounce">
             AND announcement.isHidden = 0
-            AND announcement.isAnswered = 1
         </if>
+        ORDER BY updateTime DESC
     </select>
     <resultMap id="resAnnounce" type="AnnouncementDTO">
         <id column="id" property="id"/>
         <result column="question" property="question"/>
         <result column="answer" property="answer"/>
-        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
         <result column="isHidden" property="isHidden"/>
         <result column="isFromCreator" property="isFromCreator"/>
         <result column="isAnswered" property="isAnswered"/>

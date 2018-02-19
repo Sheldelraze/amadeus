@@ -3,11 +3,11 @@ package com.minh.nguyen.controller.common;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.BaseException;
 import com.minh.nguyen.util.CheckUtil;
-import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
-import org.aspectj.apache.bcel.classfile.Constant;
+import org.modelmapper.AbstractConverter;
 import org.modelmapper.Condition;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
@@ -18,9 +18,11 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -46,8 +48,6 @@ public class BaseController {
 
     protected ModelMapper modelMapper;
 
-    protected List<String> exclusiveUpdateField;
-
     public BaseController() {
     }
 
@@ -58,31 +58,50 @@ public class BaseController {
 
         //init modelmapper setting
         modelMapper = new ModelMapper();
-        exclusiveUpdateField = new ArrayList<>();
-        exclusiveUpdateField.add("createClass");
-        exclusiveUpdateField.add("createUser");
-        exclusiveUpdateField.add("createTime");
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);
+        Converter<String, Date> toStringDate = new AbstractConverter<String, Date>() {
+            @Override
+            protected Date convert(String source) {
+                DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                Date date = new Date();
+                try {
+                    date = formatter.parse(source);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return date;
+            }
+        };
+
+        modelMapper.addConverter(toStringDate);
+
         modelMapper.getConfiguration().setPropertyCondition(new Condition<Object, Object>() {
             public boolean applies(MappingContext<Object, Object> pContext) {
                 if (null == pContext.getSource() || null == pContext.getDestinationType()) {
                     return false;
                 }
 
-                if (String.class.equals(pContext.getSourceType())) {
-                    if (Constants.BLANK.equals(pContext.getSource().toString())) {
+                if (pContext.getSourceType().equals(String.class)) {
+                    if ("".equals(pContext.getSource().toString())) {
                         return false;
+                    }
+                    if (pContext.getDestinationType().equals(Date.class)) {
+                        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                        try {
+                            formatter.parse(pContext.getSource().toString());
+                            return true;
+                        } catch (ParseException e) {
+                            logger.error(e.toString());
+                            return false;
+                        }
                     }
                 }
                 if (pContext.getSourceType().equals(String.class)
-                        && (Integer.class.equals(pContext.getDestinationType())
-                        || int.class.equals(pContext.getDestinationType()))) {
-                    if (CheckUtil.isInteger(pContext.getSource().toString())) {
-                        return true;
-                    }
-                    return false;
+                        && (pContext.getDestinationType().equals(Integer.class))
+                        || int.class.equals(pContext.getDestinationType())) {
+                    return CheckUtil.isInteger(pContext.getSource().toString());
                 }
                 return true;
             }

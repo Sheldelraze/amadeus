@@ -50,6 +50,7 @@ public class ContestController extends BaseController {
     private static final String SUBMISSION_ALL_VIEW = "contest/info/contest-submission-all";
     private static final String LEADERBOARD_VIEW = "contest/info/contest-leaderboard";
     private static final String SETTING_VIEW = "contest/info/contest-setting";
+    private static final String ANSWER_VIEW = "contest/other/contest-answer";
     private static final String SUBMISSION_VIEW = "submission/submission";
     private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announcement";
     private static final String ADD_ROLE_VIEW = "contest/other/contest-add-role";
@@ -444,9 +445,9 @@ public class ContestController extends BaseController {
         if (null == contestSettingForm.getId()) {
             contestSettingForm = new ContestSettingForm();
             ContestDTO contestDTO = contestService.getContestInfo(ctId);
-            contestService.modelMapper.map(contestDTO, contestSettingVO);
+            modelMapper.map(contestDTO, contestSettingVO);
         } else {
-            contestService.modelMapper.map(contestSettingForm, contestSettingVO);
+            modelMapper.map(contestSettingForm, contestSettingVO);
         }
         modelAndView.addObject("updateSuccess", updateSuccess);
         modelAndView.addObject(SETTING_FORM, contestSettingForm);
@@ -563,6 +564,33 @@ public class ContestController extends BaseController {
         return getAnnouncement(ctId, null, true);
     }
 
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
+    @GetMapping("/{ctId}/answer/{atId}")
+    public ModelAndView getQuestion(@PathVariable("ctId") Integer ctId, @PathVariable("atId") Integer atId, ContestAnswerForm contestAnswerForm, boolean updateSuccess) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ANSWER_VIEW);
+        String question = contestService.getQuestion(atId);
+        modelAndView.addObject("question", question);
+        modelAndView.addObject("ctId", ctId);
+        modelAndView.addObject("atId", atId);
+        if (null == contestAnswerForm) {
+            contestAnswerForm = new ContestAnswerForm();
+        }
+        modelAndView.addObject("contestAnswerForm", contestAnswerForm);
+        modelAndView.addObject(UPDATE_SUCCESS, updateSuccess);
+        return modelAndView;
+    }
 
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_EDIT_CONTEST_TEXT + "')")
+    @PostMapping("/{ctId}/answer/{atId}")
+    public ModelAndView doAnswer(@PathVariable("ctId") Integer ctId, @PathVariable("atId") Integer atId, ContestAnswerForm contestAnswerForm, BindingResult bindingResult) {
+        validate(contestAnswerForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return getQuestion(ctId, atId, contestAnswerForm, false);
+        }
+        contestService.answerQuestion(Integer.parseInt(contestAnswerForm.getAtId()), contestAnswerForm.getAnswer());
+        return getQuestion(ctId, atId, contestAnswerForm, true);
+    }
 }
 

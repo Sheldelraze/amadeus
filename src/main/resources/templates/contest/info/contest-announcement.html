@@ -11,7 +11,7 @@
           th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
     <style>
         .announce {
-            font-weight: 900;
+            background-color: #f0ffff;
         }
     </style>
     <div th:replace="layout/layout::css"></div>
@@ -90,7 +90,7 @@
                                             <h3>Thêm câu hỏi</h3>
                                             <label class="col-form-label">Chọn bài tập</label>
                                             <select class="form-control" style="width: 40%" th:field="*{pmId}">
-                                                <option value="0">Thông báo chung</option>
+                                                <option value="0">Thông tin chung</option>
                                                 <option th:each="problem : ${lstProblem}" th:value="${problem.id}"
                                                         th:text="${problem.name}"></option>
                                             </select>
@@ -126,7 +126,7 @@
                                             <h3>Thêm thông báo</h3>
                                             <label class="col-form-label">Chọn bài tập</label>
                                             <select class="form-control" style="width: 40%" th:field="*{pmId}">
-                                                <option value="0">Thông báo chung</option>
+                                                <option value="0">Thông tin chung</option>
                                                 <option th:each="problem : ${lstProblem}" th:value="${problem.id}"
                                                         th:text="${problem.name}"></option>
                                             </select>
@@ -152,12 +152,13 @@
                                                style="color: black; text-align: center;font-family: verdana,arial,sans-serif">
                                             <thead>
                                             <tr>
-                                                <th style="text-align: center;width:50px">#</th>
-                                                <th style="text-align: center;width:170px">Thời điểm</th>
-                                                <th style="text-align: center;width:200px">Tên bài</th>
-                                                <th style="text-align: center">Câu hỏi</th>
-                                                <th style="text-align: center">Trả lời</th>
-                                                <th style="text-align: center;width:50px"
+                                                <th style="text-align: center;width:50px;font-weight: 900">#</th>
+                                                <th style="text-align: center;width:170px;font-weight: 900">Thời điểm
+                                                </th>
+                                                <th style="text-align: center;width:200px;font-weight: 900">Tên bài</th>
+                                                <th style="text-align: center;font-weight: 900">Câu hỏi</th>
+                                                <th style="text-align: center;font-weight: 900">Trả lời</th>
+                                                <th style="text-align: center;font-weight: 900;width:50px"
                                                     th:if="${contestAuth == 'CAN_EDIT_CONTEST'}">Hiện
                                                 </th>
                                             </tr>
@@ -178,7 +179,7 @@
                                                        th:text="${announce.problem.name}"></a>
                                                 </td>
                                                 <td th:if="${announce.problem.id == 0}">
-                                                    Thông báo chung
+                                                    Thông tin chung
                                                 </td>
                                                 <!--question-->
                                                 <td th:text="${announce.question}"
@@ -193,7 +194,8 @@
                                                     </td>
                                                     <td th:if="${contestAuth == 'CAN_EDIT_CONTEST'}"
                                                         style="text-align: left">
-                                                        <a href="#" style="font-weight: 900;color:red">
+                                                        <a href="#" th:onclick="|popup(${ctId},${announce.id})|"
+                                                           style="font-weight: 900;color:red">
                                                             <u>Trả lời</u>
                                                         </a>
                                                     </td>
@@ -258,6 +260,16 @@
         });
     });
 
+    function popup(ctId, atId) {
+        var url = '/contest/' + ctId + '/answer/' + atId;
+        window.open(url,
+            '1426494439650',
+            'width=1500,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
+    }
+
+    function HandlePopupResult() {
+        location.reload();
+    }
     function changeState(ctId, atId, hidden) {
         var newState = 1 - hidden;
         window.location.replace("/contest/" + ctId + "/changeAnnounceState/" + atId + "/to/" + newState);

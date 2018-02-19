@@ -89,7 +89,7 @@
                         <div class="card-body">
                             <ul class="nav nav-pills m-t-30 m-b-30" th:fragment="navtab(ctId,tab)">
                                 <li class="nav-item">
-                                    <a th:href="${tab==1}?'#':@{|/contest/${ctId}/information|}"
+                                    <a th:href="@{|/contest/${ctId}/information|}"
                                        th:classappend="${tab==1}?'active'"
                                        class="nav-link">Thông tin</a></li>
                                 <li class="nav-item">
@@ -97,7 +97,7 @@
                                        th:classappend="${tab==2}?'active'"
                                        class="nav-link">Bài tập</a></li>
                                 <li class="nav-item">
-                                    <a th:href="${tab==3}?'#':@{|/contest/${ctId}/submit|}"
+                                    <a th:href="@{|/contest/${ctId}/submit|}"
                                        th:classappend="${tab==3}?'active'"
                                        class="nav-link">Nộp bài</a></li>
                                 <li class="nav-item dropdown">
@@ -109,13 +109,13 @@
                                     </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" id="dropdown1-tab"
-                                           th:href="${tab==4}?'#':@{|/contest/${ctId}/my|}"
+                                           th:href="@{|/contest/${ctId}/my|}"
                                            th:classappend="${tab==4}?'active'"
                                            style="color: cornflowerblue">Của
                                             tôi
                                         </a>
                                         <a th:if="${canViewStatus}" class="dropdown-item" id="dropdown2-tab"
-                                           th:href="${tab==5}?'#':@{|/contest/${ctId}/all|}"
+                                           th:href="@{|/contest/${ctId}/all|}"
                                            th:classappend="${tab==5}?'active'"
                                            style="color: cornflowerblue">Tất
                                             cả
@@ -123,12 +123,12 @@
                                     </div>
                                 </li>
                                 <li class="nav-item" th:if="${canViewStatus}"><a
-                                        th:href="${tab==6}?'#':@{|/contest/${ctId}/leaderboard|}"
+                                        th:href="@{|/contest/${ctId}/leaderboard|}"
                                         th:classappend="${tab==6}?'active'"
                                         class="nav-link">Bảng xếp hạng</a></li>
 
                                 <li class="nav-item"><a
-                                        th:href="${tab==7}?'#':@{|/contest/${ctId}/announcement|}"
+                                        th:href="@{|/contest/${ctId}/announcement|}"
                                         th:classappend="${tab==7}?'active'"
                                         class="nav-link">Thông báo
                                     <th:block th:if="${atCnt != null}">
@@ -137,11 +137,11 @@
                                 </a>
                                 </li>
                                 <li class="nav-item" th:if="${contestAuth == 'CAN_EDIT_CONTEST'}"><a
-                                        th:href="${tab==8}?'#':@{|/contest/${ctId}/setting|}"
+                                        th:href="@{|/contest/${ctId}/setting|}"
                                         th:classappend="${tab==8}?'active'"
                                         class="nav-link">Thiết lập</a></li>
                                 <li class="nav-item" th:if="${isCreator}"><a
-                                        th:href="${tab==9}?'#':@{|/contest/${ctId}/role|}"
+                                        th:href="@{|/contest/${ctId}/role|}"
                                         th:classappend="${tab==9}?'active'"
                                         class="nav-link">Phân quyền</a></li>
                             </ul>
