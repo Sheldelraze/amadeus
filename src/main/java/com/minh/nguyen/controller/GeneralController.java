@@ -1,5 +1,6 @@
 package com.minh.nguyen.controller;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.vo.StatusVO;
@@ -8,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -18,7 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class GeneralController {
 
     @Autowired
-    GeneralService generalService;
+    private GeneralService generalService;
+
+    @Autowired
+    private HttpSession httpSession;
 
     @GetMapping({"/login","/login/"})
     public ModelAndView getLogin(Boolean logout) {
@@ -29,7 +36,7 @@ public class GeneralController {
     }
     @GetMapping({"/",""})
     public ModelAndView getIndex() {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName("share/index");
         return modelAndView;
     }
@@ -48,7 +55,7 @@ public class GeneralController {
 
     @GetMapping("/status")
     public ModelAndView getStatus() {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName("share/status");
         StatusVO statusVO = new StatusVO();
         statusVO.setLstSubmission(generalService.getSubmission());
@@ -58,10 +65,28 @@ public class GeneralController {
 
     @GetMapping("/submission/{snId}")
     public ModelAndView getSubmission(@PathVariable("snId") Integer snId){
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName("submission/submission");
         SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId);
         modelAndView.addObject("submitDetail",submissionDTO);
+        return modelAndView;
+    }
+
+    public ModelAndView createGeneralModel() {
+        ModelAndView modelAndView = new ModelAndView();
+        boolean canCreateProblem = false;
+        boolean canCreateContest = false;
+        if (null != httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES)) {
+            List<Integer> defaultAuth = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
+            if (defaultAuth.contains(Constants.AUTH_CREATE_PROBLEM_ID)) {
+                canCreateProblem = true;
+            }
+            if (defaultAuth.contains(Constants.AUTH_CREATE_CONTEST_ID)) {
+                canCreateContest = true;
+            }
+        }
+        modelAndView.addObject("canCreateProblem", canCreateProblem);
+        modelAndView.addObject("canCreateContest", canCreateContest);
         return modelAndView;
     }
 }

@@ -83,10 +83,13 @@ public class ContestController extends BaseController {
     @Autowired
     private ContestValidator contestValidator;
 
+    @Autowired
+    private GeneralController generalController;
+
     private ModelAndView createGeneralModel(int ctId) {
 
         //add common information
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = generalController.createGeneralModel();
         ContestDTO contestDTO = contestService.getContestTime(ctId);
         modelAndView.addObject("startTime", contestDTO.getStartTime());
         modelAndView.addObject("endTime", contestDTO.getEndTime());
@@ -105,6 +108,33 @@ public class ContestController extends BaseController {
                 modelAndView.addObject(AUTHORITY, "No special authority");
             }
         }
+
+        //check if user can view common status
+        boolean canViewStatus = false;
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            List<Integer> defaultAuth = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
+            if (null != defaultAuth && defaultAuth.contains(Constants.AUTH_VIEW_ALL_CONTEST_ID)) {
+                canViewStatus = true;
+            } else if (contestValidator.checkPermission(auth, ctId, Constants.AUTH_VIEW_CONTEST_TEXT)) {
+                canViewStatus = true;
+            } else {
+                if (contestValidator.checkParticipate(auth, ctId) && contestValidator.canViewStatus(ctId)) {
+                    canViewStatus = true;
+                } else if (contestValidator.checkOutsiderPermission(auth, ctId)) {
+                    canViewStatus = true;
+                }
+            }
+        }
+        modelAndView.addObject("canViewStatus", canViewStatus);
+
+        //add contest's creator check
+        boolean isCreator = false;
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            if (contestValidator.checkCreator(auth, ctId)) {
+                isCreator = true;
+            }
+        }
+        modelAndView.addObject("isCreator", isCreator);
 
         //add announcement count if any
         Integer atCnt = contestService.getAnnouncementCount(ctId);

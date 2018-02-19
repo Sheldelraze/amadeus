@@ -70,8 +70,12 @@
                 ON problem.id = ct_pm.pmId
                    AND ct_pm.ctId = #{ctId}
                    AND ct_pm.deleteFlg = '0'
+        <if test="!getAllProblem">
+            AND ct_pm.isHidden = 0
+        </if>
         WHERE
             problem.deleteFlg = '0'
+
     </select>
     <select id="checkIfSolvedBefore" resultType="java.lang.Integer">
         SELECT count(*)

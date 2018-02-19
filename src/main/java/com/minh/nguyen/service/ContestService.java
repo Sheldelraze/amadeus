@@ -6,6 +6,8 @@ import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.contest.ContestSettingForm;
 import com.minh.nguyen.mapper.*;
+import com.minh.nguyen.util.StringUtil;
+import com.minh.nguyen.validator.ContestValidator;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -70,6 +72,9 @@ public class ContestService extends BaseService {
 
     @Autowired
     private CtSnMapper ctSnMapper;
+
+    @Autowired
+    private ContestValidator contestValidator;
 
     @Autowired
     private HttpSession httpSession;
@@ -336,7 +341,14 @@ public class ContestService extends BaseService {
     }
 
     public List<ProblemDTO> getProblemToDisplay(Integer ctId) {
-        List<ProblemDTO> lst = problemMapper.getProblemToDisplay(ctId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean getAllProblem = false;
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            if (contestValidator.checkPermission(auth, ctId, Constants.AUTH_EDIT_CONTEST_TEXT)) {
+                getAllProblem = true;
+            }
+        }
+        List<ProblemDTO> lst = problemMapper.getProblemToDisplay(ctId, getAllProblem);
         int cnt = 0;
         for (ProblemDTO problemDTO : lst) {
             if (problemDTO.getIsHidden() == 0) {
@@ -534,7 +546,14 @@ public class ContestService extends BaseService {
     }
 
     public List<AnnouncementDTO> getAnnouncementList(Integer ctId) {
-        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementList(ctId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean getAllAnnouncement = false;
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            if (contestValidator.checkPermission(auth, ctId, Constants.AUTH_EDIT_CONTEST_TEXT)) {
+                getAllAnnouncement = true;
+            }
+        }
+        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementList(ctId, getAllAnnouncement);
         for (AnnouncementDTO announce : lstAnnounce) {
             if (announce.getProblem().getId().equals(0)) {
                 announce.getProblem().setName("Thông báo chung");
@@ -562,8 +581,13 @@ public class ContestService extends BaseService {
     }
 
     public Integer getAnnouncementCount(Integer ctId) {
-        CtAtEntity ctAtEntity = new CtAtEntity();
-        ctAtEntity.setCtId(ctId);
-        return ctAtMapper.countWithExample(ctAtEntity);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean getAllAnnouncement = false;
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            if (contestValidator.checkPermission(auth, ctId, Constants.AUTH_EDIT_CONTEST_TEXT)) {
+                getAllAnnouncement = true;
+            }
+        }
+        return announcementMapper.countAnnouncementList(ctId, getAllAnnouncement);
     }
 }

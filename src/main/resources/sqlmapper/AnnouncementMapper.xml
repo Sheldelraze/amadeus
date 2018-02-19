@@ -4,6 +4,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.AnnouncementMapper">
+    <select id="countAnnouncementList" resultType="java.lang.Integer">
+        select count(*) from ct_at
+        INNER JOIN announcement
+        on ct_at.atId = announcement.id
+        and announcement.deleteFlg = '0'
+        <if test="!getAllAnnounce">
+            AND announcement.isHidden = 0
+            AND announcement.isAnswered = 1
+        </if>
+        where ct_at.ctId = #{ctId}
+        AND ct_at.deleteFlg = '0'
+    </select>
     <select id="getAnnouncementList" resultMap="resAnnounce">
         SELECT
             announcement.id,
@@ -23,6 +35,10 @@
                 ON announcement.pmId = problem.id
                    AND problem.deleteFlg = '0'
         WHERE ct_at.ctId = #{ctId}
+        <if test="!getAllAnnounce">
+            AND announcement.isHidden = 0
+            AND announcement.isAnswered = 1
+        </if>
     </select>
     <resultMap id="resAnnounce" type="AnnouncementDTO">
         <id column="id" property="id"/>

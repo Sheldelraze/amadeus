@@ -18,5 +18,7 @@ public interface AnnouncementMapper extends BaseMapper<AnnouncementEntity> {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Integer insertAnnouncement(AnnouncementEntity record);
 
-    List<AnnouncementDTO> getAnnouncementList(@Param("ctId") Integer ctId);
+    Integer countAnnouncementList(@Param("ctId") Integer ctId, @Param("getAllAnnounce") Boolean getAllAnnounce);
+
+    List<AnnouncementDTO> getAnnouncementList(@Param("ctId") Integer ctId, @Param("getAllAnnounce") Boolean getAllAnnounce);
 }

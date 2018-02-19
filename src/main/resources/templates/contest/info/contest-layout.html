@@ -114,7 +114,7 @@
                                            style="color: cornflowerblue">Của
                                             tôi
                                         </a>
-                                        <a class="dropdown-item" id="dropdown2-tab"
+                                        <a th:if="${canViewStatus}" class="dropdown-item" id="dropdown2-tab"
                                            th:href="${tab==5}?'#':@{|/contest/${ctId}/all|}"
                                            th:classappend="${tab==5}?'active'"
                                            style="color: cornflowerblue">Tất
@@ -122,7 +122,7 @@
                                         </a>
                                     </div>
                                 </li>
-                                <li class="nav-item"><a
+                                <li class="nav-item" th:if="${canViewStatus}"><a
                                         th:href="${tab==6}?'#':@{|/contest/${ctId}/leaderboard|}"
                                         th:classappend="${tab==6}?'active'"
                                         class="nav-link">Bảng xếp hạng</a></li>
@@ -136,11 +136,11 @@
                                     </th:block>
                                 </a>
                                 </li>
-                                <li class="nav-item"><a
+                                <li class="nav-item" th:if="${contestAuth == 'CAN_EDIT_CONTEST'}"><a
                                         th:href="${tab==8}?'#':@{|/contest/${ctId}/setting|}"
                                         th:classappend="${tab==8}?'active'"
                                         class="nav-link">Thiết lập</a></li>
-                                <li class="nav-item"><a
+                                <li class="nav-item" th:if="${isCreator}"><a
                                         th:href="${tab==9}?'#':@{|/contest/${ctId}/role|}"
                                         th:classappend="${tab==9}?'active'"
                                         class="nav-link">Phân quyền</a></li>

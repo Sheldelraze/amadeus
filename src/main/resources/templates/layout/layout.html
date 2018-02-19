@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <th:block th:fragment="meta">
@@ -468,7 +468,7 @@
                             class="mdi mdi-calendar-question"></i><span class="hide-menu">Bài tập</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="#">Tất cả bài tập</a></li>
-                            <li><a href="#">Bài tập của tôi</a></li>
+                            <li th:if="${canCreateProblem}"><a href="#">Bài tập của tôi</a></li>
                         </ul>
                     </li>
                     <li>

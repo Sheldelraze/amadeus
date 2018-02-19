@@ -57,7 +57,7 @@ public class ContestValidator extends BaseValidator {
 
     public boolean canViewTest(Integer ctId){
         List<Integer> defaultAuth = (List<Integer>)  httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
-        if (defaultAuth.contains(Constants.AUTH_VIEW_ALL_SUBMISSION_ID)) {
+        if (null != defaultAuth && defaultAuth.contains(Constants.AUTH_VIEW_ALL_SUBMISSION_ID)) {
             return true;
         }
         ContestEntity contestEntity = getContestById(ctId);
@@ -67,6 +67,8 @@ public class ContestValidator extends BaseValidator {
         if (currentTime.compareTo(endTime) < 0){
             return contestEntity.getShowTest().equals(Constants.SHOW_TEST_ALL);
         }
+
+        //TODO:Check if contest's creator allows participator to view only solved tests
         return true;
     }
 

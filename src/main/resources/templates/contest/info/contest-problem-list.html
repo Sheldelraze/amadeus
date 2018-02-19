@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -69,7 +69,7 @@
                                 th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
                             <div id="problem" class="tab-pane active">
                                 <div class="table-responsive">
-                                    <table class="table" style="color: black; text-align: center">
+                                    <table class="table table-bordered" style="color: black; text-align: center">
                                         <thead>
                                         <tr>
                                             <th style="text-align: center">#</th>
