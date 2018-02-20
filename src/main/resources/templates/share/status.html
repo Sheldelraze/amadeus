@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -74,7 +74,8 @@
                     <div class="card">
                         <div class="card-outline-info">
                             <div class="card-header">
-                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách 100 bài nộp gần đây nhát</h4>
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách 100
+                                    bài nộp gần đây nhất</h4>
                             </div>
                         </div>
                         <div class="card-body">
@@ -86,7 +87,7 @@
                                         <th style="text-align: center">Người nộp</th>
                                         <th style="text-align: center">Tên bài</th>
                                         <th style="text-align: center">Bộ nhớ</th>
-                                        <th style="text-align: center" class="sorting_desc">Thời gian chạy</th>
+                                        <th style="text-align: center">Thời gian chạy</th>
                                         <th style="text-align: center">Nộp lúc</th>
                                         <th style="text-align: center">Kết quả</th>
                                         <th style="text-align: center">Ngôn ngữ</th>
@@ -96,7 +97,8 @@
                                     <tr th:each="submissionDTO : ${statusVO.lstSubmission}">
                                         <td><b><a th:href="|/submission/${submissionDTO.id}|" th:text="${submissionDTO.id}">132</a></b></td>
                                         <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#" th:text="${submissionDTO.pmNm}">Tính tổng 2 số</a></b></td>
+                                        <td><b><a th:href="|/problem/info/${submissionDTO.pmId}/view|"
+                                                  th:text="${submissionDTO.pmNm}">Tính tổng 2 số</a></b></td>
                                         <td><label th:text="${submissionDTO.memoryUsed}">256KB</label>MB</td>
                                         <td><label th:text="${submissionDTO.timeRun}"></label>ms </td>
                                         <td><label th:text="${submissionDTO.submitTime}"></label></td>

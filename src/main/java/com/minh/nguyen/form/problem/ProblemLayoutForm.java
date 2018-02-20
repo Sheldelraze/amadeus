@@ -1,8 +1,8 @@
 package com.minh.nguyen.form.problem;
 
 import com.minh.nguyen.form.BaseForm;
-import com.minh.nguyen.validator.annotation.Number;
 import com.minh.nguyen.validator.annotation.MaxLength;
+import com.minh.nguyen.validator.annotation.Number;
 import com.minh.nguyen.validator.annotation.Required;
 
 /**
@@ -31,6 +31,15 @@ public class ProblemLayoutForm extends BaseForm{
     private Integer difficulty;
     private Integer cntTest;
     private Integer isPublished;
+    private Integer isPublic;
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
+    }
 
     public String getTimeLimit() {
         return timeLimit;

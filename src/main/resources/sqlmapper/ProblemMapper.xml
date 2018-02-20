@@ -4,7 +4,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.ProblemMapper">
-    <select id="getAllProblem" resultMap="problem">
+    <select id="getAllOfMyProblem" resultMap="problem">
         SELECT
             problem.difficulty  AS dif,
             problem.isPublished AS pub,
@@ -12,9 +12,43 @@
             problem.code        AS pmCe,
             problem.name        AS pmNe,
             tag.name            AS tgNe,
-            tag.id              AS tgId
+        tag.id AS tgId,
+        user.fullname AS fullname,
+        user.id AS urId
+        FROM
+        ur_pm_auy
+        INNER JOIN problem
+        ON ur_pm_auy.pmId = problem.id
+        AND problem.deleteFlg = '0'
+        INNER JOIN user
+        ON problem.createUser = user.handle
+        AND user.deleteFlg = '0'
+        LEFT JOIN pm_tg
+        ON pm_tg.pmId = problem.id
+        AND pm_tg.deleteFlg = '0'
+        LEFT JOIN tag
+        ON tag.id = pm_tg.tgId
+        AND tag.deleteFlg = '0'
+        WHERE
+        ur_pm_auy.deleteFlg = '0'
+        and ur_pm_auy.urId = #{urId}
+        and ur_pm_auy.auyId = #{read_problem_auyId}
+    </select>
+    <select id="getAllPublicProblem" resultMap="problem">
+        SELECT
+        problem.difficulty AS dif,
+        problem.id AS pmId,
+        problem.code AS pmCe,
+        problem.name AS pmNe,
+        tag.name AS tgNe,
+        tag.id AS tgId,
+        user.fullname AS fullname,
+        user.id AS urId
         FROM
             problem
+        INNER JOIN user
+        ON problem.createUser = user.handle
+        AND user.deleteFlg = '0'
             LEFT JOIN pm_tg
                 ON pm_tg.pmId = problem.id
                    AND pm_tg.deleteFlg = '0'
@@ -22,10 +56,12 @@
                 ON tag.id = pm_tg.tgId
                    AND tag.deleteFlg = '0'
         WHERE problem.deleteFlg = '0'
+        AND problem.isPublic = 1
+        AND problem.isPublished = 1
     </select>
     <update id="resetFirstSolveTime">
         UPDATE problem
-        SET firstSolve = NULL
+        SET firstSolve = NULL,solveCnt = 0
         WHERE id = #{pmId}
     </update>
     <select id="getProblemForContest" resultMap="problem">
@@ -40,9 +76,9 @@
         FROM
             problem
             INNER JOIN ur_pm_auy
-              ON problem.id = ur_pm_auy.pmId
-              AND ur_pm_auy.deleteFlg = '0'
-              AND ur_pm_auy.auyId = #{can_view_problem_auth}
+        ON problem.id = ur_pm_auy.pmId
+        AND ur_pm_auy.deleteFlg = '0'
+        AND ur_pm_auy.auyId = #{can_view_problem_auth}
             LEFT JOIN pm_tg
                 ON pm_tg.pmId = problem.id
                    AND pm_tg.deleteFlg = '0'
@@ -50,6 +86,7 @@
                 ON tag.id = pm_tg.tgId
                    AND tag.deleteFlg = '0'
         WHERE problem.deleteFlg = '0'
+        AND problem.isPublished = 1
               AND problem.id NOT IN (
             SELECT pmId
             FROM ct_pm
@@ -58,23 +95,23 @@
     </select>
     <select id="getProblemToDisplay" resultType="ProblemDTO">
         SELECT
-            problem.id,
-            problem.name,
-            problem.timeLimit,
-            problem.memoryLimit,
-            problem.difficulty,
-            problem.solveCnt,
-            ct_pm.isHidden
+        problem.id,
+        problem.name,
+        problem.timeLimit,
+        problem.memoryLimit,
+        problem.difficulty,
+        problem.solveCnt,
+        ct_pm.isHidden
         FROM problem
-            INNER JOIN ct_pm
-                ON problem.id = ct_pm.pmId
-                   AND ct_pm.ctId = #{ctId}
-                   AND ct_pm.deleteFlg = '0'
+        INNER JOIN ct_pm
+        ON problem.id = ct_pm.pmId
+        AND ct_pm.ctId = #{ctId}
+        AND ct_pm.deleteFlg = '0'
         <if test="!getAllProblem">
             AND ct_pm.isHidden = 0
         </if>
         WHERE
-            problem.deleteFlg = '0'
+        problem.deleteFlg = '0'
 
     </select>
     <select id="checkIfSolvedBefore" resultType="java.lang.Integer">
@@ -119,6 +156,10 @@
         <result column="pmNe" property="name"/>
         <result column="dif" property="difficulty"/>
         <result column="pub" property="isPublished"/>
+        <association property="creator" javaType="UserDTO">
+            <id property="id" column="urId"/>
+            <result property="fullname" column="fullname"/>
+        </association>
         <collection property="lstTag" ofType="TagDTO">
             <id property="id" column="tgId"/>
             <result property="name" column="tgNe"/>

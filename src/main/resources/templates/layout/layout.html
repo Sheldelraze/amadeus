@@ -468,11 +468,11 @@
                             class="mdi mdi-calendar-question"></i><span class="hide-menu">Bài tập</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="#">Tất cả bài tập</a></li>
-                            <li th:if="${canCreateProblem}"><a href="#">Bài tập của tôi</a></li>
+                            <li th:if="${canCreateProblem}"><a href="/problem/info/my">Bài tập của tôi</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a class="waves-effect waves-dark" href="CourseList.aspx" aria-expanded="false"><i
+                        <a class="waves-effect waves-dark" href="/status" aria-expanded="false"><i
                                 class="mdi mdi-bank"></i><span class="hide-menu">Bảng chấm bài</span></a>
                     </li>
                     <li>
@@ -528,7 +528,6 @@
             <div class="row page-titles">
                 <div class="col-md-5 col-8 align-self-center">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
                         <li class="breadcrumb-item active">Dashboard2</li>
                     </ol>

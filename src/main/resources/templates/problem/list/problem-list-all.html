@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -47,7 +47,7 @@
                 <div class="col-md-5 col-8 align-self-center">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
-                        <li class="breadcrumb-item active">Danh sách bài tập</li>
+                        <li class="breadcrumb-item active">Bài tập của tôi</li>
                     </ol>
                 </div>
             </div>
@@ -66,39 +66,36 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="myTable" class="table table-bordered " style="text-align: center; color: black">
+                                <table id="myTable" class="table table-bordered "
+                                       style="text-align: center; color: black; font-size: 14px">
                                     <thead>
                                     <tr>
-                                        <th style="text-align: center">ID</th>
-                                        <th style="text-align: center">Người nộp</th>
-                                        <th style="text-align: center">Tên bài</th>
-                                        <th style="text-align: center">Bộ nhớ</th>
-                                        <th style="text-align: center">Thời gian chạy</th>
-                                        <th style="text-align: center">Nộp lúc</th>
-                                        <th style="text-align: center">Kết quả</th>
-                                        <th style="text-align: center">Ngôn ngữ</th>
+                                        <th style="text-align: center" width="20px">ID</th>
+                                        <th style="text-align: center" width="150px">Mã bài tập</th>
+                                        <th style="text-align: center">Tên bài tập</th>
+                                        <th style="text-align: center" width="200px">Độ khó</th>
+                                        <th style="text-align: center">Môn học</th>
+                                        <th style="text-align: center">Người tạo</th>
+                                        <th style="text-align: center">Thể loại</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><b><a href="SubmissionInfo.aspx">132</a></b></td>
-                                        <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                        <td>256KB</td>
-                                        <td>25ms</td>
-                                        <td>1:20:25</td>
-                                        <td><b style="color: red; font-weight: 500">Lỗi biên dịch</b></td>
-                                        <td>C++ </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b><a href="SubmissionInfo.aspx">184</a></b></td>
-                                        <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                        <td>25KB</td>
-                                        <td>10ms</td>
-                                        <td>1:40:12</td>
-                                        <td><b style="color: green; font-weight: 800">Đúng</b></td>
-                                        <td>C++ </td>
+                                    <tbody th:remove="all-but-first">
+                                    <tr th:if="${problemList != null}" th:each="problem,iter : ${problemList}">
+                                        <td th:text="${problem.id}"></td>
+                                        <td style="font-weight: 900;font-size: large"><a
+                                                th:href="|/problem/info/${problem.id}/view|"
+                                                th:text="${problem.code}"></a></td>
+                                        <td th:text="${problem.name}"></td>
+                                        <td>
+                                            <th:block th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
+                                                <img th:src="@{/assets/images/star.png}"/>
+                                            </th:block>
+                                        </td>
+                                        <td>Lập trình C++</td>
+                                        <td><a href="#" th:text="${problem.creator.fullname}"></a></td>
+                                        <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ
+                                            thị
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>

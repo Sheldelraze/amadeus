@@ -17,7 +17,16 @@ public class ProblemLayoutVO {
     private Integer difficulty;
     private Integer cntTest;
     private Integer isPublished;
+    private Integer isPublic;
     private boolean updateSuccess;
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
+    }
 
     public static Integer[] getDifficultValue() {
         return difficultValue;

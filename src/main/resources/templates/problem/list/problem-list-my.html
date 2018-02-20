@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -74,14 +74,14 @@
                                 <table id="myTable" class="table table-bordered " style="text-align: center; color: black; font-size: 14px">
                                     <thead>
                                     <tr>
-                                        <th style="text-align: center" width="20px">ID</th>
+                                        <th style="text-align: center" width="10px">ID</th>
                                         <th style="text-align: center" width="150px">Mã bài tập</th>
                                         <th style="text-align: center" width="200px">Tên bài tập</th>
-                                        <th style="text-align: center" width="200px">Độ khó</th>
-                                        <th style="text-align: center" width="250px">Môn học</th>
-                                        <th style="text-align: center" width="200px">Người tạo</th>
-                                        <th style="text-align: center" width="200px">Thể loại</th>
-                                        <th style="text-align: center" width="140px" >Trạng thái</th>
+                                        <th style="text-align: center" width="230px">Độ khó</th>
+                                        <th style="text-align: center" width="200px">Môn học</th>
+                                        <th style="text-align: center" width="230px">Người tạo</th>
+                                        <th style="text-align: center" width="250px">Thể loại</th>
+                                        <th style="text-align: center" width="170px">Trạng thái</th>
                                     </tr>
                                     </thead>
                                     <tbody th:remove="all-but-first">
@@ -95,7 +95,7 @@
                                             </th:block>
                                         </td>
                                         <td>Lập trình C++</td>
-                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
+                                        <td><a href="#" th:text="${problem.creator.fullname}"></a></td>
                                         <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị</td>
                                         <td th:if="${problem.isPublished==1}"><span class="label label-success">Đã xuất bản</span></td>
                                         <td th:unless="${problem.isPublished==1}"><span class="label label-danger">Chưa xuất bản</span></td>

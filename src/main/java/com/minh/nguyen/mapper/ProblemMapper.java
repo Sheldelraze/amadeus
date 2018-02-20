@@ -24,7 +24,9 @@ public interface ProblemMapper extends BaseMapper<ProblemEntity> {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Integer insertEntity(ProblemEntity record);
 
-    List<ProblemDTO> getAllProblem();
+    List<ProblemDTO> getAllOfMyProblem(@Param("urId") Integer urId, @Param("read_problem_auyId") Integer readProblemAuyID);
+
+    List<ProblemDTO> getAllPublicProblem();
 
     List<ProblemDTO> getProblemForContest(@Param("can_view_problem_auth")Integer canVieProblemAuth,@Param("ctId") Integer ctId);
 

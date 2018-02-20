@@ -78,7 +78,7 @@ public class ProblemController extends BaseController {
     public ModelAndView getMy() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(LIST_MY_VIEW);
-        List<ProblemDTO> lstProblem = problemService.getAllProblem();
+        List<ProblemDTO> lstProblem = problemService.getAllOfMyProblem();
         modelAndView.addObject(PROBLEM_LIST, lstProblem);
         return modelAndView;
     }
@@ -88,7 +88,8 @@ public class ProblemController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(LIST_ALL_VIEW);
 
-//        modelAndView.setViewName("share/index");
+        List<ProblemDTO> lstProblem = problemService.getAllPublicProblem();
+        modelAndView.addObject(PROBLEM_LIST, lstProblem);
         return modelAndView;
     }
 
@@ -601,5 +602,23 @@ public class ProblemController extends BaseController {
         }
         problemService.deleteRole(pmId, urId);
         return getRole(pmId, null, null, false, true);
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkOwner(authentication,#pmId)")
+    @GetMapping("/{pmId}/doPublish/{tab}")
+    public ModelAndView doPublish(@PathVariable("pmId") Integer pmId, @PathVariable("tab") Integer tab) {
+        problemService.doPublish(pmId);
+        ModelAndView modelAndView = new ModelAndView();
+        if (tab == 1) {
+            modelAndView = getStatement(pmId, null, null, true, false);
+        } else if (tab == 2) {
+            modelAndView = getSolution(pmId, null, null, true, false);
+        } else if (tab == 3) {
+            modelAndView = getTest(pmId, null, true, false);
+        } else if (tab == 4) {
+            modelAndView = getRole(pmId, null, null, true, false);
+        }
+        return modelAndView;
     }
 }

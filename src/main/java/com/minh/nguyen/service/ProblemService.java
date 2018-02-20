@@ -217,8 +217,9 @@ public class ProblemService extends BaseService {
                 inputEntity.getInput());
     }
 
-    public List<ProblemDTO> getAllProblem() {
-        List<ProblemDTO> lst = problemMapper.getAllProblem();
+    public List<ProblemDTO> getAllOfMyProblem() {
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<ProblemDTO> lst = problemMapper.getAllOfMyProblem(urId, Constants.AUTH_VIEW_PROBLEM_ID);
         for (ProblemDTO problemDTO : lst) {
             StringBuilder stringBuilder = new StringBuilder();
             List<TagDTO> lstTag = problemDTO.getLstTag();
@@ -230,6 +231,25 @@ public class ProblemService extends BaseService {
             }
             problemDTO.setTag(stringBuilder.toString());
             if (Constants.BLANK.equals(stringBuilder.toString())) {
+                problemDTO.setTag(null);
+            }
+        }
+        return lst;
+    }
+
+    public List<ProblemDTO> getAllPublicProblem() {
+        List<ProblemDTO> lst = problemMapper.getAllPublicProblem();
+        for (ProblemDTO problemDTO : lst) {
+            StringBuilder stringBuilder = new StringBuilder();
+            List<TagDTO> lstTag = problemDTO.getLstTag();
+            for (int i = 0; i < lstTag.size(); i++) {
+                stringBuilder.append(lstTag.get(i).getName());
+                if (i < lstTag.size() - 1) {
+                    stringBuilder.append(", ");
+                }
+            }
+            problemDTO.setTag(stringBuilder.toString());
+            if ("".equals(stringBuilder.toString())) {
                 problemDTO.setTag(null);
             }
         }
@@ -384,5 +404,12 @@ public class ProblemService extends BaseService {
         urPmAuyEntity.setPmId(pmId);
         urPmAuyEntity.setUrId(urId);
         urPmAuyMapper.deleteForRealWithExample(urPmAuyEntity);
+    }
+
+    public void doPublish(Integer pmId) {
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setId(pmId);
+        problemEntity.setIsPublished(1);
+        problemMapper.updateByPKExceptNullFields(problemEntity);
     }
 }

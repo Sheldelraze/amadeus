@@ -7,6 +7,7 @@
     <select id="getSubmission" resultMap="submission">
         SELECT
             submission.id          AS id,
+        submission.pmId AS pmId,
             user.id                AS urId,
             user.fullname            AS fullname,
             problem.name           AS pmNm,

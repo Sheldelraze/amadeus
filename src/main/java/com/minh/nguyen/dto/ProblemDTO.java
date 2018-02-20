@@ -19,6 +19,7 @@ public class ProblemDTO extends BaseDTO {
     private Integer difficulty;
     private Integer cntTest;
     private Integer isPublished;
+    private Integer isPublic;
     private String statement;
     private String input;
     private String output;
@@ -38,8 +39,25 @@ public class ProblemDTO extends BaseDTO {
     private Integer totalSubmission;
     private String solvePercentage;
     private String solveTime;
+    private UserDTO creator;
     private List<SubmissionDTO> lstSubmission;
     private Date firstSolveTime;
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public UserDTO getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserDTO creator) {
+        this.creator = creator;
+    }
 
     public String getSolvePercentage() {
         return solvePercentage;

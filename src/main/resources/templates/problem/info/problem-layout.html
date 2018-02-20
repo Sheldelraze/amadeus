@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -88,7 +88,8 @@
                                 <input type="hidden" th:value="${problemLayoutVO}?${problemLayoutVO.code}"
                                        id="code" name="code"/>
                                 <small class="text-muted">Mã bài tập</small>
-                                <br/><label th:text="${problemLayoutVO}?${problemLayoutVO.code}" style="color:black"></label>
+                                <br/><label th:text="${problemLayoutVO}?${problemLayoutVO.code}"
+                                            style="color:black"></label>
 
                                 <small class="text-muted db">Tên bài tập (không quá 25 ký tự)</small>
                                 <input type="text" class="form-control form-control-line"
@@ -96,8 +97,8 @@
                                        id="name" name="name"
                                        style="color: black"/>
                                 <th:block th:if="${#fields.hasErrors('name')}">
-                                        <label th:class="'error'" th:errors="*{name}">Screen
-                                            Error</label>
+                                    <label th:class="'error'" th:errors="*{name}">Screen
+                                        Error</label>
                                 </th:block>
 
                                 <small class="text-muted db">Môn học</small>
@@ -141,20 +142,43 @@
 
                                 <small class="text-muted p-t-10 db">Số bộ test</small>
                                 <h5>2</h5>
+                                <small class="text-muted p-t-10 db">Công khai bài tập(ai cũng có thể xem)</small>
+                                <input value="1" type="checkbox" id="isPublic" name="isPublic"
+                                       th:checked="${problemLayoutVO.isPublic == 1}?'checked'">
+                                <label for="isPublic"></label>
                                 <small class="text-muted db">Tình trạng</small>
-                                <span class="label label-danger">Chưa xuất bản</span> <u><a href="#"
-                                                                                            style="margin-left: 5px"
-                                                                                            data-toggle="tooltip"
-                                                                                            data-placement="bottom"
-                                                                                            title=""
-                                                                                            data-original-title="Xuất bản để có thể sử dụng bài tập trong cuộc thi/khóa học">Xuất
-                                bản</a></u>
+                                <input type="hidden" id="isPublished" name="isPublished"
+                                       th:value="${problemLayoutVO.isPublished}"/>
+                                <th:block th:if="${problemLayoutVO.isPublished == 0}">
+                                    <span class="label label-danger">Chưa xuất bản</span>
+                                    <u>
+                                        <a href="#"
+                                           style="margin-left: 5px"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom"
+                                           title=""
+                                           th:onclick="|doPublish(${pmId},${tab})|"
+                                           data-original-title="Xuất bản để có thể sử dụng bài tập trong cuộc thi/khóa học">Xuất
+                                            bản</a>
+                                    </u>
+                                </th:block>
+                                <th:block th:if="${problemLayoutVO.isPublished == 1}">
+                                    <span class="label label-info">Đã xuất bản</span>
+                                </th:block>
                                 <br/>
                                 <br/>
                                 <button type="submit" class="btn btn-block btn-outline-success">Lưu thay đổi</button>
                             </div>
                         </form>
                     </div>
+                    <script>
+                        function doPublish(pmId, tab) {
+                            if (!confirm("Bạn có chắc không?")) {
+                                return false;
+                            }
+                            window.location.replace("/problem/info/" + pmId + "/doPublish/" + tab);
+                        }
+                    </script>
                 </div>
                 <div class="col-lg-9 col-xlg-9 col-md-7">
                     <div class="card">
@@ -216,6 +240,7 @@
     $(document).ready(function () {
         $(".select2").select2();
     });
+
 </script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
