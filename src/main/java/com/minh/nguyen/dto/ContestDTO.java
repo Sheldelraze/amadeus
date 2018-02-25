@@ -1,13 +1,11 @@
 package com.minh.nguyen.dto;
 
-import java.util.Date;
-
 /**
  * @author Mr.Minh
  * @since 21/01/2018
  * Purpose:
  */
-public class ContestDTO {
+public class ContestDTO extends BaseDTO {
     private Integer id;
     private String name;
     private String date;
@@ -28,7 +26,33 @@ public class ContestDTO {
     private String endTime;
     private Integer doUpdateCountDown;
     private String timerMessage;
+    private UserDTO creator;
+    private Integer userCnt;
+    private Boolean isOngoing;
 
+    public UserDTO getCreator() {
+        return creator;
+    }
+
+    public Integer getUserCnt() {
+        return userCnt;
+    }
+
+    public void setUserCnt(Integer userCnt) {
+        this.userCnt = userCnt;
+    }
+
+    public Boolean getOngoing() {
+        return isOngoing;
+    }
+
+    public void setOngoing(Boolean ongoing) {
+        isOngoing = ongoing;
+    }
+
+    public void setCreator(UserDTO creator) {
+        this.creator = creator;
+    }
 
     public String getTimerMessage() {
         return timerMessage;

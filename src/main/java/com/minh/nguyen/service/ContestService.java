@@ -10,6 +10,7 @@ import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.ContestValidator;
 import com.minh.nguyen.vo.contest.ContestInformationVO;
+import com.minh.nguyen.vo.contest.ContestListVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Mr.Minh
@@ -612,5 +610,33 @@ public class ContestService extends BaseService {
             throw new NoSuchPageException("Announcement not found!");
         }
         return announcementEntity.getQuestion();
+    }
+
+    public void setListContest(ContestListVO contestLst) {
+        List<ContestDTO> lstContest = contestMapper.getAllContest(Constants.AUTH_PARTICIPATE_CONTEST_ID);
+        List<ContestDTO> lstOngoing = new ArrayList<>();
+        List<ContestDTO> lstPast = new ArrayList<>();
+        for (ContestDTO contest : lstContest) {
+            //get contest's start time and end time
+            Date startTime = contest.getCreateTime();
+            Date endTime = DateUtils.addMinutes(startTime, contest.getDuration());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            DateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy \r\n HH:mm:ss");
+            contest.setDate(dateFormat1.format(contest.getCreateTime()));
+            Date now = new Date();
+            if (now.compareTo(endTime) < 0) {
+                lstOngoing.add(contest);
+                if (now.compareTo(startTime) >= 0) {
+                    contest.setOngoing(true);
+                } else {
+                    contest.setOngoing(false);
+                    contest.setStartTime(dateFormat.format(startTime));
+                }
+            } else {
+                lstPast.add(contest);
+            }
+        }
+        contestLst.setOngoingLst(lstOngoing);
+        contestLst.setPastLst(lstPast);
     }
 }

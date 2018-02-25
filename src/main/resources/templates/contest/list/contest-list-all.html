@@ -8,19 +8,6 @@
     <!-- Favicon icon -->
     <title>Amadeus system</title>
     <div th:replace="layout/layout::css"></div>
-    <style>
-        .judging{
-            color: slategray;
-        }
-        .fail{
-            color: red;
-            font-weight: 500;
-        }
-        .accepted{
-            color: limegreen;
-            font-weight: 800;
-        }
-    </style>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
 <!-- ============================================================== -->
@@ -59,8 +46,8 @@
             <div class="row page-titles">
                 <div class="col-md-5 col-8 align-self-center">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                        <li class="breadcrumb-item active">Bảng chấm bài</li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
+                        <li class="breadcrumb-item active">Bài tập của tôi</li>
                     </ol>
                 </div>
             </div>
@@ -74,73 +61,85 @@
                     <div class="card">
                         <div class="card-outline-info">
                             <div class="card-header">
-                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách 100
-                                    bài nộp gần đây nhất</h4>
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Kỳ thi
+                                    sắp/đang diễn ra</h4>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="myTable" class="table table-bordered " style="text-align: center; color: black">
+                                <table id="myTable" class="table table-bordered "
+                                       style="text-align: center; color: black; font-size: 14px">
                                     <thead>
                                     <tr>
-                                        <th style="text-align: center">ID</th>
-                                        <th style="text-align: center">Người nộp</th>
-                                        <th style="text-align: center">Tên bài</th>
-                                        <th style="text-align: center">Bộ nhớ</th>
-                                        <th style="text-align: center">Thời gian chạy</th>
-                                        <th style="text-align: center">Nộp lúc</th>
-                                        <th style="text-align: center">Kết quả</th>
-                                        <th style="text-align: center">Ngôn ngữ</th>
+                                        <th>Tên kỳ thi</th>
+                                        <th>Người ra đề</th>
+                                        <th style="width: 150px">Bắt đầu</th>
+                                        <th style="width: 180px">Thời lượng (phút)</th>
+                                        <th style="width: 130px">Số người</th>
+                                        <th style="width: 200px">Trạng thái</th>
                                     </tr>
                                     </thead>
-                                    <tbody th:remove="all-but-first">
-                                    <tr th:each="submissionDTO : ${statusVO.lstSubmission}">
-                                        <td><b><a th:href="|/submission/${submissionDTO.id}|" th:text="${submissionDTO.id}">132</a></b></td>
-                                        <td><b><a href="#" th:text="${submissionDTO.user.fullname}">Makise
-                                            Kurisu</a></b></td>
-                                        <td><b><a th:href="|/problem/info/${submissionDTO.pmId}/view|"
-                                                  th:text="${submissionDTO.pmNm}">Tính tổng 2 số</a></b></td>
-                                        <td><label th:text="${submissionDTO.memoryUsed}">256KB</label>MB</td>
-                                        <td><label th:text="${submissionDTO.timeRun}"></label>ms </td>
-                                        <td><label th:text="${submissionDTO.submitTime}"></label></td>
-                                        <th:block th:if="${submissionDTO.judgeStatus==0}">
-                                            <td><label th:text="${submissionDTO.verdict}" class="judging"></label></td>
+                                    <tr th:each="contest : ${contestListVO.ongoingLst}">
+                                        <td><a th:href="|/contest/${contest.id}|" th:text="${contest.name}"></a></td>
+                                        <td><a href="#" th:text="${contest.creator.fullname}"></a></td>
+                                        <td th:text="${contest.date}"></td>
+                                        <td th:text="${contest.duration}" style="white-space: pre"></td>
+                                        <td><i class="mdi mdi-account"></i>x<label th:text="${contest.userCnt}"></label>
+                                        </td>
+                                        <th:block th:if="${contest.ongoing}">
+                                            <td><h3><span class="badge badge-warning">Đang thi</span></h3></td>
                                         </th:block>
-                                        <th:block th:if="${submissionDTO.judgeStatus==6}">
-                                            <td><label th:text="${submissionDTO.verdict}" class="accepted"></label></td>
+                                        <th:block th:unless="${contest.ongoing}">
+                                            <input type="hidden" th:id="|cd${contest.id}input|"
+                                                   th:value="${contest.startTime}"/>
+                                            <td>Chưa thi:<h4><span class="badge badge-success" th:id="|cd${contest.id}|"
+                                                                   th:text="${contest.startTime}"></span></h4></td>
                                         </th:block>
-                                        <th:block th:if="${submissionDTO.judgeStatus!=6 && submissionDTO.judgeStatus!=0}">
-                                            <td><label th:text="${submissionDTO.verdict}" class="fail"></label></td>
-                                        </th:block>
-                                        <td>C++ </td>
                                     </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-outline-info">
+                            <div class="card-header">
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Kỳ thi đã thi
+                                    xong</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="myTable1" class="table table-bordered "
+                                       style="text-align: center; color: black; font-size: 14px">
+                                    <thead>
                                     <tr>
-                                        <td><b><a href="SubmissionInfo.aspx">132</a></b></td>
-                                        <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                        <td>256KB</td>
-                                        <td>25ms</td>
-                                        <td>1:20:25</td>
-                                        <td><b style="color: red; font-weight: 500">Lỗi biên dịch</b></td>
-                                        <td>C++ </td>
+                                        <th>Tên kỳ thi</th>
+                                        <th>Người ra đề</th>
+                                        <th>Bắt đầu</th>
+                                        <th>Thời gian</th>
+                                        <th style="width: 130px">BXH</th>
+                                        <th style="width: 100px">Số người</th>
                                     </tr>
-                                    <tr>
-                                        <td><b><a href="SubmissionInfo.aspx">184</a></b></td>
-                                        <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                        <td>25KB</td>
-                                        <td>10ms</td>
-                                        <td>1:40:12</td>
-                                        <td><b style="color: green; font-weight: 800">Đúng</b></td>
-                                        <td>C++ </td>
+                                    </thead>
+                                    <tr th:each="contest : ${contestListVO.pastLst}">
+                                        <td><a th:href="|/contest/${contest.id}|" th:text="${contest.name}"></a></td>
+                                        <td><a href="#" th:text="${contest.creator.fullname}"></a></td>
+                                        <td th:text="${contest.date}"></td>
+                                        <td th:text="${contest.duration}" style="white-space: pre"></td>
+                                        <td>
+                                            <button type="button" th:onclick="|redirect(${contest.id})|"
+                                                    class="btn btn-outline-success">Xem xếp hạng
+                                            </button>
+                                        </td>
+                                        <td><i class="mdi mdi-account"></i>x<label th:text="${contest.userCnt}"></label>
+                                        </td>
                                     </tr>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- ============================================================== -->
             <!-- End PAge Content -->
@@ -173,11 +172,39 @@
 <script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
         th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
 ></script>
+<script th:src="@{/js/timer.js}"></script>
 <script>
+    function redirect(ctId) {
+        window.location = "/contest/" + ctId + "/leaderboard";
+    }
+
     $(document).ready(function () {
-        $('#myTable').dataTable( {
+        $('#myTable').dataTable({
             "bSort": false
-        } );
+        });
+        $('#myTable1').dataTable({
+            "bSort": false
+        });
+    });
+    $('span[id^="cd"]').each(function () {
+        var id = $(this).attr('id');
+        var inputId = id + "input";
+        var time = document.getElementById(inputId).value;
+        $(this).countdown(time)
+            .on('update.countdown', function (event) {
+                var format = '%H:%M:%S';
+                if (event.offset.totalDays > 0) {
+                    format = '%-d ngày ' + format;
+                }
+                if (event.offset.weeks > 0) {
+                    format = '%-w tuần ' + format;
+                }
+                $(this).html(event.strftime(format));
+            })
+            .on('finish.countdown', function (event) {
+                $(this).html("00:00:00");
+                alert('Cuộc thi đã bắt đầu, vui lòng load lại trang');
+            });
     });
 </script>
 </body>

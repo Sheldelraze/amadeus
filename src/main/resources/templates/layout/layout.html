@@ -36,6 +36,10 @@
             .success{
                 color: #1ed921;
             }
+
+            th {
+                text-align: center;
+            }
         </style>
     </th:block>
 </head>
@@ -479,9 +483,12 @@
                         <a class="waves-effect waves-dark" href="CourseList.aspx" aria-expanded="false"><i
                                 class="mdi mdi-clipboard-text"></i><span class="hide-menu">Khoá học</span></a>
                     </li>
-                    <li>
-                        <a class="waves-effect waves-dark" href="ContestList.aspx" aria-expanded="false"><i
-                                class="mdi mdi-trophy-variant-outline"></i><span class="hide-menu">Kỳ thi</span></a>
+                    <li><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
+                            class="mdi mdi-trophy-variant-outline"></i><span class="hide-menu">Kì thi</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="/contest/all">Tất cả kì thi</a></li>
+                            <li th:if="${canCreateContest}"><a href="/contest/my">Kì thi của tôi</a></li>
+                        </ul>
                     </li>
                     <li>
                         <a class="waves-effect waves-dark" href="UserList.aspx" aria-expanded="false"><i
@@ -588,6 +595,7 @@
     <!--c3 JavaScript -->
     <script src="../../static/assets/plugins/d3/d3.min.js" th:src="@{/assets/plugins/d3/d3.min.js}" ></script>
     <script src="../../static/assets/plugins/c3-master/c3.min.js" th:src="@{/assets/plugins/c3-master/c3.min.js}" ></script>
+    <script src="../../static/js/custom.min.js" th:src="@{/js/jquery-countdown.js}"></script>
 </div>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->

@@ -12,10 +12,7 @@ import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.ContestValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
-import com.minh.nguyen.vo.contest.ContestInformationVO;
-import com.minh.nguyen.vo.contest.ContestProblemVO;
-import com.minh.nguyen.vo.contest.ContestSettingVO;
-import com.minh.nguyen.vo.contest.ContestSubmitVO;
+import com.minh.nguyen.vo.contest.*;
 import com.minh.nguyen.vo.problem.ProblemPreviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,6 +48,7 @@ public class ContestController extends BaseController {
     private static final String LEADERBOARD_VIEW = "contest/info/contest-leaderboard";
     private static final String SETTING_VIEW = "contest/info/contest-setting";
     private static final String ANSWER_VIEW = "contest/other/contest-answer";
+    private static final String LIST_ALL_VIEW = "contest/list/contest-list-all";
     private static final String SUBMISSION_VIEW = "submission/submission";
     private static final String ANNOUNCEMENT_VIEW = "contest/info/contest-announcement";
     private static final String ADD_ROLE_VIEW = "contest/other/contest-add-role";
@@ -145,6 +143,16 @@ public class ContestController extends BaseController {
         return modelAndView;
     }
 
+    @GetMapping("/all")
+    public ModelAndView getAllContest() {
+        ModelAndView modelAndView = generalController.createGeneralModel();
+        ;
+        modelAndView.setViewName(LIST_ALL_VIEW);
+        ContestListVO contestListVO = new ContestListVO();
+        contestService.setListContest(contestListVO);
+        modelAndView.addObject("contestListVO", contestListVO);
+        return modelAndView;
+    }
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_CONTEST_TEXT + "')")
     @GetMapping("/create")
     public ModelAndView createContest(ContestCreateForm contestCreateForm) {

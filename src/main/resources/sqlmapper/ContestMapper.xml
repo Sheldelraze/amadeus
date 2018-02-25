@@ -4,5 +4,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.ContestMapper">
-
+    <select id="getAllContest" resultMap="contestLst">
+        SELECT
+            contest.id,
+            contest.name,
+            contest.startTime,
+            contest.duration,
+            user.fullname,
+            user.id AS urId,
+            countTbl.userCnt
+        FROM contest
+            INNER JOIN user
+                ON contest.createUser = user.handle
+            INNER JOIN (
+                           SELECT
+                               ctId,
+                               count(*) AS userCnt
+                           FROM ur_ct_auy
+                           WHERE auyId = #{auth_participate_contest_id}
+                           GROUP BY ctId
+                       ) AS countTbl
+                ON contest.id = countTbl.ctId
+        ORDER BY contest.startTime DESC
+    </select>
+    <resultMap id="contestLst" type="ContestDTO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="startTime" property="createTime"/>
+        <result column="duration" property="duration"/>
+        <result column="userCnt" property="userCnt"/>
+        <association property="creator" javaType="UserDTO">
+            <id column="urId" property="id"/>
+            <result column="fullname" property="fullname"/>
+        </association>
+    </resultMap>
 </mapper>
