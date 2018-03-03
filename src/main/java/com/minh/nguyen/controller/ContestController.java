@@ -82,13 +82,10 @@ public class ContestController extends BaseController {
     @Autowired
     private ContestValidator contestValidator;
 
-    @Autowired
-    private GeneralController generalController;
-
     private ModelAndView createGeneralModel(int ctId) {
 
         //add common information
-        ModelAndView modelAndView = generalController.createGeneralModel();
+        ModelAndView modelAndView = createGeneralModel();
         ContestDTO contestDTO = contestService.getContestTime(ctId);
         modelAndView.addObject("startTime", contestDTO.getStartTime());
         modelAndView.addObject("endTime", contestDTO.getEndTime());
@@ -145,7 +142,7 @@ public class ContestController extends BaseController {
 
     @GetMapping("/all")
     public ModelAndView getAllContest() {
-        ModelAndView modelAndView = generalController.createGeneralModel();
+        ModelAndView modelAndView = createGeneralModel();
         ;
         modelAndView.setViewName(LIST_ALL_VIEW);
         ContestListVO contestListVO = new ContestListVO();

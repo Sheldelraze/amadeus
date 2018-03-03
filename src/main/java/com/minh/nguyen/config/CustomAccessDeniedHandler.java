@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import java.io.IOException;
  * BROKE SOMETHING SO JUST LEAVE THIS HERE.
  */
 @Component("CustomAccessDeniedHandler")
-public class CustomAccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     private static Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 

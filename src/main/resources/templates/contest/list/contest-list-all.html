@@ -90,8 +90,8 @@
                                             <td><h3><span class="badge badge-warning">Đang thi</span></h3></td>
                                         </th:block>
                                         <th:block th:unless="${contest.ongoing}">
-                                            <input type="hidden" th:id="|cd${contest.id}input|"
-                                                   th:value="${contest.startTime}"/>
+                                            ` <input type="hidden" th:id="|cd${contest.id}input|"
+                                                     th:value="${contest.startTime}"/>
                                             <td>Chưa thi:<h4><span class="badge badge-success" th:id="|cd${contest.id}|"
                                                                    th:text="${contest.startTime}"></span></h4></td>
                                         </th:block>

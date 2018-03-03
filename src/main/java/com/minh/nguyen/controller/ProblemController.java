@@ -76,7 +76,7 @@ public class ProblemController extends BaseController {
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_PROBLEM_TEXT + "')")
     @GetMapping("/my")
     public ModelAndView getMy() {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName(LIST_MY_VIEW);
         List<ProblemDTO> lstProblem = problemService.getAllOfMyProblem();
         modelAndView.addObject(PROBLEM_LIST, lstProblem);
@@ -85,7 +85,7 @@ public class ProblemController extends BaseController {
 
     @GetMapping("/all")
     public ModelAndView getAll() {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName(LIST_ALL_VIEW);
 
         List<ProblemDTO> lstProblem = problemService.getAllPublicProblem();
@@ -96,7 +96,7 @@ public class ProblemController extends BaseController {
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_PROBLEM_TEXT + "')")
     @GetMapping("/create")
     public ModelAndView getCreate() {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName(CREATE_VIEW);
         modelAndView.addObject(CREATE_FORM, new ProblemCreateForm());
         return modelAndView;
@@ -105,12 +105,13 @@ public class ProblemController extends BaseController {
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_PROBLEM_TEXT + "')")
     @PostMapping("/doCreate")
     public ModelAndView doCreate(ProblemCreateForm problemCreateForm, BindingResult result) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = null;
         ProblemDTO problemDTO = new ProblemDTO();
         modelMapper.map(problemCreateForm, problemDTO);
         problemCreateForm.setScreenName("makerAdd");
         validate(problemCreateForm, result);
         if (result.hasErrors()) {
+            modelAndView = createGeneralModel();
             modelAndView.setViewName(CREATE_VIEW);
             modelAndView.addObject(CREATE_FORM, problemCreateForm);
             return modelAndView;
@@ -123,6 +124,7 @@ public class ProblemController extends BaseController {
             addLogicError(result, Constants.MSG_SYSTEM_ERR, new Object[]{});
         }
         if (result.hasErrors()) {
+            modelAndView = createGeneralModel();
             modelAndView.setViewName(CREATE_VIEW);
             modelAndView.addObject(CREATE_FORM, problemCreateForm);
             return modelAndView;
@@ -131,7 +133,7 @@ public class ProblemController extends BaseController {
     }
 
     private ModelAndView getGeneralInfo(Integer pmId, ProblemLayoutForm problemForm, int viewTab, boolean updateSuccess) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         ProblemLayoutVO problemLayoutVO = null;
         if (null == problemForm || null == problemForm.getId()) {
             ProblemDTO problemDTO = new ProblemDTO();
@@ -166,7 +168,7 @@ public class ProblemController extends BaseController {
             "|| @ProblemValidator.checkPermission(authentication,#pmId,'" + Constants.AUTH_VIEW_PROBLEM_TEXT + "')")
     @GetMapping("/{pmId}/view")
     public ModelAndView getView(@PathVariable("pmId") Integer pmId) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName(VIEW);
         ProblemDTO problemDTO = new ProblemDTO();
         problemDTO.setId(pmId);
@@ -188,7 +190,7 @@ public class ProblemController extends BaseController {
             "|| (isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'" + Constants.AUTH_VIEW_PROBLEM_TEXT + "'))")
     @GetMapping("/{pmId}/submit")
     public ModelAndView getSubmit(@PathVariable("pmId") Integer pmId) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName(SUBMIT_VIEW);
 
         modelAndView.addObject(TAB, 2);
@@ -236,8 +238,7 @@ public class ProblemController extends BaseController {
     @GetMapping("/{pmId}/statement")
     public ModelAndView getStatement(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,
                                      boolean updateGeneralSuccess, boolean updateSuccess) {
-        ModelAndView modelAndView = null;
-        modelAndView = getGeneralInfo(pmId, problemLayoutForm, STATEMENT_TAB, updateGeneralSuccess);
+        ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, STATEMENT_TAB, updateGeneralSuccess);
 
         ProblemDTO problemDTO = new ProblemDTO();
         ProblemStatementVO problemStatementVO = new ProblemStatementVO();

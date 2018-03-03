@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,9 +18,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.Executor;
+
 /**
  * @author Mr.Minh
  * @since 06/02/2018
@@ -28,6 +31,7 @@ import java.util.concurrent.Executor;
  * you are doing
  */
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
@@ -41,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @PostConstruct
-    protected void init(){
+    protected void init() {
         //allow session to be used in multithread (a.k.a @Async) functions
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
@@ -74,10 +78,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return registration;
     }
 
-//    @Bean
-//    public InternalResourceViewResolver defaultViewResolver() {
-//        return new InternalResourceViewResolver();
-//    }
+    @Bean
+    public InternalResourceViewResolver defaultViewResolver() {
+        return new InternalResourceViewResolver();
+    }
 
     //configure security settings. Again, don't change if you don't know what you are doing
     @Override
@@ -85,6 +89,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/resources/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/ace/**").permitAll()
+                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/nicEdit/**").permitAll()
+                .antMatchers("/scss/**").permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()

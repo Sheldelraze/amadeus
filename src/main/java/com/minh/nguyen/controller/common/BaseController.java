@@ -15,14 +15,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -45,6 +48,9 @@ public class BaseController {
 
     @Autowired
     protected BindingResult bindingResult;
+
+    @Autowired
+    private HttpSession httpSession;
 
     protected ModelMapper modelMapper;
 
@@ -194,4 +200,21 @@ public class BaseController {
 
     }
 
+    protected ModelAndView createGeneralModel() {
+        ModelAndView modelAndView = new ModelAndView();
+        boolean canCreateProblem = false;
+        boolean canCreateContest = false;
+        if (null != httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES)) {
+            List<Integer> defaultAuth = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
+            if (defaultAuth.contains(Constants.AUTH_CREATE_PROBLEM_ID)) {
+                canCreateProblem = true;
+            }
+            if (defaultAuth.contains(Constants.AUTH_CREATE_CONTEST_ID)) {
+                canCreateContest = true;
+            }
+        }
+        modelAndView.addObject("canCreateProblem", canCreateProblem);
+        modelAndView.addObject("canCreateContest", canCreateContest);
+        return modelAndView;
+    }
 }

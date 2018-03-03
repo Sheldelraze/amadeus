@@ -1,6 +1,6 @@
 package com.minh.nguyen.controller;
 
-import com.minh.nguyen.constants.Constants;
+import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.vo.StatusVO;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -19,7 +18,7 @@ import java.util.List;
  * Purpose: controller for urls which anyone can access
  */
 @Controller
-public class GeneralController {
+public class GeneralController extends BaseController {
 
     @Autowired
     private GeneralService generalService;
@@ -72,21 +71,4 @@ public class GeneralController {
         return modelAndView;
     }
 
-    public ModelAndView createGeneralModel() {
-        ModelAndView modelAndView = new ModelAndView();
-        boolean canCreateProblem = false;
-        boolean canCreateContest = false;
-        if (null != httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES)) {
-            List<Integer> defaultAuth = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
-            if (defaultAuth.contains(Constants.AUTH_CREATE_PROBLEM_ID)) {
-                canCreateProblem = true;
-            }
-            if (defaultAuth.contains(Constants.AUTH_CREATE_CONTEST_ID)) {
-                canCreateContest = true;
-            }
-        }
-        modelAndView.addObject("canCreateProblem", canCreateProblem);
-        modelAndView.addObject("canCreateContest", canCreateContest);
-        return modelAndView;
-    }
 }
