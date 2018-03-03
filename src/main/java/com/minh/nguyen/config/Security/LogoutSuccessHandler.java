@@ -1,4 +1,4 @@
-package com.minh.nguyen.config;
+package com.minh.nguyen.config.Security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;

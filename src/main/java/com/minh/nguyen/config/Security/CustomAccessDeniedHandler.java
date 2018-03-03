@@ -1,4 +1,4 @@
-package com.minh.nguyen.config;
+package com.minh.nguyen.config.Security;
 
 import com.minh.nguyen.exception.NoSuchPageException;
 import org.slf4j.Logger;

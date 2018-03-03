@@ -1,6 +1,10 @@
 package com.minh.nguyen.controller;
 
 import com.minh.nguyen.controller.common.BaseController;
+import com.minh.nguyen.dto.MessageDTO;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,4 +24,12 @@ public class MessageController extends BaseController {
         modelAndView.setViewName("other/message");
         return modelAndView;
     }
+
+    @MessageMapping("/send")
+    @SendTo("/topic/public")
+    public MessageDTO sendMessage(@Payload MessageDTO chatMessage) {
+        return chatMessage;
+    }
+
+
 }

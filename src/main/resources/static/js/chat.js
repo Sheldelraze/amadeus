@@ -20,7 +20,7 @@ $(function () {
      });
     
     var cht = function () {
-            var topOffset = 445;
+        var topOffset = 220;
             var height = ((window.innerHeight > 0) ? window.innerHeight : this.screen.height) - 1;
             height = height - topOffset;
             $(".chat-list").css("height", (height) + "px");
@@ -32,7 +32,7 @@ $(function () {
 
     // this is for the left-aside-fix in content area with scroll
     var chtin = function () {
-            var topOffset = 270;
+        var topOffset = 150;
             var height = ((window.innerHeight > 0) ? window.innerHeight : this.screen.height) - 1;
             height = height - topOffset;
             $(".chat-left-inner").css("height", (height) + "px");

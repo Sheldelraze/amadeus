@@ -1,4 +1,4 @@
-package com.minh.nguyen.config;
+package com.minh.nguyen.config.Security;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;

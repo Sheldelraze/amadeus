@@ -2,7 +2,6 @@ package com.minh.nguyen.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -19,9 +18,5 @@ public class MessageEntity extends BaseEntity implements Serializable {
 
     @Column(name = "content")
     private String content;
-
-    @Column(name = "sentTime")
-    private Date sentTime;
-
 
 }

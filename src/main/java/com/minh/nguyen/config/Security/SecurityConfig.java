@@ -1,5 +1,5 @@
 
-package com.minh.nguyen.config;
+package com.minh.nguyen.config.Security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/contest/all").permitAll()
+                .antMatchers("/problem/info/all").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/css/**").permitAll()
