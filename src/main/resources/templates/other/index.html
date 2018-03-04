@@ -66,7 +66,16 @@
                             <!-- .chat-left-panel -->
                             <!-- .chat-right-panel -->
                             <div>
+                                <div class="card-outline-info">
+                                    <div class="card-header">
+                                        <h4 class="m-b-0 text-white"><i class="mdi mdi-wechat"></i>Cửa sổ chat</h4>
+                                    </div>
+                                </div>
                                 <div class="chat-rbox">
+                                    <div id="connecting" class="p-10 bg-light-primary"
+                                         style="text-align: center;color:black">
+                                        Đang kết nối...
+                                    </div>
                                     <ul class="chat-list p-20">
                                         <!--chat Row -->
                                         <li>
@@ -132,18 +141,20 @@
                                         <!--chat Row -->
                                     </ul>
                                 </div>
-                                <div class="card-body b-t">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <input placeholder="Type your message here"
-                                                   class="form-control b-0"/>
-                                        </div>
-                                        <div class="col-4 text-right">
-                                            <button type="button" class="btn btn-info btn-circle btn-lg"><i
-                                                    class="fa fa-paper-plane-o"></i></button>
+                                <form id="messageForm" name="messageForm">
+                                    <div class="card-body b-t">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <input id="messageInput" placeholder="Nhập nội dung...."
+                                                       class="form-control b-0"/>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <button type="submit" class="btn btn-info btn-circle btn-lg"><i
+                                                        class="fa fa-paper-plane-o"></i></button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                             <!-- .chat-right-panel -->
                         </div>
@@ -179,7 +190,10 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
-<script th:src="@{/js/chat.js}"></script>
+<script th:src="@{/js/chatbox.js}"></script>
+<script th:src="@{/js/sockjs.min.js}"></script>
+<script th:src="@{/js/stomp.min.js}"></script>
+
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

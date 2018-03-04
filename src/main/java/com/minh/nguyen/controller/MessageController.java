@@ -7,7 +7,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -16,16 +15,15 @@ import org.springframework.web.servlet.ModelAndView;
  * Purpose:
  */
 @Controller
-@RequestMapping("/message")
 public class MessageController extends BaseController {
-    @GetMapping({"/", ""})
+    @GetMapping({"/message", "/message/"})
     public ModelAndView getMessageView() {
         ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName("other/message");
         return modelAndView;
     }
 
-    @MessageMapping("/send")
+    @MessageMapping("/message/send")
     @SendTo("/topic/public")
     public MessageDTO sendMessage(@Payload MessageDTO chatMessage) {
         return chatMessage;

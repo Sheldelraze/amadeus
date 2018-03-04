@@ -36,7 +36,7 @@ public class GeneralController extends BaseController {
     @GetMapping({"/",""})
     public ModelAndView getIndex() {
         ModelAndView modelAndView = createGeneralModel();
-        modelAndView.setViewName("share/index");
+        modelAndView.setViewName("other/index");
         return modelAndView;
     }
     @GetMapping("/403")
