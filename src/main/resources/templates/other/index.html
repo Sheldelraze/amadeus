@@ -8,6 +8,11 @@
     <!-- Favicon icon -->
     <title>Amadeus system</title>
     <div th:replace="layout/layout::css"></div>
+    <style>
+        card-body {
+            margin-top: -10px;
+        }
+    </style>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
 <!-- ============================================================== -->
@@ -142,15 +147,12 @@
                                     </ul>
                                 </div>
                                 <form id="messageForm" name="messageForm">
-                                    <div class="card-body b-t">
+                                    <div class="card-body">
                                         <div class="row">
-                                            <div class="col-8">
-                                                <input id="messageInput" placeholder="Nhập nội dung...."
+                                            <div class="col-12">
+                                                <input autocomplete="off" id="messageInput"
+                                                       placeholder="Nhập nội dung...."
                                                        class="form-control b-0"/>
-                                            </div>
-                                            <div class="col-4 text-right">
-                                                <button type="submit" class="btn btn-info btn-circle btn-lg"><i
-                                                        class="fa fa-paper-plane-o"></i></button>
                                             </div>
                                         </div>
                                     </div>

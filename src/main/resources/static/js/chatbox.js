@@ -5,7 +5,7 @@ var stompClient = null;
 var connectingElement = document.getElementById('connecting');
 var messageInput = document.getElementById('messageInput');
 var username = 'aman';
-var topic = '/topic/public';
+var topic = '/message/topic.123';
 var messageForm = document.getElementById('messageForm');
 
 function onConnected() {
@@ -36,7 +36,7 @@ function sendMessage(event) {
             sender: username,
             content: messageInput.value
         };
-        stompClient.send("/message/send", {}, JSON.stringify(chatMessage));
+        stompClient.send("/message/send.123", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
