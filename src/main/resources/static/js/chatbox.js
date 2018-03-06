@@ -4,13 +4,16 @@
 var stompClient = null;
 var connectingElement = document.getElementById('connecting');
 var messageInput = document.getElementById('messageInput');
-var username = 'aman';
-var topic = '/message/topic.123';
 var messageForm = document.getElementById('messageForm');
 
+/*
+    username and topic variable are declared in html page
+    therefore do not search here
+    since thymeleaf can only pass value direct to view, not js file (AFAIK :D)
+ */
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe(topic, onMessageReceived);
+    stompClient.subscribe('/message/topic.' + topic, onMessageReceived);
 
     // Tell your username to the server
     // stompClient.send("/app/chat.addUser",
@@ -30,13 +33,23 @@ function onError(error) {
 messageForm.addEventListener('submit', sendMessage, true);
 
 function sendMessage(event) {
+    if (username == null){
+        alert('Bạn cần đăng nhập để chat!');
+        event.preventDefault();
+        return;
+    }
     var messageContent = messageInput.value.trim();
+    if (messageContent.length > 200){
+        alert('Vui lòng nhập không quá 200 ký tự!');
+        event.preventDefault();
+        return;
+    }
     if (messageContent && stompClient) {
         var chatMessage = {
             sender: username,
             content: messageInput.value
         };
-        stompClient.send("/message/send.123", {}, JSON.stringify(chatMessage));
+        stompClient.send("/message/send." + topic, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -47,13 +60,13 @@ function onMessageReceived(payload) {
 
     var messageElement = document.createElement('li');
 
-    if (message.type === 'JOIN') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
-    } else if (message.type === 'LEAVE') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
-    } else {
+    if (message.type === 'FAIL') {
+        if (null != username && message.sender == username) {
+            alert('Gửi tin nhắn thất bại\r\nNguyên nhân: ' + message.comment);
+        }
+        event.preventDefault();
+        return;
+    }  else {
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
@@ -81,15 +94,10 @@ function onMessageReceived(payload) {
 
 $(function () {
 
+    var socket = new SockJS('/chat');
+    stompClient = Stomp.over(socket);
 
-    if (username != null) {
-
-        var socket = new SockJS('/chat');
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, onConnected, onError);
-    }
-
+    stompClient.connect({}, onConnected, onError);
     $('.chat-left-inner > .chatonline').slimScroll({
         height: '100%',
         position: 'right',

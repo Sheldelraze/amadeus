@@ -2,6 +2,8 @@ package com.minh.nguyen.controller;
 
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.MessageDTO;
+import com.minh.nguyen.service.MessageService;
+import com.minh.nguyen.validator.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,7 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class MessageController extends BaseController {
 
     @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
+    private MessageService messageService;
+
+    @Autowired
+    private MessageValidator validator;
 
     @GetMapping({"/message", "/message/"})
     public ModelAndView getMessageView() {
@@ -30,17 +35,11 @@ public class MessageController extends BaseController {
         return modelAndView;
     }
 
-    @MessageMapping("/message/send")
-    @SendTo("/message/topic/public")
-    public MessageDTO sendMessage(@Payload MessageDTO chatMessage) {
-        messagingTemplate.convertAndSend("/topic/public", chatMessage);
-        return chatMessage;
-    }
 
-    @MessageMapping("/message/send.{channelId}")
-    @SendTo("/message/topic.{channelId}")
-    public MessageDTO chatMessage(@DestinationVariable String channelId, MessageDTO message) {
-
+    @MessageMapping("/message/send.{channelName}")
+    @SendTo("/message/topic.{channelName}")
+    public MessageDTO sendMessage(@DestinationVariable String channelName, MessageDTO message) {
+        validator.validateMessage(message);
         return message;
     }
 }

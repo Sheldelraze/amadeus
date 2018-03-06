@@ -33,7 +33,6 @@ import java.util.*;
  * Purpose:
  */
 @Service
-@Primary
 public class ContestService extends BaseService {
     @Autowired
     private ContestMapper contestMapper;

@@ -5,7 +5,10 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.entity.*;
+import com.minh.nguyen.entity.ProblemEntity;
+import com.minh.nguyen.entity.SnSDlEntity;
+import com.minh.nguyen.entity.SubmissionEntity;
+import com.minh.nguyen.entity.SubmitDetailEntity;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CompileUtil;
@@ -15,10 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
-
-import java.util.Calendar;
-import java.util.Date;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Mr.Minh
@@ -26,7 +26,7 @@ import java.util.Date;
  * Purpose: Class designed for multithread judging process,
  * you may configure more option in class SecurityConfig
  */
-@Component("JudgeService")
+@Service
 public class JudgeService extends BaseService {
     private static Logger logger = LoggerFactory.getLogger(JudgeService.class);
     @Autowired

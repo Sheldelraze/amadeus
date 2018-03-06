@@ -10,6 +10,8 @@ package com.minh.nguyen.constants;
 public class Constants {
     public static final Integer SUBMISSION_FAIL_PENALTY = 10;
 
+    public static final Integer MESSAGE_MAX_LENGTH = 200;
+
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";
     public static final String CURRENT_LOGIN_USER_FULLNAME = "currentUserFullname";

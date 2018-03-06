@@ -29,7 +29,6 @@ import java.util.Date;
  * Purpose: base class for all service class
  */
 @Service
-@Primary
 public class BaseService {
     public ModelMapper modelMapper;
 
