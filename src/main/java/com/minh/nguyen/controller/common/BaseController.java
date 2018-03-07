@@ -204,7 +204,6 @@ public class BaseController {
         ModelAndView modelAndView = new ModelAndView();
         boolean canCreateProblem = false;
         boolean canCreateContest = false;
-        Object currentUser = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
         if (null != httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES)) {
             List<Integer> defaultAuth = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
             if (defaultAuth.contains(Constants.AUTH_CREATE_PROBLEM_ID)) {
@@ -214,7 +213,6 @@ public class BaseController {
                 canCreateContest = true;
             }
         }
-        modelAndView.addObject("currentUser", currentUser);
         modelAndView.addObject("canCreateProblem", canCreateProblem);
         modelAndView.addObject("canCreateContest", canCreateContest);
         return modelAndView;

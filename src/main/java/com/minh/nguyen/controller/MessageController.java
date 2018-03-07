@@ -7,12 +7,14 @@ import com.minh.nguyen.validator.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -36,10 +38,16 @@ public class MessageController extends BaseController {
     }
 
 
-    @MessageMapping("/message/send.{channelName}")
-    @SendTo("/message/topic.{channelName}")
-    public MessageDTO sendMessage(@DestinationVariable String channelName, MessageDTO message) {
+    @MessageMapping("/message/send.{topicName}")
+    @SendTo("/message/topic.{topicName}")
+    public MessageDTO sendMessage(@DestinationVariable String topicName, MessageDTO message) {
         validator.validateMessage(message);
+        message.setCreateTime(new Date());
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        message.setSendTime(dateFormat.format(message.getCreateTime()));
+        if (message.getType() == MessageDTO.MessageType.SUCCESS) {
+            messageService.insertMessage(message, topicName);
+        }
         return message;
     }
 }

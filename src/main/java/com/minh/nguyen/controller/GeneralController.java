@@ -1,8 +1,11 @@
 package com.minh.nguyen.controller;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
+import com.minh.nguyen.dto.MessageDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
+import com.minh.nguyen.service.MessageService;
 import com.minh.nguyen.vo.StatusVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -26,6 +30,9 @@ public class GeneralController extends BaseController {
     @Autowired
     private HttpSession httpSession;
 
+    @Autowired
+    private MessageService messageService;
+
     @GetMapping({"/login","/login/"})
     public ModelAndView getLogin(Boolean logout) {
         ModelAndView modelAndView = new ModelAndView();
@@ -36,6 +43,13 @@ public class GeneralController extends BaseController {
     @GetMapping({"/",""})
     public ModelAndView getIndex() {
         ModelAndView modelAndView = createGeneralModel();
+        Object urId = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
+        List<MessageDTO> lstMessage = messageService.getRecentMessage(Constants.PUBLIC_TOPIC);
+        modelAndView.addObject("urId", urId);
+        modelAndView.addObject("topic", "public");
+        modelAndView.addObject("username", username);
+        modelAndView.addObject("lstMessage", lstMessage);
         modelAndView.setViewName("other/index");
         return modelAndView;
     }

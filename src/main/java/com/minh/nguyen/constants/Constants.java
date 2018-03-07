@@ -11,6 +11,9 @@ public class Constants {
     public static final Integer SUBMISSION_FAIL_PENALTY = 10;
 
     public static final Integer MESSAGE_MAX_LENGTH = 200;
+    public static final Integer MAX_RECENT_MESSAGE = 30;
+    public static final String PUBLIC_TOPIC = "public";
+
 
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";

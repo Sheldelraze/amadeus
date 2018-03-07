@@ -14,6 +14,8 @@
         <mapper resource="sqlmapper/AuthorityMapper.xml"/>
         <mapper resource="sqlmapper/ContestMapper.xml"/>
         <mapper resource="sqlmapper/AnnouncementMapper.xml"/>
+        <mapper resource="sqlmapper/MessageMapper.xml"/>
+        <mapper resource="sqlmapper/ConversationMapper.xml"/>
     </mappers>
 
 </configuration>

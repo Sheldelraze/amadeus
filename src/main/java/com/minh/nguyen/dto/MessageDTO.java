@@ -8,13 +8,31 @@ package com.minh.nguyen.dto;
 public class MessageDTO extends BaseDTO {
     private MessageType type;
 
-    private Integer id;
-
     private String content;
 
-    private String sender;
+    private String urId;
 
     private String comment;
+
+    private String username;
+
+    private String sendTime;
+
+    public String getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public enum MessageType {
         SUCCESS, FAIL
@@ -36,14 +54,6 @@ public class MessageDTO extends BaseDTO {
         this.type = type;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getContent() {
         return content;
     }
@@ -52,11 +62,11 @@ public class MessageDTO extends BaseDTO {
         this.content = content;
     }
 
-    public String getSender() {
-        return sender;
+    public String getUrId() {
+        return urId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setUrId(String urId) {
+        this.urId = urId;
     }
 }

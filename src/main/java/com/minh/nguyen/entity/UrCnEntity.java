@@ -1,34 +1,26 @@
 package com.minh.nguyen.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
  * @author Mr.Minh
- * @since 31/12/2017
+ * @since 07/03/2018
  * Purpose:
  */
-@Table(name="message")
-public class MessageEntity extends BaseEntity implements Serializable {
-    static final long serialVersionUID = 6434129042143L;
+@Table(name = "ur_cn")
+public class UrCnEntity extends BaseEntity implements Serializable {
+    static final long serialVersionUID = 50042L;
 
-    @Column(name = "content")
-    private String content;
-
+    @Id
     @Column(name = "urId")
     private Integer urId;
 
+    @Id
     @Column(name = "cnId")
     private Integer cnId;
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public Integer getUrId() {
         return urId;

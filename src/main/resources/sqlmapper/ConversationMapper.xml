@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minh.nguyen.mapper.ConversationMapper">
+    <select id="selectByTopic" resultType="com.minh.nguyen.entity.ConversationEntity">
+        SELECT *
+        FROM conversation
+        WHERE deleteFlg = "0"
+              AND topic = #{topic}
+    </select>
+</mapper>

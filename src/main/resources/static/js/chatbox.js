@@ -5,6 +5,7 @@ var stompClient = null;
 var connectingElement = document.getElementById('connecting');
 var messageInput = document.getElementById('messageInput');
 var messageForm = document.getElementById('messageForm');
+var messageArea = document.getElementById('chatList');
 
 /*
     username and topic variable are declared in html page
@@ -22,6 +23,8 @@ function onConnected() {
     // )
 
     connectingElement.classList.add('hiddenDiv');
+    var chatBox = document.getElementById('chatBox');
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function onError(error) {
@@ -33,20 +36,24 @@ function onError(error) {
 messageForm.addEventListener('submit', sendMessage, true);
 
 function sendMessage(event) {
-    if (username == null){
+    event.preventDefault();
+    if (urId == null) {
         alert('Bạn cần đăng nhập để chat!');
-        event.preventDefault();
         return;
     }
     var messageContent = messageInput.value.trim();
-    if (messageContent.length > 200){
+    if (messageContent == null || messageContent.length == 0) {
+        return;
+    }
+    if (messageContent.length > 200) {
         alert('Vui lòng nhập không quá 200 ký tự!');
         event.preventDefault();
         return;
     }
     if (messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
+            username: username,
+            urId: urId,
             content: messageInput.value
         };
         stompClient.send("/message/send." + topic, {}, JSON.stringify(chatMessage));
@@ -61,35 +68,50 @@ function onMessageReceived(payload) {
     var messageElement = document.createElement('li');
 
     if (message.type === 'FAIL') {
-        if (null != username && message.sender == username) {
+        if (null != urId && message.urId == urId) {
             alert('Gửi tin nhắn thất bại\r\nNguyên nhân: ' + message.comment);
         }
-        event.preventDefault();
         return;
-    }  else {
-        messageElement.classList.add('chat-message');
-
-        var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.sender[0]);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
-
-        messageElement.appendChild(avatarElement);
-
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
-        usernameElement.appendChild(usernameText);
-        messageElement.appendChild(usernameElement);
     }
+    //chat time
+    var chatTimeDiv = document.createElement('div');
+    chatTimeDiv.classList.add('chat-time');
+    chatTimeDiv.innerHTML = message.sendTime;
 
-    var textElement = document.createElement('p');
-    var messageText = document.createTextNode(message.content);
-    textElement.appendChild(messageText);
+    //chat img
+    var chatImgDiv = document.createElement('div');
+    var chatImg = document.createElement('img');
+    chatImgDiv.classList.add('chat-img');
+    chatImgDiv.appendChild(chatImg);
+    chatImg.src = '/assets/images/users/1.jpg';
+    chatImg.alt = message.username;
 
-    messageElement.appendChild(textElement);
-
-    // messageArea.appendChild(messageElement);
-    // messageArea.scrollTop = messageArea.scrollHeight;
+    //chat content
+    var contentDiv = document.createElement('div');
+    var nameElement = document.createElement('h5');
+    var messageContentDiv = document.createElement('div');
+    contentDiv.classList.add('chat-content');
+    contentDiv.appendChild(nameElement);
+    contentDiv.appendChild(messageContentDiv);
+    messageContentDiv.innerHTML = message.content;
+    nameElement.innerHTML = message.username;
+    messageContentDiv.style.color = "black";
+    if (message.urId == urId) {
+        messageContentDiv.classList.add('box');
+        messageContentDiv.classList.add('bg-light-info');
+        messageElement.classList.add('reverse');
+        messageElement.appendChild(chatTimeDiv);
+        messageElement.appendChild(contentDiv);
+        messageElement.appendChild(chatImgDiv);
+    } else {
+        messageContentDiv.classList.add('box');
+        messageContentDiv.classList.add('bg-light-inverse');
+        messageElement.appendChild(chatImgDiv);
+        messageElement.appendChild(contentDiv);
+        messageElement.appendChild(chatTimeDiv);
+    }
+    messageArea.appendChild(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 $(function () {
@@ -103,7 +125,6 @@ $(function () {
         position: 'right',
         size: "5px",
         color: '#dcdcdc'
-
     });
     $('.chat-list').slimScroll({
         position: 'right'
@@ -137,5 +158,6 @@ $(function () {
         $(".chat-left-aside").toggleClass("open-pnl");
         $(".open-panel i").toggleClass("ti-angle-left");
     });
+
 
 });
