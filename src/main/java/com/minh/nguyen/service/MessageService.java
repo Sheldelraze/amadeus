@@ -3,11 +3,13 @@ package com.minh.nguyen.service;
 import com.google.common.collect.Lists;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.MessageDTO;
+import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.entity.ConversationEntity;
 import com.minh.nguyen.entity.MessageEntity;
 import com.minh.nguyen.mapper.ConversationMapper;
 import com.minh.nguyen.mapper.MessageMapper;
 import com.minh.nguyen.mapper.UrCtAuyMapper;
+import com.minh.nguyen.mapper.UserMapper;
 import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class MessageService extends BaseService {
     @Autowired
     private UrCtAuyMapper urCtAuyMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Async
     public void insertMessage(MessageDTO message, String topic) {
         ConversationEntity conversationEntity = conversationMapper.selectByTopic(topic);
@@ -58,5 +63,9 @@ public class MessageService extends BaseService {
         }
         lstMessage = Lists.reverse(lstMessage);
         return lstMessage;
+    }
+
+    public List<UserDTO> getLstUser(String inputText) {
+        return userMapper.findListUserByFullnameOrHandle(inputText);
     }
 }

@@ -15,16 +15,8 @@ var messageArea = document.getElementById('chatList');
 function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe('/message/topic.' + topic, onMessageReceived);
-
-    // Tell your username to the server
-    // stompClient.send("/app/chat.addUser",
-    //     {},
-    //     JSON.stringify({sender: username, type: 'JOIN'})
-    // )
-
     connectingElement.classList.add('hiddenDiv');
-    var chatBox = document.getElementById('chatBox');
-    chatBox.scrollTop = chatBox.scrollHeight;
+    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 function onError(error) {
@@ -37,6 +29,9 @@ messageForm.addEventListener('submit', sendMessage, true);
 
 function sendMessage(event) {
     event.preventDefault();
+    if (topic == 'NOT_CHOSEN') {
+        return;
+    }
     if (urId == null) {
         alert('Bạn cần đăng nhập để chat!');
         return;
@@ -114,12 +109,24 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
+function doSearch() {
+    var inputElement = document.getElementById('inputText');
+}
 $(function () {
-
-    var socket = new SockJS('/chat');
-    stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, onConnected, onError);
+    var inputElement = document.getElementById('inputText');
+    if (inputElement != null) {
+        $("#inputText").on('input', function () {
+            doSearch();
+        });
+    }
+    if (topic != 'NOT_CHOSEN') {
+        var socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, onConnected, onError);
+    } else {
+        connectingElement.className = "p-10 bg-light-green";
+        connectingElement.textContent = 'Vui lòng chọn người để chat cùng...';
+    }
     $('.chat-left-inner > .chatonline').slimScroll({
         height: '100%',
         position: 'right',
@@ -145,7 +152,7 @@ $(function () {
 
     // this is for the left-aside-fix in content area with scroll
     var chtin = function () {
-        var topOffset = 150;
+        var topOffset = 130;
         var height = ((window.innerHeight > 0) ? window.innerHeight : this.screen.height) - 1;
         height = height - topOffset;
         $(".chat-left-inner").css("height", (height) + "px");
@@ -161,3 +168,4 @@ $(function () {
 
 
 });
+

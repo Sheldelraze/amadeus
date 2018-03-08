@@ -1,7 +1,9 @@
 package com.minh.nguyen.controller;
 
+import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.MessageDTO;
+import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.service.MessageService;
 import com.minh.nguyen.validator.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Mr.Minh
@@ -30,10 +33,14 @@ public class MessageController extends BaseController {
     @Autowired
     private MessageValidator validator;
 
+
     @GetMapping({"/message", "/message/"})
     public ModelAndView getMessageView() {
         ModelAndView modelAndView = createGeneralModel();
-        modelAndView.setViewName("other/message");
+        List<UserDTO> lstUser = messageService.getLstUser(null);
+        modelAndView.addObject("lstUser", lstUser);
+        modelAndView.addObject("topic", Constants.DEFAULT_TOPIC);
+        modelAndView.setViewName("share/message");
         return modelAndView;
     }
 

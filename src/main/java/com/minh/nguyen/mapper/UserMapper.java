@@ -22,4 +22,6 @@ public interface UserMapper extends BaseMapper<UserEntity>{
     List<UserDTO> getListProblemRole(@Param("urId") Integer urId, @Param("pmId") Integer pmId);
 
     List<UserDTO> getListContestRole(@Param("urId") Integer urId, @Param("ctId") Integer ctId);
+
+    List<UserDTO> findListUserByFullnameOrHandle(@Param("text") String text);
 }
