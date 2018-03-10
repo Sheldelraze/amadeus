@@ -44,23 +44,42 @@ public class MessageController extends BaseController {
     public ModelAndView getMessageView() {
         ModelAndView modelAndView = createGeneralModel();
         Integer currewntUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-        List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, 0, Constants.MAX_USER_PER_SEARCH);
+        Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
+        List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, 0);
+        modelAndView.addObject("username", username);
+        modelAndView.addObject("urId", currewntUserId);
         modelAndView.addObject("lstUser", lstUser);
         modelAndView.addObject("increment", Constants.MAX_USER_PER_SEARCH);
         modelAndView.addObject("topic", Constants.DEFAULT_TOPIC);
+        modelAndView.addObject("messagePerFetch", Constants.MAX_MESSAGE_PER_FETCH);
         modelAndView.setViewName("share/message");
         return modelAndView;
     }
 
     @PostMapping("/message/findUser")
     public ResponseEntity<?> getSearchResultViaAjax(@RequestBody MessageDTO message) {
-        Integer currewntUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-        List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, message.getLimitFrom(), message.getLimitTo());
-        return ResponseEntity.ok(lstUser);
+        try {
+            Integer currewntUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+            List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, message.getLimitFrom());
+            return ResponseEntity.ok(lstUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/message/getMessage")
+    public ResponseEntity<?> getMessage(@RequestBody MessageDTO message) {
+        try {
+            List<MessageDTO> lstMessage = messageService.getRecentMessage(message.getTopic(), message.getLimitFrom());
+            return ResponseEntity.ok(lstMessage);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @MessageMapping("/message/send.{topicName}")
     @SendTo("/message/topic.{topicName}")
     public MessageDTO sendMessage(@DestinationVariable String topicName, MessageDTO message) {
+        message.setTopic(topicName);
         validator.validateMessage(message);
         message.setCreateTime(new Date());
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");

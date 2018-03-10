@@ -2,6 +2,7 @@ package com.minh.nguyen.service;
 
 import com.google.common.collect.Lists;
 import com.minh.nguyen.constants.Constants;
+import com.minh.nguyen.dto.ConversationDTO;
 import com.minh.nguyen.dto.MessageDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.entity.ConversationEntity;
@@ -42,9 +43,16 @@ public class MessageService extends BaseService {
 
     @Async
     public void insertMessage(MessageDTO message, String topic) {
-        ConversationEntity conversationEntity = conversationMapper.selectByTopic(topic);
-        if (conversationEntity == null || StringUtil.isNull(message.getUrId()) || !CheckUtil.isInteger(message.getUrId())) {
+        if (StringUtil.isNull(message.getUrId()) || !CheckUtil.isInteger(message.getUrId())) {
             return;
+        }
+        ConversationEntity conversationEntity = conversationMapper.selectByTopic(topic);
+        if (conversationEntity == null) {
+            conversationEntity = new ConversationEntity();
+            conversationEntity.setTopic(topic);
+            setCreateInfo(conversationEntity);
+            setUpdateInfo(conversationEntity);
+            conversationMapper.insertConversation(conversationEntity);
         }
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setCreateTime(message.getCreateTime());
@@ -55,8 +63,8 @@ public class MessageService extends BaseService {
         messageMapper.insert(messageEntity);
     }
 
-    public List<MessageDTO> getRecentMessage(String topic) {
-        List<MessageDTO> lstMessage = messageMapper.getRecentMessage(topic, Constants.MAX_RECENT_MESSAGE);
+    public List<MessageDTO> getRecentMessage(String topic, Integer limitFrom) {
+        List<MessageDTO> lstMessage = messageMapper.getRecentMessage(topic, limitFrom, Constants.MAX_MESSAGE_PER_FETCH);
         for (MessageDTO message : lstMessage) {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             message.setSendTime(dateFormat.format(message.getCreateTime()));
@@ -65,7 +73,20 @@ public class MessageService extends BaseService {
         return lstMessage;
     }
 
-    public List<UserDTO> getLstUser(String inputText, Integer currentUserId, Integer limitFrom, Integer limitTo) {
-        return userMapper.findListUserByFullnameOrHandle(inputText, currentUserId, limitFrom, limitTo);
+    public List<UserDTO> getLstUser(String inputText, Integer currentUserId, Integer limitFrom) {
+        List<UserDTO> lstUser = userMapper.findListUserByFullnameOrHandle(inputText, currentUserId, limitFrom, Constants.MAX_USER_PER_SEARCH);
+        for (UserDTO user : lstUser) {
+            Integer urId = user.getId();
+            if (urId > currentUserId) {
+                int tg = urId;
+                urId = currentUserId;
+                currentUserId = tg;
+            }
+            if (user.getConversation() == null) {
+                user.setConversation(new ConversationDTO());
+            }
+            user.getConversation().setTopic(urId + "_" + currentUserId);
+        }
+        return lstUser;
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface MessageMapper extends BaseMapper<MessageEntity> {
 
-    //get recently Constants.MAX_RECENT_MESSAGE messages
-    List<MessageDTO> getRecentMessage(@Param("topic") String topic, @Param("number") Integer numberOfRecentMessage);
+    //get recently Constants.MAX_MESSAGE_PER_FETCH messages
+    List<MessageDTO> getRecentMessage(@Param("topic") String topic
+            , @Param("from") Integer limitFrom, @Param("size") Integer messagePerFetch);
 }

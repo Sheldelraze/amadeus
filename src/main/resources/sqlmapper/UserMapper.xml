@@ -27,7 +27,7 @@
             and (user.handle like concat(#{text},'%')
             or user.fullname like concat(#{text],'%'))
         </if>
-        limit #{from},#{to}
+        limit #{from},#{size}
     </select>
     <select id="getUserAuthority" resultMap="UserDetail">
         SELECT

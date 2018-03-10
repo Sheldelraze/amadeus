@@ -8,6 +8,8 @@ package com.minh.nguyen.dto;
 public class MessageDTO extends BaseDTO {
     private MessageType type;
 
+    private String topic;
+
     private String content;
 
     private String urId;
@@ -21,6 +23,14 @@ public class MessageDTO extends BaseDTO {
     private Integer limitFrom;
 
     private Integer limitTo;
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
     public Integer getLimitFrom() {
         return limitFrom;

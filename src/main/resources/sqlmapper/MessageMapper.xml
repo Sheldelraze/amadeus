@@ -21,6 +21,6 @@
                    AND user.deleteFlg = '0'
         WHERE message.deleteFlg = '0'
         ORDER BY message.createTime DESC
-        LIMIT 0, #{number}
+        LIMIT #{from}, #{size}
     </select>
 </mapper>

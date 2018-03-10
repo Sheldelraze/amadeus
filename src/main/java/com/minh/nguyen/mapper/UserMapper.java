@@ -23,5 +23,5 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     List<UserDTO> getListContestRole(@Param("urId") Integer urId, @Param("ctId") Integer ctId);
 
-    List<UserDTO> findListUserByFullnameOrHandle(@Param("text") String textm, @Param("urId") Integer currentUserID, @Param("from") Integer limitFrom, @Param("to") Integer limitTO);
+    List<UserDTO> findListUserByFullnameOrHandle(@Param("text") String textm, @Param("urId") Integer currentUserID, @Param("from") Integer limitFrom, @Param("size") Integer maxUserPerFetch);
 }

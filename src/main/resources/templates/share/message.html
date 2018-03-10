@@ -74,11 +74,13 @@
                                     </div>
                                     <ul class="chatonline style-none " id="listUser">
                                         <div class="p-10 bg-light-primary" id="searchStatus"
-                                             style="text-align: center;color:black;width: 100%;position: absolute">
+                                             style="text-align: center;color:black;width: 100%;position: absolute;z-index: 1">
                                             Đang tìm kiếm...
                                         </div>
                                         <li th:each="user : ${lstUser}">
-                                            <a class="redirectLink" href="javascript:void(0)">
+                                            <a class="redirectLink" th:id="${user.conversation.topic}"
+                                               href="javascript:void(0)"
+                                               th:onclick="|moveToTopic('${user.conversation.topic}')|">
                                                 <img src="../assets/images/users/1.jpg" th:alt="${user.fullname}"
                                                      class="img-circle">
                                                 <span>[[${user.fullname}]]
@@ -104,11 +106,11 @@
                                         <h4 class="m-b-0 text-white"><i class="mdi mdi-wechat"></i>Cửa sổ chat</h4>
                                     </div>
                                 </div>
+                                <div id="connecting" class="p-10 bg-light-primary"
+                                     style="text-align: center;color:black;width: 100%;position:relative;z-index: 1">
+                                    Đang kết nối...
+                                </div>
                                 <div class="chat-rbox" id="chatBox">
-                                    <div id="connecting" class="p-10 bg-light-primary"
-                                         style="text-align: center;color:black">
-                                        Đang kết nối...
-                                    </div>
                                     <ul class="chat-list p-20" id="chatList">
 
                                         <li th:each="message : ${lstMessage}" th:if="${lstMessage != null}"
@@ -186,10 +188,12 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var urId = /*[[${urId}]]*/ null;
-    var topic = /*[[${topic}]]*/ 'public';
+    var topic = /*[[${topic}]]*/ null;
     var username = /*[[${username}]]*/ 'user';
     var increment = /*[[${increment}]]*/ 50;
     var currentUserIndex = increment;
+    var messagePerFetch = /*[[${messagePerFetch}]]*/ 15;
+    var currentMessageIndex = messagePerFetch;
     /*]]>*/
 </script>
 <script th:src="@{/js/chatbox.js}"></script>

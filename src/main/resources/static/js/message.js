@@ -1,8 +1,40 @@
 var searchStatus = document.getElementById('searchStatus');
 var listUser = document.getElementById('listUser');
+var currentUserFetchTime = 0;
+var userWindow = $('.chat-left-inner > .chatonline');
 searchStatus.style.display = "none";
 
-$('.chat-left-inner > .chatonline').slimScroll({
+function moveToTopic(currentTopic) {
+    if (currentTopic == topic) {
+        return;
+    }
+    if (topic != 'NOT_CHOSEN') {
+        var currentLink = document.getElementById(topic);
+        currentLink.classList.remove('active');
+    }
+    while (messageArea.firstChild) {
+        messageArea.removeChild(messageArea.firstChild);
+    }
+    var newLink = document.getElementById(currentTopic);
+    newLink.classList.add('active');
+    if (stompClient == null) {
+        var socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, onConnected, onError);
+    }
+    currentMessageIndex = 0;
+    topic = currentTopic;
+    fetchMessage();
+}
+
+function createUserAnchor() {
+    var anchor = document.createElement('a');
+    anchor.setAttribute("name", "anchorUser" + currentUserFetchTime);
+    anchor.style.position = "relative";
+    listUser.appendChild(anchor);
+}
+
+$(userWindow).slimScroll({
     height: '100%',
     position: 'right',
     size: "5px",
@@ -10,12 +42,15 @@ $('.chat-left-inner > .chatonline').slimScroll({
     scroll: 1
 }).bind('slimscrolling', function () {
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+        if (fetchingDataFlag) {
+            return;
+        }
+        fetchingDataFlag = true;
         var inputText = $('#inputText').val();
         searchStatus.style.display = "inline";
         var payload = {
             content: inputText,
-            limitFrom: currentUserIndex,
-            limitTo: currentUserIndex + increment
+            limitFrom: currentUserIndex
         };
         $.ajax({
             type: "POST",
@@ -26,16 +61,38 @@ $('.chat-left-inner > .chatonline').slimScroll({
             cache: false,
             timeout: 10000,
             success: function (data) {
-                currentUserIndex += increment;
-                searchStatus.style.display = "none";
+                if (data != null && data.length > 0) {
+                    createUserAnchor();
+                }
+
+
                 for (var i = 0; i < data.length; i++) {
                     addUser(data[i]);
                 }
+                if (data != null && data.length > 0) {
+                    currentUserIndex += increment;
+                    var anchorName = "anchorUser" + currentUserFetchTime;
+                    var aTag = $("a[name=" + anchorName + "]");
+                    var newPos = aTag.position().top;
+                    $(userWindow).slimScroll({
+                        scrollTo: newPos
+                        , position: 'right'
+                        , size: "5px"
+                        , height: '100%'
+                        , start: 'bottom'
+                        , color: '#dcdcdc'
+                        , scroll: 1
+                    });
+                    currentUserFetchTime = currentUserFetchTime + 1;
+                }
+                searchStatus.style.display = "none";
+                fetchingDataFlag = false;
             },
             error: function (e) {
                 searchStatus.style.display = "inline";
-                searchStatus.textContent = 'Không thể kết nối đến server. Vui lòng thử lại!';
+                searchStatus.textContent = 'Lỗi hệ thống. Vui lòng load lại trang!';
                 searchStatus.className = "p-10 bg-light-danger";
+                fetchingDataFlag = false;
             }
         });
     }
