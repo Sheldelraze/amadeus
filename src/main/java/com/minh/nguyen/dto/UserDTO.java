@@ -32,6 +32,15 @@ public class UserDTO extends BaseDTO{
     private Date contestStartTime;
     private List<ProblemDTO> lstProblem;
     private List<AuthorityDTO> lstAuthority;
+    private ConversationDTO conversation;
+
+    public ConversationDTO getConversation() {
+        return conversation;
+    }
+
+    public void setConversation(ConversationDTO conversation) {
+        this.conversation = conversation;
+    }
 
     public String getAuthorityName() {
         return authorityName;

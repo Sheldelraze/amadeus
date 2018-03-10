@@ -2456,6 +2456,9 @@ Dashboard3 chart
   vertical-align: middle;
   padding-left: 0px; }
 
+.preserve-line {
+    white-space: pre-line;
+}
 #calendar .fc-today-button {
   display: none; }
 

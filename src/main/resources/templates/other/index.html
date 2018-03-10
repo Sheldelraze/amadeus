@@ -82,6 +82,38 @@
                                         Đang kết nối...
                                     </div>
                                     <ul class="chat-list p-20" id="chatList">
+                                        <li>
+                                            <div class="chat-img"><img src="../assets/images/users/1.jpg" alt="user"/>
+                                            </div>
+                                            <div class="chat-content">
+                                                <h5>James Anderson</h5>
+                                                <div class="box bg-light-info">Lorem Ipsum is simply dummy text of the
+                                                    printing & type setting industry.
+                                                </div>
+                                            </div>
+                                            <div class="chat-time">10:56 am</div>
+                                        </li>
+                                        <!--chat Row -->
+                                        <li>
+                                            <div class="chat-img"><img src="../assets/images/users/2.jpg" alt="user"/>
+                                            </div>
+                                            <div class="chat-content">
+                                                <h5>Bianca Doe</h5>
+                                                <div class="box bg-light-success">It’s Great opportunity to work.</div>
+                                            </div>
+                                            <div class="chat-time">10:57 am</div>
+                                        </li>
+                                        <!--chat Row -->
+                                        <li class="reverse">
+                                            <div class="chat-time">10:57 am</div>
+                                            <div class="chat-content">
+                                                <h5>Steave Doe</h5>
+                                                <div class="box bg-light-inverse">It’s Great opportunity to work.</div>
+                                            </div>
+                                            <div class="chat-img"><img src="../assets/images/users/5.jpg" alt="user"/>
+                                            </div>
+                                        </li>
+                                        <!--chat Row -->
                                         <!--chat Row -->
                                         <li th:each="message : ${lstMessage}" th:if="${lstMessage != null}"
                                             th:classappend="${username != null and username == message.username}?'reverse'">
@@ -89,7 +121,8 @@
                                                 <div class="chat-time" th:text="${message.sendTime}">10:57 am</div>
                                                 <div class="chat-content">
                                                     <h5 th:text="${message.username}">Steave Doe</h5>
-                                                    <div class="box bg-light-info" style="color:black"
+                                                    <div class="box bg-light-info preserve-line"
+                                                         style="color:black;text-align: left"
                                                          th:text="${message.content}">
                                                     </div>
                                                 </div>
@@ -101,7 +134,8 @@
                                                 </div>
                                                 <div class="chat-content">
                                                     <h5 th:text="${message.username}">Steave Doe</h5>
-                                                    <div class="box bg-light-inverse" style="color:black"
+                                                    <div class="box bg-light-inverse preserve-line"
+                                                         style="color:black;text-align: left"
                                                          th:text="${message.content}">
                                                     </div>
                                                 </div>
@@ -111,14 +145,10 @@
                                     </ul>
                                 </div>
                                 <form id="messageForm" name="messageForm">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <input autocomplete="off" id="messageInput"
-                                                       placeholder="Nhập nội dung...."
-                                                       class="form-control b-0"/>
-                                            </div>
-                                        </div>
+                                    <div class="col-12">
+                                                <textarea autocomplete="off" id="messageInput"
+                                                          placeholder="Nhập nội dung...."
+                                                          class="form-control b-0 b-t" rows="1"></textarea>
                                     </div>
                                 </form>
                             </div>
@@ -163,7 +193,7 @@
     var username = /*[[${username}]]*/ null;
     /*]]>*/
 </script>
-<script th:src="@{/js/chatbox.js}" ></script>
+<script th:src="@{/js/chatbox.js}"></script>
 <script th:src="@{/js/sockjs.min.js}"></script>
 <script th:src="@{/js/stomp.min.js}"></script>
 

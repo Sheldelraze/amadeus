@@ -18,6 +18,26 @@ public class MessageDTO extends BaseDTO {
 
     private String sendTime;
 
+    private Integer limitFrom;
+
+    private Integer limitTo;
+
+    public Integer getLimitFrom() {
+        return limitFrom;
+    }
+
+    public void setLimitFrom(Integer limitFrom) {
+        this.limitFrom = limitFrom;
+    }
+
+    public Integer getLimitTo() {
+        return limitTo;
+    }
+
+    public void setLimitTo(Integer limitTo) {
+        this.limitTo = limitTo;
+    }
+
     public String getSendTime() {
         return sendTime;
     }

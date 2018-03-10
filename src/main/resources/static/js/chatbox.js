@@ -16,7 +16,16 @@ function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe('/message/topic.' + topic, onMessageReceived);
     connectingElement.classList.add('hiddenDiv');
-    messageArea.scrollTop = messageArea.scrollHeight;
+    $('.chat-list').slimScroll({
+        scrollTo: messageArea.scrollHeight
+        , position: 'right'
+        , size: "5px"
+        , height: '100%'
+        , start: 'bottom'
+        , color: '#dcdcdc'
+        , scroll: 1
+    });
+
 }
 
 function onError(error) {
@@ -91,6 +100,7 @@ function onMessageReceived(payload) {
     messageContentDiv.innerHTML = message.content;
     nameElement.innerHTML = message.username;
     messageContentDiv.style.color = "black";
+    messageContentDiv.classList.add('preserve-line');
     if (message.urId == urId) {
         messageContentDiv.classList.add('box');
         messageContentDiv.classList.add('bg-light-info');
@@ -98,6 +108,7 @@ function onMessageReceived(payload) {
         messageElement.appendChild(chatTimeDiv);
         messageElement.appendChild(contentDiv);
         messageElement.appendChild(chatImgDiv);
+        messageContentDiv.style.textAlign = "left";
     } else {
         messageContentDiv.classList.add('box');
         messageContentDiv.classList.add('bg-light-inverse');
@@ -106,7 +117,15 @@ function onMessageReceived(payload) {
         messageElement.appendChild(chatTimeDiv);
     }
     messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
+    $('.chat-list').slimScroll({
+        scrollTo: messageArea.scrollHeight
+        , position: 'right'
+        , size: "5px"
+        , height: '100%'
+        , start: 'bottom'
+        , color: '#dcdcdc'
+        , scroll: 1
+    });
 }
 
 function doSearch() {
@@ -114,6 +133,11 @@ function doSearch() {
 }
 $(function () {
     var inputElement = document.getElementById('inputText');
+    $('textarea').on('keydown', function (event) {
+        if (event.keyCode == 13)
+            if (!event.shiftKey && !event.altKey)
+                sendMessage(event);
+    });
     if (inputElement != null) {
         $("#inputText").on('input', function () {
             doSearch();
@@ -127,17 +151,14 @@ $(function () {
         connectingElement.className = "p-10 bg-light-green";
         connectingElement.textContent = 'Vui lòng chọn người để chat cùng...';
     }
-    $('.chat-left-inner > .chatonline').slimScroll({
-        height: '100%',
-        position: 'right',
-        size: "5px",
-        color: '#dcdcdc'
-    });
     $('.chat-list').slimScroll({
-        position: 'right'
+        scrollTo: messageArea.scrollHeight
+        , position: 'right'
         , size: "5px"
         , height: '100%'
+        , start: 'bottom'
         , color: '#dcdcdc'
+        , scroll: 1
     });
 
     var cht = function () {

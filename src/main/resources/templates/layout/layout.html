@@ -5,6 +5,9 @@
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <th:block th:fragment="meta">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <!-- default header name is X-CSRF-TOKEN -->
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Tell the browser to be responsive to screen width -->
@@ -463,6 +466,15 @@
     <script src="../../static/assets/plugins/d3/d3.min.js" th:src="@{/assets/plugins/d3/d3.min.js}" ></script>
     <script src="../../static/assets/plugins/c3-master/c3.min.js" th:src="@{/assets/plugins/c3-master/c3.min.js}" ></script>
     <script src="../../static/js/custom.min.js" th:src="@{/js/jquery-countdown.js}"></script>
+    <script>
+        $(function () {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, token);
+            });
+        });
+    </script>
 </div>
 
 </body>

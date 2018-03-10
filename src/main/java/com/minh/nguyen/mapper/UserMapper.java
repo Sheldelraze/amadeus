@@ -10,10 +10,10 @@ import java.util.List;
 
 @Component("UserMapper")
 @Mapper
-public interface UserMapper extends BaseMapper<UserEntity>{
+public interface UserMapper extends BaseMapper<UserEntity> {
     List<UserDTO> getUserAuthority(@Param("handle") String handle);
 
-    List<UserDTO> getLeaderboardInfor(@Param("ctId")Integer ctId,@Param("auth_participate_id")Integer authParticipateId);
+    List<UserDTO> getLeaderboardInfor(@Param("ctId") Integer ctId, @Param("auth_participate_id") Integer authParticipateId);
 
     List<UserDTO> findUserForProblemRole(@Param("fullname") String fullname, @Param("reId") Integer reId, @Param("pmId") Integer pmId);
 
@@ -23,5 +23,5 @@ public interface UserMapper extends BaseMapper<UserEntity>{
 
     List<UserDTO> getListContestRole(@Param("urId") Integer urId, @Param("ctId") Integer ctId);
 
-    List<UserDTO> findListUserByFullnameOrHandle(@Param("text") String text);
+    List<UserDTO> findListUserByFullnameOrHandle(@Param("text") String textm, @Param("urId") Integer currentUserID, @Param("from") Integer limitFrom, @Param("to") Integer limitTO);
 }

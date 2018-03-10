@@ -7,13 +7,17 @@ import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.service.MessageService;
 import com.minh.nguyen.validator.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,18 +37,27 @@ public class MessageController extends BaseController {
     @Autowired
     private MessageValidator validator;
 
+    @Autowired
+    private HttpSession httpSession;
 
     @GetMapping({"/message", "/message/"})
     public ModelAndView getMessageView() {
         ModelAndView modelAndView = createGeneralModel();
-        List<UserDTO> lstUser = messageService.getLstUser(null);
+        Integer currewntUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, 0, Constants.MAX_USER_PER_SEARCH);
         modelAndView.addObject("lstUser", lstUser);
+        modelAndView.addObject("increment", Constants.MAX_USER_PER_SEARCH);
         modelAndView.addObject("topic", Constants.DEFAULT_TOPIC);
         modelAndView.setViewName("share/message");
         return modelAndView;
     }
 
-
+    @PostMapping("/message/findUser")
+    public ResponseEntity<?> getSearchResultViaAjax(@RequestBody MessageDTO message) {
+        Integer currewntUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, message.getLimitFrom(), message.getLimitTo());
+        return ResponseEntity.ok(lstUser);
+    }
     @MessageMapping("/message/send.{topicName}")
     @SendTo("/message/topic.{topicName}")
     public MessageDTO sendMessage(@DestinationVariable String topicName, MessageDTO message) {

@@ -4,17 +4,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.UserMapper">
-    <select id="findListUserByFullnameOrHandle" resultType="UserDTO">
+    <select id="findListUserByFullnameOrHandle" resultMap="UserListInMessage">
         select user.fullname,
-        user.handle,
         user.id,
-        user.reId
+        user.reId,
+        role.text,
+        ur_cn.cnId,
+        conversation.topic
         from user
+        left join role
+        on role.id = user.reId
+        and role.deleteFlg = '0'
+        left join ur_cn
+        on user.id = ur_cn.urId
+        and ur_cn.deleteFlg = '0'
+        left join conversation
+        on ur_cn.cnId = conversation.id
+        and conversation.deleteFlg = '0'
         where user.deleteFlg = '0'
+        and user.id != #{urId}
         <if test="text != null and text.length > 0">
             and (user.handle like concat(#{text},'%')
             or user.fullname like concat(#{text],'%'))
         </if>
+        limit #{from},#{to}
     </select>
     <select id="getUserAuthority" resultMap="UserDetail">
         SELECT
@@ -199,5 +212,17 @@
             <id column="auyId" property="id"/>
             <result column="auyName" property="name"/>
         </collection>
+    </resultMap>
+    <resultMap id="UserListInMessage" type="UserDTO">
+        <id property="id" column="id"/>
+        <result property="fullname" column="fullname"/>
+        <association property="role" javaType="RoleDTO">
+            <id property="id" column="reId"/>
+            <result property="text" column="text"/>
+        </association>
+        <association property="conversation" javaType="ConversationDTO">
+            <id property="id" column="cnId"/>
+            <result property="topic" column="topic"/>
+        </association>
     </resultMap>
 </mapper>

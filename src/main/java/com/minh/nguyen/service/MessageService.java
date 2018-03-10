@@ -65,7 +65,7 @@ public class MessageService extends BaseService {
         return lstMessage;
     }
 
-    public List<UserDTO> getLstUser(String inputText) {
-        return userMapper.findListUserByFullnameOrHandle(inputText);
+    public List<UserDTO> getLstUser(String inputText, Integer currentUserId, Integer limitFrom, Integer limitTo) {
+        return userMapper.findListUserByFullnameOrHandle(inputText, currentUserId, limitFrom, limitTo);
     }
 }
