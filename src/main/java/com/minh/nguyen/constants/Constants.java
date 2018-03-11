@@ -14,6 +14,7 @@ public class Constants {
     public static final Integer MAX_MESSAGE_PER_FETCH = 15;
     public static final Integer MAX_USER_PER_SEARCH = 8;
     public static final String PUBLIC_TOPIC = "public";
+    public static final String STATUS_TOPIC = "status";
     public static final String DEFAULT_TOPIC = "NOT_CHOSEN";
 
 

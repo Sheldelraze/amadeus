@@ -60,9 +60,10 @@ public class MessageController extends BaseController {
     public ResponseEntity<?> getSearchResultViaAjax(@RequestBody MessageDTO message) {
         try {
             Integer currewntUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-            List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, message.getLimitFrom());
+            List<UserDTO> lstUser = messageService.getLstUser(message.getContent(), currewntUserId, message.getLimitFrom());
             return ResponseEntity.ok(lstUser);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
@@ -73,6 +74,7 @@ public class MessageController extends BaseController {
             List<MessageDTO> lstMessage = messageService.getRecentMessage(message.getTopic(), message.getLimitFrom());
             return ResponseEntity.ok(lstMessage);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

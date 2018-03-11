@@ -72,11 +72,11 @@
                                         <input class="form-control p-20" type="text" id="inputText"
                                                placeholder="Tìm kiếm...">
                                     </div>
+                                    <div class="p-10 bg-light-primary" id="searchStatus"
+                                         style="text-align: center;color:black;width: 100%;position: absolute;z-index: 1">
+                                        Đang tìm kiếm...
+                                    </div>
                                     <ul class="chatonline style-none " id="listUser">
-                                        <div class="p-10 bg-light-primary" id="searchStatus"
-                                             style="text-align: center;color:black;width: 100%;position: absolute;z-index: 1">
-                                            Đang tìm kiếm...
-                                        </div>
                                         <li th:each="user : ${lstUser}">
                                             <a class="redirectLink" th:id="${user.conversation.topic}"
                                                href="javascript:void(0)"

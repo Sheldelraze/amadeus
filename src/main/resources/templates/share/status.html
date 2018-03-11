@@ -173,13 +173,18 @@
 <script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
         th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
 ></script>
-<script>
+
+<script th:inline="javascript">
+    var topic = /*[[${topic}]]*/ null;
     $(document).ready(function () {
         $('#myTable').dataTable( {
             "bSort": false
         } );
     });
 </script>
+<script th:src="@{/js/sockjs.min.js}"></script>
+<script th:src="@{/js/stomp.min.js}"></script>
+<script th:src="@{/js/leaderboard.js}"></script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

@@ -79,7 +79,7 @@ function fetchMessage() {
                     , scroll: 1
                 });
                 currentFetchTime = currentFetchTime + 1;
-                currentMessageIndex += messagePerFetch;
+                currentMessageIndex += data.length;
             }
             connectingElement.classList.add('hiddenDiv');
             fetchingDataFlag = false;

@@ -17,6 +17,7 @@ import com.minh.nguyen.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class JudgeService extends BaseService {
     private static Logger logger = LoggerFactory.getLogger(JudgeService.class);
+
+    @Autowired
+    private SimpMessageSendingOperations simpMessagingTemplate;
+
     @Autowired
     private ProblemMapper problemMapper;
 
@@ -58,7 +63,7 @@ public class JudgeService extends BaseService {
         boolean timeLimitErr = false;
         int timeTotal = 0;
         int testCount = 0;
-
+        simpMessagingTemplate.convertAndSend("/message/topic." + Constants.STATUS_TOPIC, "hello world");
         SnSDlEntity snSDlEntity = new SnSDlEntity();
         SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
         try {

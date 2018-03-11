@@ -25,7 +25,7 @@
         and user.id != #{urId}
         <if test="text != null and text.length > 0">
             and (user.handle like concat(#{text},'%')
-            or user.fullname like concat(#{text],'%'))
+            or user.fullname like concat(#{text},'%'))
         </if>
         limit #{from},#{size}
     </select>
