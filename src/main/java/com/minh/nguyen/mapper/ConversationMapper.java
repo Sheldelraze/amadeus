@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component("ConversationMapper")
 @Mapper
-public interface ConversationMapper extends BaseMapper<ConversationMapper> {
+public interface ConversationMapper extends BaseMapper<ConversationEntity> {
     ConversationEntity selectByTopic(@Param("topic") String topic);
 
     @InsertProvider(type = BaseProvider.class, method = "insert")

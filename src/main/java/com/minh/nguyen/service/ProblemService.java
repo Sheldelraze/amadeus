@@ -266,8 +266,8 @@ public class ProblemService extends BaseService {
         List<InputDTO> lstInput = inputMapper.getAllTest(problemTestVO.getId());
         problemTestVO.setLstInput(lstInput);
         for (InputDTO inputDTO : lstInput) {
-            inputDTO.setInput(StringUtil.getFirst100Chars(inputDTO.getInput()));
-            inputDTO.setOutput(StringUtil.getFirst100Chars(inputDTO.getOutput()));
+            inputDTO.setInput(StringUtil.getFirstPartOfString(inputDTO.getInput(), 100));
+            inputDTO.setOutput(StringUtil.getFirstPartOfString(inputDTO.getOutput(), 100));
         }
     }
 

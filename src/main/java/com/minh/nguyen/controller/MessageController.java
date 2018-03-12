@@ -4,6 +4,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.MessageDTO;
 import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.service.MessageService;
 import com.minh.nguyen.validator.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,19 @@ public class MessageController extends BaseController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping("/message/getUserInConversation")
+    public ResponseEntity<?> getUserInConversation(@RequestBody MessageDTO message) throws UserTryingToBeSmartException {
+        try {
+            String userName = messageService.getUserInConversation(message.getTopic());
+            message.setContent(userName);
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @MessageMapping("/message/send.{topicName}")
     @SendTo("/message/topic.{topicName}")
     public MessageDTO sendMessage(@DestinationVariable String topicName, MessageDTO message) {

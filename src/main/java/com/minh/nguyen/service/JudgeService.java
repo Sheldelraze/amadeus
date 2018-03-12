@@ -86,12 +86,7 @@ public class JudgeService extends BaseService {
             submissionMapper.updateByPK(submissionEntity);
 
             //send message
-            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
-            if (ctId != null) {
-                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "contest/" + ctId, submissionEntity);
-            } else if (ceId != null) {
-                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "course/" + ceId, submissionEntity);
-            }
+            sendMessage(submissionEntity, ctId, ceId);
             return;
         }
         for (int i = 0; i < problemDTO.getLstInput().size(); i++) {
@@ -99,18 +94,13 @@ public class JudgeService extends BaseService {
             submissionEntity.setVerdict(Constants.VERDICT_JUDGING + (i + 1));
 
             //send message
-            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
-            if (ctId != null) {
-                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "contest/" + ctId, submissionEntity);
-            } else if (ceId != null) {
-                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "course/" + ceId, submissionEntity);
-            }
+            sendMessage(submissionEntity, ctId, ceId);
             submissionMapper.updateByPK(submissionEntity);
 
             //set id = null de insert = BaseMapper không bị lỗi
             submitDetailEntity.setId(null);
-            submitDetailEntity.setInput(StringUtil.getFirst100Chars(inputDTO.getInput()));
-            submitDetailEntity.setAnswer(StringUtil.getFirst100Chars(inputDTO.getOutput()));
+            submitDetailEntity.setInput(StringUtil.getFirstPartOfString(inputDTO.getInput(), 100));
+            submitDetailEntity.setAnswer(StringUtil.getFirstPartOfString(inputDTO.getOutput(), 100));
             try {
                 Outcome outcome = CompileUtil.doRun(languageDTO, problemDTO, inputDTO
                         , submissionEntity.getId());
@@ -128,9 +118,7 @@ public class JudgeService extends BaseService {
                     StringUtil.CompareResult compareResult = StringUtil.compareString(outcome.getOutput(), inputDTO.getOutput());
                     submitDetailEntity.setResult(compareResult.getResult());
                     submitDetailEntity.setStatus(compareResult.getStatus());
-
-
-                    submitDetailEntity.setOutput(StringUtil.getFirst100Chars(outcome.getOutput()));
+                    submitDetailEntity.setOutput(StringUtil.getFirstPartOfString(outcome.getOutput(), 100));
                     if (compareResult.getStatus() == Constants.STATUS_WRONG_ANSWER) {
                         wrongAns = true;
                     }
@@ -198,6 +186,10 @@ public class JudgeService extends BaseService {
         submissionMapper.updateByPK(submissionEntity);
 
         //send message
+        sendMessage(submissionEntity, ctId, ceId);
+    }
+
+    private void sendMessage(SubmissionEntity submissionEntity, Integer ctId, Integer ceId) {
         simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
         if (ctId != null) {
             simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "contest/" + ctId, submissionEntity);
@@ -205,5 +197,4 @@ public class JudgeService extends BaseService {
             simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "course/" + ceId, submissionEntity);
         }
     }
-
 }

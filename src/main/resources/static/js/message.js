@@ -13,6 +13,7 @@ $('#inputText').on('input', function () {
     currentUserIndex = 0;
     doFindUser();
 });
+
 function moveToTopic(currentTopic) {
     if (currentTopic == topic) {
         return;
@@ -26,14 +27,53 @@ function moveToTopic(currentTopic) {
     }
     var newLink = document.getElementById(currentTopic);
     newLink.classList.add('active');
+    topic = currentTopic;
     if (stompClient == null) {
         var socket = new SockJS('/chat');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, onConnected, onError);
+    } else {
+        stompClient.subscribe('/message/topic.' + topic, onMessageReceived);
     }
     currentMessageIndex = 0;
-    topic = currentTopic;
-    fetchMessage();
+    fetchInfo();
+}
+
+function fetchInfo() {
+    if (fetchingDataFlag) {
+        return;
+    }
+    fetchingDataFlag = true;
+    connectingElement.textContent = 'Đang lấy dữ liệu...';
+    connectingElement.className = "p-10 bg-light-primary";
+    connectingElement.classList.remove('hiddenDiv');
+    var payload = {
+        topic: topic
+    };
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/message/getUserInConversation",
+        data: JSON.stringify(payload),
+        dataType: 'json',
+        cache: false,
+        timeout: 10000,
+        success: function (data) {
+            if (data != null && data.content.length != null && data.content.length > 0) {
+                document.getElementById('userInChat').innerHTML = "(" + data.content + ")";
+            } else {
+                document.getElementById('userInChat').innerHTML = "";
+            }
+            connectingElement.classList.add('hiddenDiv');
+            fetchingDataFlag = false;
+            fetchMessage();
+        },
+        error: function (e) {
+            connectingElement.textContent = 'Lỗi hệ thống. Vui lòng load lại trang!';
+            connectingElement.className = "p-10 bg-light-danger";
+            fetchingDataFlag = false;
+        }
+    });
 }
 
 function createUserAnchor() {
@@ -117,6 +157,7 @@ function checkIfNoResult() {
         $(userWindow).append("<li><div class='card-body'>Không tìm thấy dữ liệu...</div></li>")
     }
 }
+
 function addUser(data) {
     var newUser = document.createElement('li');
 

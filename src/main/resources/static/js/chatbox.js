@@ -81,13 +81,14 @@ function fetchMessage() {
                 currentFetchTime = currentFetchTime + 1;
                 currentMessageIndex += data.length;
             }
-            connectingElement.classList.add('hiddenDiv');
             fetchingDataFlag = false;
+            connectingElement.classList.add('hiddenDiv');
+
         },
         error: function (e) {
+            fetchingDataFlag = false;
             connectingElement.textContent = 'Lỗi hệ thống. Vui lòng load lại trang!';
             connectingElement.className = "p-10 bg-light-danger";
-            fetchingDataFlag = false;
         }
     });
 }

@@ -1,7 +1,6 @@
 package com.minh.nguyen.util;
 
 import com.minh.nguyen.constants.Constants;
-import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 
@@ -100,10 +99,10 @@ public class StringUtil {
                             .append(i + 1)
                             .append(":\r\n")
                             .append("Output: ")
-                            .append(getFirst100Chars(out[i]))
+                            .append(getFirstPartOfString(out[i], 100))
                             .append("\r\n")
                             .append("Kết quả: ")
-                            .append(getFirst100Chars(ans[i])).toString();
+                            .append(getFirstPartOfString(ans[i], 100)).toString();
                     compareResult.setStatus(Constants.STATUS_WRONG_ANSWER);
                     correct = false;
                     break;
@@ -202,12 +201,12 @@ public class StringUtil {
         }
     }
 
-    public static String getFirst100Chars(String s) {
+    public static String getFirstPartOfString(String s, int length) {
         if (null == s) {
             return null;
         }
-        if (s.length() > 100) {
-            s = s.substring(0, 100);
+        if (s.length() > length) {
+            s = s.substring(0, length);
             s += "...";
         }
         return s;

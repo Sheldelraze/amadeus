@@ -7,10 +7,8 @@ import com.minh.nguyen.dto.MessageDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.entity.ConversationEntity;
 import com.minh.nguyen.entity.MessageEntity;
-import com.minh.nguyen.mapper.ConversationMapper;
-import com.minh.nguyen.mapper.MessageMapper;
-import com.minh.nguyen.mapper.UrCtAuyMapper;
-import com.minh.nguyen.mapper.UserMapper;
+import com.minh.nguyen.entity.UrCnEntity;
+import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,19 +40,18 @@ public class MessageService extends BaseService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UrCnMapper urCnMapper;
+
     @Async
     public void insertMessage(MessageDTO message, String topic) {
         if (StringUtil.isNull(message.getUrId()) || !CheckUtil.isInteger(message.getUrId())) {
             return;
         }
         ConversationEntity conversationEntity = conversationMapper.selectByTopic(topic);
-        if (conversationEntity == null) {
-            conversationEntity = new ConversationEntity();
-            conversationEntity.setTopic(topic);
-            setCreateInfo(conversationEntity);
-            setUpdateInfo(conversationEntity);
-            conversationMapper.insertConversation(conversationEntity);
-        }
+
+        //if conversation not exist then insert conversation
+
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setCreateTime(message.getCreateTime());
         messageEntity.setDeleteFlg("0");
@@ -61,6 +59,43 @@ public class MessageService extends BaseService {
         messageEntity.setCnId(conversationEntity.getId());
         messageEntity.setUrId(Integer.parseInt(message.getUrId()));
         messageMapper.insert(messageEntity);
+    }
+
+    public String getUserInConversation(String topic) {
+        //get conversation ID
+        ConversationEntity conversationEntity = conversationMapper.selectByTopic(topic);
+        if (conversationEntity == null) {
+            conversationEntity = new ConversationEntity();
+            conversationEntity.setTopic(topic);
+            conversationEntity.setCreateTime(new Date());
+            conversationEntity.setDeleteFlg("0");
+            conversationMapper.insertConversation(conversationEntity);
+
+            //if topic != null then insert all user in conversation
+            if (!topic.equals(Constants.PUBLIC_TOPIC) && !topic.equals(Constants.DEFAULT_TOPIC)) {
+                String[] lstUrId = topic.split("_");
+                UrCnEntity urCnEntity = new UrCnEntity();
+                urCnEntity.setCnId(conversationEntity.getId());
+                urCnEntity.setCreateTime(new Date());
+                urCnEntity.setDeleteFlg("0");
+                for (String urId : lstUrId) {
+                    Integer id = Integer.parseInt(urId);
+                    urCnEntity.setUrId(id);
+                    urCnMapper.insert(urCnEntity);
+                }
+            }
+        }
+
+        List<UserDTO> lstUser = userMapper.findUserInConversation(topic);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < lstUser.size(); i++) {
+            UserDTO user = lstUser.get(i);
+            stringBuilder.append(user.getFullname());
+            if (i != lstUser.size() - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+        return stringBuilder.toString();
     }
 
     public List<MessageDTO> getRecentMessage(String topic, Integer limitFrom) {
@@ -77,15 +112,16 @@ public class MessageService extends BaseService {
         List<UserDTO> lstUser = userMapper.findListUserByFullnameOrHandle(inputText, currentUserId, limitFrom, Constants.MAX_USER_PER_SEARCH);
         for (UserDTO user : lstUser) {
             Integer urId = user.getId();
-            if (urId > currentUserId) {
+            int userLogginId = currentUserId;
+            if (urId > userLogginId) {
                 int tg = urId;
-                urId = currentUserId;
-                currentUserId = tg;
+                urId = userLogginId;
+                userLogginId = tg;
             }
             if (user.getConversation() == null) {
                 user.setConversation(new ConversationDTO());
             }
-            user.getConversation().setTopic(urId + "_" + currentUserId);
+            user.getConversation().setTopic(urId + "_" + userLogginId);
         }
         return lstUser;
     }
