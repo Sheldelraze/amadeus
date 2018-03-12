@@ -104,36 +104,20 @@
                                         <td><label th:text="${submissionDTO.timeRun}"></label>ms </td>
                                         <td><label th:text="${submissionDTO.submitTime}"></label></td>
                                         <th:block th:if="${submissionDTO.judgeStatus==0}">
-                                            <td><label th:text="${submissionDTO.verdict}" class="judging"></label></td>
+                                            <td><label th:text="${submissionDTO.verdict}"
+                                                       th:id="|sub${submissionDTO.id}|" class="judging"></label></td>
                                         </th:block>
                                         <th:block th:if="${submissionDTO.judgeStatus==6}">
-                                            <td><label th:text="${submissionDTO.verdict}" class="accepted"></label></td>
+                                            <td><label th:text="${submissionDTO.verdict}"
+                                                       th:id="|sub$${submissionDTO.id}|" class="accepted"></label></td>
                                         </th:block>
                                         <th:block th:if="${submissionDTO.judgeStatus!=6 && submissionDTO.judgeStatus!=0}">
-                                            <td><label th:text="${submissionDTO.verdict}" class="fail"></label></td>
+                                            <td><label th:text="${submissionDTO.verdict}"
+                                                       th:id="|sub$${submissionDTO.id}|" class="fail"></label></td>
                                         </th:block>
                                         <td>C++ </td>
                                     </tr>
-                                    <tr>
-                                        <td><b><a href="SubmissionInfo.aspx">132</a></b></td>
-                                        <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                        <td>256KB</td>
-                                        <td>25ms</td>
-                                        <td>1:20:25</td>
-                                        <td><b style="color: red; font-weight: 500">Lỗi biên dịch</b></td>
-                                        <td>C++ </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b><a href="SubmissionInfo.aspx">184</a></b></td>
-                                        <td><b><a href="#">Makise Kurisu</a></b></td>
-                                        <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                        <td>25KB</td>
-                                        <td>10ms</td>
-                                        <td>1:40:12</td>
-                                        <td><b style="color: green; font-weight: 800">Đúng</b></td>
-                                        <td>C++ </td>
-                                    </tr>
+
                                     </tbody>
                                 </table>
                             </div>

@@ -48,7 +48,7 @@ public class GeneralController extends BaseController {
         Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
         List<MessageDTO> lstMessage = messageService.getRecentMessage(Constants.PUBLIC_TOPIC, 0);
         modelAndView.addObject("urId", urId);
-        modelAndView.addObject("topic", Constants.PUBLIC_TOPIC);
+        modelAndView.addObject(Constants.TOPIC_TEXT, Constants.PUBLIC_TOPIC);
         modelAndView.addObject("username", username);
         modelAndView.addObject("messagePerFetch", Constants.MAX_MESSAGE_PER_FETCH);
         modelAndView.addObject("lstMessage", lstMessage);

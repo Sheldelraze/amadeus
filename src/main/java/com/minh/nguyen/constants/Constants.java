@@ -13,10 +13,12 @@ public class Constants {
     public static final Integer MESSAGE_MAX_LENGTH = 200;
     public static final Integer MAX_MESSAGE_PER_FETCH = 15;
     public static final Integer MAX_USER_PER_SEARCH = 8;
+    public static final String TOPIC_TEXT = "topic";
     public static final String PUBLIC_TOPIC = "public";
     public static final String STATUS_TOPIC = "status";
     public static final String DEFAULT_TOPIC = "NOT_CHOSEN";
 
+    public static final String WEB_SOCKET_PREFIX = "/message/topic.";
 
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";

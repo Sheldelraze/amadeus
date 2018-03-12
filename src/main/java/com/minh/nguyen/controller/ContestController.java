@@ -337,6 +337,7 @@ public class ContestController extends BaseController {
         ContestLayoutForm contestSubmissionMyForm = new ContestSubmissionMyForm();
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SUBMISSION_MY_VIEW);
+        modelAndView.addObject(Constants.TOPIC_TEXT, "contest/" + ctId);
         modelAndView.addObject(SUBMISSION_MY_FORM, contestSubmissionMyForm);
         List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId, false);
         modelAndView.addObject(TAB, 4);
@@ -353,6 +354,7 @@ public class ContestController extends BaseController {
         ContestLayoutForm contestSubmissionAllForm = new ContestSubmissionAllForm();
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(SUBMISSION_ALL_VIEW);
+        modelAndView.addObject(Constants.TOPIC_TEXT, "contest/" + ctId);
         modelAndView.addObject(SUBMISSION_ALL_FORM, contestSubmissionAllForm);
         List<SubmissionDTO> lstSubmission = contestService.getSubmissionInContest(ctId, true);
         modelAndView.addObject(SUBMISSION_LIST, lstSubmission);

@@ -56,14 +56,13 @@ public class JudgeService extends BaseService {
     private SubmissionMapper submissionMapper;
 
     @Async
-    public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO,SubmissionEntity submissionEntity,Integer urId) {
+    public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO, SubmissionEntity submissionEntity, Integer urId, Integer ctId, Integer ceId) {
         logger.debug("Doing me a heavy and magical discomfort judging....");
         boolean runTimeErr = false;
         boolean wrongAns = false;
         boolean timeLimitErr = false;
         int timeTotal = 0;
         int testCount = 0;
-        simpMessagingTemplate.convertAndSend("/message/topic." + Constants.STATUS_TOPIC, "hello world");
         SnSDlEntity snSDlEntity = new SnSDlEntity();
         SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
         try {
@@ -85,12 +84,29 @@ public class JudgeService extends BaseService {
             setCreateInfo(snSDlEntity);
             snSDlMapper.insert(snSDlEntity);
             submissionMapper.updateByPK(submissionEntity);
+
+            //send message
+            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
+            if (ctId != null) {
+                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "contest/" + ctId, submissionEntity);
+            } else if (ceId != null) {
+                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "course/" + ceId, submissionEntity);
+            }
             return;
         }
         for (int i = 0; i < problemDTO.getLstInput().size(); i++) {
             InputDTO inputDTO = problemDTO.getLstInput().get(i);
             submissionEntity.setVerdict(Constants.VERDICT_JUDGING + (i + 1));
+
+            //send message
+            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
+            if (ctId != null) {
+                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "contest/" + ctId, submissionEntity);
+            } else if (ceId != null) {
+                simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "course/" + ceId, submissionEntity);
+            }
             submissionMapper.updateByPK(submissionEntity);
+
             //set id = null de insert = BaseMapper không bị lỗi
             submitDetailEntity.setId(null);
             submitDetailEntity.setInput(StringUtil.getFirst100Chars(inputDTO.getInput()));
@@ -99,8 +115,8 @@ public class JudgeService extends BaseService {
                 Outcome outcome = CompileUtil.doRun(languageDTO, problemDTO, inputDTO
                         , submissionEntity.getId());
                 //outcome.timeelapse là nano giây -> ms giây
-                int timeElapsed =  (int)(outcome.getTimeElapsed() == null ? 0 : outcome.getTimeElapsed() / 1000000);
-                timeElapsed = Math.max(timeElapsed,15);
+                int timeElapsed = (int) (outcome.getTimeElapsed() == null ? 0 : outcome.getTimeElapsed() / 1000000);
+                timeElapsed = Math.max(timeElapsed, 15);
                 submitDetailEntity.setTimeRun(timeElapsed);
                 //run time err
                 if (outcome.getExitCode() != 0) {
@@ -164,13 +180,13 @@ public class JudgeService extends BaseService {
             ProblemEntity problemEntity = new ProblemEntity();
             problemEntity.setId(problemDTO.getId());
             problemEntity = problemMapper.selectByPK(problemEntity);
-            Integer cntSolvedBefore = problemMapper.checkIfSolvedBefore(problemDTO.getId(),urId);
-            if (cntSolvedBefore == 0){
+            Integer cntSolvedBefore = problemMapper.checkIfSolvedBefore(problemDTO.getId(), urId);
+            if (cntSolvedBefore == 0) {
                 problemEntity.setSolveCnt(1 + problemEntity.getSolveCnt());
             }
 
             //check if first solve
-            if(problemEntity.getFirstSolveTime() == null){
+            if (problemEntity.getFirstSolveTime() == null) {
                 problemEntity.setFirstSolveTime(submissionEntity.getCreateTime());
             }
 
@@ -180,6 +196,14 @@ public class JudgeService extends BaseService {
         }
         submissionEntity.setTimeRun(timeTotal);
         submissionMapper.updateByPK(submissionEntity);
+
+        //send message
+        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
+        if (ctId != null) {
+            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "contest/" + ctId, submissionEntity);
+        } else if (ceId != null) {
+            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "course/" + ceId, submissionEntity);
+        }
     }
 
 }

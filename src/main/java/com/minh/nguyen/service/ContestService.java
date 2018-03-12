@@ -14,7 +14,6 @@ import com.minh.nguyen.vo.contest.ContestListVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -193,12 +192,13 @@ public class ContestService extends BaseService {
 
         return contestDTO;
     }
-    public List<ProblemDTO> getProblemForLeaderboard(int ctId){
+
+    public List<ProblemDTO> getProblemForLeaderboard(int ctId) {
         List<ProblemDTO> lstProblem = problemMapper.getProblemForLeaderboard(ctId);
-        for(ProblemDTO problem : lstProblem){
+        for (ProblemDTO problem : lstProblem) {
             int ac = problem.getSolveCnt();
             int all = problem.getTotalSubmission();
-            if (all == 0){
+            if (all == 0) {
                 problem.setSolvePercentage("(0%)");
                 continue;
             }
@@ -208,6 +208,7 @@ public class ContestService extends BaseService {
         }
         return lstProblem;
     }
+
     public List<ProblemDTO> getProblemToAdd(int ctId) {
         List<ProblemDTO> lst = problemMapper.getProblemForContest(Constants.AUTH_VIEW_PROBLEM_ID, ctId);
         for (ProblemDTO problemDTO : lst) {
@@ -266,8 +267,8 @@ public class ContestService extends BaseService {
                                 time += (int) Math.floor((elapsed / 1000 / 60));
 
                                 //check if first solver
-                                if (null != problem.getFirstSolveTime()){
-                                    if (problem.getFirstSolveTime().equals(submit.getCreateTime())){
+                                if (null != problem.getFirstSolveTime()) {
+                                    if (problem.getFirstSolveTime().equals(submit.getCreateTime())) {
                                         problem.setIsFirstSolve(1);
                                     }
                                 }
@@ -296,7 +297,7 @@ public class ContestService extends BaseService {
             user.setScore(score);
             user.setPenalty(penalty);
         }
-        Collections.sort(lstUser,new ScoreboardComparator());
+        Collections.sort(lstUser, new ScoreboardComparator());
         return lstUser;
     }
 
@@ -305,12 +306,13 @@ public class ContestService extends BaseService {
 
         @Override
         public int compare(UserDTO o1, UserDTO o2) {
-            if (o1.getScore().equals(o2.getScore())){
+            if (o1.getScore().equals(o2.getScore())) {
                 return o1.getPenalty().compareTo(o2.getPenalty());
             }
             return o2.getScore().compareTo(o1.getScore());
         }
     }
+
     public void setProblemHiddenStatus(Integer ctId, Integer pmId, Integer status) {
         CtPmEntity ctPmEntity = new CtPmEntity();
         ctPmEntity.setCtId(ctId);
@@ -492,7 +494,7 @@ public class ContestService extends BaseService {
         setUpdateInfo(ctSnEntity);
         ctSnMapper.insert(ctSnEntity);
 
-        judgeService.judge(problemDTO, languageDTO, submissionEntity, urId);
+        judgeService.judge(problemDTO, languageDTO, submissionEntity, urId, ctId, null);
     }
 
     public List<UserDTO> getListContestRole(Integer ctId) {
@@ -563,6 +565,7 @@ public class ContestService extends BaseService {
         }
         return lstAnnounce;
     }
+
     public void deleteRole(Integer ctId, Integer urId) {
         UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
         urCtAuyEntity.setCtId(ctId);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -106,45 +106,18 @@
                                             <td th:text="|${submission.timeRun}ms|">25ms</td>
                                             <td th:text="${submission.submitTime}">1:20:25</td>
                                             <th:block th:if="${submission.judgeStatus==0}">
-                                                <td><label th:text="${submission.verdict}" class="judging"></label></td>
+                                                <td><label th:text="${submission.verdict}" th:id="|sub${submission.id}|"
+                                                           class="judging"></label></td>
                                             </th:block>
                                             <th:block th:if="${submission.judgeStatus==6}">
-                                                <td><label th:text="${submission.verdict}" class="accepted"></label></td>
+                                                <td><label th:text="${submission.verdict}" th:id="|sub${submission.id}|"
+                                                           class="accepted"></label></td>
                                             </th:block>
                                             <th:block th:if="${submission.judgeStatus!=6 && submission.judgeStatus!=0}">
-                                                <td><label th:text="${submission.verdict}" class="fail"></label></td>
+                                                <td><label th:text="${submission.verdict}" th:id="|sub${submission.id}|"
+                                                           class="fail"></label></td>
                                             </th:block>
                                             <td th:text="${submission.leNm}">C++ </td>
-                                        </tr>
-                                        <tr>
-                                            <td><b><a href="SubmissionInfo.aspx">132</a></b></td>
-                                            <td><b><a href="#">Makise Kurisu</a></b></td>
-                                            <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                            <td>256KB</td>
-                                            <td>25ms</td>
-                                            <td>1:20:25</td>
-                                            <td><b style="color: red; font-weight: 500">Lỗi biên dịch</b></td>
-                                            <td>C++</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b><a href="SubmissionInfo.aspx">139</a></b></td>
-                                            <td><b><a href="#">Okabe Rintarou</a></b></td>
-                                            <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                            <td>0KB</td>
-                                            <td>0ms</td>
-                                            <td>1:30:54</td>
-                                            <td><b style="color: red; font-weight: 500">Chạy quá thời gian</b></td>
-                                            <td>Java</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b><a href="SubmissionInfo.aspx">184</a></b></td>
-                                            <td><b><a href="#">Makise Kurisu</a></b></td>
-                                            <td><b><a href="#">Tính tổng 2 số</a></b></td>
-                                            <td>25KB</td>
-                                            <td>10ms</td>
-                                            <td>1:40:12</td>
-                                            <td><b style="color: green; font-weight: 800">Đúng</b></td>
-                                            <td>C++</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -187,13 +160,17 @@
 <!-- This is data table -->
 <script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
         th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
-<script>
+<script th:inline="javascript">
+    var topic = /*[[${topic}]]*/ null;
     $(document).ready(function () {
         $('#myTable').dataTable( {
             "bSort": false
         } );
     });
 </script>
+<script th:src="@{/js/sockjs.min.js}"></script>
+<script th:src="@{/js/stomp.min.js}"></script>
+<script th:src="@{/js/leaderboard.js}"></script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

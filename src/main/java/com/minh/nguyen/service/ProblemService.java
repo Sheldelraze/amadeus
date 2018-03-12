@@ -110,7 +110,8 @@ public class ProblemService extends BaseService {
         setUpdateInfo(submissionEntity);
         setCreateInfo(submissionEntity);
         submissionMapper.insertSubmission(submissionEntity);
-        judgeService.judge(problemDTO, languageDTO, submissionEntity, urId);
+
+        judgeService.judge(problemDTO, languageDTO, submissionEntity, urId, null, null);
 
     }
 

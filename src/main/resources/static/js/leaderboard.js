@@ -15,5 +15,17 @@ function onConnected() {
 }
 
 function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
+    var submission = JSON.parse(payload.body);
+    var verdict = document.getElementById("sub" + submission.id);
+    if (verdict == null) {
+        return;
+    }
+    if (submission.judgeStatus == 0) {
+        verdict.className = "judging";
+    } else if (submission.judgeStatus == 6) {
+        verdict.className = "accepted";
+    } else {
+        verdict.className = "fail";
+    }
+    verdict.innerHTML = submission.verdict;
 }
