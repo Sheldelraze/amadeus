@@ -104,6 +104,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/ace/**").permitAll()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/nicEdit/**").permitAll()
+                .antMatchers("/contest/**").permitAll()
+                .antMatchers("/course/**").permitAll()
                 .antMatchers("/scss/**").permitAll()
                 .antMatchers("/chat/**").permitAll()
                 .and()

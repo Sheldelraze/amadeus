@@ -98,6 +98,10 @@ public class Constants {
     public static final Integer AUTH_VIEW_ALL_CONTEST_ID = 11;
     public static final Integer AUTH_SUBMIT_PROBLEM_ID = 12;
     public static final Integer AUTH_VIEW_ALL_SUBMISSION_ID = 13;
+    public static final Integer AUTH_PARTICIPATE_COURSE_ID = 14;
+    public static final Integer AUTH_VIEW_COURSE_ID = 15;
+    public static final Integer AUTH_EDIT_COURSE_ID = 16;
+    public static final Integer AUTH_VIEW_ALL_COURSE_ID = 17;
 
     public static final String AUTH_CREATE_PROBLEM_TEXT = "CAN_CREATE_PROBLEM";
     public static final String AUTH_VIEW_PROBLEM_TEXT = "CAN_VIEW_PROBLEM";
@@ -109,6 +113,10 @@ public class Constants {
     public static final String AUTH_VIEW_ALL_CONTEST_TEXT = "CAN_VIEW_ALL_CONTEST";
     public static final String AUTH_PARTICIPATE_CONTEST_TEXT = "CAN_PARTICIPATE_CONTEST";
     public static final String AUTH_VIEW_ALL_SUBMISSION_TEXT = "CAN_VIEW_ALL_SUBMISSION";
+    public static final String AUTH_PARTICIPATE_COURSE_TEXT = "CAN_PARTICIPATE_COURSE";
+    public static final String AUTH_VIEW_COURSE_TEXT = "CAN_VIEW_COURSE";
+    public static final String AUTH_EDIT_COURSE_TEXT = "CAN_EDIT_COURSE";
+    public static final String AUTH_VIEW_ALL_COURSE_TEXT = "CAN_VIEW_ALL_COURSE";
 
     public static final Integer SHOW_SUBMIT_ALL = 1;
     public static final Integer SHOW_SUBMIT_SOLVED = 2;

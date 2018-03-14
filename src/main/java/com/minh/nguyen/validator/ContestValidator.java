@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +44,7 @@ public class ContestValidator extends BaseValidator {
     private HttpSession httpSession;
 
     //check if user outside contest can view problem (only work when contest is public)
-    public boolean checkPublic(Integer ctId) throws NoSuchPageException, IOException, ServletException {
+    public boolean checkPublic(Integer ctId) {
         ContestEntity contestEntity = getContestById(ctId);
         if (contestEntity.getIsAnyoneCanParticipate().equals(1)
                 && contestEntity.getShowInforToAll().equals(1)){
@@ -71,7 +69,6 @@ public class ContestValidator extends BaseValidator {
         //TODO:Check if contest's creator allows participator to view only solved tests
         return true;
     }
-
     public boolean canViewStatus(Integer ctId){
         ContestEntity contestEntity = getContestById(ctId);
         return contestEntity.getShowStatus().equals(1);

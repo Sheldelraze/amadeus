@@ -107,7 +107,9 @@ public class ContestController extends BaseController {
 
         //check if user can view common status
         boolean canViewStatus = false;
-        if (null != auth && !StringUtil.isNull(auth.getName())) {
+        if (contestValidator.checkPublic(ctId)) {
+            canViewStatus = true;
+        } else if (null != auth && !StringUtil.isNull(auth.getName())) {
             List<Integer> defaultAuth = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
             if (null != defaultAuth && defaultAuth.contains(Constants.AUTH_VIEW_ALL_CONTEST_ID)) {
                 canViewStatus = true;
@@ -150,6 +152,7 @@ public class ContestController extends BaseController {
         modelAndView.addObject("contestListVO", contestListVO);
         return modelAndView;
     }
+
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_CONTEST_TEXT + "')")
     @GetMapping("/create")
     public ModelAndView createContest(ContestCreateForm contestCreateForm) {

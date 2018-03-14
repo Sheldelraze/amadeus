@@ -1,11 +1,16 @@
 package com.minh.nguyen.dto;
 
+import java.io.Serializable;
+
 /**
  * @author Mr.Minh
  * @since 03/03/2018
  * Purpose:
  */
-public class MessageDTO extends BaseDTO {
+public class MessageDTO extends BaseDTO implements Serializable {
+
+    static final long serialVersionUID = 542L;
+
     private MessageType type;
 
     private Integer id;
@@ -29,6 +34,10 @@ public class MessageDTO extends BaseDTO {
     private Integer isRead;
 
     private UserDTO sender;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public UserDTO getSender() {
         return sender;
