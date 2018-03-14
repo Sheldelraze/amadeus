@@ -44,9 +44,9 @@ public class GeneralController extends BaseController {
     @GetMapping({"/", ""})
     public ModelAndView getIndex() {
         ModelAndView modelAndView = createGeneralModel();
-        Object urId = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
         Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
-        List<MessageDTO> lstMessage = messageService.getRecentMessage(Constants.PUBLIC_TOPIC, 0);
+        List<MessageDTO> lstMessage = messageService.getRecentMessage(Constants.PUBLIC_TOPIC, 0, null);
         modelAndView.addObject("urId", urId);
         modelAndView.addObject(Constants.TOPIC_TEXT, Constants.PUBLIC_TOPIC);
         modelAndView.addObject("username", username);

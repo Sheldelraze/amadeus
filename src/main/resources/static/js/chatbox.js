@@ -1,6 +1,5 @@
 /*jslint browser: true*/
 /*global $, jQuery, alert*/
-
 var stompClient = null;
 var connectingElement = document.getElementById('connecting');
 var messageInput = document.getElementById('messageInput');
@@ -130,7 +129,12 @@ function addMessage(message, position) {
         messageContentDiv.style.textAlign = "left";
     } else {
         messageContentDiv.classList.add('box');
-        messageContentDiv.classList.add('bg-light-inverse');
+        if (message.isRead != null && message.isRead == 0) {
+            messageContentDiv.classList.add('bg-light-green');
+        }
+        else {
+            messageContentDiv.classList.add('bg-light-inverse');
+        }
         messageElement.appendChild(chatImgDiv);
         messageElement.appendChild(contentDiv);
         messageElement.appendChild(chatTimeDiv);
@@ -184,7 +188,7 @@ function onMessageReceived(payload) {
     if (message.topic != topic) {
         return;
     }
-    if (message.type === 'FAIL') {
+    if (message.type == 'FAIL') {
         if (null != urId && message.urId == urId) {
             alert('Gửi tin nhắn thất bại\r\nNguyên nhân: ' + message.comment);
         }

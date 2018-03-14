@@ -45,14 +45,8 @@ public class MessageController extends BaseController {
     public ModelAndView getMessageView() {
         ModelAndView modelAndView = createGeneralModel();
         Integer currewntUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-        Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
         List<UserDTO> lstUser = messageService.getLstUser(null, currewntUserId, 0);
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("urId", currewntUserId);
         modelAndView.addObject("lstUser", lstUser);
-        modelAndView.addObject("increment", Constants.MAX_USER_PER_SEARCH);
-        modelAndView.addObject("topic", Constants.DEFAULT_TOPIC);
-        modelAndView.addObject("messagePerFetch", Constants.MAX_MESSAGE_PER_FETCH);
         modelAndView.setViewName("share/message");
         return modelAndView;
     }
@@ -72,8 +66,20 @@ public class MessageController extends BaseController {
     @PostMapping("/message/getMessage")
     public ResponseEntity<?> getMessage(@RequestBody MessageDTO message) {
         try {
-            List<MessageDTO> lstMessage = messageService.getRecentMessage(message.getTopic(), message.getLimitFrom());
+            Integer curretUserId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+            List<MessageDTO> lstMessage = messageService.getRecentMessage(message.getTopic(), message.getLimitFrom(), curretUserId);
             return ResponseEntity.ok(lstMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/message/updateMessageStatus")
+    public ResponseEntity<?> updateMessageStatus(@RequestBody MessageDTO message) {
+        try {
+            messageService.updateMessageStatus(message.getTopic(), Integer.parseInt(message.getUrId()));
+            return ResponseEntity.ok(message);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

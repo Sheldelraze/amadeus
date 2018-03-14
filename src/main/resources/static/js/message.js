@@ -1,6 +1,7 @@
 var searchStatus = document.getElementById('searchStatus');
 var listUser = document.getElementById('listUser');
 var currentUserFetchTime = 0;
+var updateStatusFlag = false;
 var userWindow = $('.chat-left-inner > .chatonline');
 searchStatus.style.display = "none";
 $('#inputText').on('input', function () {
@@ -37,8 +38,35 @@ function moveToTopic(currentTopic) {
     }
     currentMessageIndex = 0;
     fetchInfo();
+
 }
 
+function updateMessageStatus() {
+    if (updateStatusFlag) {
+        return;
+    }
+    updateStatusFlag = true;
+    var payload = {
+        topic: topic,
+        urId: urId
+    };
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/message/updateMessageStatus",
+        data: JSON.stringify(payload),
+        dataType: 'json',
+        cache: false,
+        timeout: 10000,
+        success: function (data) {
+            updateStatusFlag = false;
+        },
+        error: function (e) {
+            alert('Có lỗi hệ thống xảy ra!\r\n' + e);
+            updateStatusFlag = false;
+        }
+    });
+}
 function fetchInfo() {
     if (fetchingDataFlag) {
         return;
@@ -67,6 +95,7 @@ function fetchInfo() {
             connectingElement.classList.add('hiddenDiv');
             fetchingDataFlag = false;
             fetchMessage();
+            updateMessageStatus();
         },
         error: function (e) {
             connectingElement.textContent = 'Lỗi hệ thống. Vui lòng load lại trang!';

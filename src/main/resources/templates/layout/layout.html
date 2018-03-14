@@ -71,7 +71,7 @@
             <!-- Logo -->
             <!-- ============================================================== -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="Index.aspx">
+                <a class="navbar-brand" href="/">
                     <!-- Logo icon -->
                     <b>
                         <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -126,7 +126,8 @@
                         <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="#"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="mdi mdi-bell"></i>
-                            <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
+                            <div class="notify" id="otherNotify"><span class="heartbit"></span><span
+                                    class="point"></span></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right mailbox scale-up">
                             <ul>
@@ -186,69 +187,33 @@
                     <!-- ============================================================== -->
                     <!-- Messages -->
                     <!-- ============================================================== -->
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" th:if="${lstMessageNotify != null}">
                         <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="#" id="2"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="mdi mdi-email"></i>
-                            <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
+                            <div th:classappend="${#lists.size(lstMessageNotify) == 0}?'hiddenDiv'" class="notify"
+                                 id="messageNotify"><span class="heartbit"></span><span class="point"></span></div>
                         </a>
                         <div class="dropdown-menu mailbox dropdown-menu-right scale-up" aria-labelledby="2">
                             <ul>
                                 <li>
-                                    <div class="drop-title">Bạn có 5 tin nhắn mới</div>
+                                    <div class="drop-title"> Bạn có <span id="messageNotifyCount"
+                                                                          th:text="${#lists.size(lstMessageNotify)}"></span>
+                                        tin nhắn mới
+                                    </div>
                                 </li>
                                 <li>
-                                    <div class="message-center">
+                                    <div class="message-center" id="messageNotifyCenter">
                                         <!-- Message -->
-                                        <a href="#">
+                                        <a th:href="@{/message}" th:each="message : ${lstMessageNotify}">
                                             <div class="user-img">
-                                                <img src="../../static/assets/images/users/1.jpg" th:src="@{/assets/images/users/1.jpg}"  alt="user"
+                                                <img th:src="@{/assets/images/users/1.jpg}" th:alt="${message.username}"
                                                      class="img-circle">
-                                                <span class="profile-status online pull-right"></span>
                                             </div>
                                             <div class="mail-contnet">
-                                                <h5>Pavan kumar</h5>
-                                                <span class="mail-desc">Just see the my admin!</span> <span
-                                                    class="time">9:30 AM</span>
-                                            </div>
-                                        </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="user-img">
-                                                <img src="../../static/assets/images/users/2.jpg" th:src="@{/assets/images/users/2.jpg}"  alt="user"
-                                                     class="img-circle">
-                                                <span class="profile-status busy pull-right"></span>
-                                            </div>
-                                            <div class="mail-contnet">
-                                                <h5>Sonu Nigam</h5>
-                                                <span class="mail-desc">I've sung a song! See you at</span> <span
-                                                    class="time">9:10 AM</span>
-                                            </div>
-                                        </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="user-img">
-                                                <img src="../../static/assets/images/users/3.jpg" th:src="@{/assets/images/users/3.jpg}"  alt="user"
-                                                     class="img-circle">
-                                                <span class="profile-status away pull-right"></span>
-                                            </div>
-                                            <div class="mail-contnet">
-                                                <h5>Arijit Sinh</h5>
-                                                <span class="mail-desc">I am a singer!</span> <span
-                                                    class="time">9:08 AM</span>
-                                            </div>
-                                        </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="user-img">
-                                                <img src="../../static/assets/images/users/4.jpg" th:src="@{/assets/images/users/4.jpg}"  alt="user"
-                                                     class="img-circle">
-                                                <span class="profile-status offline pull-right"></span>
-                                            </div>
-                                            <div class="mail-contnet">
-                                                <h5>Pavan kumar</h5>
-                                                <span class="mail-desc">Just see the my admin!</span> <span
-                                                    class="time">9:02 AM</span>
+                                                <h5 th:text="${message.username}">Pavan kumar</h5>
+                                                <span class="mail-desc" th:text="${message.content}">Just see the my admin!</span>
+                                                <span class="time" th:text="${message.sendTime}">9:30 AM</span>
                                             </div>
                                         </a>
                                     </div>
@@ -335,7 +300,7 @@
             <nav class="sidebar-nav">
                 <ul id="sidebarnav">
                     <li>
-                        <a class="waves-effect waves-dark" href="Index.aspx" aria-expanded="false"><i
+                        <a class="waves-effect waves-dark" href="/" aria-expanded="false"><i
                                 class="mdi mdi-home"></i><span class="hide-menu">Trang chủ </span></a>
                     </li>
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
@@ -444,6 +409,18 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:fragment="js">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var urId = /*[[${urId}]]*/ null;
+        var topic = /*[[${topic}]]*/ null;
+        var username = /*[[${username}]]*/ 'user';
+        var increment = /*[[${increment}]]*/ 50;
+        var currentUserIndex = increment;
+        var messagePerFetch = /*[[${messagePerFetch}]]*/ 15;
+        var currentMessageIndex = messagePerFetch;
+
+        /*]]>*/
+    </script>
     <script src="../../static/assets/plugins/jquery/jquery.min.js" th:src="@{/assets/plugins/jquery/jquery.min.js}" ></script>
     <!-- Bootstrap tether Core JavaScript -->
     <script src="../../static/assets/plugins/bootstrap/js/popper.min.js" th:src="@{/assets/plugins/bootstrap/js/popper.min.js}" ></script>
@@ -465,7 +442,10 @@
     <!--c3 JavaScript -->
     <script src="../../static/assets/plugins/d3/d3.min.js" th:src="@{/assets/plugins/d3/d3.min.js}" ></script>
     <script src="../../static/assets/plugins/c3-master/c3.min.js" th:src="@{/assets/plugins/c3-master/c3.min.js}" ></script>
-    <script src="../../static/js/custom.min.js" th:src="@{/js/jquery-countdown.js}"></script>
+    <script src="../../stati/js/custom.min.js" th:src="@{/js/jquery-countdown.js}"></script>
+    <script th:src="@{/js/notification.js}"></script>
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
     <script>
         $(function () {
             var token = $("meta[name='_csrf']").attr("content");

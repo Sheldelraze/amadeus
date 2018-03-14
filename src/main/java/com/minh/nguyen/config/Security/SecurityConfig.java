@@ -3,7 +3,6 @@ package com.minh.nguyen.config.Security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -36,36 +36,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
     @PostConstruct
     protected void init() {
-        //allow session to be used in multithread (a.k.a @Async) functions
+        //allow session to be used in asynchronous functions
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
+    @Bean
+    public UserDetailsService getUserDetailsService() {
+        return new UserAuthentication();
+    }
+
+    @Bean
+    public AccessDeniedHandler getAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder getBCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     /**
-     * configure multithread setting here,
+     * configure async setting here,
      * for example: maximum thread running at the same time,
      * maximum queue size,...
      * but first, please do some research to understand what they really do
      * and make sure your hardware can handle it properly.
      */
-    @Bean
-    public Executor asyncExecutor() {
+    @Bean(name = "taskExecutor")
+    public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(100);
+        executor.setCorePoolSize(30);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(500);
         executor.setThreadNamePrefix("Judge");
         executor.initialize();
-        return executor;
+        return new DelegatingSecurityContextAsyncTaskExecutor(executor);
     }
 
     //this allows system to throw excepion when no controller is found for
@@ -99,7 +106,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/nicEdit/**").permitAll()
                 .antMatchers("/scss/**").permitAll()
                 .antMatchers("/chat/**").permitAll()
-                .antMatchers("/chat/**").permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
@@ -108,15 +114,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().clearAuthentication(true).logoutSuccessHandler(new LogoutSuccessHandler()).logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true).permitAll()
                 .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+                .exceptionHandling().accessDeniedHandler(getAccessDeniedHandler());
     }
 
     //better not touch here too...
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.
-                userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder);
+                userDetailsService(getUserDetailsService())
+                .passwordEncoder(getBCryptPasswordEncoder());
     }
 }
 

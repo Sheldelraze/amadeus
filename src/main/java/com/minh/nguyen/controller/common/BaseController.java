@@ -1,7 +1,9 @@
 package com.minh.nguyen.controller.common;
 
 import com.minh.nguyen.constants.Constants;
+import com.minh.nguyen.dto.MessageDTO;
 import com.minh.nguyen.exception.BaseException;
+import com.minh.nguyen.service.MessageService;
 import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
@@ -51,6 +53,9 @@ public class BaseController {
 
     @Autowired
     private HttpSession httpSession;
+
+    @Autowired
+    private MessageService messageService;
 
     protected ModelMapper modelMapper;
 
@@ -213,8 +218,19 @@ public class BaseController {
                 canCreateContest = true;
             }
         }
+        Object currewntUserId = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
+        if (currewntUserId != null) {
+            List<MessageDTO> lstMessageNotify = messageService.getMessageNotify((Integer) currewntUserId);
+            modelAndView.addObject("lstMessageNotify", lstMessageNotify);
+        }
         modelAndView.addObject("canCreateProblem", canCreateProblem);
         modelAndView.addObject("canCreateContest", canCreateContest);
+        modelAndView.addObject("username", username);
+        modelAndView.addObject("urId", currewntUserId);
+        modelAndView.addObject("increment", Constants.MAX_USER_PER_SEARCH);
+        modelAndView.addObject("topic", Constants.DEFAULT_TOPIC);
+        modelAndView.addObject("messagePerFetch", Constants.MAX_MESSAGE_PER_FETCH);
         return modelAndView;
     }
 }

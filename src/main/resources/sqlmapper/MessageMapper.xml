@@ -4,7 +4,80 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.MessageMapper">
+    <select id="getMessageNotify" resultMap="messageNotify">
+        SELECT
+            message.id,
+            user.fullname,
+            message.urId    AS sender,
+            temp.createTime AS createTime,
+            message.content
+        FROM
+            ur_me
+            INNER JOIN
+            message
+                ON ur_me.meId = message.id
+                   AND message.deleteFlg = '0'
+            INNER JOIN
+            (
+                SELECT
+                    ur_me.urId,
+                    MAX(ur_me.createTime) AS createTime,
+                    message.cnId
+                FROM
+                    message
+                    INNER JOIN ur_me
+                        ON ur_me.meId = message.id
+                           AND ur_me.deleteFlg = '0'
+                           AND ur_me.urId = #{urId}
+                           AND ur_me.isRead = 0
+                    INNER JOIN conversation ON message.cnId = conversation.id
+                GROUP BY conversation.id
+            ) AS temp
+                ON ur_me.createTime = temp.createTime
+                   AND ur_me.deleteFlg = '0'
+                   AND ur_me.urId = temp.urId
+                   AND message.cnId = temp.cnId
+            INNER JOIN user
+                ON message.urId = user.id
+    </select>
+    <update id="updateMessageStatus">
+        UPDATE ur_me
+        SET isRead = 1
+        WHERE isRead = 0
+              AND urId = #{urId}
+              AND meId IN (
+            SELECT meId
+            FROM message
+                INNER JOIN conversation
+                    ON message.cnId = conversation.id
+                       AND conversation.topic = #{topic}
+        )
+    </update>
     <select id="getRecentMessage" resultType="MessageDTO">
+        SELECT
+            user.fullname AS username,
+            user.id,
+            message.createTime,
+            message.content,
+            ur_me.isRead
+        FROM message
+            INNER JOIN
+            conversation
+                ON message.cnId = conversation.id
+                   AND conversation.topic = #{topic}
+                   AND conversation.deleteFlg = '0'
+            INNER JOIN user
+                ON message.urID = user.id
+                   AND user.deleteFlg = '0'
+            INNER JOIN ur_me
+                ON message.id = ur_me.meId
+                   AND ur_me.deleteFlg = '0'
+                   AND ur_me.urId = #{urId}
+        WHERE message.deleteFlg = '0'
+        ORDER BY message.createTime DESC
+        LIMIT #{from}, #{size}
+    </select>
+    <select id="getPublicMessage" resultType="MessageDTO">
         SELECT
             user.fullname AS username,
             user.id,
@@ -23,4 +96,11 @@
         ORDER BY message.createTime DESC
         LIMIT #{from}, #{size}
     </select>
+    <resultMap id="messageNotify" type="MessageDTO">
+        <id column="id" property="id"/>
+        <result column="createTime" property="createTime"/>
+        <result column="content" property="content"/>
+        <result column="sender" property="urId"/>
+        <result column="fullname" property="username"/>
+    </resultMap>
 </mapper>

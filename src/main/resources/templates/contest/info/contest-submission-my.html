@@ -100,8 +100,12 @@
                                             <td><b><a  th:href="|/contest/${ctId}/submission/${submission.id}|"  th:text="${submission.id}">132</a></b></td>
                                             <td><b><a href="#" th:text="${submission?.user?.fullname}">Makise Kurisu</a></b></td>
                                             <td><b><a th:href="|/contest/${ctId}/problem/${submission.pmId}/view|" th:text="${submission.pmNm}">Tính tổng 2 số</a></b></td>
-                                            <td th:text="|${submission.memoryUsed}MB|">256KB</td>
-                                            <td th:text="|${submission.timeRun}ms|">25ms</td>
+                                            <td><label th:text="${submission.memoryUsed}"
+                                                       th:id="|memoryUsed${submission.id}|">256KB</label>MB
+                                            </td>
+                                            <td><label th:text="${submission.timeRun}"
+                                                       th:id="|timeRun${submission.id}|"></label>ms
+                                            </td>
                                             <td th:text="${submission.submitTime}">1:20:25</td>
                                             <th:block th:if="${submission.judgeStatus==0}">
                                                 <td><label th:text="${submission.verdict}" th:id="|sub${submission.id}|"

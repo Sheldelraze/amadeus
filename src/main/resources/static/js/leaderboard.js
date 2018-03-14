@@ -11,12 +11,14 @@ function onError(error) {
 }
 
 function onConnected() {
-    stompClient.subscribe('/message/topic.' + topic, onMessageReceived);
+    stompClient.subscribe('/message/topic.' + topic, onStatusUpdate);
 }
 
-function onMessageReceived(payload) {
+function onStatusUpdate(payload) {
     var submission = JSON.parse(payload.body);
     var verdict = document.getElementById("sub" + submission.id);
+    var timeRun = document.getElementById("timeRun" + submission.id);
+    var memoryUsed = document.getElementById("memoryUsed" + submission.id);
     if (verdict == null) {
         return;
     }
@@ -26,6 +28,12 @@ function onMessageReceived(payload) {
         verdict.className = "accepted";
     } else {
         verdict.className = "fail";
+    }
+    if (submission.timeRun != null && submission.timeRun != 0) {
+        timeRun.innerHTML = submission.timeRun;
+    }
+    if (submission.memoryUsed != null && submission.memoryUsed != 0) {
+        memoryUsed.innerHTML = submission.memoryUsed;
     }
     verdict.innerHTML = submission.verdict;
 }

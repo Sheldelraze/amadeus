@@ -100,8 +100,12 @@
                                             Kurisu</a></b></td>
                                         <td><b><a th:href="|/problem/info/${submissionDTO.pmId}/view|"
                                                   th:text="${submissionDTO.pmNm}">Tính tổng 2 số</a></b></td>
-                                        <td><label th:text="${submissionDTO.memoryUsed}">256KB</label>MB</td>
-                                        <td><label th:text="${submissionDTO.timeRun}"></label>ms </td>
+                                        <td><label th:text="${submissionDTO.memoryUsed}"
+                                                   th:id="|memoryUsed${submissionDTO.id}|">256KB</label>MB
+                                        </td>
+                                        <td><label th:text="${submissionDTO.timeRun}"
+                                                   th:id="|timeRun${submissionDTO.id}|"></label>ms
+                                        </td>
                                         <td><label th:text="${submissionDTO.submitTime}"></label></td>
                                         <th:block th:if="${submissionDTO.judgeStatus==0}">
                                             <td><label th:text="${submissionDTO.verdict}"

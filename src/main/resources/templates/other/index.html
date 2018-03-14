@@ -154,18 +154,7 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    var urId = /*[[${urId}]]*/ null;
-    var topic = /*[[${topic}]]*/ null;
-    var username = /*[[${username}]]*/ null;
-    var messagePerFetch = /*[[${messagePerFetch}]]*/ 15;
-    var currentMessageIndex = messagePerFetch;
-    /*]]>*/
-</script>
 <script th:src="@{/js/chatbox.js}"></script>
-<script th:src="@{/js/sockjs.min.js}"></script>
-<script th:src="@{/js/stomp.min.js}"></script>
 
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->

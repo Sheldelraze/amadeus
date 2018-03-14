@@ -1,5 +1,7 @@
 package com.minh.nguyen.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -12,10 +14,15 @@ import java.io.Serializable;
 public class UrMeEntity extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3330039343L;
 
+    @Id
+    @Column(name = "urId")
     private Integer urId;
 
+    @Id
+    @Column(name = "meId")
     private Integer meId;
 
+    @Column(name = "isRead")
     private Integer isRead;
 
     public static long getSerialVersionUID() {

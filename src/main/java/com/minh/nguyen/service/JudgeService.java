@@ -95,7 +95,6 @@ public class JudgeService extends BaseService {
 
             //send message
             sendMessage(submissionEntity, ctId, ceId);
-            submissionMapper.updateByPK(submissionEntity);
 
             //set id = null de insert = BaseMapper không bị lỗi
             submitDetailEntity.setId(null);
@@ -192,9 +191,9 @@ public class JudgeService extends BaseService {
     private void sendMessage(SubmissionEntity submissionEntity, Integer ctId, Integer ceId) {
         simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
         if (ctId != null) {
-            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "contest/" + ctId, submissionEntity);
+            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.CONTEST_TOPIC + ctId, submissionEntity);
         } else if (ceId != null) {
-            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + "course/" + ceId, submissionEntity);
+            simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.COURSE_TOPIC + ceId, submissionEntity);
         }
     }
 }
