@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <link href="../../../static/assets/plugins/select2/dist/css/select2.min.css"
+          th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+    <style>
+        .announce {
+            background-color: #f0ffff;
+        }
+    </style>
+    <div th:replace="layout/layout::css"></div>
+</head>
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::preloader"></div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::topbar"></div>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::left-sidebar"></div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles">
+                <div class="col-md-5 col-8 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Kỳ thi</a></li>
+                        <li class="breadcrumb-item active">Thông tin kỳ thi</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <div class="row">
+                <!-- Column -->
+                <!-- Column -->
+                <div class="col-lg-12 col-xlg-12 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="nav nav-pills m-t-30 m-b-30"
+                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                            <div id="announcement" class="tab-pane active" style="margin-top: 20px; color: black">
+                                <div class="card-body">
+                                    <th:block th:if="${contestAuth == 'CAN_PARTICIPATE_CONTEST'}">
+                                        <form th:object="${contestAnnouncementForm}"
+                                              th:action="|/contest/${ctId}/addQuestion|" method="post">
+                                            <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                                <div class="alert alert-danger">
+                                                    ✘ <label th:errors="*{screenMessage}"></label>
+                                                </div>
+                                            </th:block>
+                                            <th:block th:if="${updateSuccess}">
+                                                <div class="alert alert-success">
+                                                    ✔ Thêm thành công
+                                                </div>
+                                            </th:block>
+                                            <h3>Thêm câu hỏi</h3>
+                                            <label class="col-form-label">Chọn bài tập</label>
+                                            <select class="form-control" style="width: 40%" th:field="*{pmId}">
+                                                <option value="0">Thông tin chung</option>
+                                                <option th:each="problem : ${lstProblem}" th:value="${problem.id}"
+                                                        th:text="${problem.name}"></option>
+                                            </select>
+                                            <br/>
+                                            <label class="col-form-label">Nội dung (tối đa 2000 ký tự)</label>
+                                            <textarea class="form-control" rows="5" id="question"
+                                                      name="question"></textarea>
+                                            <th:block th:if="${#fields.hasErrors('question')}">
+                                                <label
+                                                        th:class="'error'"
+                                                        th:errors="*{question}">Name Error</label>
+                                                <br/>
+                                            </th:block>
+                                            <button type="submit" class="btn btn-warning" style="margin-top:20px">Đặt
+                                                câu hỏi
+                                            </button>
+                                            <hr style="width: 100%"/>
+                                        </form>
+                                    </th:block>
+                                    <th:block th:if="${contestAuth == 'CAN_EDIT_CONTEST'}">
+                                        <form method="post" th:object="${contestAnnouncementForm}"
+                                              th:action="|/contest/${ctId}/addAnnouncement|">
+                                            <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                                <div class="alert alert-danger">
+                                                    ✘ <label th:errors="*{screenMessage}"></label>
+                                                </div>
+                                            </th:block>
+                                            <th:block th:if="${updateSuccess}">
+                                                <div class="alert alert-success">
+                                                    ✔ Thêm thành công
+                                                </div>
+                                            </th:block>
+                                            <h3>Thêm thông báo</h3>
+                                            <label class="col-form-label">Chọn bài tập</label>
+                                            <select class="form-control" style="width: 40%" th:field="*{pmId}">
+                                                <option value="0">Thông tin chung</option>
+                                                <option th:each="problem : ${lstProblem}" th:value="${problem.id}"
+                                                        th:text="${problem.name}"></option>
+                                            </select>
+                                            <br/>
+                                            <label class="col-form-label">Nội dung (tối đa 2000 ký tự)</label>
+                                            <textarea class="form-control" rows="5" id="answer"
+                                                      name="answer"></textarea>
+                                            <th:block th:if="${#fields.hasErrors('answer')}">
+                                                <label
+                                                        th:class="'error'"
+                                                        th:errors="*{answer}">Name Error</label>
+                                                <br/>
+                                            </th:block>
+                                            <button type="submit" class="btn btn-warning" style="margin-top:20px">Thêm
+                                                thông
+                                                báo
+                                            </button>
+                                            <hr style="width: 100%"/>
+                                        </form>
+                                    </th:block>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="myTable"
+                                               style="color: black; text-align: center;font-family: verdana,arial,sans-serif">
+                                            <thead>
+                                            <tr>
+                                                <th style="text-align: center;width:50px;font-weight: 900">#</th>
+                                                <th style="text-align: center;width:170px;font-weight: 900">Thời điểm
+                                                </th>
+                                                <th style="text-align: center;width:200px;font-weight: 900">Tên bài</th>
+                                                <th style="text-align: center;font-weight: 900">Câu hỏi</th>
+                                                <th style="text-align: center;font-weight: 900">Trả lời</th>
+                                                <th style="text-align: center;font-weight: 900;width:50px"
+                                                    th:if="${contestAuth == 'CAN_EDIT_CONTEST'}">Hiện
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody style="font-size: 80%">
+                                            <tr th:each="announce : ${lstAnnounce}"
+                                                th:style="${announce.isHidden == 1}?'background-color: #e8e8e8'"
+                                                th:classappend="${announce.isFromCreator == 1}?'announce'">
+                                                <!--id-->
+                                                <td th:text="${announce.isFromCreator == 1}?'':${announce.id}"></td>
+
+                                                <!--timeposted-->
+                                                <td th:text="${announce.timePosted}"></td>
+
+                                                <!--problem's name-->
+                                                <td th:if="${announce.problem.id != 0}">
+                                                    <a th:href="|/contest/${ctId}/problem/${announce.problem.id}/view|"
+                                                       th:text="${announce.problem.name}"></a>
+                                                </td>
+                                                <td th:if="${announce.problem.id == 0}">
+                                                    Thông tin chung
+                                                </td>
+                                                <!--question-->
+                                                <td th:text="${announce.question}"
+                                                    style="white-space: pre-line;text-align: left"></td>
+
+                                                <!--answer-->
+                                                <td th:text="${announce.answer}" th:if="${announce.isAnswered == 1}"
+                                                    style="white-space: pre-line;text-align: left"></td>
+                                                <th:block th:if="${announce.isAnswered == 0}">
+                                                    <td th:if="${contestAuth != 'CAN_EDIT_CONTEST'}"
+                                                        style="color:darkgrey;text-align: left">Chưa có câu trả lời
+                                                    </td>
+                                                    <td th:if="${contestAuth == 'CAN_EDIT_CONTEST'}"
+                                                        style="text-align: left">
+                                                        <a href="#" th:onclick="|popup(${ctId},${announce.id})|"
+                                                           style="font-weight: 900;color:red">
+                                                            <u>Trả lời</u>
+                                                        </a>
+                                                    </td>
+                                                </th:block>
+                                                <!--hidden-->
+                                                <td th:if="${contestAuth == 'CAN_EDIT_CONTEST'}">
+                                                    <input th:value="${announce.id}"
+                                                           th:checked="${announce.isHidden == 0}?'checked'"
+                                                           type="checkbox"
+                                                           th:id="|lstAtId${__${announce.id}__}|" name="lstPmId"/>
+                                                    <label th:for="|lstAtId${__${announce.id}__}|"
+                                                           th:onclick="|changeState(${ctId},${announce.id},${announce.isHidden})|"></label>
+                                                </td>
+
+                                            </tr>
+                                            <!--style="background-color: #ffd2d3"-->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="layout/layout::footer"></div>
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::js"></div>
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').dataTable({
+            "bSort": false
+        });
+    });
+
+    function popup(ctId, atId) {
+        var url = '/contest/' + ctId + '/answer/' + atId;
+        window.open(url,
+            '1426494439650',
+            'width=1500,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
+    }
+
+    function HandlePopupResult() {
+        location.reload();
+    }
+    function changeState(ctId, atId, hidden) {
+        var newState = 1 - hidden;
+        window.location.replace("/contest/" + ctId + "/changeAnnounceState/" + atId + "/to/" + newState);
+    }
+</script>
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

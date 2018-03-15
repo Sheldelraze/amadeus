@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <link href="../../../static/assets/plugins/select2/dist/css/select2.min.css"
+          th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+
+    <div th:replace="layout/layout::css"></div>
+</head>
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::preloader"></div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::topbar"></div>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::left-sidebar"></div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles">
+                <div class="col-md-5 col-8 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Kỳ thi</a></li>
+                        <li class="breadcrumb-item active">Thông tin kỳ thi</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <div class="row">
+                <!-- Column -->
+                <!-- Column -->
+                <div class="col-lg-12 col-xlg-12 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="nav nav-pills m-t-30 m-b-30" th:fragment="navtab(ctId,tab)">
+                                <li class="nav-item">
+                                    <a th:href="@{|/contest/${ctId}/information|}"
+                                       th:classappend="${tab==1}?'active'"
+                                       class="nav-link">Thông tin</a></li>
+                                <li class="nav-item">
+                                    <a th:href="@{|/contest/${ctId}/problem|}"
+                                       th:classappend="${tab==2}?'active'"
+                                       class="nav-link">Bài tập</a></li>
+                                <li class="nav-item">
+                                    <a th:href="@{|/contest/${ctId}/submit|}"
+                                       th:classappend="${tab==3}?'active'"
+                                       class="nav-link">Nộp bài</a></li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                       th:classappend="${tab==4 || tab == 5}?'active'"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        <span class="hidden-sm-up"><i class="ti-email"></i></span><span
+                                            class="hidden-xs-down">Danh sách bài nộp</span>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" id="dropdown1-tab"
+                                           th:href="@{|/contest/${ctId}/my|}"
+                                           th:classappend="${tab==4}?'active'"
+                                           style="color: cornflowerblue">Của
+                                            tôi
+                                        </a>
+                                        <a th:if="${canViewStatus}" class="dropdown-item" id="dropdown2-tab"
+                                           th:href="@{|/contest/${ctId}/all|}"
+                                           th:classappend="${tab==5}?'active'"
+                                           style="color: cornflowerblue">Tất
+                                            cả
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="nav-item" th:if="${canViewStatus}"><a
+                                        th:href="@{|/contest/${ctId}/leaderboard|}"
+                                        th:classappend="${tab==6}?'active'"
+                                        class="nav-link">Bảng xếp hạng</a></li>
+
+                                <li class="nav-item"><a
+                                        th:href="@{|/contest/${ctId}/announcement|}"
+                                        th:classappend="${tab==7}?'active'"
+                                        class="nav-link">Thông báo
+                                    <th:block th:if="${atCnt != null}">
+                                        <b style="color: red" th:text="|(${atCnt})|"></b>
+                                    </th:block>
+                                </a>
+                                </li>
+                                <li class="nav-item" th:if="${contestAuth == 'CAN_EDIT_CONTEST'}"><a
+                                        th:href="@{|/contest/${ctId}/setting|}"
+                                        th:classappend="${tab==8}?'active'"
+                                        class="nav-link">Thiết lập</a></li>
+                                <li class="nav-item" th:if="${isCreator}"><a
+                                        th:href="@{|/contest/${ctId}/role|}"
+                                        th:classappend="${tab==9}?'active'"
+                                        class="nav-link">Phân quyền</a></li>
+                            </ul>
+                            <div class="tab-content br-n pn">
+                                <div id="information" class="tab-pane">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="layout/layout::footer"></div>
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<th:block th:replace="layout/layout::js"></th:block>
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

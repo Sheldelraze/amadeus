@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <!-- Page plugins css -->
+    <link href="../../../static/assets/plugins/clockpicker/dist/jquery-clockpicker.min.css"
+          th:href="@{/assets/plugins/clockpicker/dist/jquery-clockpicker.min.css}" rel="stylesheet"/>
+    <link href="../../../static/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css"
+          th:href="@{/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css}" rel="stylesheet"
+          type="text/css"/>
+
+    <div th:replace="layout/layout::css"></div>
+</head>
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::preloader"></div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::topbar"></div>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::left-sidebar"></div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles">
+                <div class="col-md-5 col-8 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Kỳ thi</a></li>
+                        <li class="breadcrumb-item active">Thông tin kỳ thi</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <div class="row">
+                <!-- Column -->
+                <!-- Column -->
+                <div class="col-lg-12 col-xlg-12 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <ul class="nav nav-pills m-t-30 m-b-30"
+                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                            <div id="settings" class="tab-pane active" style="margin-top: 20px; color: black">
+                                <form method="post" th:object="${contestSettingForm}"
+                                      th:action="|/contest/${ctId}/setting|">
+                                    <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                        <div class="alert alert-danger">
+                                            ✘ <label th:errors="*{screenMessage}"></label>
+                                        </div>
+                                    </th:block>
+                                    <th:block th:if="${updateSuccess}">
+                                        <div class="alert alert-success">
+                                            ✔ Cập nhật thành công
+                                        </div>
+                                    </th:block>
+                                    <div style="text-align: center">
+                                        <h3>Thông tin chung</h3>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Tên cuộc
+                                            thi</label>
+                                        <div class="col-10">
+                                            <input th:value="${contestSettingVO.name}" class="form-control" type="text"
+                                                   style="color: black"
+                                                   id="name" name="name"/>
+                                            <label
+                                                    th:if="${#fields.hasErrors('name')}" th:class="'error'"
+                                                    th:errors="*{name}">Name Error</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Ngày
+                                            thi</label>
+                                        <div class="col-3">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" style="color: black"
+                                                       id="date" name="date" th:value="${contestSettingVO.date}"
+                                                       placeholder="mm/dd/yyyy"/>
+                                                <span class="input-group-addon"><i class="icon-calender"></i></span>
+                                            </div>
+                                        </div>
+                                        <label class="col-2 col-form-label text-right">Giờ
+                                            thi</label>
+                                        <div class="col-3">
+                                            <div class="input-group clockpicker " data-placement="top" data-align="top"
+                                                 data-autoclose="true">
+                                                <input type="text" style="color: black" class="form-control"
+                                                       id="time" name="time" th:value="${contestSettingVO.time}"
+                                                       placeholder="hh:mm"/>
+                                                <span class="input-group-addon"><span
+                                                        class="fa fa-clock-o"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <th:block th:if="${#fields.hasErrors('date') || #fields.hasErrors('time')}">
+                                        <div class="row" style="margin-top:-22px">
+                                            <div class="col-2"></div>
+                                            <div class="col-3">
+                                                <label
+                                                        th:if="${#fields.hasErrors('date')}" th:class="'error'"
+                                                        th:errors="*{date}">Name Error</label>
+                                            </div>
+                                            <div class="col-2"></div>
+                                            <div class="col-3">
+                                                <label
+                                                        th:if="${#fields.hasErrors('time')}" th:class="'error'"
+                                                        th:errors="*{time}">Name Error</label>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Thời lượng
+                                            (phút)</label>
+                                        <div class="col-3">
+                                            <input class="form-control" type="text" style="color: black"
+                                                   id="duration" name="duration"
+                                                   th:value="${contestSettingVO.duration}"/>
+                                            <label
+                                                    th:if="${#fields.hasErrors('duration')}" th:class="'error'"
+                                                    th:errors="*{duration}">Name Error</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Cách tính
+                                            điểm (coming soon)</label>
+                                        <div class="col-5">
+                                            <select id="judgeType" name="judgeType" class="form-control"
+                                                    style="height: 45px;color: black">
+                                                <option value="1"
+                                                        th:selected="${contestSettingVO.judgeType==1}?'selected'">Chỉ
+                                                    đúng hết hoặc sai
+                                                </option>
+                                                <option value="2"
+                                                        th:selected="${contestSettingVO.judgeType==2}?'selected'">Tính
+                                                    điểm dựa trên số test đúng
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Loại cuộc
+                                            thi</label>
+                                        <div class="col-6">
+                                            <select id="isPublic" name="isPublic" class="form-control"
+                                                    style="height: 45px;color:black">
+                                                <option value="1"
+                                                        th:selected="${contestSettingVO.isPublic==1}?'selected'">Public
+                                                    - Ai cũng có thể đăng ký tham gia
+                                                </option>
+                                                <option value="2"
+                                                        th:selected="${contestSettingVO.isPublic==2}?'selected'">Private
+                                                    - Chỉ những người được mời mới có thể tham gia
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Cho phép
+                                            người không đăng ký xem thông tin cuộc thi</label>
+                                        <div class="col-10" style="margin-top: 10px">
+                                            <input type="checkbox" id="showToAll" name="showToAll"
+                                                   class="filled-in chk-col-light-green"
+                                                   value="1"
+                                                   th:checked="${contestSettingVO.showToAll==1}?'checked'"/>
+                                            <label for="showToAll">Được xem thông tin về bài tập và BXH (Chỉ dùng
+                                                cho
+                                                loại Public)</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Mô
+                                            tả</label>
+                                        <div class="col-10">
+                                            <textarea class="form-control" id="description" name="description"
+                                                      style="white-space: pre;color:black"
+                                                      rows="5" th:inline="text">[[${contestSettingVO.description}]]</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Yêu
+                                            cầu</label>
+                                        <div class="col-10">
+                                            <textarea class="form-control"
+                                                      id="requirement" name="requirement"
+                                                      style="white-space: pre;color:black"
+                                                      rows="5" th:inline="text">[[${contestSettingVO.requirement}]]</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Giải
+                                            thưởng</label>
+                                        <div class="col-10">
+                                            <textarea class="form-control"
+                                                      id="prize" name="prize"
+                                                      style="white-space: pre;color:black"
+                                                      rows="5" th:inline="text">[[${contestSettingVO.prize}]]</textarea>
+                                        </div>
+                                    </div>
+                                    <hr style="width: 100%"/>
+                                    <div style="text-align: center">
+                                        <h3>Đối với sinh viên tham gia thi</h3>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Cho phép xem
+                                            test </label>
+                                        <div class="col-5">
+                                            <select id="showTest" name="showTest" class="form-control"
+                                                    style="height: 45px;color: black">
+                                                <option value="1"
+                                                        th:selected="${contestSettingVO.showTest==1}?'selected'">Xem tất
+                                                    cả
+                                                </option>
+                                                <option value="2"
+                                                        th:selected="${contestSettingVO.showTest==2}?'selected'">Chỉ
+                                                    được xem test bị sai(coming soon)
+                                                </option>
+                                                <option value="3"
+                                                        th:selected="${contestSettingVO.showTest==3}?'selected'">Không
+                                                    được xem
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Cho phép xem
+                                            bài nộp</label>
+                                        <div class="col-5">
+                                            <select id="showSubmit" name="showSubmit" class="form-control"
+                                                    style="height: 45px;color: black">
+                                                <option value="1"
+                                                        th:selected="${contestSettingVO.showSubmit==1}?'selected'">Được
+                                                    xem tất cả mọi người
+                                                </option>
+                                                <option value="2"
+                                                        th:selected="${contestSettingVO.showSubmit==2}?'selected'">Chỉ
+                                                    những bài đã giải được
+                                                </option>
+                                                <option value="3"
+                                                        th:selected="${contestSettingVO.showSubmit==3}?'selected'">Chỉ
+                                                    cá nhân
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Cho phép xem
+                                            thông tin chung </label>
+                                        <div class="col-10" style="margin-top: 10px">
+                                            <input type="checkbox" id="showStatus"
+                                                   name="showStatus"
+                                                   value="1"
+                                                   class="filled-in chk-col-light-green"
+                                                   th:checked="${contestSettingVO.showStatus==1}?'checked'"/>
+                                            <label for="showStatus">Bao gồm BXH và danh sách bài nộp của tất
+                                                cả</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row">
+                                        <label class="col-2 col-form-label text-right">Cho phép
+                                            luyện tập</label>
+                                        <div class="col-10" style="margin-top: 10px">
+                                            <input type="checkbox" id="canPractice" name="canPractice"
+                                                   class="filled-in chk-col-light-green"
+                                                   value="1"
+                                                   th:checked="${contestSettingVO.canPractice==1}?'checked'"/>
+                                            <label for="canPractice">Được nộp bài sau khi cuộc thi kết thúc</label>
+                                        </div>
+                                    </div>
+                                    <hr style="width: 100%"/>
+                                    <div style="text-align: center">
+                                        <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+                                        <button type="button" class="btn btn-success" style="margin-left: 50px">Công
+                                            khai
+                                            cuộc thi
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="layout/layout::footer"></div>
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<!-- Plugin JavaScript -->
+<!-- Clock Plugin JavaScript -->
+<script th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+<script src="../../../static/assets/plugins/clockpicker/dist/jquery-clockpicker.min.js"
+        th:src="@{/assets/plugins/clockpicker/dist/jquery-clockpicker.min.js}"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="../../../static/assets/plugins/jquery-asColorPicker-master/libs/jquery-asColor.js"
+        th:src="@{/assets/plugins/jquery-asColorPicker-master/libs/jquery-asColor.js}"></script>
+<script src="../../../static/assets/plugins/jquery-asColorPicker-master/libs/jquery-asGradient.js"
+        th:src="@{/assets/plugins/jquery-asColorPicker-master/libs/jquery-asGradient.js}"></script>
+<script src="../../../static/assets/plugins/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"
+        th:src="@{/assets/plugins/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js}"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="../../../static/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"
+        th:src="@{/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js}"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="../../../static/assets/plugins/timepicker/bootstrap-timepicker.min.js"
+        th:src="@{/assets/plugins/timepicker/bootstrap-timepicker.min.js}"></script>
+<script src="../../../static/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"
+        th:src="@{/assets/plugins/bootstrap-daterangepicker/daterangepicker.js}"></script>
+<script>
+    // Clock pickers
+    $('.clockpicker').clockpicker({
+        donetext: 'Done',
+    });
+    $('#check-minutes').click(function (e) {
+        // Have to stop propagation here
+        e.stopPropagation();
+        input.clockpicker('show').clockpicker('toggleView', 'minutes');
+    });
+    jQuery('#date').datepicker({
+        autoclose: true,
+        todayHighlight: true
+    });
+
+</script>
+<div th:replace="layout/layout::js"></div>
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

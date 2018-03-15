@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../static/assets/images/favicon.png"
+          th:href="@{/assets/images/favicon.png}">
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+
+    <link href="../../../static/assets/plugins/bootstrap/css/bootstrap.min.css"
+          th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="../../../static/css/colors/blue.css" th:href="@{/css/colors/blue.css}" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+</head>
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <div class="row" style="margin-top:30px;color:black">
+            <!-- Column -->
+            <!-- Column -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form th:action="|/contest/${ctId}/findForRole|"
+                              th:object="${contestAddRoleForm}" method="post">
+                            <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                <div class="alert alert-danger">
+                                    ✘ <label th:errors="*{screenMessage}"></label>
+                                </div>
+                            </th:block>
+                            <th:block th:if="${updateSuccess}">
+                                <div class="alert alert-success">
+                                    ✔ Cập nhật thành công
+                                </div>
+                            </th:block>
+                            <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()"
+                                    style="margin-left: 50px">Đóng cứa sổ
+                            </button>
+                            <div style="text-align: center">
+                                <h3>Thêm quyền</h3>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-2 col-form-label text-right">Tên người dùng</label>
+                                <div class="col-8">
+                                    <input style="color:black" class="form-control" th:field="*{fullname}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-2 col-form-label text-right">Vai trò</label>
+                                <div class="col-3">
+                                    <select class="form-control" style="color:black;height: 45px;" th:field="*{reId}">
+                                        <option value="0">Tất cả</option>
+                                        <option value="1">Quản trị</option>
+                                        <option value="2">Giảng viên</option>
+                                        <option value="3">Sinh viên</option>
+                                        <option value="4">Lãnh đạo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <button type="submit" class="btn btn-warning">Tìm kiếm
+                                </button>
+                            </div>
+                        </form>
+                        <form th:action="|/contest/${ctId}/addRole|" method="post" th:if="${null != lstUser}">
+                            <hr width="80%"/>
+                            <div style="width: 10%; margin-top: 10px;margin-bottom: 15px">
+                                <b style="color: black">Quyền</b><i class="mdi mdi-comment-question-outline"
+                                                                    data-toggle="tooltip"
+                                                                    data-placement="bottom" title=""
+                                                                    data-original-title="Quyền 'Xem' là được xem tất cả thông tin về cuộc thi (bài tập, bài nộp, BXH,..), còn 'Cập nhật' là bao gồm 'Xem' và sửa thông tin"></i>
+                                <select class="form-control" id="auyId" name="auyId">
+                                    <option value="1">Xem</option>
+                                    <option value="2">Cập nhật</option>
+                                    <option value="3">Tham gia</option>
+                                </select>
+
+                            </div>
+                            <small>(*) Nếu đã có quyền 'Xem' thì sẽ không được 'Tham gia'</small>
+                            <table id="myTable" class="table table-bordered "
+                                   style="text-align: center; color: black;">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center" width="20px">#</th>
+                                    <th style="text-align: center" width="150px">Tài khoản</th>
+                                    <th style="text-align: center" width="150px">Họ và tên</th>
+                                    <th style="text-align: center" width="200px">Vai trò</th>
+                                    <th style="text-align: center" width="170px">
+                                        <input type="checkbox" id="parent"/>
+                                        <label style="margin-bottom: -10px;margin-left: 20px" for="parent"> Thêm</label>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="user,iter : ${lstUser}">
+                                    <td th:text="${iter.count}"></td>
+                                    <td th:text="${user.handle}"></td>
+                                    <td th:text="${user.fullname}"></td>
+                                    <td th:if="${user.role == null}"></td>
+                                    <th:block th:if="${user.role != null}">
+                                        <td th:if="${user.role.id == 1}">
+                                            <span class="badge badge-danger" th:text="${user.role.text}"></span>
+                                        </td>
+                                        <td th:if="${user.role.id == 2}">
+                                            <span class="badge badge-warning" th:text="${user.role.text}"></span>
+                                        </td>
+                                        <td th:if="${user.role.id == 3}">
+                                            <span class="badge badge-primary" th:text="${user.role.text}"></span>
+                                        </td>
+                                        <td th:if="${user.role.id == 4}">
+                                            <span class="badge badge-info" th:text="${user.role.text}"></span>
+                                        </td>
+                                    </th:block>
+
+                                    <td>
+                                        <div class="checkbox checkbox-single">
+                                            <input th:value="${user.id}"
+                                                   type="checkbox"
+                                                   th:id="|lstUrId{__${user.id}__}|" name="lstUrId"/>
+                                            <label th:for="|lstUrId{__${user.id}__}|"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                            <div style="text-align: center">
+                                <button type="submit" class="btn btn-success">Thêm quyền
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Container fluid  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+
+<script>
+    function CloseMySelf() {
+        try {
+            window.opener.HandlePopupResult();
+        }
+        catch (err) {
+        }
+        window.close();
+        return false;
+    }
+</script>
+<script src="../../../static/assets/plugins/jquery/jquery.min.js"
+        th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
+></script>
+<!--Custom JavaScript -->
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+    $(function () {
+        $('#parent').on('change', function () {
+            $('[id^=lstUrId]').prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--c3 JavaScript -->
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

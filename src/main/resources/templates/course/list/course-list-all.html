@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <div th:replace="layout/layout::css"></div>
+</head>
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::preloader"></div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::topbar"></div>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::left-sidebar"></div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles">
+                <div class="col-md-5 col-8 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
+                        <li class="breadcrumb-item active">Bài tập của tôi</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-outline-info">
+                            <div class="card-header">
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Kỳ thi
+                                    sắp/đang diễn ra</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-bordered "
+                                       style="text-align: center; color: black; font-size: 14px">
+                                    <thead>
+                                    <tr>
+                                        <th>Tên kỳ thi</th>
+                                        <th>Người ra đề</th>
+                                        <th style="width: 150px">Bắt đầu</th>
+                                        <th style="width: 180px">Thời lượng (phút)</th>
+                                        <th style="width: 130px">Số người</th>
+                                        <th style="width: 200px">Trạng thái</th>
+                                    </tr>
+                                    </thead>
+                                    <tr th:each="contest : ${contestListVO.ongoingLst}">
+                                        <td><a th:href="|/contest/${contest.id}|" th:text="${contest.name}"></a></td>
+                                        <td><a href="#" th:text="${contest.creator.fullname}"></a></td>
+                                        <td th:text="${contest.date}"></td>
+                                        <td th:text="${contest.duration}" style="white-space: pre"></td>
+                                        <td><i class="mdi mdi-account"></i>x<label th:text="${contest.userCnt}"></label>
+                                        </td>
+                                        <th:block th:if="${contest.ongoing}">
+                                            <td><h3><span class="badge badge-warning">Đang thi</span></h3></td>
+                                        </th:block>
+                                        <th:block th:unless="${contest.ongoing}">
+                                            ` <input type="hidden" th:id="|cd${contest.id}input|"
+                                                     th:value="${contest.startTime}"/>
+                                            <td>Chưa thi:<h4><span class="badge badge-success" th:id="|cd${contest.id}|"
+                                                                   th:text="${contest.startTime}"></span></h4></td>
+                                        </th:block>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-outline-info">
+                            <div class="card-header">
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Kỳ thi đã thi
+                                    xong</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="myTable1" class="table table-bordered "
+                                       style="text-align: center; color: black; font-size: 14px">
+                                    <thead>
+                                    <tr>
+                                        <th>Tên kỳ thi</th>
+                                        <th>Người ra đề</th>
+                                        <th>Bắt đầu</th>
+                                        <th>Thời gian</th>
+                                        <th style="width: 130px">BXH</th>
+                                        <th style="width: 100px">Số người</th>
+                                    </tr>
+                                    </thead>
+                                    <tr th:each="contest : ${contestListVO.pastLst}">
+                                        <td><a th:href="|/contest/${contest.id}|" th:text="${contest.name}"></a></td>
+                                        <td><a href="#" th:text="${contest.creator.fullname}"></a></td>
+                                        <td th:text="${contest.date}"></td>
+                                        <td th:text="${contest.duration}" style="white-space: pre"></td>
+                                        <td>
+                                            <button type="button" th:onclick="|redirect(${contest.id})|"
+                                                    class="btn btn-outline-success">Xem xếp hạng
+                                            </button>
+                                        </td>
+                                        <td><i class="mdi mdi-account"></i>x<label th:text="${contest.userCnt}"></label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <footer class="footer" th:fragment="footer">
+            Copyright © Nguyen Tuan Minh
+        </footer>
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::js"></div>
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
+></script>
+<script th:src="@{/js/timer.js}"></script>
+<script>
+    function redirect(ctId) {
+        window.location = "/contest/" + ctId + "/leaderboard";
+    }
+
+    $(document).ready(function () {
+        $('#myTable').dataTable({
+            "bSort": false
+        });
+        $('#myTable1').dataTable({
+            "bSort": false
+        });
+    });
+    $('span[id^="cd"]').each(function () {
+        var id = $(this).attr('id');
+        var inputId = id + "input";
+        var time = document.getElementById(inputId).value;
+        $(this).countdown(time)
+            .on('update.countdown', function (event) {
+                var format = '%H:%M:%S';
+                if (event.offset.totalDays > 0) {
+                    format = '%-d ngày ' + format;
+                }
+                if (event.offset.weeks > 0) {
+                    format = '%-w tuần ' + format;
+                }
+                $(this).html(event.strftime(format));
+            })
+            .on('finish.countdown', function (event) {
+                $(this).html("00:00:00");
+                alert('Cuộc thi đã bắt đầu, vui lòng load lại trang');
+            });
+    });
+</script>
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>
