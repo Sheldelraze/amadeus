@@ -102,6 +102,7 @@ public class Constants {
     public static final Integer AUTH_VIEW_COURSE_ID = 15;
     public static final Integer AUTH_EDIT_COURSE_ID = 16;
     public static final Integer AUTH_VIEW_ALL_COURSE_ID = 17;
+    public static final Integer AUTH_CREATE_COURSE_ID = 18;
 
     public static final String AUTH_CREATE_PROBLEM_TEXT = "CAN_CREATE_PROBLEM";
     public static final String AUTH_VIEW_PROBLEM_TEXT = "CAN_VIEW_PROBLEM";
@@ -117,6 +118,7 @@ public class Constants {
     public static final String AUTH_VIEW_COURSE_TEXT = "CAN_VIEW_COURSE";
     public static final String AUTH_EDIT_COURSE_TEXT = "CAN_EDIT_COURSE";
     public static final String AUTH_VIEW_ALL_COURSE_TEXT = "CAN_VIEW_ALL_COURSE";
+    public static final String AUTH_CREATE_COURSE_TEXT = "CAN_CREATE_COURSE";
 
     public static final Integer SHOW_SUBMIT_ALL = 1;
     public static final Integer SHOW_SUBMIT_SOLVED = 2;

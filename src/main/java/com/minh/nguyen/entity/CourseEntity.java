@@ -2,6 +2,7 @@ package com.minh.nguyen.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -24,6 +25,32 @@ public class CourseEntity extends BaseEntity implements Serializable {
 
     @Column(name="requirement")
     private String requirement;
+
+    @Column(name = "startTime")
+    private Date startTime;
+
+    @Column(name = "endTime")
+    private Date endTime;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
     public Integer getId() {
         return id;

@@ -62,10 +62,7 @@ public class ContestController extends BaseController {
     private static final String LEADERBOARD_FORM = "contestLeaderboardForm";
     private static final String SETTING_FORM = "contestSettingForm";
     private static final String ROLE_FORM = "contestRoleForm";
-    private static final String TAB = "tab";
     private static final String CONTEST_ID = "ctId";
-    private static final String UPDATE_SUCCESS = "updateSuccess";
-    private static final String AUTHORITY = "contestAuth";
 
     @Autowired
     private ContestService contestService;
@@ -145,7 +142,6 @@ public class ContestController extends BaseController {
     @GetMapping("/all")
     public ModelAndView getAllContest() {
         ModelAndView modelAndView = createGeneralModel();
-        ;
         modelAndView.setViewName(LIST_ALL_VIEW);
         ContestListVO contestListVO = new ContestListVO();
         contestService.setListContest(contestListVO);
@@ -156,7 +152,7 @@ public class ContestController extends BaseController {
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_CONTEST_TEXT + "')")
     @GetMapping("/create")
     public ModelAndView createContest(ContestCreateForm contestCreateForm) {
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName(CREATE_VIEW);
         if (null == contestCreateForm) {
             contestCreateForm = new ContestCreateForm();

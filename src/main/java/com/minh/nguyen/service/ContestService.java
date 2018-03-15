@@ -89,7 +89,7 @@ public class ContestService extends BaseService {
         modelMapper.map(contestDTO, contestEntity);
         try {
             //set initial contest info and insert
-            SetCreateContestInfor(contestEntity);
+            setCreateContestInfor(contestEntity);
             int insertRecord = contestMapper.insertContest(contestEntity);
             if (insertRecord == 0) {
                 rollBack(Constants.MSG_INSERT_ERR);
@@ -135,7 +135,7 @@ public class ContestService extends BaseService {
         }
     }
 
-    private void SetCreateContestInfor(ContestEntity contestEntity) {
+    private void setCreateContestInfor(ContestEntity contestEntity) {
         setCreateInfo(contestEntity);
         setUpdateInfo(contestEntity);
         contestEntity.setIsPublic(1);
@@ -555,7 +555,7 @@ public class ContestService extends BaseService {
                 getAllAnnouncement = true;
             }
         }
-        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementList(ctId, getAllAnnouncement);
+        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementListInContest(ctId, getAllAnnouncement);
         for (AnnouncementDTO announce : lstAnnounce) {
             if (announce.getProblem().getId().equals(0)) {
                 announce.getProblem().setName("Thông báo chung");
@@ -592,7 +592,7 @@ public class ContestService extends BaseService {
                 getAllAnnouncement = true;
             }
         }
-        return announcementMapper.countAnnouncementList(ctId, getAllAnnouncement);
+        return announcementMapper.countAnnouncementListInContest(ctId, getAllAnnouncement);
     }
 
     public void answerQuestion(Integer atId, String answer) {

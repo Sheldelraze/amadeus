@@ -13,4 +13,6 @@ import java.util.List;
 public interface AuthorityMapper extends BaseMapper<AuthorityEntity> {
     List<AuthorityDTO> getProblemAuthority(@Param("pmId") Integer pmId, @Param("handle") String handle);
     List<AuthorityDTO> getContestAuthority(@Param("ctId") Integer ctId, @Param("handle") String handle);
+
+    List<AuthorityDTO> getCourseAuthority(@Param("ceId") Integer ceId, @Param("handle") String handle);
 }

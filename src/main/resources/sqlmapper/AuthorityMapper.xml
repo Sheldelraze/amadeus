@@ -6,11 +6,11 @@
 <mapper namespace="com.minh.nguyen.mapper.AuthorityMapper">
     <select id="getProblemAuthority" resultType="AuthorityDTO">
         SELECT
-            authority.id,
-            authority.name
+        authority.id,
+        authority.name
         FROM authority
             INNER JOIN ur_pm_auy
-                ON authority.id = ur_pm_auy.auyId
+        ON authority.id = ur_pm_auy.auyId
                    AND ur_pm_auy.pmId = #{pmId}
                    AND ur_pm_auy.deleteFlg = '0'
             INNER JOIN user
@@ -29,6 +29,20 @@
                    AND ur_ct_auy.deleteFlg = '0'
             INNER JOIN user
                 ON ur_ct_auy.urId = user.id
+                   AND user.handle = #{handle}
+        WHERE authority.deleteFlg = '0'
+    </select>
+    <select id="getCourseAuthority" resultType="AuthorityDTO">
+        SELECT
+            authority.id,
+            authority.name
+        FROM authority
+            INNER JOIN ur_ce_auy
+                ON authority.id = ur_ce_auy.auyId
+                   AND ur_ce_auy.ceId = #{ceId}
+                   AND ur_ce_auy.deleteFlg = '0'
+            INNER JOIN user
+                ON ur_ce_auy.urId = user.id
                    AND user.handle = #{handle}
         WHERE authority.deleteFlg = '0'
     </select>

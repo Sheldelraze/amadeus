@@ -4,7 +4,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.AnnouncementMapper">
-    <select id="countAnnouncementList" resultType="java.lang.Integer">
+    <select id="countAnnouncementListInContest" resultType="java.lang.Integer">
         select count(*) from ct_at
         INNER JOIN announcement
         on ct_at.atId = announcement.id
@@ -15,7 +15,7 @@
         where ct_at.ctId = #{ctId}
         AND ct_at.deleteFlg = '0'
     </select>
-    <select id="getAnnouncementList" resultMap="resAnnounce">
+    <select id="getAnnouncementListInContest" resultMap="resAnnounce">
         SELECT
             announcement.id,
             announcement.pmId,
@@ -39,6 +39,43 @@
         </if>
         ORDER BY updateTime DESC
     </select>
+
+    <select id="countAnnouncementListInCourse" resultType="java.lang.Integer">
+        select count(*) from ce_at
+        INNER JOIN announcement
+        on ce_at.atId = announcement.id
+        and announcement.deleteFlg = '0'
+        <if test="!getAllAnnounce">
+            AND announcement.isHidden = 0
+        </if>
+        where ce_at.ceId = #{ceId}
+        AND ce_at.deleteFlg = '0'
+    </select>
+    <select id="getAnnouncementListInCourse" resultMap="resAnnounce">
+        SELECT
+        announcement.id,
+        announcement.pmId,
+        announcement.updateTime,
+        problem.name,
+        announcement.question,
+        announcement.answer,
+        announcement.isFromCreator,
+        announcement.isHidden,
+        announcement.isAnswered
+        FROM ce_at
+        INNER JOIN announcement
+        ON ce_at.atId = announcement.id
+        AND announcement.deleteFlg = '0'
+        LEFT JOIN problem
+        ON announcement.pmId = problem.id
+        AND problem.deleteFlg = '0'
+        WHERE ce_at.ceId = #{ceId}
+        <if test="!getAllAnnounce">
+            AND announcement.isHidden = 0
+        </if>
+        ORDER BY updateTime DESC
+    </select>
+
     <resultMap id="resAnnounce" type="AnnouncementDTO">
         <id column="id" property="id"/>
         <result column="question" property="question"/>

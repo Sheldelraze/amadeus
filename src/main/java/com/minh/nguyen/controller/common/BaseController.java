@@ -36,9 +36,12 @@ import java.util.List;
  */
 public class BaseController {
 
-    private static final String SCREEN_MESSAGE = "screenMessage";
+    protected static final String SCREEN_MESSAGE = "screenMessage";
+    protected static final String TAB = "tab";
+    protected static final String UPDATE_SUCCESS = "updateSuccess";
+    protected static final String AUTHORITY = "contestAuth";
 
-    protected static Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private BaseValidator validator;
 
