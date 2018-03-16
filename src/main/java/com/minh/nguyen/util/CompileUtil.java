@@ -69,14 +69,14 @@ public class CompileUtil {
 
     public static Outcome doRun(LanguageDTO languageDTO, ProblemDTO problemDTO, InputDTO inputDTO, int snId) {
         StringBuilder input = new StringBuilder()
-                .append(Constants.PROBLEM_LOCATION)
+                .append(Constants.PROBLEM_LOCATION_PREFIX)
                 .append(problemDTO.getCode())
                 .append("\\")
                 .append("input-itId-")
                 .append(inputDTO.getId())
                 .append(".txt");
         StringBuilder source = new StringBuilder()
-                .append(Constants.SUBMISSION_LOCATION)
+                .append(Constants.SUBMISSION_LOCATION_PREFIX)
                 .append("submission-snId-")
                 .append(snId)
                 .append("-")

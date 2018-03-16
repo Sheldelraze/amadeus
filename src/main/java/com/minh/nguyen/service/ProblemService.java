@@ -72,7 +72,7 @@ public class ProblemService extends BaseService {
         modelMapper.map(languageEntity, languageDTO);
         try {
             String fileName = "Solution-" + problemDTO.getId() + "-" + problemDTO.getCode();
-            String location = Constants.PROBLEM_LOCATION + problemDTO.getCode();
+            String location = Constants.PROBLEM_LOCATION_PREFIX + problemDTO.getCode();
             File dir = new File(location);
             dir.mkdir();
             CompileUtil.doCompile(languageDTO, problemDTO, location + "\\", fileName);
@@ -211,7 +211,7 @@ public class ProblemService extends BaseService {
             e.printStackTrace();
             throw e;
         }
-        String location = Constants.PROBLEM_LOCATION + problemDTO.getCode()
+        String location = Constants.PROBLEM_LOCATION_PREFIX + problemDTO.getCode()
                 + "\\";
         String filename = "input-itId-" + inputEntity.getId();
         FileUtil.createFileWithContent(location, filename, "txt",
@@ -284,7 +284,7 @@ public class ProblemService extends BaseService {
         setUpdateInfo(problemEntity);
         int recordCnt = 0;
         try {
-            recordCnt = problemMapper.updateByPKExceptNullFields(problemEntity);
+            recordCnt = problemMapper.updateNotNullByPK(problemEntity);
         } catch (Exception e) {
             e.printStackTrace();
             rollBack(Constants.MSG_SYSTEM_ERR);
@@ -343,12 +343,12 @@ public class ProblemService extends BaseService {
         modelMapper.map(problemUpdateTestForm, inputEntity);
         setUpdateInfo(inputEntity);
         try {
-            inputMapper.updateByPKExceptNullFields(inputEntity);
+            inputMapper.updateNotNullByPK(inputEntity);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
-        String location = Constants.PROBLEM_LOCATION + problemUpdateTestForm.getCode()
+        String location = Constants.PROBLEM_LOCATION_PREFIX + problemUpdateTestForm.getCode()
                 + "\\";
         String filename = "input-itId-" + inputEntity.getId();
         FileUtil.createFileWithContent(location, filename, "txt",
@@ -411,6 +411,6 @@ public class ProblemService extends BaseService {
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setId(pmId);
         problemEntity.setIsPublished(1);
-        problemMapper.updateByPKExceptNullFields(problemEntity);
+        problemMapper.updateNotNullByPK(problemEntity);
     }
 }

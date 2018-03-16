@@ -319,7 +319,7 @@ public class ContestService extends BaseService {
         ctPmEntity.setPmId(pmId);
         ctPmEntity.setIsHidden(status);
         setUpdateInfo(ctPmEntity);
-        ctPmMapper.updateByPKExceptNullFields(ctPmEntity);
+        ctPmMapper.updateNotNullByPK(ctPmEntity);
     }
 
     @Transactional
@@ -394,7 +394,7 @@ public class ContestService extends BaseService {
             modelMapper.map(contestSettingForm, contestEntity);
             contestEntity.setStartTime(dateFormat.parse(startTime));
             setUpdateInfo(contestEntity);
-            contestMapper.updateByPKExceptNullFields(contestEntity);
+            contestMapper.updateNotNullByPK(contestEntity);
         } catch (Exception e) {
             throw e;
         }
@@ -578,7 +578,7 @@ public class ContestService extends BaseService {
         announcementEntity.setId(atId);
         announcementEntity.setIsHidden(newState);
         setUpdateInfo(announcementEntity);
-        int recordCnt = announcementMapper.updateByPKExceptNullFields(announcementEntity);
+        int recordCnt = announcementMapper.updateNotNullByPK(announcementEntity);
         if (recordCnt == 0) {
             rollBack(Constants.MSG_UPDATE_ERR);
         }
@@ -601,7 +601,7 @@ public class ContestService extends BaseService {
         announcementEntity.setIsAnswered(1);
         announcementEntity.setAnswer(answer);
         setUpdateInfo(announcementEntity);
-        announcementMapper.updateByPKExceptNullFields(announcementEntity);
+        announcementMapper.updateNotNullByPK(announcementEntity);
     }
 
     public String getQuestion(Integer atId) {

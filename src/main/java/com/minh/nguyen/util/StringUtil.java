@@ -51,6 +51,13 @@ public class StringUtil {
         return obj.toString();
     }
 
+    public static String buildString(String... args) {
+        StringBuilder string = new StringBuilder();
+        for (String s : args) {
+            string.append(s);
+        }
+        return string.toString();
+    }
     public static boolean isNull(Object str) {
         return str == null || str.toString().length() <= 0;
     }

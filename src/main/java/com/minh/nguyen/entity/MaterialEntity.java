@@ -35,6 +35,17 @@ public class MaterialEntity extends BaseEntity implements Serializable {
     @Column(name = "isPublic")
     private Integer isPublic;
 
+    @Column(name = "status")
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Integer getIsPublic() {
         return isPublic;
     }

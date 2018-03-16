@@ -1,6 +1,7 @@
 package com.minh.nguyen.form.material;
 
 import com.minh.nguyen.form.BaseForm;
+import com.minh.nguyen.validator.annotation.Required;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
  * Purpose:
  */
 public class MaterialUploadForm extends BaseForm {
+    @Required(displayFieldName = "file")
     private MultipartFile file;
 
     public MultipartFile getFile() {

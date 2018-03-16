@@ -46,7 +46,7 @@ public interface BaseMapper<T> {
     Integer updateByPK(T record);
 
     @UpdateProvider(type = BaseProvider.class, method = "updateByPKExceptFields")
-    Integer updateByPKExceptNullFields(T entity);
+    Integer updateNotNullByPK(T entity);
 
     @SelectProvider(type = BaseProvider.class, method = "checkExclusive")
     Boolean checkExclusive(T record);

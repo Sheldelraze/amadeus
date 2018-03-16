@@ -12,5 +12,5 @@ import org.springframework.stereotype.Component;
 public interface MaterialMapper extends BaseMapper<MaterialEntity> {
     @InsertProvider(type = BaseProvider.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    Integer insertContest(MaterialEntity record);
+    Integer insertMaterial(MaterialEntity record);
 }

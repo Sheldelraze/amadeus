@@ -68,7 +68,7 @@ public class JudgeService extends BaseService {
         try {
             String fileName = ("submission-snId-" + submissionEntity.getId())
                     + "-" + problemDTO.getCode();
-            String location = Constants.SUBMISSION_LOCATION;
+            String location = Constants.SUBMISSION_LOCATION_PREFIX;
             CompileUtil.doCompile(languageDTO, problemDTO, location, fileName);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
             // compile err
@@ -83,7 +83,7 @@ public class JudgeService extends BaseService {
             setUpdateInfo(snSDlEntity);
             setCreateInfo(snSDlEntity);
             snSDlMapper.insert(snSDlEntity);
-            submissionMapper.updateByPK(submissionEntity);
+            submissionMapper.updateNotNullByPK(submissionEntity);
 
             //send message
             sendMessage(submissionEntity, ctId, ceId);
@@ -179,10 +179,10 @@ public class JudgeService extends BaseService {
 
             //increase total submission
             problemEntity.setTotalSubmission(1 + problemEntity.getTotalSubmission());
-            problemMapper.updateByPK(problemEntity);
+            problemMapper.updateNotNullByPK(problemEntity);
         }
         submissionEntity.setTimeRun(timeTotal);
-        submissionMapper.updateByPK(submissionEntity);
+        submissionMapper.updateNotNullByPK(submissionEntity);
 
         //send message
         sendMessage(submissionEntity, ctId, ceId);

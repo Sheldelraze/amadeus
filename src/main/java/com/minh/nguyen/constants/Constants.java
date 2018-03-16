@@ -8,6 +8,9 @@ package com.minh.nguyen.constants;
  * For instance, current number of authorities is 13, so if you want to add another authority, start with AUTH_XXX = 14
  */
 public class Constants {
+    public static final Integer UPLOAD_FILE_SUCCESS_FLAG = 1;
+    public static final Integer UPLOAD_FILE_FAIL_FLAG = -1;
+
     public static final Integer SUBMISSION_FAIL_PENALTY = 10;
 
     public static final Integer MESSAGE_MAX_LENGTH = 200;
@@ -39,8 +42,9 @@ public class Constants {
     public static final String JAVA_COMPILER = "javac";
     public static final String JAVA_EXECUTOR = "java";
     public static final String JAVA_EXTENSION = "java";
-    public static final String PROBLEM_LOCATION = "E:\\problem\\";
-    public static final String SUBMISSION_LOCATION = "E:\\submission\\";
+    public static final String PROBLEM_LOCATION_PREFIX = "E:\\storage\\problem\\";
+    public static final String SUBMISSION_LOCATION_PREFIX = "E:\\storage\\submission\\";
+    public static final String MATERIAL_LOCATION_PREFIX = "E:\\storage\\material\\";
     public static final String BLANK = "";
 
     public static final String MSG_TOTAL_ERR = "msg000";
@@ -60,6 +64,8 @@ public class Constants {
     public static final String MSG_COMPILE_ERR = "msg011";
     public static final String MSG_FILE_TOO_LARGE_ERR = "msg015";
     public static final String MSG_SESSION_TIMEOUT = "msg016";
+    public static final String MSG_UPLOAD_ERR = "msg017";
+
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;

@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Mr.Minh
@@ -20,17 +21,22 @@ import java.nio.file.Path;
  * Purpose:
  */
 public class FileUtil {
-    public static void store(MultipartFile file, Path path) {
+    public static void store(MultipartFile file, String location) {
         try {
+            Path path = Paths.get(location);
+            File directory = new File(location);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
             Files.copy(file.getInputStream(), path.resolve(file.getOriginalFilename()));
         } catch (Exception e) {
             throw new RuntimeException("FAIL!");
         }
     }
 
-    public static Resource loadFile(String filename, Path path) {
+    public static Resource loadFile(String filename, String location) {
         try {
-            Path file = path.resolve(filename);
+            Path file = Paths.get(location).resolve(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;

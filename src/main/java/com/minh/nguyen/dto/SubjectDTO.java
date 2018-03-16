@@ -1,30 +1,16 @@
-package com.minh.nguyen.entity;
-
-import javax.persistence.*;
-import java.io.Serializable;
+package com.minh.nguyen.dto;
 
 /**
  * @author Mr.Minh
- * @since 01/01/2018
+ * @since 16/03/2018
  * Purpose:
  */
-@Table(name="subject")
-public class SubjectEntity extends BaseEntity implements Serializable{
-    static final long serialVersionUID = 1250531262L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class SubjectDTO extends BaseDTO {
     private Integer id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "credit")
     private Integer credit;
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
     public Integer getId() {
         return id;
