@@ -65,17 +65,17 @@
                 <div class="col-lg-12 col-xlg-12 col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <ul class="nav nav-pills m-t-30 m-b-30" th:fragment="navtab(ctId,tab)">
+                            <ul class="nav nav-pills m-t-30 m-b-30" th:fragment="navtab(ceId,tab)">
                                 <li class="nav-item">
-                                    <a th:href="@{|/contest/${ctId}/information|}"
+                                    <a th:href="@{|/course/${ceId}/information|}"
                                        th:classappend="${tab==1}?'active'"
                                        class="nav-link">Thông tin</a></li>
                                 <li class="nav-item">
-                                    <a th:href="@{|/contest/${ctId}/problem|}"
+                                    <a th:href="@{|/course/${ceId}/problem|}"
                                        th:classappend="${tab==2}?'active'"
                                        class="nav-link">Bài tập</a></li>
                                 <li class="nav-item">
-                                    <a th:href="@{|/contest/${ctId}/submit|}"
+                                    <a th:href="@{|/course/${ceId}/submit|}"
                                        th:classappend="${tab==3}?'active'"
                                        class="nav-link">Nộp bài</a></li>
                                 <li class="nav-item dropdown">
@@ -87,13 +87,13 @@
                                     </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" id="dropdown1-tab"
-                                           th:href="@{|/contest/${ctId}/my|}"
+                                           th:href="@{|/course/${ceId}/my|}"
                                            th:classappend="${tab==4}?'active'"
                                            style="color: cornflowerblue">Của
                                             tôi
                                         </a>
                                         <a th:if="${canViewStatus}" class="dropdown-item" id="dropdown2-tab"
-                                           th:href="@{|/contest/${ctId}/all|}"
+                                           th:href="@{|/course/${ceId}/all|}"
                                            th:classappend="${tab==5}?'active'"
                                            style="color: cornflowerblue">Tất
                                             cả
@@ -101,12 +101,12 @@
                                     </div>
                                 </li>
                                 <li class="nav-item" th:if="${canViewStatus}"><a
-                                        th:href="@{|/contest/${ctId}/leaderboard|}"
+                                        th:href="@{|/course/${ceId}/leaderboard|}"
                                         th:classappend="${tab==6}?'active'"
                                         class="nav-link">Bảng xếp hạng</a></li>
 
                                 <li class="nav-item"><a
-                                        th:href="@{|/contest/${ctId}/announcement|}"
+                                        th:href="@{|/course/${ceId}/announcement|}"
                                         th:classappend="${tab==7}?'active'"
                                         class="nav-link">Thông báo
                                     <th:block th:if="${atCnt != null}">
@@ -114,14 +114,18 @@
                                     </th:block>
                                 </a>
                                 </li>
-                                <li class="nav-item" th:if="${contestAuth == 'CAN_EDIT_CONTEST'}"><a
-                                        th:href="@{|/contest/${ctId}/setting|}"
+                                <li class="nav-item" th:if="${courseAuth == 'CAN_EDIT_COURSE'}"><a
+                                        th:href="@{|/course/${ceId}/setting|}"
                                         th:classappend="${tab==8}?'active'"
                                         class="nav-link">Thiết lập</a></li>
-                                <li class="nav-item" th:if="${isCreator}"><a
-                                        th:href="@{|/contest/${ctId}/role|}"
+                                <li class="nav-item"><a
+                                        th:href="@{|/course/${ceId}/role|}"
                                         th:classappend="${tab==9}?'active'"
-                                        class="nav-link">Phân quyền</a></li>
+                                        class="nav-link">Thành viên</a></li>
+                                <li class="nav-item"><a
+                                        th:href="@{|/course/${ceId}/role|}"
+                                        th:classappend="${tab==10}?'active'"
+                                        class="nav-link">Tài liệu</a></li>
                             </ul>
                             <div class="tab-content br-n pn">
                                 <div id="information" class="tab-pane">

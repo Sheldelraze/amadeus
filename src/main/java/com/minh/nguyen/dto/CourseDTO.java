@@ -6,23 +6,53 @@ package com.minh.nguyen.dto;
  * Purpose:
  */
 public class CourseDTO extends BaseDTO {
-    private String start;
+    private String name;
 
-    private String end;
+    private String startTime;
 
-    public String getStart() {
-        return start;
+    private String endTime;
+
+    private String requirement;
+
+    private String description;
+
+    public String getRequirement() {
+        return requirement;
     }
 
-    public void setStart(String start) {
-        this.start = start;
+    public void setRequirement(String requirement) {
+        this.requirement = requirement;
     }
 
-    public String getEnd() {
-        return end;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEnd(String end) {
-        this.end = end;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

@@ -60,6 +60,7 @@ public class CourseController extends BaseController {
     private static final String SETTING_FORM = "courseSettingForm";
     private static final String ROLE_FORM = "courseRoleForm";
     private static final String COURSE_ID = "ceId";
+    private static final String AUTHORITY = "courseAuth";
 
     @Autowired
     private CourseService courseService;
@@ -170,7 +171,7 @@ public class CourseController extends BaseController {
         ModelAndView modelAndView = createGeneralModel(ceId);
         modelAndView.setViewName(INFORMATION_VIEW);
         CourseDTO courseDTO = courseService.getInformation(ceId);
-        modelAndView.addObject("courseInfor", courseDTO);
+        modelAndView.addObject("course", courseDTO);
         modelAndView.addObject(TAB, 1);
         modelAndView.addObject(COURSE_ID, ceId);
         return modelAndView;

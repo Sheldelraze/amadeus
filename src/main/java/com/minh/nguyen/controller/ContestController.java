@@ -63,6 +63,7 @@ public class ContestController extends BaseController {
     private static final String SETTING_FORM = "contestSettingForm";
     private static final String ROLE_FORM = "contestRoleForm";
     private static final String CONTEST_ID = "ctId";
+    private static final String AUTHORITY = "contestAuth";
 
     @Autowired
     private ContestService contestService;

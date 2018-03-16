@@ -1,5 +1,4 @@
 package com.minh.nguyen.controller.common;
-
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.MessageDTO;
 import com.minh.nguyen.exception.BaseException;
@@ -39,7 +38,7 @@ public class BaseController {
     protected static final String SCREEN_MESSAGE = "screenMessage";
     protected static final String TAB = "tab";
     protected static final String UPDATE_SUCCESS = "updateSuccess";
-    protected static final String AUTHORITY = "contestAuth";
+
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 

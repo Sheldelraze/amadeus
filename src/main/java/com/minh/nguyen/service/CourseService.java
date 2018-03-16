@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -56,9 +58,12 @@ public class CourseService extends BaseService {
     }
 
     @Transactional
-    public int createCourse(CourseDTO courseDTO) {
+    public int createCourse(CourseDTO courseDTO) throws ParseException {
         CourseEntity courseEntity = new CourseEntity();
-        modelMapper.map(courseDTO, courseEntity);
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        courseEntity.setStartTime(formatter.parse(courseDTO.getStartTime()));
+        courseEntity.setEndTime(formatter.parse(courseDTO.getEndTime()));
+        courseEntity.setName(courseDTO.getName());
         try {
             //set initial course info and insert
             setCreateInfo(courseEntity);
@@ -116,9 +121,9 @@ public class CourseService extends BaseService {
         modelMapper.map(courseEntity, courseDTO);
         Date startTime = courseEntity.getStartTime();
         Date endTime = courseEntity.getEndTime();
-        SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        courseDTO.setStart(sdfr.format(startTime));
-        courseDTO.setEnd(sdfr.format(endTime));
+        SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy");
+        courseDTO.setStartTime(sdfr.format(startTime));
+        courseDTO.setEndTime(sdfr.format(endTime));
         return courseDTO;
     }
 }

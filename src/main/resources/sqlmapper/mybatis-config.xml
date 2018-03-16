@@ -16,6 +16,7 @@
         <mapper resource="sqlmapper/AnnouncementMapper.xml"/>
         <mapper resource="sqlmapper/MessageMapper.xml"/>
         <mapper resource="sqlmapper/ConversationMapper.xml"/>
+        <mapper resource="sqlmapper/MaterialMapper.xml"/>
     </mappers>
 
 </configuration>

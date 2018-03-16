@@ -20,7 +20,7 @@
 <!-- ============================================================== -->
 <!-- Main wrapper - style you can find in pages.scss -->
 <!-- ============================================================== -->
-<div id="main-wrapper" >
+<div id="main-wrapper">
     <!-- ============================================================== -->
     <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
@@ -49,8 +49,8 @@
             <div class="row page-titles">
                 <div class="col-md-5 col-8 align-self-center">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Kỳ thi</a></li>
-                        <li class="breadcrumb-item active">Thông tin kỳ thi</li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Bài tập</a></li>
+                        <li class="breadcrumb-item active">Thêm bài tập</li>
                     </ol>
                 </div>
             </div>
@@ -59,56 +59,44 @@
             <!-- ============================================================== -->
             <!-- ============================================================== -->
             <!-- Start Page Content -->
-            <div class="row" >
-                <!-- Column -->
-                <!-- Column -->
-                <div class="col-lg-12 col-xlg-12 col-md-12">
+            <div class="row">
+                <div class="col-12">
                     <div class="card">
-                        <div class="card-body" >
-                            <ul class="nav nav-pills m-t-30 m-b-30"
-                                th:replace="course/info/course-layout::navtab(ceId = ${ceId},tab = ${tab})"></ul>
-                            <div id="infomation" class="tab-pane" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
-                                <div class="form-group row" style="color:black">
-                                    <label class="col-3 col-form-label text-right">Tên khóa học</label>
-                                    <div class="col-9">
-                                        <label class="col-form-label" style="font-weight:700" th:text="${course.name}">Lập
-                                            trình hướng đổi tượng</label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" style="color:black">
-                                    <label class="col-3 col-form-label text-right">Thời gian bắt đầu</label>
-                                    <div class="col-9">
-                                        <label class="col-form-label" style="font-weight:700"
-                                               th:text="${course.startTime}">30/02/2017 16:00</label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" style="color:black">
-                                    <label class="col-3 col-form-label text-right">Thời gian kết thúc</label>
-                                    <div class="col-9">
-                                        <label class="col-form-label" style="font-weight:700"
-                                               th:text="${course.endTime}">31/02/2017 19:00</label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" style="color:black">
-                                    <label class="col-3 col-form-label text-right">Yêu cầu</label>
-                                    <div class="col-9">
-                                        <label class="col-form-label" style="font-weight:700;white-space: pre-line"
-                                               th:text="${course.requirement}">Tốt nghiệp mẫu giáo bé</label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" style="color:black">
-                                    <label class="col-3 col-form-label text-right">Mô tả</label>
-                                    <div class="col-9">
-                                        <label class="col-form-label" style="font-weight:700;white-space: pre-line"
-                                               th:text="${course.description}">Kiểm tra hệ số 1 môn thể dục của giáo sư
-                                            PVH</label>
-                                    </div>
-                                </div>
+                        <div class="card-outline-info">
+                            <div class="card-header">
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Danh sách tài
+                                    liệu của tôi</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="float: right;margin-bottom: 10px">
+                                <button type="button" onclick="popup()" class="btn btn-block btn-outline-success">Thêm
+                                    bộ test
+                                </button>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-bordered "
+                                       style="text-align: center; color: black; font-size: 14px">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 30px">#</th>
+                                        <th style="width: 200px">Tên tài liệu</th>
+                                        <th style="width: 150px">Môn học</th>
+                                        <th>Mô tả</th>
+                                        <th style="width: 100px">Số lần tải</th>
+                                        <th style="width: 100px">Trạng thái</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Column -->
             </div>
             <!-- ============================================================== -->
             <!-- End PAge Content -->
@@ -138,6 +126,38 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
+<script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"
+        th:src="@{/assets/plugins/select2/dist/js/select2.full.min.js}" type="text/javascript"></script>
+<script>
+    $(document).ready(function () {
+        $(".select2").select2();
+    });
+
+    function popup() {
+        var url = '/material/upload';
+        window.open(url,
+            '1426494439650',
+            'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
+    }
+
+    function popupUpdate(mlId) {
+        var url = '/material/' + mlId + "/update";
+        window.open(url,
+            '1426494439650',
+            'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
+    }
+
+    function HandlePopupResult(result) {
+        location.reload();
+    }
+
+    function deleteTest(pmId, itId) {
+        if (!confirm("Bạn có chắc là muốn xóa không?")) {
+            return false;
+        }
+        window.location.replace('/material/' + pmId + '/deleteTest/' + itId);
+    }
+</script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

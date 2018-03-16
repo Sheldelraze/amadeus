@@ -2,11 +2,17 @@ package com.minh.nguyen.util;
 
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author Mr.Minh
@@ -14,7 +20,29 @@ import java.io.PrintWriter;
  * Purpose:
  */
 public class FileUtil {
-    public static void writeToFile(String text,final File file){
+    public static void store(MultipartFile file, Path path) {
+        try {
+            Files.copy(file.getInputStream(), path.resolve(file.getOriginalFilename()));
+        } catch (Exception e) {
+            throw new RuntimeException("FAIL!");
+        }
+    }
+
+    public static Resource loadFile(String filename, Path path) {
+        try {
+            Path file = path.resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new RuntimeException("FAIL!");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("FAIL!");
+        }
+    }
+
+    private static void writeToFile(String text, final File file) {
         try {
             PrintWriter out = new PrintWriter(file);
             out.println(text);
@@ -34,7 +62,8 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-    public static File createFile(String location, String fileName,String extension){
+
+    private static File createFile(String location, String fileName, String extension) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(location);
         if (location.charAt(location.length() - 1) != '\\') {
