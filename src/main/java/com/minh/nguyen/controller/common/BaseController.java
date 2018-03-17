@@ -192,6 +192,14 @@ public class BaseController {
         result.rejectValue(SCREEN_MESSAGE, message);
     }
 
+    public boolean checkDefaultAuthority(Integer authId) {
+        Object lst = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
+        if (lst == null) {
+            return false;
+        }
+        List<Integer> defaultAuth = (List<Integer>) lst;
+        return defaultAuth.contains(authId);
+    }
     public void addFieldError(
             org.springframework.validation.BindingResult result,
             String field,

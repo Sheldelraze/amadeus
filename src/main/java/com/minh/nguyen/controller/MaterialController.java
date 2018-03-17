@@ -9,18 +9,24 @@ import com.minh.nguyen.form.material.MaterialUpdateForm;
 import com.minh.nguyen.form.material.MaterialUploadForm;
 import com.minh.nguyen.service.MaterialService;
 import com.minh.nguyen.service.SubjectService;
+import com.minh.nguyen.util.MediaTypeUtil;
 import com.minh.nguyen.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.RollbackException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 /**
@@ -43,6 +49,9 @@ public class MaterialController extends BaseController {
     @Autowired
     private HttpSession httpSession;
 
+    @Autowired
+    private ServletContext servletContext;
+
     @GetMapping("/all")
     public ModelAndView getAllMaterial() {
         ModelAndView modelAndView = createGeneralModel();
@@ -50,6 +59,7 @@ public class MaterialController extends BaseController {
         return modelAndView;
     }
 
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_UPLOAD_MATERIAL_TEXT + "')")
     @GetMapping("/my")
     public ModelAndView getMyMaterial() {
         ModelAndView modelAndView = createGeneralModel();
@@ -60,6 +70,7 @@ public class MaterialController extends BaseController {
         return modelAndView;
     }
 
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_UPLOAD_MATERIAL_TEXT + "')")
     @GetMapping("/upload")
     public ModelAndView uploadMaterial(MaterialUploadForm materialUploadForm) {
         ModelAndView modelAndView = new ModelAndView();
@@ -71,6 +82,7 @@ public class MaterialController extends BaseController {
         return modelAndView;
     }
 
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_UPLOAD_MATERIAL_TEXT + "')")
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public ModelAndView doUpload(MaterialUploadForm materialUploadForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
@@ -90,6 +102,29 @@ public class MaterialController extends BaseController {
         return updateMaterial(mlId, null, true);
     }
 
+    @PreAuthorize("@MaterialValidator.checkDownloadAuthority(#mlId)")
+    @RequestMapping(value = "/download/{mlId}/{filename}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> getFile(@PathVariable("mlId") Integer mlId, @PathVariable("filename") String filename) {
+        try {
+            String src = materialService.getMaterialLocation(mlId);
+            File file = new File(src);
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            MediaType mediaType = MediaTypeUtil.getMediaTypeForFileName(this.servletContext, file.getName());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                    .contentLength(file.length())
+                    .contentType(mediaType)
+                    .body(resource);
+        } catch (RollbackException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PreAuthorize("@MaterialValidator.checkCreator(#mlId)")
     @GetMapping("/{mlId}/update")
     public ModelAndView updateMaterial(@PathVariable("mlId") Integer mlId, MaterialUpdateForm materialUpdateForm, boolean updateSuccess) {
         ModelAndView modelAndView = createGeneralModel();
@@ -106,6 +141,7 @@ public class MaterialController extends BaseController {
         return modelAndView;
     }
 
+    @PreAuthorize("@MaterialValidator.checkCreator(#mlId)")
     @PostMapping("/{mlId}/update")
     public ModelAndView doUpdateMaterial(@PathVariable("mlId") Integer mlId, MaterialUpdateForm materialUpdateForm, BindingResult bindingResult) {
         ModelAndView modelAndView = createGeneralModel();

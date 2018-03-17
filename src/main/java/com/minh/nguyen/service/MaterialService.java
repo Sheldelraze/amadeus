@@ -29,6 +29,12 @@ public class MaterialService extends BaseService {
     @Autowired
     private HttpSession httpSession;
 
+    public String getMaterialLocation(Integer mlId) {
+        MaterialEntity materialEntity = new MaterialEntity();
+        materialEntity.setId(mlId);
+        materialEntity = materialMapper.selectByPK(materialEntity);
+        return materialEntity.getStoredLocation();
+    }
     public List<MaterialDTO> getListMaterial(String handle, boolean getAllMaterial) {
         List<MaterialDTO> lstMaterial = materialMapper.getMaterial(handle, getAllMaterial);
         for (MaterialDTO material : lstMaterial) {

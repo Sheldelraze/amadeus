@@ -94,7 +94,9 @@
                                     <tr th:each="material,iter : ${lstMaterial}"
                                         th:style="${material.isPublic == 0}?'background-color: #e8e8e8'">
                                         <td th:text="${iter.count}"></td>
-                                        <td><a href="#" th:text="${material.name}"></a></td>
+                                        <td><a href="javascript:void(0)"
+                                               th:onclick="'doMagic(' + ${material.id} + ',\'' + ${material.name} + '\');'"
+                                               th:text="${material.name}"></a></td>
                                         <td th:if="${material.subjectName != null}"
                                             th:text="${material.subjectName}"></td>
                                         <td th:if="${material.subjectName == null}">
@@ -166,6 +168,22 @@
 <script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
         th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
 <script>
+    function doMagic(mlId, name) {
+        var url = '/material/download/' + mlId + '/' + name;
+        $.ajax({
+            type: "GET",
+            url: url,
+            cache: false,
+            timeout: 10000,
+            success: function (data) {
+                var x = 2;
+            },
+            error: function (e) {
+                alert('Có lỗi hệ thống xảy ra!\r\n' + e);
+
+            }
+        });
+    }
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });

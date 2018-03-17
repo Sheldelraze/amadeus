@@ -108,12 +108,8 @@
                                 <div class="form-group row">
                                     <label class="col-2 col-form-label text-right">Tên tài liệu</label>
                                     <div class="col-8">
-                                        <small style="color:slategray">Tối đa 300 ký tự</small>
-                                        <input style="color:black" class="form-control" th:field="*{name}"/>
-                                        <th:block th:if="${#fields.hasErrors('name')}">
-                                            <label class="error" th:errors="*{name}">Screen
-                                                Error</label>
-                                        </th:block>
+                                        <label class="col-form-label" th:text="${materialUpdateForm.name}"></label>
+                                        <input type="hidden" th:field="*{name}"/>
                                     </div>
                                 </div>
                                 <div class="form-group row">

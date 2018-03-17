@@ -1,9 +1,13 @@
 package com.minh.nguyen.aspect;
 
 import com.minh.nguyen.entity.ContestEntity;
+import com.minh.nguyen.entity.CourseEntity;
+import com.minh.nguyen.entity.MaterialEntity;
 import com.minh.nguyen.entity.ProblemEntity;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.mapper.ContestMapper;
+import com.minh.nguyen.mapper.CourseMapper;
+import com.minh.nguyen.mapper.MaterialMapper;
 import com.minh.nguyen.mapper.ProblemMapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -33,11 +37,25 @@ public class AdviceAspect {
     @Autowired
     private ContestMapper contestMapper;
 
+    @Autowired
+    private CourseMapper courseMapper;
+
+    @Autowired
+    private MaterialMapper materialMapper;
+
     @Pointcut("execution(public * com.minh.nguyen.controller.ProblemController.*(..))")
     public void problemController(){}
 
     @Pointcut("execution(public * com.minh.nguyen.controller.ContestController.*(..))")
     public void contestController(){}
+
+    @Pointcut("execution(public * com.minh.nguyen.controller.CourseController.*(..))")
+    public void courseController() {
+    }
+
+    @Pointcut("execution(public * com.minh.nguyen.controller.MaterialController.*(..))")
+    public void materialController() {
+    }
 
     @Pointcut("@annotation(com.minh.nguyen.validator.annotation.CheckNotNullFirst)")
     public void checkNotNullFirst(){}
@@ -66,6 +84,30 @@ public class AdviceAspect {
         contestEntity = contestMapper.selectByPK(contestEntity);
         if (null == contestEntity){
             throw new NoSuchPageException("Contest not found!");
+        }
+    }
+
+    @Before("courseController() && checkNotNullFirst()")
+    public void ensureCourseNotNull(JoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        Integer ctId = (Integer) args[0];
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(ctId);
+        courseEntity = courseMapper.selectByPK(courseEntity);
+        if (null == courseEntity) {
+            throw new NoSuchPageException("Course not found!");
+        }
+    }
+
+    @Before("materialController() && checkNotNullFirst()")
+    public void ensureMaterialNotNull(JoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        Integer ctId = (Integer) args[0];
+        MaterialEntity materialEntity = new MaterialEntity();
+        materialEntity.setId(ctId);
+        materialEntity = materialMapper.selectByPK(materialEntity);
+        if (null == materialEntity) {
+            throw new NoSuchPageException("Material not found!");
         }
     }
 
