@@ -3,11 +3,13 @@ package com.minh.nguyen.controller;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.MaterialDTO;
+import com.minh.nguyen.dto.MessageDTO;
 import com.minh.nguyen.dto.SubjectDTO;
 import com.minh.nguyen.form.material.MaterialUpdateForm;
 import com.minh.nguyen.form.material.MaterialUploadForm;
 import com.minh.nguyen.service.MaterialService;
 import com.minh.nguyen.service.SubjectService;
+import com.minh.nguyen.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -51,6 +53,9 @@ public class MaterialController extends BaseController {
     @GetMapping("/my")
     public ModelAndView getMyMaterial() {
         ModelAndView modelAndView = createGeneralModel();
+        String handle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        List<MaterialDTO> lstMaterial = materialService.getListMaterial(handle, true);
+        modelAndView.addObject("lstMaterial", lstMaterial);
         modelAndView.setViewName("material/material-list-my");
         return modelAndView;
     }
@@ -69,21 +74,18 @@ public class MaterialController extends BaseController {
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public ModelAndView doUpload(MaterialUploadForm materialUploadForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        validate(materialUploadForm, bindingResult);
+        modelAndView.addObject("materialUploadForm", new MaterialUploadForm());
+        modelAndView.setViewName("material/material-upload");
         int mlId = 0;
-        if (bindingResult.hasErrors()) {
-            return uploadMaterial(materialUploadForm);
-        }
         try {
             mlId = materialService.insertMaterial(materialUploadForm.getFile());
         } catch (RollbackException e) {
-            addLogicError(bindingResult, e.getMessage());
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), e.getMessage()));
+            return modelAndView;
         } catch (Exception e) {
             e.printStackTrace();
-            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR);
-        }
-        if (bindingResult.hasErrors()) {
-            return uploadMaterial(materialUploadForm);
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), Constants.MSG_SYSTEM_ERR));
+            return modelAndView;
         }
         return updateMaterial(mlId, null, true);
     }

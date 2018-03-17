@@ -192,6 +192,12 @@ public class BaseController {
         result.rejectValue(SCREEN_MESSAGE, message);
     }
 
+    public void addFieldError(
+            org.springframework.validation.BindingResult result,
+            String field,
+            String message) {
+        result.rejectValue(field, message);
+    }
     /**
      * likewise but for message which require parameter
      * ex: msg00x = You have {0} errors.

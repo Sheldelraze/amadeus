@@ -2,6 +2,7 @@ package com.minh.nguyen.form.material;
 
 import com.minh.nguyen.form.BaseForm;
 import com.minh.nguyen.validator.annotation.Required;
+import com.minh.nguyen.validator.annotation.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class MaterialUploadForm extends BaseForm {
     @Required(displayFieldName = "file")
+    @Size(max = 50, displayFieldName = "file")
     private MultipartFile file;
 
     public MultipartFile getFile() {

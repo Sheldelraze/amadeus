@@ -22,6 +22,26 @@ public class MaterialDTO extends BaseDTO {
 
     private Integer downloadCnt;
 
+    private String subjectName;
+
+    private String preview;
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
     public Integer getSutId() {
         return sutId;
     }

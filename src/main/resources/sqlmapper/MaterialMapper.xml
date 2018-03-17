@@ -4,5 +4,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.minh.nguyen.mapper.MaterialMapper">
-
+    <select id="getMaterial" resultType="MaterialDTO">
+        select material.id,
+        material.name,
+        material.storedLocation,
+        material.downloadCnt,
+        material.status,
+        material.isPublic,
+        material.description,
+        subject.name as subjectName
+        from material
+        left join subject
+        on material.sutId = subject.id
+        and subject.deleteFlg = '0'
+        where material.deleteFlg = '0'
+        <if test="handle != null and handle.length > 0">
+            and material.createUser = #{handle}
+        </if>
+        <if test="!getAllMaterial">
+            and material.isPublic != 0
+        </if>
+    </select>
 </mapper>

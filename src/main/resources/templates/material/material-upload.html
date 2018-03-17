@@ -89,6 +89,10 @@
                             <form th:action="|/material/upload?${_csrf.parameterName}=${_csrf.token}|"
                                   enctype="multipart/form-data" id="uploadForm" th:object="${materialUploadForm}"
                                   method="post">
+                                <th:block th:if="${message != null}">
+                                    <div class="alert alert-danger" th:text="|✘#{${message.messageId}}|">
+                                    </div>
+                                </th:block>
                                 <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()"
                                         style="margin-left: 50px">Đóng cứa sổ
                                 </button>
@@ -164,12 +168,12 @@
 <script src="../../../static/assets/plugins/dropify/dist/js/dropify.min.js"
         th:src="@{/assets/plugins/dropify/dist/js/dropify.min.js}"></script>
 <script>
-    $("#file").dropify({
+    var drEvent = $("#file");
+    drEvent.dropify({
         error: {
             'fileSize': 'Dung lượng file quá lớn, tối đa là {{ value }}.'
         }
     });
-
     function CloseMySelf() {
         try {
             window.opener.HandlePopupResult();

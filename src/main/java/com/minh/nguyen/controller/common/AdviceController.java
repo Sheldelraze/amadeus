@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -33,7 +34,7 @@ public class AdviceController {
     private HttpSession httpSession;
 
     //404: page not found
-    @ExceptionHandler({NoSuchPageException.class, NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
+    @ExceptionHandler({NoSuchPageException.class, MethodArgumentTypeMismatchException.class, NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
     public ModelAndView pageNotFoundHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("share/404");

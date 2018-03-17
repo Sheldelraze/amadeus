@@ -5,10 +5,9 @@ import com.minh.nguyen.exception.InputCheckException;
 import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.annotation.Format;
-import com.minh.nguyen.validator.annotation.Number;
 import com.minh.nguyen.validator.annotation.MaxLength;
+import com.minh.nguyen.validator.annotation.Number;
 import com.minh.nguyen.validator.annotation.Required;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;

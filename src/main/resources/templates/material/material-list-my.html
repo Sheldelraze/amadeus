@@ -71,7 +71,7 @@
                         <div class="card-body">
                             <div style="float: right;margin-bottom: 10px">
                                 <button type="button" onclick="popup()" class="btn btn-block btn-outline-success">Thêm
-                                    bộ test
+                                    tài liệu
                                 </button>
                             </div>
                             <br/>
@@ -86,11 +86,46 @@
                                         <th style="width: 150px">Môn học</th>
                                         <th>Mô tả</th>
                                         <th style="width: 100px">Số lần tải</th>
-                                        <th style="width: 100px">Trạng thái</th>
+                                        <th style="width: 150px">Trạng thái</th>
+                                        <th style="width: 120px">Cập nhật</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-
+                                    <tr th:each="material,iter : ${lstMaterial}"
+                                        th:style="${material.isPublic == 0}?'background-color: #e8e8e8'">
+                                        <td th:text="${iter.count}"></td>
+                                        <td><a href="#" th:text="${material.name}"></a></td>
+                                        <td th:if="${material.subjectName != null}"
+                                            th:text="${material.subjectName}"></td>
+                                        <td th:if="${material.subjectName == null}">
+                                            <label class="font-light text-muted">Không có môn học liên quan</label>
+                                        </td>
+                                        <td>
+                                            <label data-toggle="tooltip" data-placement="auto"
+                                                   style="text-align: left;white-space: pre-line"
+                                                   th:text="${material.preview}"
+                                                   th:attr="title=${material.description}"></label>
+                                        </td>
+                                        <td th:text="${material.downloadCnt}"></td>
+                                        <th:block th:if="${material.status != 1}">
+                                            <td th:if="${material.status == 0}" class="text-muted">Đang upload...</td>
+                                            <td th:if="${material.status == -1}" class="text-danger font-bold">✘Upload
+                                                thất bại
+                                            </td>
+                                        </th:block>
+                                        <th:block th:if="${material.status == 1}">
+                                            <td th:if="${material.isPublic == 0}">
+                                                <span class="badge badge-danger">Không công khai</span>
+                                            </td>
+                                            <td th:if="${material.isPublic == 1}">
+                                                <span class="badge badge-success">Công khai</span>
+                                            </td>
+                                        </th:block>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-warning"
+                                                    th:onclick="|popupUpdate(${material.id})|">Cập nhật
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -118,7 +153,6 @@
 <!-- ============================================================== -->
 <!-- End Page wrapper  -->
 <!-- ============================================================== -->
-</div>
 <!-- ============================================================== -->
 <!-- End Wrapper -->
 <!-- ============================================================== -->
@@ -126,13 +160,23 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
+
 <script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"
         th:src="@{/assets/plugins/select2/dist/js/select2.full.min.js}" type="text/javascript"></script>
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
 <script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
     $(document).ready(function () {
         $(".select2").select2();
     });
-
+    $(document).ready(function () {
+        $('#myTable').dataTable({
+            "bSort": false
+        });
+    });
     function popup() {
         var url = '/material/upload';
         window.open(url,

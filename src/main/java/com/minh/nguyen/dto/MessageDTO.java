@@ -104,7 +104,11 @@ public class MessageDTO extends BaseDTO implements Serializable {
     }
 
     public enum MessageType {
-        SUCCESS, FAIL
+        SUCCESS,
+        FAIL,
+        WARN,
+        ERROR,
+        INFO
     }
 
     public String getComment() {

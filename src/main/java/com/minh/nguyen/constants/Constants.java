@@ -8,6 +8,10 @@ package com.minh.nguyen.constants;
  * For instance, current number of authorities is 13, so if you want to add another authority, start with AUTH_XXX = 14
  */
 public class Constants {
+    public static final Integer MAX_UPLOAD_SIZE = 50;
+    public static final Integer MAX_FILENAME_LENGTH_SIZE = 100;
+
+    public static final Integer UPLOAD_FILE_PENDING_FLAG = 0;
     public static final Integer UPLOAD_FILE_SUCCESS_FLAG = 1;
     public static final Integer UPLOAD_FILE_FAIL_FLAG = -1;
 
@@ -65,7 +69,9 @@ public class Constants {
     public static final String MSG_FILE_TOO_LARGE_ERR = "msg015";
     public static final String MSG_SESSION_TIMEOUT = "msg016";
     public static final String MSG_UPLOAD_ERR = "msg017";
-
+    public static final String MSG_UPLOAD_FILE_TOO_BIG_ERR = "msg018";
+    public static final String MSG_FILE_NAME_TOO_LONG_ERR = "msg019";
+    public static final String MSG_FILENAME_EXISTED_ERR = "msg020";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;
