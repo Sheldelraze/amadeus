@@ -143,4 +143,6 @@ public class Constants {
     public static final Integer SHOW_TEST_ALL = 1;
     public static final Integer SHOW_TEST_SOLVED = 1;
     public static final Integer SHOW_TEST_PERSONAL = 1;
+
+    public static final Integer MAX_DESCRIPTION_LENGTH = 150;
 }

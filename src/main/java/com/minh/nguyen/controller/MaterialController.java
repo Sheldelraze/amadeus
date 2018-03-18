@@ -12,8 +12,7 @@ import com.minh.nguyen.service.SubjectService;
 import com.minh.nguyen.util.MediaTypeUtil;
 import com.minh.nguyen.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +25,9 @@ import javax.persistence.RollbackException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -55,6 +56,9 @@ public class MaterialController extends BaseController {
     @GetMapping("/all")
     public ModelAndView getAllMaterial() {
         ModelAndView modelAndView = createGeneralModel();
+        Boolean canViewAllMaterial = checkDefaultAuthority(Constants.AUTH_VIEW_ALL_MATERIAL_ID);
+        List<MaterialDTO> lstMaterial = materialService.getListMaterial(null, canViewAllMaterial);
+        modelAndView.addObject("lstMaterial", lstMaterial);
         modelAndView.setViewName("material/material-list-all");
         return modelAndView;
     }
@@ -103,18 +107,23 @@ public class MaterialController extends BaseController {
     }
 
     @PreAuthorize("@MaterialValidator.checkDownloadAuthority(#mlId)")
-    @RequestMapping(value = "/download/{mlId}/{filename}", method = RequestMethod.GET)
+    @RequestMapping(value = "/download/{mlId}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<InputStreamResource> getFile(@PathVariable("mlId") Integer mlId, @PathVariable("filename") String filename) {
+    public ResponseEntity<?> getFile(@PathVariable("mlId") Integer mlId) {
         try {
-            String src = materialService.getMaterialLocation(mlId);
-            File file = new File(src);
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            MediaType mediaType = MediaTypeUtil.getMediaTypeForFileName(this.servletContext, file.getName());
+            MaterialDTO material = materialService.getMaterialInfo(mlId);
+            File file2Upload = new File(material.getStoredLocation());
+
+            Path path = Paths.get(file2Upload.getAbsolutePath());
+            ByteArrayResource resource = null;
+            MediaType mediaType = MediaTypeUtil.getMediaTypeForFileName(servletContext, material.getName());
+            resource = new ByteArrayResource(Files.readAllBytes(path));
+            material.setDownloadCnt(material.getDownloadCnt() + 1);
+            materialService.updateMaterial(material);
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
-                    .contentLength(file.length())
+                    .contentLength(file2Upload.length())
                     .contentType(mediaType)
+                    .header("Content-Disposition", "attachment; filename=" + material.getName())
                     .body(resource);
         } catch (RollbackException e) {
             return ResponseEntity.badRequest().build();

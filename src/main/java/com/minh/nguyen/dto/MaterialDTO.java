@@ -26,6 +26,26 @@ public class MaterialDTO extends BaseDTO {
 
     private String preview;
 
+    private Integer creatorId;
+
+    private String creatorName;
+
+    public Integer getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Integer creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
     public String getPreview() {
         return preview;
     }

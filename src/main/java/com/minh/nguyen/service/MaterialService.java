@@ -29,17 +29,13 @@ public class MaterialService extends BaseService {
     @Autowired
     private HttpSession httpSession;
 
-    public String getMaterialLocation(Integer mlId) {
-        MaterialEntity materialEntity = new MaterialEntity();
-        materialEntity.setId(mlId);
-        materialEntity = materialMapper.selectByPK(materialEntity);
-        return materialEntity.getStoredLocation();
-    }
     public List<MaterialDTO> getListMaterial(String handle, boolean getAllMaterial) {
         List<MaterialDTO> lstMaterial = materialMapper.getMaterial(handle, getAllMaterial);
         for (MaterialDTO material : lstMaterial) {
-            if (!StringUtil.isNull(material.getDescription()) && material.getDescription().length() > 150) {
-                material.setPreview(StringUtil.getFirstPartOfString(material.getDescription(), 150) + "...");
+            if (!StringUtil.isNull(material.getDescription()) && material.getDescription().length() > Constants.MAX_DESCRIPTION_LENGTH) {
+                material.setPreview(StringUtil.getFirstPartOfString(material.getDescription(), Constants.MAX_DESCRIPTION_LENGTH) + "...");
+            } else {
+                material.setPreview(material.getDescription());
             }
         }
         return lstMaterial;
@@ -91,6 +87,7 @@ public class MaterialService extends BaseService {
 
     public void updateMaterial(MaterialDTO material) {
         MaterialEntity materialEntity = modelMapper.map(material, MaterialEntity.class);
+        setUpdateInfo(materialEntity);
         if (materialEntity.getIsPublic() == null) {
             materialEntity.setIsPublic(0);
         }

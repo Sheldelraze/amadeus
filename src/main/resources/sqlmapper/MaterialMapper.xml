@@ -12,8 +12,13 @@
         material.status,
         material.isPublic,
         material.description,
-        subject.name as subjectName
+        subject.name as subjectName,
+        user.fullname as creatorName,
+        user.id as creatorId
         from material
+        inner join user
+        on material.createUser = user.handle
+        and user.deleteFlg = '0'
         left join subject
         on material.sutId = subject.id
         and subject.deleteFlg = '0'
