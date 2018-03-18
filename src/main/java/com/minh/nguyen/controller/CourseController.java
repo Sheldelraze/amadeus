@@ -35,6 +35,7 @@ import java.util.List;
 public class CourseController extends BaseController {
 
     private static final String INFORMATION_VIEW = "course/info/course-information";
+    private static final String MATERIAL_VIEW = "course/info/course-material";
     private static final String CREATE_VIEW = "course/other/course-create";
     private static final String PROBLEM_LIST_VIEW = "course/info/course-problem-list";
     private static final String PROBLEM_VIEW = "course/info/course-problem-view";
@@ -174,6 +175,14 @@ public class CourseController extends BaseController {
         modelAndView.addObject("course", courseDTO);
         modelAndView.addObject(TAB, 1);
         modelAndView.addObject(COURSE_ID, ceId);
+        return modelAndView;
+    }
+
+    @GetMapping("/{ceId}/material")
+    public ModelAndView getMaterial(@PathVariable("ceId") int ceId) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(MATERIAL_VIEW);
+
         return modelAndView;
     }
 //

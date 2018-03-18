@@ -19,4 +19,6 @@ public interface MaterialMapper extends BaseMapper<MaterialEntity> {
     Integer insertMaterial(MaterialEntity record);
 
     List<MaterialDTO> getMaterial(@Param("handle") String handle, @Param("getAllMaterial") Boolean getAllMaterial);
+
+    List<MaterialDTO> getMaterialInCourse(@Param("handle") String handle, @Param("getAllMaterial") Boolean getAllMaterial);
 }

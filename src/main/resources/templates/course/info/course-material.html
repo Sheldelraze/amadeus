@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <div th:replace="layout/layout::css"></div>
+
+
+</head>
+<body class="fix-header fix-sidebar card-no-border">
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::preloader"></div>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::topbar"></div>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <div th:replace="layout/layout::left-sidebar"></div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="row page-titles">
+                <div class="col-md-5 col-8 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Kỳ thi</a></li>
+                        <li class="breadcrumb-item active">Thông tin kỳ thi</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <div class="row">
+                <!-- Column -->
+                <!-- Column -->
+                <div class="col-lg-12 col-xlg-12 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="nav nav-pills m-t-30 m-b-30"
+                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                            <div id="problem" class="tab-pane active">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" style="color: black; text-align: center">
+                                        <tr>
+                                            <th style="width: 30px">#</th>
+                                            <th style="width: 200px">Tên tài liệu</th>
+                                            <th style="width: 200px">Người đăng</th>
+                                            <th style="width: 150px">Môn học</th>
+                                            <th>Mô tả</th>
+                                            <th style="width: 120px">Số lần tải</th>
+                                            <th style="width: 120px">Tải</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="material,iter : ${lstMaterial}" th:if="${material.status == 1}"
+                                            th:style="${material.isPublic == 0}?'background-color: #e8e8e8'">
+                                            <td th:text="${iter.count}"></td>
+                                            <td><label th:text="${material.name}"></label>
+                                                <th:block th:if="${material.isPublic == 0}">
+                                                    <span class="badge badge-danger">Không công khai</span>
+                                                </th:block>
+                                            </td>
+                                            <td><a href="#" th:text="${material.creatorName}"></a></td>
+                                            <td th:if="${material.subjectName != null}"
+                                                th:text="${material.subjectName}"></td>
+                                            <td th:if="${material.subjectName == null}">
+                                                <label class="font-light text-muted">Không có môn học liên quan</label>
+                                            </td>
+                                            <td>
+                                                <label data-toggle="tooltip" data-placement="auto"
+                                                       style="text-align: left;white-space: pre-line"
+                                                       th:text="${material.preview}"
+                                                       th:attr="title=${material.description}"></label>
+                                            </td>
+                                            <td th:text="${material.downloadCnt}"></td>
+                                            <th:block th:if="${material.status != 1}">
+                                                <td th:if="${material.status == 0}" class="text-muted">Đang upload...
+                                                </td>
+                                                <td th:if="${material.status == -1}" class="text-danger font-bold">
+                                                    ✘Upload
+                                                    thất bại
+                                                </td>
+                                            </th:block>
+                                            <td>
+                                                <button type="button" class="btn btn-outline-danger"
+                                                        th:onclick="|window.location='/material/download/${material.id}'|">
+                                                    <i class="mdi mdi-download"></i>Tải về
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="float: left" th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                    <button type="button" th:onclick="|popup(${ctId})|"
+                                            class="btn btn-outline-success">Thêm tài liệu
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="layout/layout::footer"></div>
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::js"></div>
+<script>
+    function popup(ctId) {
+        var url = '/contest/' + ctId + '/addProblem';
+        window.open(url,
+            '1426494439650',
+            'width=1500,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
+    }
+
+    function HandlePopupResult() {
+        location.reload();
+    }
+
+    function showProblem(ctId, pmId) {
+        if (!confirm("Bạn có chắc không?")) {
+            return false;
+        }
+        window.location.replace("/contest/" + ctId + "/showProblem/" + pmId);
+    }
+
+    function hideProblem(ctId, pmId) {
+        if (!confirm("Bạn có chắc không?")) {
+            return false;
+        }
+        window.location.replace("/contest/" + ctId + "/hideProblem/" + pmId);
+    }
+</script>
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>
