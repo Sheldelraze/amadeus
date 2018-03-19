@@ -45,7 +45,6 @@ public class MaterialService extends BaseService {
                 && multipartFile.getOriginalFilename().length() > Constants.MAX_FILENAME_LENGTH_SIZE) {
             rollBack(Constants.MSG_FILE_NAME_TOO_LONG_ERR);
         }
-        long size = multipartFile.getSize();
         if (multipartFile.getSize() == 0) {
             rollBack(Constants.MSG_UPLOAD_ERR);
         }
@@ -76,6 +75,36 @@ public class MaterialService extends BaseService {
         //asynchronously update
         uploadMaterial(multipartFile, location, materialEntity);
         return materialEntity.getId();
+    }
+
+    public List<MaterialDTO> getMaterialInCourse(Integer ceId, Boolean getAllMaterial) {
+        List<MaterialDTO> lstMaterial = materialMapper.getMaterialInCourse(ceId, getAllMaterial);
+        int cnt = 0;
+        for (MaterialDTO material : lstMaterial) {
+            if (material.getIsHidden().equals(1)) {
+                material.setAlias(-1 + "");
+            } else {
+                material.setAlias(++cnt + "");
+            }
+            if (!StringUtil.isNull(material.getDescription()) && material.getDescription().length() > Constants.MAX_DESCRIPTION_LENGTH) {
+                material.setPreview(StringUtil.getFirstPartOfString(material.getDescription(), Constants.MAX_DESCRIPTION_LENGTH) + "...");
+            } else {
+                material.setPreview(material.getDescription());
+            }
+        }
+        return lstMaterial;
+    }
+
+    public List<MaterialDTO> getMaterialToAddInCourse(Integer ceId, String currentUserHandle) {
+        List<MaterialDTO> lstMaterial = materialMapper.getMaterialToAdd(ceId, currentUserHandle);
+        for (MaterialDTO material : lstMaterial) {
+            if (!StringUtil.isNull(material.getDescription()) && material.getDescription().length() > Constants.MAX_DESCRIPTION_LENGTH) {
+                material.setPreview(StringUtil.getFirstPartOfString(material.getDescription(), Constants.MAX_DESCRIPTION_LENGTH) + "...");
+            } else {
+                material.setPreview(material.getDescription());
+            }
+        }
+        return lstMaterial;
     }
 
     public MaterialDTO getMaterialInfo(Integer mlId) {

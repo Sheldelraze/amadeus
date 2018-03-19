@@ -97,6 +97,7 @@ public class Constants {
     public static final Integer ROLE_LECTURER = 2;
     public static final Integer ROLE_STUDENT = 3;
     public static final Integer ROLE_SUPERVISOR = 4;
+
     public static final Integer AUTH_CREATE_USER_ID = 1;
     public static final Integer AUTH_EDIT_USER_ID = 2;
     public static final Integer AUTH_CREATE_PROBLEM_ID = 3;
@@ -141,8 +142,16 @@ public class Constants {
     public static final Integer SHOW_SUBMIT_PERSONAL = 3;
 
     public static final Integer SHOW_TEST_ALL = 1;
-    public static final Integer SHOW_TEST_SOLVED = 1;
-    public static final Integer SHOW_TEST_PERSONAL = 1;
+    public static final Integer SHOW_TEST_SOLVED = 2;
+    public static final Integer SHOW_TEST_PERSONAL = 3;
 
     public static final Integer MAX_DESCRIPTION_LENGTH = 150;
+
+    public static final Integer HIDDEN_FLAG = 1;
+    public static final Integer NOT_HIDDEN_FLAG = 0;
+
+    public static final Integer PUBLIC_FLAG = 1;
+    public static final Integer NOT_PUBLIC_FLAG = 0;
+
+
 }

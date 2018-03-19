@@ -3,26 +3,37 @@ package com.minh.nguyen.controller;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.CourseDTO;
+import com.minh.nguyen.dto.MaterialDTO;
+import com.minh.nguyen.form.course.CourseAddMaterialForm;
 import com.minh.nguyen.form.course.CourseCreateForm;
 import com.minh.nguyen.service.CourseService;
 import com.minh.nguyen.service.GeneralService;
+import com.minh.nguyen.service.MaterialService;
 import com.minh.nguyen.service.ProblemService;
+import com.minh.nguyen.util.MediaTypeUtil;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
+import com.minh.nguyen.validator.MaterialValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.RollbackException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -36,6 +47,7 @@ public class CourseController extends BaseController {
 
     private static final String INFORMATION_VIEW = "course/info/course-information";
     private static final String MATERIAL_VIEW = "course/info/course-material";
+    private static final String ADD_MATERIAL_VIEW = "course/other/course-add-material";
     private static final String CREATE_VIEW = "course/other/course-create";
     private static final String PROBLEM_LIST_VIEW = "course/info/course-problem-list";
     private static final String PROBLEM_VIEW = "course/info/course-problem-view";
@@ -73,10 +85,19 @@ public class CourseController extends BaseController {
     private GeneralService generalService;
 
     @Autowired
+    private MaterialValidator materialValidator;
+
+    @Autowired
+    private MaterialService materialService;
+
+    @Autowired
     private HttpSession httpSession;
 
     @Autowired
     private CourseValidator courseValidator;
+
+    @Autowired
+    private ServletContext servletContext;
 
     private ModelAndView createGeneralModel(int ceId) {
 
@@ -178,12 +199,78 @@ public class CourseController extends BaseController {
         return modelAndView;
     }
 
+    @CheckNotNullFirst
+    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/material")
     public ModelAndView getMaterial(@PathVariable("ceId") int ceId) {
         ModelAndView modelAndView = createGeneralModel(ceId);
         modelAndView.setViewName(MATERIAL_VIEW);
-
+        Boolean canViewAllMaterial = checkDefaultAuthority(Constants.AUTH_EDIT_COURSE_ID);
+        List<MaterialDTO> lstMaterial = materialService.getMaterialInCourse(ceId, canViewAllMaterial);
+        modelAndView.addObject("lstMaterial", lstMaterial);
+        modelAndView.addObject(COURSE_ID, ceId);
+        modelAndView.addObject(TAB, 10);
         return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/addMaterial")
+    public ModelAndView addMaterial(@PathVariable("ceId") int ceId, CourseAddMaterialForm courseAddMaterialForm, boolean updateSuccess) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(ADD_MATERIAL_VIEW);
+        String handle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        List<MaterialDTO> lstMaterial = materialService.getMaterialToAddInCourse(ceId, handle);
+        modelAndView.addObject("lstMaterial", lstMaterial);
+        modelAndView.addObject(COURSE_ID, ceId);
+        if (null == courseAddMaterialForm) {
+            courseAddMaterialForm = new CourseAddMaterialForm();
+        }
+        modelAndView.addObject("courseAddMaterialForm", courseAddMaterialForm);
+        modelAndView.addObject("updateSuccess", updateSuccess);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @RequestMapping(value = "/{ceId}/download/{mlId}")
+    @ResponseBody
+    public ResponseEntity<?> getFile(@PathVariable("ceId") Integer ceId, @PathVariable("mlId") Integer mlId) {
+        try {
+            MaterialDTO material = materialService.getMaterialInfo(mlId);
+            File file2Upload = new File(material.getStoredLocation());
+
+            Path path = Paths.get(file2Upload.getAbsolutePath());
+            MediaType mediaType = MediaTypeUtil.getMediaTypeForFileName(servletContext, material.getName());
+            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+            material.setDownloadCnt(material.getDownloadCnt() + 1);
+            materialService.updateMaterial(material);
+            return ResponseEntity.ok()
+                    .contentLength(file2Upload.length())
+                    .contentType(mediaType)
+                    .header("Content-Disposition", "attachment; filename=" + material.getName())
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @PostMapping("/{ceId}/addMaterial")
+    public ModelAndView doAddMaterial(@PathVariable("ceId") int ceId, CourseAddMaterialForm courseAddMaterialForm, BindingResult bindingResult) {
+        try {
+            courseService.addMaterialToCourse(courseAddMaterialForm.getLstMlId(), ceId);
+        } catch (RollbackException e) {
+            addLogicError(bindingResult, e.getMessage());
+            return addMaterial(ceId, courseAddMaterialForm, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR);
+            return addMaterial(ceId, courseAddMaterialForm, false);
+        }
+        return addMaterial(ceId, courseAddMaterialForm, true);
     }
 //
 //    @CheckNotNullFirst

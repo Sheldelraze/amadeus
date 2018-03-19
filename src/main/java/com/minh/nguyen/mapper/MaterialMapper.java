@@ -20,5 +20,7 @@ public interface MaterialMapper extends BaseMapper<MaterialEntity> {
 
     List<MaterialDTO> getMaterial(@Param("handle") String handle, @Param("getAllMaterial") Boolean getAllMaterial);
 
-    List<MaterialDTO> getMaterialInCourse(@Param("handle") String handle, @Param("getAllMaterial") Boolean getAllMaterial);
+    List<MaterialDTO> getMaterialInCourse(@Param("ceId") Integer ceId, @Param("getAllMaterial") Boolean getAllMaterial);
+
+    List<MaterialDTO> getMaterialToAdd(@Param("ceId") Integer ceId, @Param("handle") String handle);
 }

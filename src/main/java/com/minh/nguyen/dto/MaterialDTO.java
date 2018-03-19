@@ -30,6 +30,26 @@ public class MaterialDTO extends BaseDTO {
 
     private String creatorName;
 
+    private Integer isHidden;
+
+    private String alias;
+
+    public Integer getIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(Integer isHidden) {
+        this.isHidden = isHidden;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
     public Integer getCreatorId() {
         return creatorId;
     }

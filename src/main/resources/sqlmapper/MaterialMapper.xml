@@ -30,4 +30,55 @@
             and material.isPublic != 0
         </if>
     </select>
+    <select id="getMaterialInCourse" resultType="MaterialDTO">
+        select material.id,
+        material.name,
+        material.storedLocation,
+        material.downloadCnt,
+        material.status,
+        material.isPublic,
+        material.description,
+        subject.name as subjectName,
+        ce_ml.isHidden
+        from material
+        inner join ce_ml
+        ON material.id = ce_ml.mlId
+        and ce_ml.ceId = #{ceId}
+        <if test="!getAllMaterial">
+            and ce_ml.isHidden != 1
+        </if>
+        left join subject
+        on material.sutId = subject.id
+        and subject.deleteFlg = '0'
+        where material.deleteFlg = '0'
+        and material.status = 1
+    </select>
+    <select id="getMaterialToAdd" resultType="MaterialDTO">
+        SELECT
+            material.id,
+            material.name,
+            material.storedLocation,
+            material.downloadCnt,
+            material.status,
+            material.isPublic,
+            material.description,
+            subject.name  AS subjectName,
+            user.fullname AS creatorName,
+            user.id       AS creatorId
+        FROM material
+            INNER JOIN user
+                ON material.createUser = user.handle
+                   AND user.deleteFlg = '0'
+            LEFT JOIN subject
+                ON material.sutId = subject.id
+                   AND subject.deleteFlg = '0'
+        WHERE material.deleteFlg = '0'
+              AND material.status = 1
+              AND (material.createUser = #{handle} OR (material.createUser != #{handle} AND material.isPublic = 1))
+              AND material.id NOT IN (
+            SELECT mlId
+            FROM ce_ml
+            WHERE ceId = #{ceId}
+        )
+    </select>
 </mapper>

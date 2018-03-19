@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../static/assets/images/favicon.png"
+          th:href="@{/assets/images/favicon.png}">
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+
+    <link href="../../../static/assets/plugins/bootstrap/css/bootstrap.min.css"
+          th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="../../../static/css/colors/blue.css" th:href="@{/css/colors/blue.css}" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+</head>
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <div class="row" style="margin-top:30px;color:black">
+            <!-- Column -->
+            <!-- Column -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form th:action="|/course/${ceId}/addMaterial|"
+                              th:object="${courseAddMaterialForm}" method="post">
+                            <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                <div class="alert alert-danger">
+                                    ✘ <label th:errors="*{screenMessage}"></label>
+                                </div>
+                            </th:block>
+                            <th:block th:if="${updateSuccess}">
+                                <div class="alert alert-success">
+                                    ✔ Cập nhật thành công
+                                </div>
+                            </th:block>
+                            <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()"
+                                    style="margin-left: 50px">Đóng cứa sổ
+                            </button>
+                            <div style="text-align: center">
+                                <h3>Thêm bài tập</h3>
+                            </div>
+                            <table id="myTable" class="table table-bordered "
+                                   style="text-align: center; color: black; font-size: 14px">
+                                <thead>
+                                <tr>
+                                    <th style="width: 30px;text-align: center">#</th>
+                                    <th style="width: 200px;text-align: center">Tên tài liệu</th>
+                                    <th style="width: 200px;text-align: center">Người đăng</th>
+                                    <th style="width: 150px;text-align: center">Môn học</th>
+                                    <th style="text-align: center">Mô tả</th>
+                                    <th style="width: 170px;text-align: center;">
+                                        <input type="checkbox" id="parent"/>
+                                        <label style="margin-bottom: -10px;margin-left: 20px" for="parent"> Thêm</label>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${lstMaterial != null}"
+                                    th:each="material,iter : ${lstMaterial}">
+                                    <td th:text="${iter.count}"></td>
+                                    <td><label th:text="${material.name}"></label></td>
+                                    <td><a href="#" th:text="${material.creatorName}"></a></td>
+                                    <td th:if="${material.subjectName != null}"
+                                        th:text="${material.subjectName}"></td>
+                                    <td th:if="${material.subjectName == null}">
+                                        <label class="font-light text-muted">Không có môn học liên quan</label>
+                                    </td>
+                                    <td th:if="${material.preview != null}">
+                                        <label data-toggle="tooltip" data-placement="auto"
+                                               style="text-align: left;white-space: pre-line"
+                                               th:text="${material.preview}"
+                                               th:attr="title=${material.description}"></label>
+                                    </td>
+                                    <td th:if="${material.preview == null}">
+                                        <label class="font-light text-muted">Không có mô tả</label>
+                                    </td>
+                                    <td>
+                                        <div class="checkbox checkbox-single">
+                                            <input th:value="${material.id}"
+                                                   type="checkbox"
+                                                   th:id="|lstMlId${__${material.id}__}|" name="lstMlId"/>
+                                            <label th:for="|lstMlId${__${material.id}__}|"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <div style="margin-left: 42%">
+                                <button type="submit" class="btn btn-success" style="margin-left: 50px">Thêm bài tập
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Container fluid  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script src="../../static/assets/plugins/jquery/jquery.min.js"
+        th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../static/assets/plugins/bootstrap/js/popper.min.js"
+        th:src="@{/assets/plugins/bootstrap/js/popper.min.js}"></script>
+<script src="../../static/assets/plugins/bootstrap/js/bootstrap.min.js"
+        th:src="@{/assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="../../static/js/jquery.slimscroll.js" th:src="@{/js/jquery.slimscroll.js}"></script>
+<!--Wave Effects -->
+<script src="../../static/js/waves.js" th:src="@{/js/waves.js}"></script>
+<!--Menu sidebar -->
+<script src="../../static/js/sidebarmenu.js" th:src="@{/js/sidebarmenu.js}"></script>
+<!--stickey kit -->
+<script src="../../static/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js"
+        th:src="@{/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js}"></script>
+<script src="../../static/assets/plugins/sparkline/jquery.sparkline.min.js"
+        th:src="@{/assets/plugins/sparkline/jquery.sparkline.min.js}"></script>
+<!--Custom JavaScript -->
+<script src="../../static/js/custom.min.js" th:src="@{/js/custom.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
+></script>
+<!--Custom JavaScript -->
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    function CloseMySelf() {
+        try {
+            window.opener.HandlePopupResult();
+        }
+        catch (err) {
+        }
+        window.close();
+        return false;
+    }
+
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+    $(function () {
+        $('#parent').on('change', function () {
+            $('[id^=lstMlId]').prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--c3 JavaScript -->
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

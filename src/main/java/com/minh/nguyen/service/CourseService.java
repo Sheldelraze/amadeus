@@ -2,13 +2,11 @@ package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.CourseDTO;
+import com.minh.nguyen.entity.CeMlEntity;
 import com.minh.nguyen.entity.CourseEntity;
 import com.minh.nguyen.entity.UrCeAuyEntity;
 import com.minh.nguyen.entity.UserEntity;
-import com.minh.nguyen.mapper.AnnouncementMapper;
-import com.minh.nguyen.mapper.CourseMapper;
-import com.minh.nguyen.mapper.UrCeAuyMapper;
-import com.minh.nguyen.mapper.UserMapper;
+import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,9 @@ import java.util.List;
 public class CourseService extends BaseService {
 
     @Autowired
+    private MaterialMapper materialMapper;
+
+    @Autowired
     private CourseValidator courseValidator;
 
     @Autowired
@@ -45,6 +46,9 @@ public class CourseService extends BaseService {
 
     @Autowired
     private UrCeAuyMapper urCeAuyMapper;
+
+    @Autowired
+    private CeMlMapper ceMlMapper;
 
     public Integer getAnnouncementCount(Integer ctId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -113,6 +117,22 @@ public class CourseService extends BaseService {
         }
     }
 
+    @Transactional
+    public void addMaterialToCourse(String[] mlId, Integer ceId) {
+        CeMlEntity ceMlEntity = new CeMlEntity();
+        setUpdateInfo(ceMlEntity);
+        setCreateInfo(ceMlEntity);
+        ceMlEntity.setCeId(ceId);
+        ceMlEntity.setIsHidden(Constants.NOT_HIDDEN_FLAG);
+        for (String id : mlId) {
+            Integer materialId = Integer.parseInt(id);
+            ceMlEntity.setMlId(materialId);
+            int recordCnt = ceMlMapper.insert(ceMlEntity);
+            if (recordCnt == 0) {
+                rollBack(Constants.MSG_INSERT_ERR);
+            }
+        }
+    }
     public CourseDTO getInformation(int ceId) {
         CourseDTO courseDTO = new CourseDTO();
         CourseEntity courseEntity = new CourseEntity();

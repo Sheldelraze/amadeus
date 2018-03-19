@@ -31,8 +31,8 @@ public class CourseValidator extends BaseValidator {
     private CourseMapper courseMapper;
 
     //check if curent user has any authority in current contest
-    public boolean checkPermission(Authentication auth, Integer ctId, String... authority) throws NoSuchPageException {
-        List<AuthorityDTO> lstAuthority = authorityMapper.getCourseAuthority(ctId, auth.getName());
+    public boolean checkPermission(Authentication auth, Integer ceId, String... authority) throws NoSuchPageException {
+        List<AuthorityDTO> lstAuthority = authorityMapper.getCourseAuthority(ceId, auth.getName());
         for (AuthorityDTO curAuth : lstAuthority) {
             for (String requireAuth : authority) {
                 if (requireAuth.equals(curAuth.getName())) {

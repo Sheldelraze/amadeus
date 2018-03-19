@@ -101,11 +101,14 @@
                                         <td th:if="${material.subjectName == null}">
                                             <label class="font-light text-muted">Không có môn học liên quan</label>
                                         </td>
-                                        <td>
+                                        <td th:if="${material.preview != null}">
                                             <label data-toggle="tooltip" data-placement="auto"
                                                    style="text-align: left;white-space: pre-line"
                                                    th:text="${material.preview}"
                                                    th:attr="title=${material.description}"></label>
+                                        </td>
+                                        <td th:if="${material.preview == null}">
+                                            <label class="font-light text-muted">Không có mô tả</label>
                                         </td>
                                         <td th:text="${material.downloadCnt}"></td>
                                         <th:block th:if="${material.status != 1}">
