@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -9,7 +9,7 @@
     <title>Amadeus system</title>
     <link href="../../../static/assets/plugins/select2/dist/css/select2.min.css"
           th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
-
+    <link th:href="@{/assets/plugins/summernote/dist/summernote.css}" rel="stylesheet"/>
     <div th:replace="layout/layout::css"></div>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
@@ -75,7 +75,7 @@
                             <!--second tab-->
                             <div class="tab-pane active" role="tabpanel">
                                 <div class="card-body">
-                                    <form th:object="${problemStatementForm}" th:method="post"
+                                    <form th:object="${problemStatementForm}" th:method="post" id="updateForm"
                                           th:action="|/problem/info/${problemStatementVO.id}/updateStatement|">
                                         <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                             <div class="alert alert-danger">
@@ -89,39 +89,49 @@
                                         </th:block>
                                         <div style="float:right"><a href="#" th:onclick="|popup(${problemStatementVO.id})|">Xem trước</a></div>
                                         <h4 style="margin-top: 10px">Nội dung (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 300px"  id="statement" name="statement">
-                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.statement}"></th:block>
-                                        </textarea>
+                                        <div class="summernote" id="statementEditor">
+                                            <th:block
+                                                    th:utext="${problemStatementVO}?${problemStatementVO.statement}"></th:block>
+                                        </div>
+                                        <input type="hidden" id="statement" name="statement"/>
                                         <label
                                                 th:if="${#fields.hasErrors('statement')}" th:class="'error'"
                                                 th:errors="*{statement}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Điều kiện input (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;"  id="input" name="input">
-                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.input}"></th:block>
-                                        </textarea>
+                                        <div class="summernote" id="inputEditor">
+                                            <th:block
+                                                    th:utext="${problemStatementVO}?${problemStatementVO.input}"></th:block>
+                                        </div>
+                                        <input type="hidden" id="input" name="input"/>
                                         <label
                                                 th:if="${#fields.hasErrors('input')}" th:class="'error'"
                                                 th:errors="*{input}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Yêu cầu output (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;" id="output" name="output">
-                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.output}"></th:block>
-                                        </textarea>
+                                        <div class="summernote" id="outputEditor">
+                                            <th:block
+                                                    th:utext="${problemStatementVO}?${problemStatementVO.output}"></th:block>
+                                        </div>
+                                        <input type="hidden" id="output" name="output"/>
                                         <label
                                                 th:if="${#fields.hasErrors('output')}" th:class="'error'"
                                                 th:errors="*{output}">Name Error</label>
                                         <br/>
                                         <h4 style="margin-top: 10px">Ghi chú khác (không quá 20000 ký tự)</h4>
-                                        <textarea style="height: 150px;"  id="note" name="note">
-                                            <th:block th:text="${problemStatementVO}?${problemStatementVO.note}"></th:block>
-                                        </textarea>
+                                        <div class="summernote" id="noteEditor">
+                                            <th:block
+                                                    th:utext="${problemStatementVO}?${problemStatementVO.note}"></th:block>
+                                        </div>
+                                        <input type="hidden" id="note" name="note"/>
                                         <label
                                                 th:if="${#fields.hasErrors('note')}" th:class="'error'"
                                                 th:errors="*{note}">Name Error</label>
                                         <br/>
-                                        <div style="text-align: center">
-                                            <button type="submit" class="btn btn-outline-success">Lưu thay đổi</button>
+                                        <div style="text-align: center;display: block;">
+                                            <button type="button" onclick="doMagic()" class="btn btn-outline-success">
+                                                Lưu thay đổi
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -165,29 +175,55 @@
 <!-- ============================================================== -->
 
 <div th:replace="layout/layout::js"></div>
-<script th:src="@{/nicEdit/nicEdit.js}"></script>
-<!--<script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"-->
-<!--th:src="@{/assets/plugins/select2/dist/js/select2.full.min.js}" type="text/javascript"></script>-->
+<script src="../assets/plugins/summernote/dist/summernote.min.js"
+        th:src="@{/assets/plugins/summernote/dist/summernote.min.js}"></script>
+<script src="../../../static/assets/plugins/select2/dist/js/select2.full.min.js"
+        th:src="@{/assets/plugins/select2/dist/js/select2.full.min.js}" type="text/javascript"></script>
 <script>
+    function doMagic() {
+        var statementText = $('#statementEditor').summernote('code');
+        $('#statement').val(statementText);
+        var inputText = $('#inputEditor').summernote('code');
+        $('#input').val(inputText);
+        var outputText = $('#outputEditor').summernote('code');
+        $('#output').val(outputText);
+        var noteText = $('#noteEditor').summernote('code');
+        $('#note').val(noteText);
+        $('#updateForm').submit();
+    }
     function popup(pmId){
         var url = '/problem/info/' + pmId + '/preview';
         window.open(url,
             '1426494439650',
             'width=1000,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
     }
-</script>
-<script>
-    // $(document).ready(function () {
-    //     $(".select2").select2();
-    // });
-    $('#statement').width('100%');
-    $('#input').width('100%');
-    $('#output').width('100%');
-    $('#note').width('100%');
-    new nicEditor({maxHeight: 300,fullPanel : true}).panelInstance('statement');
-    new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('input');
-    new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('output');
-    new nicEditor({maxHeight: 150,fullPanel : true}).panelInstance('note');
+
+    $('.summernote').summernote({
+        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather'],
+        toolbar: [
+            // [groupName, [list of button]]
+            ['font', ['bold', 'italic', 'underline', 'superscript', 'subscript', 'strikethrough', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['list', ['ul', 'ol']],
+            ['table', ['table']],
+            ['insert', ['picture']],
+            ['insert', ['video']],
+            ['insert', ['link']],
+            ['insert', ['hr']],
+        ],
+        height: 200, // set editor height
+        minHeight: null, // set minimum height of editor
+        maxHeight: null, // set maximum height of editor
+        focus: false // set focus to editable area after initializing summernote
+    });
+    $(document).ready(function () {
+        $(".select2").select2();
+    });
+
 </script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
