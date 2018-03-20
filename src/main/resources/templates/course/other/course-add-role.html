@@ -70,8 +70,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form th:action="|/contest/${ctId}/findForRole|"
-                              th:object="${contestAddRoleForm}" method="post">
+                        <form th:action="|/course/${ceId}/findForRole|"
+                              th:object="${courseAddRoleForm}" method="post">
                             <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                 <div class="alert alert-danger">
                                     ✘ <label th:errors="*{screenMessage}"></label>
@@ -111,7 +111,7 @@
                                 </button>
                             </div>
                         </form>
-                        <form th:action="|/contest/${ctId}/addRole|" method="post" th:if="${null != lstUser}">
+                        <form th:action="|/course/${ceId}/addRole|" method="post" th:if="${null != lstUser}">
                             <hr width="80%"/>
                             <div style="width: 10%; margin-top: 10px;margin-bottom: 15px">
                                 <b style="color: black">Quyền</b><i class="mdi mdi-comment-question-outline"

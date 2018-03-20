@@ -510,8 +510,8 @@ public class ContestService extends BaseService {
 
     /**
      * addRole
-     * 1 = CAN_VIEW_PROBLEM
-     * 2 = CAN_VIEW_PROBLEM + CAN_EDIT_PROBLEM
+     * 1 = CAN_VIEW_CONTEST
+     * 2 = CAN_VIEW_CONTEST + CAN_EDIT_CONTEST
      * 3 = CAN_PARTICIPATE_CONTEST
      */
     public void addRole(String[] urId, Integer auyId, Integer ctId) throws UserTryingToBeSmartException {

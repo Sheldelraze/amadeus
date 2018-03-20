@@ -72,6 +72,9 @@ public class Constants {
     public static final String MSG_UPLOAD_FILE_TOO_BIG_ERR = "msg018";
     public static final String MSG_FILE_NAME_TOO_LONG_ERR = "msg019";
     public static final String MSG_FILENAME_EXISTED_ERR = "msg020";
+    public static final String MSG_APPLY_SUCCESS = "msg021";
+    public static final String MSG_APPLY_PENDING_ERR = "msg022";
+    public static final String MSG_ALREADY_APPLIED_ERR = "msg023";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;
@@ -93,10 +96,15 @@ public class Constants {
     public static final Integer STATUS_HIDDEN = 1;
     public static final Integer STATUS_SHOW = 0;
 
-    public static final Integer ROLE_ADMIN = 1;
-    public static final Integer ROLE_LECTURER = 2;
-    public static final Integer ROLE_STUDENT = 3;
-    public static final Integer ROLE_SUPERVISOR = 4;
+    public static final Integer ROLE_ADMIN_ID = 1;
+    public static final Integer ROLE_LECTURER_ID = 2;
+    public static final Integer ROLE_STUDENT_ID = 3;
+    public static final Integer ROLE_SUPERVISOR_ID = 4;
+
+    public static final String ROLE_ADMIN_TEXT = "Quản trị viên";
+    public static final String ROLE_LECTURER_TEXT = "Giảng viên";
+    public static final String ROLE_STUDENT_TEXT = "Sinh viên";
+    public static final String ROLE_SUPERVISOR_TEXT = "Lãnh đạo";
 
     public static final Integer AUTH_CREATE_USER_ID = 1;
     public static final Integer AUTH_EDIT_USER_ID = 2;
@@ -153,5 +161,7 @@ public class Constants {
     public static final Integer PUBLIC_FLAG = 1;
     public static final Integer NOT_PUBLIC_FLAG = 0;
 
-
+    public static final Integer APPLICATION_STATUS_PENDING = 0;
+    public static final Integer APPLICATION_STATUS_DENIED = -1;
+    public static final Integer APPLICATION_STATUS_ACCEPTED = 1;
 }

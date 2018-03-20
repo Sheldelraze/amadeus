@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -25,10 +26,23 @@ import java.util.List;
 public class CourseValidator extends BaseValidator {
 
     @Autowired
+    private HttpSession httpSession;
+
+    @Autowired
     private AuthorityMapper authorityMapper;
 
     @Autowired
     private CourseMapper courseMapper;
+
+    public boolean checkApplyPermission(Integer ceId, Integer urId) {
+        if (urId == null || ceId == null) {
+            return false;
+        }
+        if (!checkRole(Constants.ROLE_STUDENT_TEXT)) {
+            return false;
+        }
+        return true;
+    }
 
     //check if curent user has any authority in current contest
     public boolean checkPermission(Authentication auth, Integer ceId, String... authority) throws NoSuchPageException {
@@ -41,6 +55,12 @@ public class CourseValidator extends BaseValidator {
             }
         }
         return false;
+    }
+
+
+    public boolean checkRole(String roleName) {
+        Object currentRole = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);
+        return currentRole != null && currentRole.toString().equals(roleName);
     }
 
     public boolean checkParticipate(Authentication auth, Integer ctId) throws NoSuchPageException {

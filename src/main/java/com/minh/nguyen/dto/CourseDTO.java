@@ -16,6 +16,16 @@ public class CourseDTO extends BaseDTO {
 
     private String description;
 
+    private UserDTO creator;
+
+    public UserDTO getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserDTO creator) {
+        this.creator = creator;
+    }
+
     public String getRequirement() {
         return requirement;
     }

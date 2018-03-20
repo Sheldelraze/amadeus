@@ -63,23 +63,12 @@
                     <div class="card">
                         <div class="card-body">
                             <ul class="nav nav-pills m-t-30 m-b-30"
-                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                                th:replace="course/info/course-layout::navtab(ceId = ${ceId},tab = ${tab})"></ul>
                             <div id="role" class="tab-pane active" style="margin-top: 20px; color: black">
-                                <div class="table-responsive">
-                                    <th:block th:if="${updateSuccess}">
-                                        <div class="alert alert-success">
-                                            ✔ Cập nhật thành công
-                                        </div>
-                                    </th:block>
-                                    <div style="float: left">
-                                        <button th:onclick="|popup(${ctId})|" type="button"
-                                                class="btn btn-block btn-outline-success">Thêm người
-                                            dùng
-                                        </button>
-                                        <br/>
-                                    </div>
+                                <th:block th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                    <h4>Danh sách xin gia nhập</h4>
                                     <div class="table-responsive">
-                                        <table id="myTable" class="table table-bordered "
+                                        <table id="myTable1" class="table table-bordered "
                                                style="text-align: center; color: black; font-size: 14px">
                                             <thead>
                                             <tr>
@@ -87,103 +76,127 @@
                                                 <th style="text-align: center">Tài khoản</th>
                                                 <th style="text-align: center">Tên người dùng</th>
                                                 <th style="text-align: center">Loại tài khoản</th>
-                                                <th style="text-align: center">Quyền</th>
-                                                <th style="text-align: center" width="50px"></th>
                                             </tr>
                                             </thead>
-                                            <tr>
-                                                <td>1</td>
-                                                <td><a href="#" th:text="${currentUrHandle}"></a></td>
-                                                <td th:text="${currentUrName}"></td>
-                                                <th:block th:if="${currentReId != null}">
-                                                    <td th:if="${currentReId == 1}">
-                                                        <span class="badge badge-danger"
-                                                              th:text="${currentReName}"></span>
-                                                    </td>
-                                                    <td th:if="${currentReId== 2}">
-                                                        <span class="badge badge-warning"
-                                                              th:text="${currentReName}"></span>
-                                                    </td>
-                                                    <td th:if="${currentReId == 3}">
-                                                        <span class="badge badge-primary"
-                                                              th:text="${currentReName}"></span>
-                                                    </td>
-                                                    <td th:if="${currentReId== 4}">
-                                                        <span class="badge badge-info"
-                                                              th:text="${currentReName}"></span>
-                                                    </td>
-                                                </th:block>
-                                                <td><span class="label label-light-danger">Quản trị</span></td>
-                                                <td>
-                                                    <button type="button" class="btn disabled">Xóa</button>
-                                                </td>
-                                            </tr>
-                                            <tr th:each="user,iter : ${lstUser}">
-                                                <td th:text="${1 + iter.count}"></td>
-                                                <td><a href="#" th:text="${user.handle}">Nguyễn Tuấn Minh</a></td>
-                                                <td th:text="${user.fullname}">Nguyễn Tuấn Minh</td>
-                                                <th:block th:if="${user.role != null}">
-                                                    <td th:if="${user.role.id == 1}">
-                                                        <span class="badge badge-danger"
-                                                              th:text="${user.role.text}"></span>
-                                                    </td>
-                                                    <td th:if="${user.role.id == 2}">
-                                                        <span class="badge badge-warning"
-                                                              th:text="${user.role.text}"></span>
-                                                    </td>
-                                                    <td th:if="${user.role.id == 3}">
-                                                        <span class="badge badge-primary"
-                                                              th:text="${user.role.text}"></span>
-                                                    </td>
-                                                    <td th:if="${user.role.id == 4}">
-                                                        <span class="badge badge-info"
-                                                              th:text="${user.role.text}"></span>
-                                                    </td>
-                                                </th:block>
-                                                <td>
-                                                    <th:block th:each="auth : ${user.lstAuthority}">
-                                                        <span class="label label-light-info"
-                                                              th:if="${auth.id == 8}">Xem</span>
-                                                        <span class="label label-light-success" th:if="${auth.id == 7}">Sửa</span>
-                                                        <span class="label label-light-warning" th:if="${auth.id == 9}">Tham gia</span>
-                                                    </th:block>
 
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-outline-danger"
-                                                            th:onclick="|deleteRole(${ctId},${user.id})|">
-                                                        Xóa
-                                                    </button>
-                                                </td>
-                                            </tr>
                                         </table>
                                     </div>
+                                    <hr/>
+                                </th:block>
+                                <h4>Danh sách thành viên trong khóa học</h4>
+                                <div style="float: right" th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                    <button th:onclick="|popup(${ceId})|" type="button"
+                                            class="btn btn-block btn-outline-success">Thêm người
+                                        dùng
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="myTable" class="table table-bordered "
+                                           style="text-align: center; color: black; font-size: 14px">
+                                        <thead>
+                                        <tr>
+                                            <th style="text-align: center" width="20px">#</th>
+                                            <th style="text-align: center">Tài khoản</th>
+                                            <th style="text-align: center">Tên người dùng</th>
+                                            <th style="text-align: center">Loại tài khoản</th>
+                                            <th style="text-align: center">Quyền</th>
+                                            <th style="text-align: center" width="50px"
+                                                th:if="${courseAuth == 'CAN_EDIT_COURSE'}"></th>
+                                        </tr>
+                                        </thead>
+                                        <tr>
+                                            <td>1</td>
+                                            <td><a href="#" th:text="${currentUrHandle}"></a></td>
+                                            <td th:text="${currentUrName}"></td>
+                                            <th:block th:if="${currentReId != null}">
+                                                <td th:if="${currentReId == 1}">
+                                                        <span class="badge badge-danger"
+                                                              th:text="${currentReName}"></span>
+                                                </td>
+                                                <td th:if="${currentReId== 2}">
+                                                        <span class="badge badge-warning"
+                                                              th:text="${currentReName}"></span>
+                                                </td>
+                                                <td th:if="${currentReId == 3}">
+                                                        <span class="badge badge-primary"
+                                                              th:text="${currentReName}"></span>
+                                                </td>
+                                                <td th:if="${currentReId== 4}">
+                                                        <span class="badge badge-info"
+                                                              th:text="${currentReName}"></span>
+                                                </td>
+                                            </th:block>
+                                            <td><span class="label label-light-danger">Quản trị</span></td>
+                                            <td th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                                <button type="button" class="btn disabled">Xóa</button>
+                                            </td>
+                                        </tr>
+                                        <tr th:each="user,iter : ${lstUser}">
+                                            <td th:text="${1 + iter.count}"></td>
+                                            <td><a href="#" th:text="${user.handle}">Nguyễn Tuấn Minh</a></td>
+                                            <td th:text="${user.fullname}">Nguyễn Tuấn Minh</td>
+                                            <th:block th:if="${user.role != null}">
+                                                <td th:if="${user.role.id == 1}">
+                                                        <span class="badge badge-danger"
+                                                              th:text="${user.role.text}"></span>
+                                                </td>
+                                                <td th:if="${user.role.id == 2}">
+                                                        <span class="badge badge-warning"
+                                                              th:text="${user.role.text}"></span>
+                                                </td>
+                                                <td th:if="${user.role.id == 3}">
+                                                        <span class="badge badge-primary"
+                                                              th:text="${user.role.text}"></span>
+                                                </td>
+                                                <td th:if="${user.role.id == 4}">
+                                                        <span class="badge badge-info"
+                                                              th:text="${user.role.text}"></span>
+                                                </td>
+                                            </th:block>
+                                            <td>
+                                                <th:block th:each="auth : ${user.lstAuthority}">
+                                                        <span class="label label-light-info"
+                                                              th:if="${auth.id == 15}">Xem</span>
+                                                    <span class="label label-light-success"
+                                                          th:if="${auth.id == 16}">Sửa</span>
+                                                    <span class="label label-light-warning" th:if="${auth.id == 14}">Tham gia</span>
+                                                </th:block>
+
+                                            </td>
+                                            <td th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                                <button type="button" class="btn btn-outline-danger"
+                                                        th:onclick="|deleteRole(${ceId},${user.id})|">
+                                                    Xóa
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- Column -->
                 </div>
-                <!-- Column -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
             </div>
             <!-- ============================================================== -->
-            <!-- End PAge Content -->
+            <!-- End Container fluid  -->
             <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <div th:replace="layout/layout::footer"></div>
+
         </div>
         <!-- ============================================================== -->
-        <!-- End Container fluid  -->
+        <!-- End footer -->
         <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- footer -->
-        <!-- ============================================================== -->
-        <div th:replace="layout/layout::footer"></div>
-
     </div>
     <!-- ============================================================== -->
-    <!-- End footer -->
+    <!-- End Page wrapper  -->
     <!-- ============================================================== -->
-</div>
-<!-- ============================================================== -->
-<!-- End Page wrapper  -->
-<!-- ============================================================== -->
 </div>
 <!-- ============================================================== -->
 <!-- End Wrapper -->
@@ -200,15 +213,15 @@
         $('#myTable').DataTable();
     });
 
-    function deleteRole(ctId, urId) {
+    function deleteRole(ceId, urId) {
         if (!confirm("Bạn có chắc không?")) {
             return false;
         }
-        window.location.replace("/contest/" + ctId + "/deleteRole/" + urId);
+        window.location.replace("/course/" + ceId + "/deleteRole/" + urId);
     }
 
-    function popup(ctId) {
-        var url = '/contest/' + ctId + '/addRole';
+    function popup(ceId) {
+        var url = '/course/' + ceId + '/addRole';
         window.open(url,
             '1426494439650',
             'width=1500,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')

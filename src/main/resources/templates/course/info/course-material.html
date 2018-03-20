@@ -78,6 +78,7 @@
                                             <th>Mô tả</th>
                                             <th style="width: 120px">Số lần tải</th>
                                             <th style="width: 120px">Tải</th>
+                                            <th th:if="${courseAuth == 'CAN_EDIT_COURSE'}">Ẩn/hiện</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -106,6 +107,20 @@
                                                     <i class="mdi mdi-download"></i>Tải về
                                                 </button>
                                             </td>
+                                            <th:block th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                                <td th:if="${material.isHidden==0}">
+                                                    <button type="button"
+                                                            th:onclick="|hideMaterial(${ceId},${material.id})|"
+                                                            class="btn btn-outline-warning">Ẩn đi
+                                                    </button>
+                                                </td>
+                                                <td th:if="${material.isHidden==1}">
+                                                    <button type="button"
+                                                            th:onclick="|showMaterial(${ceId},${material.id})|"
+                                                            class="btn btn-outline-success">Hiện
+                                                    </button>
+                                                </td>
+                                            </th:block>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -167,18 +182,18 @@
         $('#myTable').DataTable();
     });
 
-    function showMaterial(ceId, pmId) {
+    function showMaterial(ceId, mlId) {
         if (!confirm("Bạn có chắc không?")) {
             return false;
         }
-        window.location.replace("/course/" + ceId + "/showMaterial/" + pmId);
+        window.location.replace("/course/" + ceId + "/showMaterial/" + mlId);
     }
 
-    function hideMaterial(ceId, pmId) {
+    function hideMaterial(ceId, mlId) {
         if (!confirm("Bạn có chắc không?")) {
             return false;
         }
-        window.location.replace("/course/" + ceId + "/hideMaterial/" + pmId);
+        window.location.replace("/course/" + ceId + "/hideMaterial/" + mlId);
     }
 </script>
 </body>

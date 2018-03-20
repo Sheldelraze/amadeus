@@ -67,11 +67,6 @@
                                 th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
                             <div id="role" class="tab-pane active" style="margin-top: 20px; color: black">
                                 <div class="table-responsive">
-                                    <th:block th:if="${updateSuccess}">
-                                        <div class="alert alert-success">
-                                            ✔ Cập nhật thành công
-                                        </div>
-                                    </th:block>
                                     <div style="float: left">
                                         <button th:onclick="|popup(${ctId})|" type="button"
                                                 class="btn btn-block btn-outline-success">Thêm người

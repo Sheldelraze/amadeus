@@ -96,20 +96,16 @@
         role
         on user.reId = role.id
         and role.deleteFlg = '0'
-        <where>
-            <if test="fullname != null and fullname.length > 0">
-                user.fullname like concat('%',#{fullname},'%')
-            </if>
-            <if test="reId != 0">
-                user.reId = #{reId}
-            </if>
-            <if test="1 == 1">
-                user.id not in (
-                select ur_pm_auy.urId from ur_pm_auy
-                where ur_pm_auy.pmId = #{pmId}
-                )
-            </if>
-        </where>
+        where user.id not in (
+        select ur_pm_auy.urId from ur_pm_auy
+        where ur_pm_auy.pmId = #{pmId}
+        )
+        <if test="fullname != null and fullname.length > 0">
+            and user.fullname like concat('%',#{fullname},'%')
+        </if>
+        <if test="reId != 0">
+            and user.reId = #{reId}
+        </if>
     </select>
 
     <select id="findUserForContestRole" resultMap="userAndRole">
@@ -128,12 +124,43 @@
                 user.fullname like concat('%',#{fullname},'%')
             </if>
             <if test="reId != 0">
-                user.reId = #{reId}
+                and user.reId = #{reId}
             </if>
             <if test="1 == 1">
-                user.id not in (
+                and user.id not in (
                 select ur_ct_auy.urId from ur_ct_auy
                 where ur_ct_auy.ctId = #{ctId}
+                )
+            </if>
+        </where>
+    </select>
+    <select id="findUserByHandle" resultType="UserDTO">
+        SELECT *
+        FROM user
+        WHERE user.handle = #{handle}
+    </select>
+    <select id="findUserForCourseRole" resultMap="userAndRole">
+        select user.id as urId,
+        user.handle,
+        user.fullname,
+        role.id as reId,
+        role.text as text
+        from user
+        LEFT JOIN
+        role
+        on user.reId = role.id
+        and role.deleteFlg = '0'
+        <where>
+            <if test="fullname != null and fullname.length > 0">
+                user.fullname like concat('%',#{fullname},'%')
+            </if>
+            <if test="reId != 0">
+                and user.reId = #{reId}
+            </if>
+            <if test="1 == 1">
+                and user.id not in (
+                select ur_ce_auy.urId from ur_ce_auy
+                where ur_ce_auy.ceId = #{ceId}
                 )
             </if>
         </where>
@@ -160,6 +187,28 @@
                    AND authority.deleteFlg = '0'
         WHERE ur_pm_auy.pmId = #{pmId}
               AND ur_pm_auy.deleteFlg = '0'
+    </select>
+    <select id="getListCourseRole" resultMap="userAndRole">
+        SELECT
+            user.id      AS urId,
+            user.handle,
+            user.fullname,
+            role.id      AS reId,
+            role.text    AS text,
+            authority.id AS auyId
+        FROM ur_ce_auy
+            INNER JOIN user
+                ON user.id = ur_ce_auy.urId
+                   AND user.id != #{urId}
+                   AND user.deleteFlg = '0'
+            LEFT JOIN role
+                ON user.reId = role.id
+                   AND role.deleteFlg = '0'
+            LEFT JOIN authority
+                ON ur_ce_auy.auyId = authority.id
+                   AND authority.deleteFlg = '0'
+        WHERE ur_ce_auy.ceId = #{ceId}
+              AND ur_ce_auy.deleteFlg = '0'
     </select>
     <select id="getListContestRole" resultMap="userAndRole">
         SELECT

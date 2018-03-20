@@ -11,6 +11,8 @@ import java.util.List;
 @Component("UserMapper")
 @Mapper
 public interface UserMapper extends BaseMapper<UserEntity> {
+    UserDTO findUserByHandle(@Param("handle") String handle);
+
     List<UserDTO> getUserAuthority(@Param("handle") String handle);
 
     List<UserDTO> getLeaderboardInfor(@Param("ctId") Integer ctId, @Param("auth_participate_id") Integer authParticipateId);
@@ -19,9 +21,13 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     List<UserDTO> findUserForContestRole(@Param("fullname") String fullname, @Param("reId") Integer reId, @Param("ctId") Integer ctId);
 
+    List<UserDTO> findUserForCourseRole(@Param("fullname") String fullname, @Param("reId") Integer reId, @Param("ceId") Integer ceId);
+
     List<UserDTO> getListProblemRole(@Param("urId") Integer urId, @Param("pmId") Integer pmId);
 
     List<UserDTO> getListContestRole(@Param("urId") Integer urId, @Param("ctId") Integer ctId);
+
+    List<UserDTO> getListCourseRole(@Param("urId") Integer urId, @Param("ceId") Integer ceId);
 
     List<UserDTO> findListUserByFullnameOrHandle(@Param("text") String textm, @Param("urId") Integer currentUserID, @Param("from") Integer limitFrom, @Param("size") Integer maxUserPerFetch);
 
