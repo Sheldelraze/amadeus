@@ -3,15 +3,14 @@ package com.minh.nguyen.service;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.CourseDTO;
 import com.minh.nguyen.dto.UserDTO;
-import com.minh.nguyen.entity.CeMlEntity;
-import com.minh.nguyen.entity.CourseEntity;
-import com.minh.nguyen.entity.UrCeAuyEntity;
-import com.minh.nguyen.entity.UserEntity;
+import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -51,6 +50,15 @@ public class CourseService extends BaseService {
 
     @Autowired
     private CeMlMapper ceMlMapper;
+
+    @Autowired
+    private ApplicationMapper applicationMapper;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
+
+    @Autowired
+    private SimpMessageSendingOperations simpMessagingTemplate;
 
     public Integer getAnnouncementCount(Integer ctId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -202,9 +210,65 @@ public class CourseService extends BaseService {
         }
     }
 
+    @Transactional
     public void doApply(Integer ceId, Integer urId) {
+        ApplicationEntity applicationEntity = new ApplicationEntity();
+        applicationEntity.setCeId(ceId);
+        applicationEntity.setUrId(urId);
+        List<ApplicationEntity> lstApply = applicationMapper.selectWithExample(applicationEntity);
 
+        //check if this user already apply to this course or not
+        for (ApplicationEntity apply : lstApply) {
+            if (apply.getStatus().equals(Constants.APPLICATION_STATUS_ACCEPTED)) {
+                rollBack(Constants.MSG_ALREADY_APPLIED_ERR);
+            }
+            if (apply.getStatus().equals(Constants.APPLICATION_STATUS_PENDING)) {
+                rollBack(Constants.MSG_APPLY_PENDING_ERR);
+            }
+        }
+
+        //insert application
+        applicationEntity.setStatus(Constants.APPLICATION_STATUS_PENDING);
+        setCreateInfo(applicationEntity);
+        setUpdateInfo(applicationEntity);
+        applicationMapper.insert(applicationEntity);
+
+        //send notification to course's administrators
+        //get course infor
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(ceId);
+        courseEntity = courseMapper.selectByPK(courseEntity);
+
+        //get application sender infor
+        UserDTO sender = userMapper.findUserById(urId);
+
+        //get course's administrator infor
+        UserDTO receiver = userMapper.findUserByHandle(courseEntity.getCreateUser());
+
+        //set notification infor
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setType(Constants.NOTIFICATION_APPLICATION_PENDING_TYPE);
+        String content = StringUtil.buildString(StringUtil.makeTextBoldInHTML(sender.getFullname()), Constants.NOTIFICATION_APPLICATION_PENDING_CONTENT, StringUtil.makeTextBoldInHTML(courseEntity.getName()));
+        notificationEntity.setContent(content);
+        notificationEntity.setUrId(receiver.getId());
+        notificationEntity.setLink(StringUtil.buildString("/course/", courseEntity.getId().toString(), "/role"));
+        notificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
+        setCreateInfo(notificationEntity);
+        setUpdateInfo(notificationEntity);
+        notificationMapper.insert(notificationEntity);
+
+        sendApplyNotification(notificationEntity, receiver.getId());
     }
+
+    public int countPendingApplication(Integer ceId) {
+        return courseMapper.countApplication(ceId);
+    }
+
+    @Async
+    public void sendApplyNotification(NotificationEntity notificationEntity, Integer receiverId) {
+        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.NOTIFICATION_TOPIC + receiverId, notificationEntity);
+    }
+
     public CourseDTO getInformation(int ceId) {
         //get course information
         CourseDTO courseDTO = new CourseDTO();

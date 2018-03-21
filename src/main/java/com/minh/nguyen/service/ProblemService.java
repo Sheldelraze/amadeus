@@ -88,7 +88,9 @@ public class ProblemService extends BaseService {
         languageEntity.setId(problemSubmitForm.getLeId());
         languageEntity = languageMapper.selectByPK(languageEntity);
         LanguageDTO languageDTO = new LanguageDTO();
-        modelMapper.map(languageEntity, languageDTO);
+        languageDTO.setExtension(languageEntity.getExtension());
+        languageDTO.setId(languageEntity.getId());
+        languageDTO.setName(languageEntity.getName());
         ProblemDTO problemDTO = new ProblemDTO();
         problemDTO.setId(pmId);
         getProblemInfo(problemDTO);

@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="text-align: center" th:if="${roleName == 'Sinh viên'}">
+                            <div style="text-align: center" th:if="${canApply}">
                                 <button th:onclick="|doApply(${ceId},${urId})|" type="button"
                                         class="btn btn-success">Tham gia khóa học
                                 </button>

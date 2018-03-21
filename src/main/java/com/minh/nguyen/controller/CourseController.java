@@ -139,11 +139,14 @@ public class CourseController extends BaseController {
 
         //add course's creator check
         boolean isCreator = false;
+        Integer appCnt = 0;
         if (null != auth && !StringUtil.isNull(auth.getName())) {
             if (courseValidator.checkCreator(auth, ceId)) {
                 isCreator = true;
+                appCnt = courseService.countPendingApplication(ceId);
             }
         }
+        modelAndView.addObject("appCnt", appCnt);
         modelAndView.addObject("isCreator", isCreator);
 
         //check if user can apply to this course
@@ -218,11 +221,12 @@ public class CourseController extends BaseController {
     public ModelAndView doApply(@PathVariable("ceId") Integer ceId, @PathVariable("urId") Integer urId) throws UserTryingToBeSmartException {
         ModelAndView modelAndView = getInformation(ceId);
         try {
-
+            courseService.doApply(ceId, urId);
         } catch (RollbackException e) {
             modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), e.getMessage()));
             return modelAndView;
         } catch (Exception e) {
+            e.printStackTrace();
             modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), Constants.MSG_SYSTEM_ERR));
             return modelAndView;
         }

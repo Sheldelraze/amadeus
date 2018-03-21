@@ -9,11 +9,15 @@ $(function () {
 
 function onConnect() {
     notifyClient.subscribe('/message/topic.inbox/' + urId, onMessageNotifyReceived);
+    notifyClient.subscribe('/message/topic.notification/' + urId, onMessageNotifyReceived);
 }
 
 function onMessageNotifyReceived(payload) {
     var message = JSON.parse(payload.body);
     if (topic != null && message.topic != null && topic != message.topic) {
+        var noMessageNotify = document.getElementById('noMessageNotification');
+        noMessageNotify.style.display = 'none';
+
         var notifyDot = document.getElementById('messageNotify');
         var messageCenter = document.getElementById('messageNotifyCenter');
         //show notification

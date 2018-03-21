@@ -122,62 +122,50 @@
                     <!-- ============================================================== -->
                     <!-- Comment -->
                     <!-- ============================================================== -->
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" th:if="${lstNotification != null}">
                         <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="#"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="mdi mdi-bell"></i>
-                            <div class="notify" id="otherNotify"><span class="heartbit"></span><span
-                                    class="point"></span></div>
+                            <div th:classappend="${#lists.size(lstNotification) == 0}?'hiddenDiv'" class="notify"
+                                 id="notificationNotify"><span class="heartbit"></span><span class="point"></span></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right mailbox scale-up">
                             <ul>
                                 <li>
                                     <div class="drop-title">Thông báo</div>
-                                    N
                                 </li>
                                 <li>
                                     <div class="message-center">
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
+                                        <a id="noNotification" href="#"
+                                           th:style="${#lists.size(lstNotification) != 0}?'display:none'">
                                             <div class="mail-contnet">
-                                                <h5>Luanch Admin</h5>
-                                                <span class="mail-desc">Just see the my new admin!</span> <span
-                                                    class="time">9:30 AM</span>
+                                                <h5 style="text-align: center">Không có thông báo mới</h5>
                                             </div>
                                         </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="btn btn-success btn-circle"><i class="ti-calendar"></i></div>
+                                        <a th:href="${notify.link}" th:each="notify : ${lstNotification}">
+                                            <th:block th:if="${notify.type == 1}">
+                                                <div class="btn btn-warning btn-circle"><i class="ti-user"></i></div>
+                                            </th:block>
+                                            <th:block th:if="${notify.type == 2}">
+                                                <div class="btn btn-success btn-circle"><i class="fa fa-check"></i>
+                                                </div>
+                                            </th:block>
+                                            <th:block th:if="${notify.type == 3}">
+                                                <div class="btn btn-danger  btn-circle"><i class="ti-close"></i></div>
+                                            </th:block>
+                                            <th:block th:if="${notify.type == 4}">
+                                                <div class="btn btn-danger  btn-circle"><i class="ti-close"></i></div>
+                                            </th:block>
                                             <div class="mail-contnet">
-                                                <h5>Event today</h5>
-                                                <span class="mail-desc">Just a reminder that you have event</span> <span
-                                                    class="time">9:10 AM</span>
+                                                <h5 th:if="${notify.type == 1}">Xin gia nhập khóa học</h5>
+                                                <h5 th:if="${notify.type == 2}">Chấp nhận tham gia khóa học</h5>
+                                                <h5 th:if="${notify.type == 3}">Từ chối tham gia khóa học</h5>
+                                                <h5 th:if="${notify.type == 4}">Loại khỏi khóa học</h5>
+                                                <small style="color: #99abb4;" th:utext="${notify.content}"></small>
                                             </div>
                                         </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="btn btn-info btn-circle"><i class="ti-settings"></i></div>
-                                            <div class="mail-contnet">
-                                                <h5>Settings</h5>
-                                                <span class="mail-desc">You can customize this template as you want</span>
-                                                <span class="time">9:08 AM</span>
-                                            </div>
-                                        </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="btn btn-primary btn-circle"><i class="ti-user"></i></div>
-                                            <div class="mail-contnet">
-                                                <h5>Pavan kumar</h5>
-                                                <span class="mail-desc">Just see the my admin!</span> <span
-                                                    class="time">9:02 AM</span>
-                                            </div>
-                                        </a>
+
                                     </div>
-                                </li>
-                                <li>
-                                    <a class="nav-link text-center" href="javascript:void(0);"><strong>Check all
-                                        notifications</strong> <i class="fa fa-angle-right"></i></a>
                                 </li>
                             </ul>
                         </div>
@@ -206,6 +194,12 @@
                                 <li>
                                     <div class="message-center" id="messageNotifyCenter">
                                         <!-- Message -->
+                                        <a id="noMessageNotification" href="#"
+                                           th:style="${#lists.size(lstMessageNotify) != 0}?'display:none'">
+                                            <div class="mail-contnet">
+                                                <h5 style="text-align: center">Không có thông báo mới</h5>
+                                            </div>
+                                        </a>
                                         <a th:href="@{/message}" th:each="message : ${lstMessageNotify}">
                                             <div class="user-img">
                                                 <img th:src="@{/assets/images/users/1.jpg}" th:alt="${message.username}"

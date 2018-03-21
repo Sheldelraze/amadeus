@@ -5,7 +5,7 @@ package com.minh.nguyen.constants;
  * @since 07/01/2018
  * Purpose: store system constants, may need to create more files in the future if needed
  * Warning: only add constant if you feel needed, however DO NOT change order of constants which are presented before
- * For instance, current number of authorities is 13, so if you want to add another authority, start with AUTH_XXX = 14
+ * For instance, current number of authorities is 25, so if you want to add another authority, start with AUTH_XXX = 26
  */
 public class Constants {
     public static final Integer MAX_UPLOAD_SIZE = 50;
@@ -26,6 +26,7 @@ public class Constants {
     public static final String CONTEST_TOPIC = "contest/";
     public static final String COURSE_TOPIC = "course/";
     public static final String MESSAGE_NOTIFICATION_TOPIC = "inbox/";
+    public static final String NOTIFICATION_TOPIC = "notification/";
     public static final String DEFAULT_TOPIC = "NOT_CHOSEN";
 
     public static final String WEB_SOCKET_PREFIX = "/message/topic.";
@@ -61,12 +62,12 @@ public class Constants {
     public static final String MSG_DUPLICATE_PROBLEM_ERR = "msg006";
     public static final String MSG_NUMBER_TOO_SMALL_ERR = "msg008";
     public static final String MSG_NUMBER_TOO_BIG_ERR = "msg009";
+    public static final String MSG_FILE_TOO_LARGE_ERR = "msg015";
     public static final String MSG_TEXT_NOT_VALID = "msg013";
     public static final String MSG_SYSTEM_ERR = "msg005";
     public static final String MSG_UPDATE_ERR = "msg010";
     public static final String MSG_INSERT_ERR = "msg012";
     public static final String MSG_COMPILE_ERR = "msg011";
-    public static final String MSG_FILE_TOO_LARGE_ERR = "msg015";
     public static final String MSG_SESSION_TIMEOUT = "msg016";
     public static final String MSG_UPLOAD_ERR = "msg017";
     public static final String MSG_UPLOAD_FILE_TOO_BIG_ERR = "msg018";
@@ -164,4 +165,14 @@ public class Constants {
     public static final Integer APPLICATION_STATUS_PENDING = 0;
     public static final Integer APPLICATION_STATUS_DENIED = -1;
     public static final Integer APPLICATION_STATUS_ACCEPTED = 1;
+
+    public static final Integer NOTIFICATION_APPLICATION_PENDING_TYPE = 1;
+    public static final Integer NOTIFICATION_APPLICATION_ACCEPTED_TYPE = 2;
+    public static final Integer NOTIFICATION_APPLICATION_DENIED_TYPE = 3;
+    public static final Integer NOTIFICATION_COURSE_KICKED_TYPE = 4;
+
+    public static final String NOTIFICATION_APPLICATION_PENDING_CONTENT = " muốn được gia nhập khóa học ";
+    public static final String NOTIFICATION_APPLICATION_ACCEPTED_CONTENT = "Bạn đã được chấp nhận vào khóa học  ";
+    public static final String NOTIFICATION_APPLICATION_DENIED_CONTENT = "Bạn đã bị từ chối tham gia khóa học  ";
+    public static final String NOTIFICATION_COURSE_KICKED_CONTENT = "Bạn đã bị loại khỏi khóa học  ";
 }

@@ -2,9 +2,11 @@ package com.minh.nguyen.validator;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
+import com.minh.nguyen.entity.ApplicationEntity;
 import com.minh.nguyen.entity.CourseEntity;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.form.BaseForm;
+import com.minh.nguyen.mapper.ApplicationMapper;
 import com.minh.nguyen.mapper.AuthorityMapper;
 import com.minh.nguyen.mapper.CourseMapper;
 import com.minh.nguyen.validator.common.BaseValidator;
@@ -34,12 +36,27 @@ public class CourseValidator extends BaseValidator {
     @Autowired
     private CourseMapper courseMapper;
 
+    @Autowired
+    private ApplicationMapper applicationMapper;
+
     public boolean checkApplyPermission(Integer ceId, Integer urId) {
         if (urId == null || ceId == null) {
             return false;
         }
         if (!checkRole(Constants.ROLE_STUDENT_TEXT)) {
             return false;
+        }
+        ApplicationEntity applicationEntity = new ApplicationEntity();
+        applicationEntity.setCeId(ceId);
+        applicationEntity.setUrId(urId);
+        List<ApplicationEntity> lstApply = applicationMapper.selectWithExample(applicationEntity);
+        for (ApplicationEntity apply : lstApply) {
+            if (apply.getStatus().equals(Constants.APPLICATION_STATUS_ACCEPTED)) {
+                return false;
+            }
+            if (apply.getStatus().equals(Constants.APPLICATION_STATUS_PENDING)) {
+                return false;
+            }
         }
         return true;
     }

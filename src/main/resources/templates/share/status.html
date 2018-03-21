@@ -108,8 +108,10 @@
                                         </td>
                                         <td><label th:text="${submissionDTO.submitTime}"></label></td>
                                         <th:block th:if="${submissionDTO.judgeStatus==0}">
-                                            <td><label th:text="${submissionDTO.verdict}"
-                                                       th:id="|sub${submissionDTO.id}|" class="judging"></label></td>
+                                            <td>
+                                                <label th:text="${submissionDTO.verdict}"
+                                                       th:id="|sub${submissionDTO.id}|" class="judging"></label>
+                                            </td>
                                         </th:block>
                                         <th:block th:if="${submissionDTO.judgeStatus==6}">
                                             <td><label th:text="${submissionDTO.verdict}"

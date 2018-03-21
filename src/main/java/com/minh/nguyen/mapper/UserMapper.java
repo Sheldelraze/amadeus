@@ -13,6 +13,8 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<UserEntity> {
     UserDTO findUserByHandle(@Param("handle") String handle);
 
+    UserDTO findUserById(@Param("urId") Integer urId);
+
     List<UserDTO> getUserAuthority(@Param("handle") String handle);
 
     List<UserDTO> getLeaderboardInfor(@Param("ctId") Integer ctId, @Param("auth_participate_id") Integer authParticipateId);

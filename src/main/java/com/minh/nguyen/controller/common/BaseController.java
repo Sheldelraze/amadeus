@@ -1,7 +1,9 @@
 package com.minh.nguyen.controller.common;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.MessageDTO;
+import com.minh.nguyen.entity.NotificationEntity;
 import com.minh.nguyen.exception.BaseException;
+import com.minh.nguyen.mapper.NotificationMapper;
 import com.minh.nguyen.service.MessageService;
 import com.minh.nguyen.util.CheckUtil;
 import com.minh.nguyen.validator.common.BaseValidator;
@@ -58,6 +60,9 @@ public class BaseController {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     protected ModelMapper modelMapper;
 
@@ -239,7 +244,12 @@ public class BaseController {
         Object roleName = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);
         if (currewntUserId != null) {
             List<MessageDTO> lstMessageNotify = messageService.getMessageNotify((Integer) currewntUserId);
+            NotificationEntity notificationEntity = new NotificationEntity();
+            notificationEntity.setUrId(Integer.parseInt(currewntUserId.toString()));
+            notificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
+            List<NotificationEntity> lstNotification = notificationMapper.selectWithExample(notificationEntity);
             modelAndView.addObject("lstMessageNotify", lstMessageNotify);
+            modelAndView.addObject("lstNotification", lstNotification);
         }
         modelAndView.addObject("canCreateProblem", canCreateProblem);
         modelAndView.addObject("canCreateContest", canCreateContest);

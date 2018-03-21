@@ -139,6 +139,11 @@
         FROM user
         WHERE user.handle = #{handle}
     </select>
+    <select id="findUserById" resultType="UserDTO">
+        SELECT *
+        FROM user
+        WHERE user.id = #{urId}
+    </select>
     <select id="findUserForCourseRole" resultMap="userAndRole">
         select user.id as urId,
         user.handle,

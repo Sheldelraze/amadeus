@@ -35,5 +35,10 @@ function onStatusUpdate(payload) {
     if (submission.memoryUsed != null && submission.memoryUsed != 0) {
         memoryUsed.innerHTML = submission.memoryUsed;
     }
-    verdict.innerHTML = submission.verdict;
+    if (submission.judgeStatus == 0) {
+        verdict.innerHTML = "<i class='fa fa-spin fa-spinner'></i>" + submission.verdict;
+    }
+    else {
+        verdict.innerHTML = submission.verdict;
+    }
 }

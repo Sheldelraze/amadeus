@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @since 31/12/2017
  * Purpose:
  */
-@Table(name = "apply")
+@Table(name = "application")
 public class ApplicationEntity extends BaseEntity implements Serializable {
     static final long serialVersionUID = 464924412L;
     @Id
@@ -16,15 +16,12 @@ public class ApplicationEntity extends BaseEntity implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Id
     @Column(name = "urId")
     private Integer urId;
 
-    @Id
     @Column(name = "ceId")
     private Integer ceId;
 
-    @Id
     @Column(name = "status")
     private Integer status;
 

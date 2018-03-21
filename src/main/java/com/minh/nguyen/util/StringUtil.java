@@ -58,6 +58,10 @@ public class StringUtil {
         }
         return string.toString();
     }
+
+    public static String makeTextBoldInHTML(String s) {
+        return buildString("<b>", s, "</b>");
+    }
     public static boolean isNull(Object str) {
         return str == null || str.toString().length() <= 0;
     }
