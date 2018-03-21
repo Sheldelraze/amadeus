@@ -1,6 +1,7 @@
 package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
+import com.minh.nguyen.dto.ApplicationDTO;
 import com.minh.nguyen.dto.CourseDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.entity.*;
@@ -191,6 +192,28 @@ public class CourseService extends BaseService {
         urCeAuyEntity.setCeId(ceId);
         urCeAuyEntity.setUrId(urId);
         urCeAuyMapper.deleteForRealWithExample(urCeAuyEntity);
+
+        //update application status
+        ApplicationEntity applicationEntity = new ApplicationEntity();
+        applicationEntity.setCeId(ceId);
+        applicationEntity.setUrId(urId);
+        List<ApplicationEntity> lstApply = applicationMapper.selectWithExample(applicationEntity);
+        if (lstApply != null) {
+            for (ApplicationEntity apply : lstApply) {
+                if (apply.getStatus().equals(Constants.APPLICATION_STATUS_ACCEPTED)) {
+                    apply.setStatus(Constants.APPLICATION_STATUS_DENIED);
+                    setUpdateInfo(apply);
+                    setCreateInfo(apply);
+                    applicationMapper.updateNotNullByPK(apply);
+                }
+            }
+        }
+
+        //send notification
+        NotificationEntity notificationEntity = new NotificationEntity();
+        setCreateInfo(notificationEntity);
+        setUpdateInfo(notificationEntity);
+        sendKickNotification(ceId, urId, notificationEntity);
     }
 
     @Transactional
@@ -233,6 +256,83 @@ public class CourseService extends BaseService {
         setUpdateInfo(applicationEntity);
         applicationMapper.insert(applicationEntity);
 
+        NotificationEntity notificationEntity = new NotificationEntity();
+        setCreateInfo(notificationEntity);
+        setUpdateInfo(notificationEntity);
+        sendApplyNotification(ceId, urId, notificationEntity);
+    }
+
+    public int countPendingApplication(Integer ceId) {
+        return courseMapper.countApplication(ceId);
+    }
+
+    public List<ApplicationDTO> getPendingApplication(Integer ceId) {
+        List<ApplicationDTO> lstApply = applicationMapper.getAllApplicationInCourse(ceId);
+
+        return lstApply;
+    }
+
+    @Transactional
+    public void acceptApplication(Integer urId, Integer ceId) {
+        ApplicationEntity applicationEntity = new ApplicationEntity();
+        applicationEntity.setUrId(urId);
+        applicationEntity.setCeId(ceId);
+        applicationEntity.setStatus(Constants.APPLICATION_STATUS_PENDING);
+        List<ApplicationEntity> lstApply = applicationMapper.selectWithExample(applicationEntity);
+        if (null == lstApply || lstApply.size() != 1) {
+            rollBack(Constants.MSG_UPDATE_ERR);
+        }
+        applicationEntity = lstApply.get(0);
+        applicationEntity.setStatus(Constants.APPLICATION_STATUS_ACCEPTED);
+        setUpdateInfo(applicationEntity);
+        applicationMapper.updateNotNullByPK(applicationEntity);
+
+
+        //add to course's role list
+        UrCeAuyEntity urCeAuyEntity = new UrCeAuyEntity();
+        urCeAuyEntity.setAuyId(Constants.AUTH_PARTICIPATE_COURSE_ID);
+        urCeAuyEntity.setUrId(urId);
+        urCeAuyEntity.setCeId(ceId);
+        setCreateInfo(urCeAuyEntity);
+        setUpdateInfo(urCeAuyEntity);
+        urCeAuyMapper.insert(urCeAuyEntity);
+
+        //send notification to course's administrators
+        NotificationEntity notificationEntity = new NotificationEntity();
+        setCreateInfo(notificationEntity);
+        setUpdateInfo(notificationEntity);
+
+        //send notification
+        sendAcceptNotification(ceId, urId, notificationEntity);
+    }
+
+    @Transactional
+    public void declineApplication(Integer urId, Integer ceId) {
+        ApplicationEntity applicationEntity = new ApplicationEntity();
+        applicationEntity.setUrId(urId);
+        applicationEntity.setCeId(ceId);
+        applicationEntity.setStatus(Constants.APPLICATION_STATUS_PENDING);
+        List<ApplicationEntity> lstApply = applicationMapper.selectWithExample(applicationEntity);
+        if (null == lstApply || lstApply.size() != 1) {
+            rollBack(Constants.MSG_UPDATE_ERR);
+        }
+        applicationEntity = lstApply.get(0);
+        applicationEntity.setStatus(Constants.APPLICATION_STATUS_DENIED);
+        setUpdateInfo(applicationEntity);
+        applicationMapper.updateNotNullByPK(applicationEntity);
+
+        //add notification
+        NotificationEntity notificationEntity = new NotificationEntity();
+        setCreateInfo(notificationEntity);
+        setUpdateInfo(notificationEntity);
+
+        //send notification
+        sendDeclineNotification(ceId, urId, notificationEntity);
+    }
+
+
+    @Async
+    public void sendApplyNotification(Integer ceId, Integer urId, NotificationEntity notificationEntity) {
         //send notification to course's administrators
         //get course infor
         CourseEntity courseEntity = new CourseEntity();
@@ -246,29 +346,80 @@ public class CourseService extends BaseService {
         UserDTO receiver = userMapper.findUserByHandle(courseEntity.getCreateUser());
 
         //set notification infor
-        NotificationEntity notificationEntity = new NotificationEntity();
         notificationEntity.setType(Constants.NOTIFICATION_APPLICATION_PENDING_TYPE);
         String content = StringUtil.buildString(StringUtil.makeTextBoldInHTML(sender.getFullname()), Constants.NOTIFICATION_APPLICATION_PENDING_CONTENT, StringUtil.makeTextBoldInHTML(courseEntity.getName()));
         notificationEntity.setContent(content);
         notificationEntity.setUrId(receiver.getId());
         notificationEntity.setLink(StringUtil.buildString("/course/", courseEntity.getId().toString(), "/role"));
         notificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
-        setCreateInfo(notificationEntity);
-        setUpdateInfo(notificationEntity);
         notificationMapper.insert(notificationEntity);
 
-        sendApplyNotification(notificationEntity, receiver.getId());
-    }
-
-    public int countPendingApplication(Integer ceId) {
-        return courseMapper.countApplication(ceId);
+        //send message to view
+        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.NOTIFICATION_TOPIC + receiver.getId(), notificationEntity);
     }
 
     @Async
-    public void sendApplyNotification(NotificationEntity notificationEntity, Integer receiverId) {
-        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.NOTIFICATION_TOPIC + receiverId, notificationEntity);
+    public void sendAcceptNotification(Integer ceId, Integer urId, NotificationEntity notificationEntity) {
+        //send notification to student
+        //get course infor
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(ceId);
+        courseEntity = courseMapper.selectByPK(courseEntity);
+
+        //set notification infor
+        notificationEntity.setType(Constants.NOTIFICATION_APPLICATION_ACCEPTED_TYPE);
+        String content = StringUtil.buildString(Constants.NOTIFICATION_APPLICATION_ACCEPTED_CONTENT, StringUtil.makeTextBoldInHTML(courseEntity.getName()));
+        notificationEntity.setContent(content);
+        notificationEntity.setUrId(urId);
+        notificationEntity.setLink(StringUtil.buildString("/course/", ceId.toString()));
+        notificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
+        notificationMapper.insert(notificationEntity);
+
+        //send message to view
+        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.NOTIFICATION_TOPIC + urId, notificationEntity);
     }
 
+    @Async
+    public void sendKickNotification(Integer ceId, Integer urId, NotificationEntity notificationEntity) {
+        //send notification to student
+        //get course infor
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(ceId);
+        courseEntity = courseMapper.selectByPK(courseEntity);
+
+        //set notification infor
+        notificationEntity.setType(Constants.NOTIFICATION_COURSE_KICKED_TYPE);
+        String content = StringUtil.buildString(Constants.NOTIFICATION_COURSE_KICKED_CONTENT, StringUtil.makeTextBoldInHTML(courseEntity.getName()));
+        notificationEntity.setContent(content);
+        notificationEntity.setUrId(urId);
+        notificationEntity.setLink(StringUtil.buildString("/course/", ceId.toString()));
+        notificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
+        notificationMapper.insert(notificationEntity);
+
+        //send message to view
+        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.NOTIFICATION_TOPIC + urId, notificationEntity);
+    }
+
+    @Async
+    public void sendDeclineNotification(Integer ceId, Integer urId, NotificationEntity notificationEntity) {
+        //send notification to course's administrators
+        //get course infor
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(ceId);
+        courseEntity = courseMapper.selectByPK(courseEntity);
+
+        //set notification infor
+        notificationEntity.setType(Constants.NOTIFICATION_APPLICATION_DENIED_TYPE);
+        String content = StringUtil.buildString(Constants.NOTIFICATION_APPLICATION_DENIED_CONTENT, StringUtil.makeTextBoldInHTML(courseEntity.getName()));
+        notificationEntity.setContent(content);
+        notificationEntity.setUrId(urId);
+        notificationEntity.setLink(StringUtil.buildString("/course/", ceId.toString()));
+        notificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
+        notificationMapper.insert(notificationEntity);
+
+        //send message to view
+        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.NOTIFICATION_TOPIC + urId, notificationEntity);
+    }
     public CourseDTO getInformation(int ceId) {
         //get course information
         CourseDTO courseDTO = new CourseDTO();

@@ -76,6 +76,8 @@ public class Constants {
     public static final String MSG_APPLY_SUCCESS = "msg021";
     public static final String MSG_APPLY_PENDING_ERR = "msg022";
     public static final String MSG_ALREADY_APPLIED_ERR = "msg023";
+    public static final String MSG_APPLICATION_ACCEPTED_SUCCESS = "msg024";
+    public static final String MSG_APPLICATION_DECLINED_SUCCESS = "msg025";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;
@@ -172,7 +174,7 @@ public class Constants {
     public static final Integer NOTIFICATION_COURSE_KICKED_TYPE = 4;
 
     public static final String NOTIFICATION_APPLICATION_PENDING_CONTENT = " muốn được gia nhập khóa học ";
-    public static final String NOTIFICATION_APPLICATION_ACCEPTED_CONTENT = "Bạn đã được chấp nhận vào khóa học  ";
+    public static final String NOTIFICATION_APPLICATION_ACCEPTED_CONTENT = "Bạn đã được chấp nhận tham gia khóa học  ";
     public static final String NOTIFICATION_APPLICATION_DENIED_CONTENT = "Bạn đã bị từ chối tham gia khóa học  ";
     public static final String NOTIFICATION_COURSE_KICKED_CONTENT = "Bạn đã bị loại khỏi khóa học  ";
 }

@@ -6,14 +6,14 @@ import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.dto.SubmitDetailDTO;
 import com.minh.nguyen.entity.BaseEntity;
 import com.minh.nguyen.entity.ContestEntity;
+import com.minh.nguyen.entity.NotificationEntity;
 import com.minh.nguyen.mapper.ContestMapper;
+import com.minh.nguyen.mapper.NotificationMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
-import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.ContestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -40,6 +40,9 @@ public class GeneralService extends BaseService {
     @Autowired
     private ContestValidator contestValidator;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     public List<SubmissionDTO> getSubmission(){
         List<SubmissionDTO> lstSubmission = submissionMapper.getSubmission();
         for(SubmissionDTO submissionDTO : lstSubmission){
@@ -48,6 +51,18 @@ public class GeneralService extends BaseService {
             submissionDTO.setSubmitTime(strDate);
         }
         return lstSubmission;
+    }
+
+    public void removeNotification(Integer urId) {
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setUrId(urId);
+        notificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
+        List<NotificationEntity> lstNotify = notificationMapper.selectWithExample(notificationEntity);
+        for (NotificationEntity notify : lstNotify) {
+            notify.setIsRead(Constants.MESSAGE_READ_FLAG);
+            setUpdateInfo(notify);
+            notificationMapper.updateNotNullByPK(notify);
+        }
     }
 
     //normal submission

@@ -7,5 +7,4 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component("NotificationMapper")
 public interface NotificationMapper extends BaseMapper<NotificationEntity> {
-
 }

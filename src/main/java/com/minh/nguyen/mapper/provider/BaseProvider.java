@@ -391,7 +391,7 @@ public class BaseProvider {
             }
 
             private void genSqlForUpdate(Object entity, Field field) throws IllegalAccessException {
-                if (field.isAnnotationPresent(Id.class)) {
+                if (field.isAnnotationPresent(Id.class) && field.get(entity) != null) {
                     WHERE(field.getAnnotation(Column.class).name()
                             + FORMAT_STRING_SQL_1 + field.getName()
                             + FORMAT_STRING_SQL_2);

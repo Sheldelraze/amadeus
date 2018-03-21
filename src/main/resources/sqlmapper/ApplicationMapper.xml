@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minh.nguyen.mapper.ApplicationMapper">
+    <select id="getAllApplicationInCourse" resultMap="apply">
+        SELECT
+            application.id,
+            user.id    AS senderID,
+            user.fullname,
+            user.handle,
+            class.id   AS classID,
+            class.name AS className
+        FROM application
+            INNER JOIN user
+                ON user.id = application.urId
+                   AND user.deleteFlg = '0'
+            LEFT JOIN cs_ur
+                ON cs_ur.urId = user.id
+                   AND cs_ur.deleteFlg = '0'
+            LEFT JOIN class
+                ON cs_ur.csId = class.id
+                   AND class.deleteFlg = '0'
+        WHERE application.deleteFlg = '0'
+              AND application.ceId = #{ceId}
+              AND application.status = 0
+    </select>
+    <resultMap id="apply" type="ApplicationDTO">
+        <id property="id" column="id"/>
+        <association property="sender" javaType="UserDTO">
+            <id property="id" column="senderID"/>
+            <result property="fullname" column="fullname"/>
+            <result property="handle" column="handle"/>
+            <association property="inClass" javaType="ClassDTO">
+                <id property="id" column="classID"/>
+                <result property="name" column="className"/>
+            </association>
+        </association>
+    </resultMap>
+</mapper>

@@ -65,6 +65,14 @@
                             <ul class="nav nav-pills m-t-30 m-b-30"
                                 th:replace="course/info/course-layout::navtab(ceId = ${ceId},tab = ${tab})"></ul>
                             <div id="role" class="tab-pane active" style="margin-top: 20px; color: black">
+                                <th:block th:if="${message != null}">
+                                    <div class="alert alert-danger" th:if="${(message.type == 'ERROR')}"
+                                         th:text="|✘#{${message.messageId}}|">
+                                    </div>
+                                    <div class="alert alert-success" th:if="${(message.type == 'SUCCESS')}"
+                                         th:text="|✔#{${message.messageId}}|">
+                                    </div>
+                                </th:block>
                                 <th:block th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
                                     <h4>Danh sách xin gia nhập</h4>
                                     <div class="table-responsive">
@@ -74,22 +82,34 @@
                                             <tr>
                                                 <th style="text-align: center" width="20px">#</th>
                                                 <th style="text-align: center">Tài khoản</th>
-                                                <th style="text-align: center">Tên người dùng</th>
-                                                <th style="text-align: center">Loại tài khoản</th>
+                                                <th style="text-align: center">Tên sinh viên</th>
+                                                <th style="text-align: center">Lớp</th>
+                                                <th width="230px">Tác vụ</th>
                                             </tr>
                                             </thead>
-
+                                            <tbody>
+                                            <tr th:each="apply,iter : ${lstApply}">
+                                                <td th:text="${iter.count}"></td>
+                                                <td><a href="#" th:text="${apply.sender.handle}"></a></td>
+                                                <td th:text="${apply.sender.fullname}"></td>
+                                                <td th:text="${apply.sender.inClass?.name}"></td>
+                                                <td>
+                                                    <button type="button"
+                                                            th:onclick="|agree(${ceId},${apply.sender.id},'${apply.sender.fullname}')|"
+                                                            class="btn btn-outline-success">Chấp nhận
+                                                    </button>
+                                                    <button type="button"
+                                                            th:onclick="|decline(${ceId},${apply.sender.id},'${apply.sender.fullname}')|"
+                                                            class="btn btn-outline-danger">Từ chối
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
                                         </table>
                                     </div>
                                     <hr/>
                                 </th:block>
                                 <h4>Danh sách thành viên trong khóa học</h4>
-                                <div style="float: right" th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
-                                    <button th:onclick="|popup(${ceId})|" type="button"
-                                            class="btn btn-block btn-outline-success">Thêm người
-                                        dùng
-                                    </button>
-                                </div>
                                 <div class="table-responsive">
                                     <table id="myTable" class="table table-bordered "
                                            style="text-align: center; color: black; font-size: 14px">
@@ -172,6 +192,13 @@
                                         </tr>
                                     </table>
                                 </div>
+                                <br/>
+                                <div style="float: left;" th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                    <button th:onclick="|popup(${ceId})|" type="button"
+                                            class="btn btn-block btn-outline-success">Thêm người
+                                        dùng
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -213,6 +240,19 @@
         $('#myTable').DataTable();
     });
 
+    function agree(ceId, urId, name) {
+        if (!confirm("Bạn có chắc muốn chấp nhận sinh viên " + name + " tham gia khóa học không?")) {
+            return false;
+        }
+        window.location = '/course/' + ceId + '/accept/' + urId;
+    }
+
+    function decline(ceId, urId, name) {
+        if (!confirm("Bạn có chắc muốn từ chối sinh viên " + name + " tham gia khóa học không?")) {
+            return false;
+        }
+        window.location = '/course/' + ceId + '/decline/' + urId;
+    }
     function deleteRole(ceId, urId) {
         if (!confirm("Bạn có chắc không?")) {
             return false;

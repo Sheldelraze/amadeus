@@ -2,10 +2,7 @@ package com.minh.nguyen.controller;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
-import com.minh.nguyen.dto.CourseDTO;
-import com.minh.nguyen.dto.MaterialDTO;
-import com.minh.nguyen.dto.MessageDTO;
-import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.dto.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.course.CourseAddMaterialForm;
 import com.minh.nguyen.form.course.CourseAddRoleForm;
@@ -109,17 +106,20 @@ public class CourseController extends BaseController {
         //add common information
         ModelAndView modelAndView = createGeneralModel();
 
-        //add authority of current user (CAN_VIEW and CAN_PARTICIPATE only)
+        //add authority of current user (CAN_VIEW and CAN_PARTICIPATE only) and application count
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Integer appCnt = 0;
         if (null != auth && !StringUtil.isNull(auth.getName())) {
             if (courseValidator.checkPermission(auth, ceId, Constants.AUTH_EDIT_COURSE_TEXT)) {
                 modelAndView.addObject(AUTHORITY, Constants.AUTH_EDIT_COURSE_TEXT);
+                appCnt = courseService.countPendingApplication(ceId);
             } else if (courseValidator.checkPermission(auth, ceId, Constants.AUTH_PARTICIPATE_COURSE_TEXT)) {
                 modelAndView.addObject(AUTHORITY, Constants.AUTH_PARTICIPATE_COURSE_TEXT);
             } else {
                 modelAndView.addObject(AUTHORITY, "No special authority");
             }
         }
+        modelAndView.addObject("appCnt", appCnt);
 
         //check if user can view common status
         boolean canViewStatus = false;
@@ -139,14 +139,12 @@ public class CourseController extends BaseController {
 
         //add course's creator check
         boolean isCreator = false;
-        Integer appCnt = 0;
         if (null != auth && !StringUtil.isNull(auth.getName())) {
             if (courseValidator.checkCreator(auth, ceId)) {
                 isCreator = true;
-                appCnt = courseService.countPendingApplication(ceId);
+
             }
         }
-        modelAndView.addObject("appCnt", appCnt);
         modelAndView.addObject("isCreator", isCreator);
 
         //check if user can apply to this course
@@ -327,7 +325,8 @@ public class CourseController extends BaseController {
         courseService.setMaterialHiddenStatus(ceId, mlId, Constants.STATUS_HIDDEN);
         return getMaterial(ceId);
     }
-//
+
+    //
 //    @CheckNotNullFirst
 //    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
 //    @GetMapping("/{ceId}/addProblem")
@@ -616,31 +615,77 @@ public class CourseController extends BaseController {
 //        return getSetting(ceId, courseSettingForm, true);
 //    }
 //
-@CheckNotNullFirst
-@PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
-@GetMapping("/{ceId}/role")
-public ModelAndView getRole(@PathVariable("ceId") int ceId, boolean updateSuccess) {
-    ModelAndView modelAndView = createGeneralModel(ceId);
-    modelAndView.setViewName(ROLE_VIEW);
-    modelAndView.addObject(TAB, 9);
-    modelAndView.addObject(COURSE_ID, ceId);
-    Integer currentUrId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-    String currentUrName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
-    String currentUrHandle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
-    Integer currentReId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_ID);
-    String currentReName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);
-    List<UserDTO> lstUser = courseService.getListCourseRole(currentUrId, ceId);
-    modelAndView.addObject("lstUser", lstUser);
-    modelAndView.addObject("currentUrId", currentUrId);
-    modelAndView.addObject("currentUrName", currentUrName);
-    modelAndView.addObject("currentReId", currentReId);
-    modelAndView.addObject("currentUrHandle", currentUrHandle);
-    modelAndView.addObject("currentReName", currentReName);
-    if (updateSuccess) {
-        modelAndView.addObject(UPDATE_SUCCESS, true);
+    @CheckNotNullFirst
+    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/role")
+    public ModelAndView getRole(@PathVariable("ceId") int ceId) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(ROLE_VIEW);
+        modelAndView.addObject(TAB, 9);
+        modelAndView.addObject(COURSE_ID, ceId);
+        Integer currentUrId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        String currentUrName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
+        String currentUrHandle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        Integer currentReId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_ID);
+        String currentReName = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);
+        List<UserDTO> lstUser = courseService.getListCourseRole(currentUrId, ceId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<ApplicationDTO> lstApply = null;
+        if (courseValidator.checkPermission(auth, ceId, Constants.AUTH_EDIT_COURSE_TEXT)) {
+            lstApply = courseService.getPendingApplication(ceId);
+        }
+        modelAndView.addObject("lstUser", lstUser);
+        modelAndView.addObject("lstApply", lstApply);
+        modelAndView.addObject("currentUrId", currentUrId);
+        modelAndView.addObject("currentUrName", currentUrName);
+        modelAndView.addObject("currentReId", currentReId);
+        modelAndView.addObject("currentUrHandle", currentUrHandle);
+        modelAndView.addObject("currentReName", currentReName);
+
+        return modelAndView;
     }
-    return modelAndView;
-}
+
+    @CheckNotNullFirst
+    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/accept/{urId}")
+    public ModelAndView acceptApply(@PathVariable("ceId") int ceId, @PathVariable("urId") int urId) {
+        try {
+            courseService.acceptApplication(urId, ceId);
+        } catch (RollbackException e) {
+            ModelAndView modelAndView = getRole(ceId);
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), e.getMessage()));
+            return modelAndView;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ModelAndView modelAndView = getRole(ceId);
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), Constants.MSG_SYSTEM_ERR));
+            return modelAndView;
+        }
+        ModelAndView modelAndView = getRole(ceId);
+        modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.SUCCESS.toString(), Constants.MSG_APPLICATION_ACCEPTED_SUCCESS));
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/decline/{urId}")
+    public ModelAndView declineApply(@PathVariable("ceId") int ceId, @PathVariable("urId") int urId) {
+        try {
+            courseService.declineApplication(urId, ceId);
+        } catch (RollbackException e) {
+            ModelAndView modelAndView = getRole(ceId);
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), e.getMessage()));
+            return modelAndView;
+        } catch (Exception e) {
+            e.printStackTrace();
+            ModelAndView modelAndView = getRole(ceId);
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), Constants.MSG_SYSTEM_ERR));
+            return modelAndView;
+        }
+        ModelAndView modelAndView = getRole(ceId);
+        modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.SUCCESS.toString(), Constants.MSG_APPLICATION_DECLINED_SUCCESS));
+        return modelAndView;
+    }
 
     @CheckNotNullFirst
     @PreAuthorize("isAuthenticated() && @CourseValidator.checkCreator(authentication,#ceId)")
@@ -688,7 +733,7 @@ public ModelAndView getRole(@PathVariable("ceId") int ceId, boolean updateSucces
             throw new UserTryingToBeSmartException();
         }
         courseService.deleteRole(ceId, urId);
-        return getRole(ceId, true);
+        return getRole(ceId);
     }
 
 

@@ -19,13 +19,15 @@
     <title>Amadeus system</title>
     <th:block th:fragment="css">
         <!-- Bootstrap Core CSS -->
-        <link href="../../static/assets/plugins/bootstrap/css/bootstrap.min.css" th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}"  rel="stylesheet">
+        <link href="../../static/assets/plugins/bootstrap/css/bootstrap.min.css"
+              th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
         <!--This page css - Morris CSS -->
-        <link href="../../static/assets/plugins/c3-master/c3.min.css" th:href="@{/assets/plugins/c3-master/c3.min.css}"  rel="stylesheet">
+        <link href="../../static/assets/plugins/c3-master/c3.min.css" th:href="@{/assets/plugins/c3-master/c3.min.css}"
+              rel="stylesheet">
         <!-- Custom CSS -->
-        <link href="../../static/css/style.css" th:href="@{/css/style.css}"  rel="stylesheet">
+        <link href="../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
         <!-- You can change the theme colors from here -->
-        <link href="../../static/css/colors/blue.css" th:href="@{/css/colors/blue.css}"  id="theme" rel="stylesheet">
+        <link href="../../static/css/colors/blue.css" th:href="@{/css/colors/blue.css}" id="theme" rel="stylesheet">
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -36,10 +38,12 @@
             .hiddenDiv {
                 display: none;
             }
-            .error{
-                color:red;
+
+            .error {
+                color: red;
             }
-            .success{
+
+            .success {
                 color: #1ed921;
             }
 
@@ -76,17 +80,21 @@
                     <b>
                         <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                         <!-- Dark Logo icon -->
-                        <img src="../../static/assets/images/logo-icon.png" th:src="@{/assets/images/logo-icon.png}"  alt="homepage" class="dark-logo"/>
+                        <img src="../../static/assets/images/logo-icon.png" th:src="@{/assets/images/logo-icon.png}"
+                             alt="homepage" class="dark-logo"/>
                         <!-- Light Logo icon -->
-                        <img src="../../static/assets/images/logo-light-icon.png" th:src="@{/assets/images/logo-light-icon.png}"  alt="homepage" class="light-logo"/>
+                        <img src="../../static/assets/images/logo-light-icon.png"
+                             th:src="@{/assets/images/logo-light-icon.png}" alt="homepage" class="light-logo"/>
                     </b>
                     <!--End Logo icon -->
                     <!-- Logo text -->
                     <span>
                             <!-- dark Logo text -->
-                            <img src="../../static/assets/images/logo-text.png" th:src="@{/assets/images/logo-text.png}"  alt="homepage" class="dark-logo"/>
+                            <img src="../../static/assets/images/logo-text.png" th:src="@{/assets/images/logo-text.png}"
+                                 alt="homepage" class="dark-logo"/>
                         <!-- Light Logo text -->
-                            <img src="../../static/assets/images/logo-light-text.png" th:src="@{/assets/images/logo-light-text.png}"  class="light-logo"
+                            <img src="../../static/assets/images/logo-light-text.png"
+                                 th:src="@{/assets/images/logo-light-text.png}" class="light-logo"
                                  alt="homepage"/>
                         </span>
                 </a>
@@ -123,7 +131,8 @@
                     <!-- Comment -->
                     <!-- ============================================================== -->
                     <li class="nav-item dropdown" th:if="${lstNotification != null}">
-                        <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="#"
+                        <a id="masterNotification"
+                           class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="#"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="mdi mdi-bell"></i>
                             <div th:classappend="${#lists.size(lstNotification) == 0}?'hiddenDiv'" class="notify"
@@ -142,25 +151,25 @@
                                                 <h5 style="text-align: center">Không có thông báo mới</h5>
                                             </div>
                                         </a>
-                                        <a th:href="${notify.link}" th:each="notify : ${lstNotification}">
-                                            <th:block th:if="${notify.type == 1}">
-                                                <div class="btn btn-warning btn-circle"><i class="ti-user"></i></div>
-                                            </th:block>
-                                            <th:block th:if="${notify.type == 2}">
-                                                <div class="btn btn-success btn-circle"><i class="fa fa-check"></i>
-                                                </div>
-                                            </th:block>
-                                            <th:block th:if="${notify.type == 3}">
-                                                <div class="btn btn-danger  btn-circle"><i class="ti-close"></i></div>
-                                            </th:block>
-                                            <th:block th:if="${notify.type == 4}">
-                                                <div class="btn btn-danger  btn-circle"><i class="ti-close"></i></div>
+                                        <a href="#" th:onclick="|openInNewTab('${notify.link}')|"
+                                           th:each="notify : ${lstNotification}">
+                                            <th:block th:switch="${notify.type}">
+                                                <div th:case="1" class="btn btn-warning btn-circle"><i
+                                                        class="ti-user"></i></div>
+                                                <div th:case="2" class="btn btn-success btn-circle"><i
+                                                        class="fa fa-check"></i></div>
+                                                <div th:case="3" class="btn btn-danger  btn-circle"><i
+                                                        class="ti-close"></i></div>
+                                                <div th:case="4" class="btn btn-danger  btn-circle"><i
+                                                        class="ti-close"></i></div>
                                             </th:block>
                                             <div class="mail-contnet">
-                                                <h5 th:if="${notify.type == 1}">Xin gia nhập khóa học</h5>
-                                                <h5 th:if="${notify.type == 2}">Chấp nhận tham gia khóa học</h5>
-                                                <h5 th:if="${notify.type == 3}">Từ chối tham gia khóa học</h5>
-                                                <h5 th:if="${notify.type == 4}">Loại khỏi khóa học</h5>
+                                                <th:block th:switch="${notify.type}">
+                                                    <h5 th:case="1">Xin gia nhập khóa học</h5>
+                                                    <h5 th:case="2">Xin gia nhập khóa học</h5>
+                                                    <h5 th:case="3">Xin gia nhập khóa học</h5>
+                                                    <h5 th:case="4">Loại khỏi khóa học</h5>
+                                                </th:block>
                                                 <small style="color: #99abb4;" th:utext="${notify.content}"></small>
                                             </div>
                                         </a>
@@ -229,13 +238,15 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="#"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="../../static/assets/images/users/1.jpg" th:src="@{/assets/images/users/1.jpg}"  alt="user" class="profile-pic"/></a>
+                            <img src="../../static/assets/images/users/1.jpg" th:src="@{/assets/images/users/1.jpg}"
+                                 alt="user" class="profile-pic"/></a>
                         <div class="dropdown-menu dropdown-menu-right scale-up">
                             <ul class="dropdown-user">
                                 <li>
                                     <div class="dw-user-box">
                                         <div class="u-img">
-                                            <img src="../../static/assets/images/users/1.jpg" th:src="@{/assets/images/users/1.jpg}"  alt="user">
+                                            <img src="../../static/assets/images/users/1.jpg"
+                                                 th:src="@{/assets/images/users/1.jpg}" alt="user">
                                         </div>
                                         <div class="u-text">
                                             <h4>Makise Kurisu</h4>
@@ -274,7 +285,8 @@
 
                 <!-- User profile image -->
                 <div class="profile-img">
-                    <img src="../../static/assets/images/users/profile.png" th:src="@{/assets/images/users/profile.png}"  alt="user"/>
+                    <img src="../../static/assets/images/users/profile.png" th:src="@{/assets/images/users/profile.png}"
+                         alt="user"/>
                 </div>
                 <!-- User profile text-->
                 <div class="profile-text">
@@ -298,7 +310,7 @@
                         <a class="waves-effect waves-dark" href="/" aria-expanded="false"><i
                                 class="mdi mdi-home"></i><span class="hide-menu">Trang chủ </span></a>
                     </li>
-                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
+                    <li><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
                             class="mdi mdi-calendar-question"></i><span class="hide-menu">Bài tập</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a href="#">Tất cả bài tập</a></li>
@@ -413,40 +425,68 @@
         var currentUserIndex = increment;
         var messagePerFetch = /*[[${messagePerFetch}]]*/ 15;
         var currentMessageIndex = messagePerFetch;
-
+        var clearNotification = false;
         /*]]>*/
     </script>
-    <script src="../../static/assets/plugins/jquery/jquery.min.js" th:src="@{/assets/plugins/jquery/jquery.min.js}" ></script>
+    <script src="../../static/assets/plugins/jquery/jquery.min.js"
+            th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="../../static/assets/plugins/bootstrap/js/popper.min.js" th:src="@{/assets/plugins/bootstrap/js/popper.min.js}" ></script>
-    <script src="../../static/assets/plugins/bootstrap/js/bootstrap.min.js" th:src="@{/assets/plugins/bootstrap/js/bootstrap.min.js}" ></script>
+    <script src="../../static/assets/plugins/bootstrap/js/popper.min.js"
+            th:src="@{/assets/plugins/bootstrap/js/popper.min.js}"></script>
+    <script src="../../static/assets/plugins/bootstrap/js/bootstrap.min.js"
+            th:src="@{/assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
     <!-- slimscrollbar scrollbar JavaScript -->
-    <script src="../../static/js/jquery.slimscroll.js" th:src="@{/js/jquery.slimscroll.js}" ></script>
+    <script src="../../static/js/jquery.slimscroll.js" th:src="@{/js/jquery.slimscroll.js}"></script>
     <!--Wave Effects -->
-    <script src="../../static/js/waves.js" th:src="@{/js/waves.js}" ></script>
+    <script src="../../static/js/waves.js" th:src="@{/js/waves.js}"></script>
     <!--Menu sidebar -->
-    <script src="../../static/js/sidebarmenu.js" th:src="@{/js/sidebarmenu.js}" ></script>
+    <script src="../../static/js/sidebarmenu.js" th:src="@{/js/sidebarmenu.js}"></script>
     <!--stickey kit -->
-    <script src="../../static/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js" th:src="@{/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js}" ></script>
-    <script src="../../static/assets/plugins/sparkline/jquery.sparkline.min.js" th:src="@{/assets/plugins/sparkline/jquery.sparkline.min.js}" ></script>
+    <script src="../../static/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js"
+            th:src="@{/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js}"></script>
+    <script src="../../static/assets/plugins/sparkline/jquery.sparkline.min.js"
+            th:src="@{/assets/plugins/sparkline/jquery.sparkline.min.js}"></script>
     <!--Custom JavaScript -->
-    <script src="../../static/js/custom.min.js" th:src="@{/js/custom.min.js}" ></script>
+    <script src="../../static/js/custom.min.js" th:src="@{/js/custom.min.js}"></script>
     <!-- ============================================================== -->
     <!-- This page plugins -->
     <!-- ============================================================== -->
     <!--c3 JavaScript -->
-    <script src="../../static/assets/plugins/d3/d3.min.js" th:src="@{/assets/plugins/d3/d3.min.js}" ></script>
-    <script src="../../static/assets/plugins/c3-master/c3.min.js" th:src="@{/assets/plugins/c3-master/c3.min.js}" ></script>
+    <script src="../../static/assets/plugins/d3/d3.min.js" th:src="@{/assets/plugins/d3/d3.min.js}"></script>
+    <script src="../../static/assets/plugins/c3-master/c3.min.js"
+            th:src="@{/assets/plugins/c3-master/c3.min.js}"></script>
     <script src="../../stati/js/custom.min.js" th:src="@{/js/jquery-countdown.js}"></script>
     <script th:src="@{/js/notification.js}"></script>
     <script th:src="@{/js/sockjs.min.js}"></script>
     <script th:src="@{/js/stomp.min.js}"></script>
     <script>
+        function openInNewTab(url) {
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
         $(function () {
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             $(document).ajaxSend(function (e, xhr, options) {
                 xhr.setRequestHeader(header, token);
+            });
+        });
+        $("#masterNotification").click(function (e) {
+            if (clearNotification) {
+                return;
+            }
+            clearNotification = true;
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/clearNotification/" + urId,
+                cache: false,
+                timeout: 10000,
+                success: function () {
+                },
+                error: function (e) {
+                    alert('Có lỗi hệ thống xảy ra!\r\n' + e);
+                }
             });
         });
     </script>

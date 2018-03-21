@@ -33,6 +33,15 @@ public class UserDTO extends BaseDTO{
     private List<ProblemDTO> lstProblem;
     private List<AuthorityDTO> lstAuthority;
     private ConversationDTO conversation;
+    private ClassDTO inClass;
+
+    public ClassDTO getInClass() {
+        return inClass;
+    }
+
+    public void setInClass(ClassDTO inClass) {
+        this.inClass = inClass;
+    }
 
     public ConversationDTO getConversation() {
         return conversation;

@@ -1,40 +1,29 @@
-package com.minh.nguyen.entity;
-
-import javax.persistence.*;
-import java.io.Serializable;
+package com.minh.nguyen.dto;
 
 /**
  * @author Mr.Minh
- * @since 31/12/2017
+ * @since 21/03/2018
  * Purpose:
  */
-@Table(name = "class")
-public class ClassEntity extends UserEntity implements Serializable{
-    static final long serialVersionUID = 42L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class ClassDTO extends BaseDTO {
     private Integer id;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "intake")
     private Integer intake;
-
-    @Column(name = "major")
     private String major;
-
-    @Column(name = "academicYear")
     private String academicYear;
 
-    @Override
+    public String getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
+    }
+
     public Integer getId() {
         return id;
     }
 
-    @Override
     public void setId(Integer id) {
         this.id = id;
     }
@@ -61,13 +50,5 @@ public class ClassEntity extends UserEntity implements Serializable{
 
     public void setMajor(String major) {
         this.major = major;
-    }
-
-    public String getAcademicYear() {
-        return academicYear;
-    }
-
-    public void setAcademicYear(String academicYear) {
-        this.academicYear = academicYear;
     }
 }
