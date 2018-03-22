@@ -70,8 +70,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form th:action="|/contest/${ctId}/addProblem|"
-                              th:object="${contestAddProblemForm}" method="post">
+                        <form th:action="|/course/${ceId}/addProblem|"
+                              th:object="${courseAddProblemForm}" method="post">
                             <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                 <div class="alert alert-danger">
                                     ✘ <label th:errors="*{screenMessage}"></label>
@@ -106,8 +106,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:if="${contestAddProblemForm.lstProblemDTO != null}"
-                                    th:each="problem,iter : ${contestAddProblemForm.lstProblemDTO}" >
+                                <tr th:if="${courseAddProblemForm.lstProblemDTO != null}"
+                                    th:each="problem,iter : ${courseAddProblemForm.lstProblemDTO}">
                                     <td th:text="${problem.id}"></td>
                                     <td style="font-weight: 900;font-size: large"><a
                                             th:href="|/problem/${problem.id}/view|" th:text="${problem.code}"></a>

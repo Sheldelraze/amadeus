@@ -1,9 +1,7 @@
 package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
-import com.minh.nguyen.dto.ApplicationDTO;
-import com.minh.nguyen.dto.CourseDTO;
-import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.mapper.*;
@@ -17,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +29,21 @@ import java.util.List;
  */
 @Service
 public class CourseService extends BaseService {
+
+    @Autowired
+    private CeMlMapper ceMlMapper;
+
+    @Autowired
+    private CePmMapper cePmMapper;
+
+    @Autowired
+    private CeSnMapper ceSnMapper;
+
+    @Autowired
+    private CeAtMapper ceAtMapper;
+
+    @Autowired
+    private ProblemMapper problemMapper;
 
     @Autowired
     private MaterialMapper materialMapper;
@@ -50,13 +64,13 @@ public class CourseService extends BaseService {
     private UrCeAuyMapper urCeAuyMapper;
 
     @Autowired
-    private CeMlMapper ceMlMapper;
-
-    @Autowired
     private ApplicationMapper applicationMapper;
 
     @Autowired
     private NotificationMapper notificationMapper;
+
+    @Autowired
+    private HttpSession httpSession;
 
     @Autowired
     private SimpMessageSendingOperations simpMessagingTemplate;
@@ -440,5 +454,54 @@ public class CourseService extends BaseService {
         courseDTO.setStartTime(sdfr.format(startTime));
         courseDTO.setEndTime(sdfr.format(endTime));
         return courseDTO;
+    }
+
+    public List<ProblemDTO> getProblemToDisplay(Integer ceId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean getAllProblem = false;
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            if (courseValidator.checkPermission(auth, ceId, Constants.AUTH_EDIT_COURSE_TEXT)) {
+                getAllProblem = true;
+            }
+        }
+        List<ProblemDTO> lst = problemMapper.getProblemToDisplayInCourse(ceId, getAllProblem);
+        int cnt = 0;
+        for (ProblemDTO problemDTO : lst) {
+            if (problemDTO.getIsHidden() == 0) {
+                problemDTO.setAlias(++cnt);
+            } else {
+                problemDTO.setAlias(-1);
+            }
+        }
+        return lst;
+    }
+
+    public void setProblemHiddenStatus(Integer ceId, Integer pmId, Integer status) {
+        CePmEntity cePmEntity = new CePmEntity();
+        cePmEntity.setCeId(ceId);
+        cePmEntity.setPmId(pmId);
+        cePmEntity.setIsHidden(status);
+        setUpdateInfo(cePmEntity);
+        cePmMapper.updateNotNullByPK(cePmEntity);
+    }
+
+    public List<ProblemDTO> getProblemToAdd(int ctId) {
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<ProblemDTO> lst = problemMapper.getProblemForContest(urId, Constants.AUTH_VIEW_PROBLEM_ID, ctId);
+        for (ProblemDTO problemDTO : lst) {
+            StringBuilder stringBuilder = new StringBuilder();
+            List<TagDTO> lstTag = problemDTO.getLstTag();
+            for (int i = 0; i < lstTag.size(); ++i) {
+                stringBuilder.append(lstTag.get(i).getName());
+                if (i < lstTag.size() - 1) {
+                    stringBuilder.append(",");
+                }
+            }
+            problemDTO.setTag(stringBuilder.toString());
+            if (Constants.BLANK.equals(stringBuilder.toString())) {
+                problemDTO.setTag(null);
+            }
+        }
+        return lst;
     }
 }

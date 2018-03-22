@@ -5670,7 +5670,7 @@ File: scss
   vertical-align: middle; }
 
 .notification-content {
-  margin-left: 15px;
+    padding-left: 5px;
 }
 /*******************
 /*States row*/

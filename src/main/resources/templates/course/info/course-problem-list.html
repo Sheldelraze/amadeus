@@ -65,7 +65,7 @@
                     <div class="card">
                         <div class="card-body">
                             <ul class="nav nav-pills m-t-30 m-b-30"
-                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                                th:replace="course/info/course-layout::navtab(ceId = ${ceId},tab = ${tab})"></ul>
                             <div id="problem" class="tab-pane active">
                                 <div class="table-responsive">
                                     <table class="table table-bordered" style="color: black; text-align: center">
@@ -81,11 +81,12 @@
                                         </tr>
                                         </thead>
                                         <tbody th:remove="all-but-first">
-                                        <tr th:if="${null != contestProblemVO.lstProblemDTO}"
-                                            th:each="problem : ${contestProblemVO.lstProblemDTO}"
+                                        <tr th:if="${null != lstProblem}"
+                                            th:each="problem : ${lstProblem}"
                                             th:style="${problem.isHidden}?'background-color: #e8e8e8'">
                                             <td th:text="${problem.alias}"></td>
-                                            <td><b><a href="#" th:href="|/contest/${ctId}/problem/${problem.id}/view|" th:text="${problem.name}"></a></b></td>
+                                            <td><b><a href="#" th:href="|/course/${ceId}/problem/${problem.id}/view|"
+                                                      th:text="${problem.name}"></a></b></td>
                                             <td><label th:text="${problem.timeLimit}"></label>s</td>
                                             <td><label th:text="${problem.memoryLimit}"></label>MB</td>
                                             <td>
@@ -95,10 +96,14 @@
                                             </td>
                                             <td><i class="mdi mdi-account"></i>x<label th:text="${problem.solveCnt}"></label></td>
                                             <td th:if="${problem.isHidden==0}">
-                                                <button type="button" th:onclick="|hideProblem(${ctId},${problem.id})|" class="btn btn-outline-danger">Ẩn đi</button>
+                                                <button type="button" th:onclick="|hideProblem(${ceId},${problem.id})|"
+                                                        class="btn btn-outline-danger">Ẩn đi
+                                                </button>
                                             </td>
                                             <td th:if="${problem.isHidden==1}">
-                                                <button type="button" th:onclick="|showProblem(${ctId},${problem.id})|" class="btn btn-outline-success">Hiện</button>
+                                                <button type="button" th:onclick="|showProblem(${ceId},${problem.id})|"
+                                                        class="btn btn-outline-success">Hiện
+                                                </button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -163,8 +168,8 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div style="float: left">
-                                    <button type="button" th:onclick="|popup(${ctId})|"
+                                <div style="float: left" th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
+                                    <button type="button" th:onclick="|popup(${ceId})|"
                                             class="btn btn-outline-success">Thêm bài tập</button>
                                 </div>
                             </div>
@@ -201,8 +206,8 @@
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
 <script>
-    function popup(ctId){
-        var url = '/contest/' + ctId + '/addProblem';
+    function popup(ceId) {
+        var url = '/course/' + ceId + '/addProblem';
         window.open(url,
             '1426494439650',
             'width=1500,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
@@ -210,17 +215,19 @@
     function HandlePopupResult() {
         location.reload();
     }
-    function showProblem(ctId,pmId){
+
+    function showProblem(ceId, pmId) {
         if (!confirm("Bạn có chắc không?")){
             return false;
         }
-        window.location.replace("/contest/" + ctId + "/showProblem/" + pmId);
+        window.location.replace("/course/" + ceId + "/showProblem/" + pmId);
     }
-    function hideProblem(ctId,pmId){
+
+    function hideProblem(ceId, pmId) {
         if (!confirm("Bạn có chắc không?")){
             return false;
         }
-        window.location.replace("/contest/" + ctId + "/hideProblem/" + pmId);
+        window.location.replace("/course/" + ceId + "/hideProblem/" + pmId);
     }
 </script>
 </body>

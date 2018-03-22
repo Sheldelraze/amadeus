@@ -28,11 +28,17 @@ public interface ProblemMapper extends BaseMapper<ProblemEntity> {
 
     List<ProblemDTO> getAllPublicProblem();
 
-    List<ProblemDTO> getProblemForContest(@Param("can_view_problem_auth")Integer canVieProblemAuth,@Param("ctId") Integer ctId);
+    List<ProblemDTO> getProblemForContest(@Param("urId") Integer urId, @Param("can_view_problem_auth") Integer canVieProblemAuth, @Param("ctId") Integer ctId);
 
-    List<ProblemDTO> getProblemToDisplay(@Param("ctId") Integer ctId, @Param("getAllProblem") Boolean getAllProblem);
+    List<ProblemDTO> getProblemToDisplayInContest(@Param("ctId") Integer ctId, @Param("getAllProblem") Boolean getAllProblem);
 
-    List<ProblemDTO> getProblemToSubmit(@Param("ctId")Integer ctId);
+    List<ProblemDTO> getProblemToSubmitInContest(@Param("ctId") Integer ctId);
+
+    List<ProblemDTO> getProblemForCourse(@Param("urId") Integer urId, @Param("can_view_problem_auth") Integer canVieProblemAuth, @Param("ctId") Integer ceId);
+
+    List<ProblemDTO> getProblemToDisplayInCourse(@Param("ceId") Integer ceId, @Param("getAllProblem") Boolean getAllProblem);
+
+    List<ProblemDTO> getProblemToSubmitInCourse(@Param("ceId") Integer ceId);
 
     List<ProblemDTO> getProblemForLeaderboard(@Param("ctId")Integer ctId);
 

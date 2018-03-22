@@ -5,6 +5,7 @@ import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.course.CourseAddMaterialForm;
+import com.minh.nguyen.form.course.CourseAddProblemForm;
 import com.minh.nguyen.form.course.CourseAddRoleForm;
 import com.minh.nguyen.form.course.CourseCreateForm;
 import com.minh.nguyen.service.CourseService;
@@ -16,6 +17,7 @@ import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
 import com.minh.nguyen.validator.MaterialValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
+import com.minh.nguyen.validator.annotation.CheckNotNullThird;
 import com.minh.nguyen.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -313,7 +315,7 @@ public class CourseController extends BaseController {
     @CheckNotNullFirst
     @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/showMaterial/{mlId}")
-    public ModelAndView showProblem(@PathVariable("ceId") int ceId, @PathVariable("mlId") int mlId) {
+    public ModelAndView showMaterial(@PathVariable("ceId") int ceId, @PathVariable("mlId") int mlId) {
         courseService.setMaterialHiddenStatus(ceId, mlId, Constants.STATUS_SHOW);
         return getMaterial(ceId);
     }
@@ -321,29 +323,29 @@ public class CourseController extends BaseController {
     @CheckNotNullFirst
     @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/hideMaterial/{mlId}")
-    public ModelAndView hideProblem(@PathVariable("ceId") int ceId, @PathVariable("mlId") int mlId) {
+    public ModelAndView hideMaterial(@PathVariable("ceId") int ceId, @PathVariable("mlId") int mlId) {
         courseService.setMaterialHiddenStatus(ceId, mlId, Constants.STATUS_HIDDEN);
         return getMaterial(ceId);
     }
 
-    //
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @GetMapping("/{ceId}/addProblem")
-//    public ModelAndView initAddProblem(@PathVariable("ceId") int ceId, CourseAddProblemForm courseAddProblemForm,
-//                                       Boolean updateSuccess) {
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        modelAndView.setViewName(ADD_PROBLEM_VIEW);
-//        if (null == courseAddProblemForm) {
-//            courseAddProblemForm = new CourseAddProblemForm();
-//        }
-//        List<ProblemDTO> lstProblemDTO = courseService.getProblemToAdd(ceId);
-//        courseAddProblemForm.setLstProblemDTO(lstProblemDTO);
-//        modelAndView.addObject("updateSuccess", updateSuccess);
-//        modelAndView.addObject("ceId", ceId);
-//        modelAndView.addObject("courseAddProblemForm", courseAddProblemForm);
-//        return modelAndView;
-//    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/addProblem")
+    public ModelAndView initAddProblem(@PathVariable("ceId") int ceId, CourseAddProblemForm courseAddProblemForm,
+                                       Boolean updateSuccess) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(ADD_PROBLEM_VIEW);
+        if (null == courseAddProblemForm) {
+            courseAddProblemForm = new CourseAddProblemForm();
+        }
+        List<ProblemDTO> lstProblemDTO = courseService.getProblemToAdd(ceId);
+        courseAddProblemForm.setLstProblemDTO(lstProblemDTO);
+        modelAndView.addObject("updateSuccess", updateSuccess);
+        modelAndView.addObject("ceId", ceId);
+        modelAndView.addObject("courseAddProblemForm", courseAddProblemForm);
+        return modelAndView;
+    }
 //
 //    @CheckNotNullFirst
 //    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
@@ -362,42 +364,38 @@ public class CourseController extends BaseController {
 //        }
 //        return initAddProblem(ceId, courseAddProblemForm, true);
 //    }
-//
-//    @CheckNotNullFirst
-//    @CheckNotNullThird
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @GetMapping("/{ceId}/showProblem/{pmId}")
-//    public ModelAndView showProblem(@PathVariable("ceId") int ceId, @PathVariable("pmId") int pmId) {
-//        courseService.setProblemHiddenStatus(ceId, pmId, Constants.STATUS_SHOW);
-//        return getProblem(ceId);
-//    }
-//
-//    @CheckNotNullFirst
-//    @CheckNotNullThird
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @GetMapping("/{ceId}/hideProblem/{pmId}")
-//    public ModelAndView hideProblem(@PathVariable("ceId") int ceId, @PathVariable("pmId") int pmId) {
-//        courseService.setProblemHiddenStatus(ceId, pmId, Constants.STATUS_HIDDEN);
-//        return getProblem(ceId);
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
-//            "|| @CourseValidator.checkParticipate(authentication,#ceId) " +
-//            "|| @CourseValidator.checkOutsiderPermission(authentication,#ceId)")
-//    @GetMapping("/{ceId}/problem")
-//    public ModelAndView getProblem(@PathVariable("ceId") int ceId) {
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        modelAndView.setViewName(PROBLEM_LIST_VIEW);
-//        List<ProblemDTO> lstProblemDTO = courseService.getProblemToDisplay(ceId);
-//        CourseProblemVO courseProblemVO = new CourseProblemVO();
-//        courseProblemVO.setLstProblemDTO(lstProblemDTO);
-//        modelAndView.addObject(TAB, 2);
-//        modelAndView.addObject("courseProblemVO", courseProblemVO);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        return modelAndView;
-//    }
-//
+
+    @CheckNotNullFirst
+    @CheckNotNullThird
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/showProblem/{pmId}")
+    public ModelAndView showProblem(@PathVariable("ceId") int ceId, @PathVariable("pmId") int pmId) {
+        courseService.setProblemHiddenStatus(ceId, pmId, Constants.STATUS_SHOW);
+        return getProblem(ceId);
+    }
+
+    @CheckNotNullFirst
+    @CheckNotNullThird
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/hideProblem/{pmId}")
+    public ModelAndView hideProblem(@PathVariable("ceId") int ceId, @PathVariable("pmId") int pmId) {
+        courseService.setProblemHiddenStatus(ceId, pmId, Constants.STATUS_HIDDEN);
+        return getProblem(ceId);
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/problem")
+    public ModelAndView getProblem(@PathVariable("ceId") int ceId) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(PROBLEM_LIST_VIEW);
+        List<ProblemDTO> lstProblem = courseService.getProblemToDisplay(ceId);
+        modelAndView.addObject(TAB, 2);
+        modelAndView.addObject("lstProblem", lstProblem);
+        modelAndView.addObject(COURSE_ID, ceId);
+        return modelAndView;
+    }
+
 //    @CheckNotNullFirst
 //    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
 //            "|| @CourseValidator.checkParticipate(authentication,#ceId) " +

@@ -210,7 +210,8 @@ public class ContestService extends BaseService {
     }
 
     public List<ProblemDTO> getProblemToAdd(int ctId) {
-        List<ProblemDTO> lst = problemMapper.getProblemForContest(Constants.AUTH_VIEW_PROBLEM_ID, ctId);
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<ProblemDTO> lst = problemMapper.getProblemForContest(urId, Constants.AUTH_VIEW_PROBLEM_ID, ctId);
         for (ProblemDTO problemDTO : lst) {
             StringBuilder stringBuilder = new StringBuilder();
             List<TagDTO> lstTag = problemDTO.getLstTag();
@@ -221,7 +222,7 @@ public class ContestService extends BaseService {
                 }
             }
             problemDTO.setTag(stringBuilder.toString());
-            if (Constants.BLANK.equals(stringBuilder.toString())) {
+            if ("".equals(stringBuilder.toString())) {
                 problemDTO.setTag(null);
             }
         }
@@ -350,7 +351,7 @@ public class ContestService extends BaseService {
                 getAllProblem = true;
             }
         }
-        List<ProblemDTO> lst = problemMapper.getProblemToDisplay(ctId, getAllProblem);
+        List<ProblemDTO> lst = problemMapper.getProblemToDisplayInContest(ctId, getAllProblem);
         int cnt = 0;
         for (ProblemDTO problemDTO : lst) {
             if (problemDTO.getIsHidden() == 0) {
@@ -363,7 +364,7 @@ public class ContestService extends BaseService {
     }
 
     public List<ProblemDTO> getProblemToSubmit(Integer ctId) {
-        List<ProblemDTO> lst = problemMapper.getProblemToSubmit(ctId);
+        List<ProblemDTO> lst = problemMapper.getProblemToSubmitInContest(ctId);
         int cnt = 0;
         for (ProblemDTO problemDTO : lst) {
             String name = ++cnt + ". " + problemDTO.getName();

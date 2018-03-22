@@ -195,9 +195,7 @@
                         <div class="dropdown-menu mailbox dropdown-menu-right scale-up" aria-labelledby="2">
                             <ul>
                                 <li>
-                                    <div class="drop-title"> Bạn có <span id="messageNotifyCount"
-                                                                          th:text="${#lists.size(lstMessageNotify)}"></span>
-                                        tin nhắn mới
+                                    <div class="drop-title"> Tin nhắn
                                     </div>
                                 </li>
                                 <li>
@@ -206,7 +204,7 @@
                                         <a id="noMessageNotification" href="#"
                                            th:style="${#lists.size(lstMessageNotify) != 0}?'display:none'">
                                             <div class="mail-contnet">
-                                                <h5 style="text-align: center">Không có thông báo mới</h5>
+                                                <h5 style="text-align: center">Không có tin nhắn mới</h5>
                                             </div>
                                         </a>
                                         <a th:href="@{/message}" th:each="message : ${lstMessageNotify}">
@@ -223,7 +221,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <a class="nav-link text-center" href="javascript:void(0);"><strong>Xem tin
+                                    <a class="nav-link text-center" href="/message"><strong>Xem tin
                                         nhắn</strong> <i class="fa fa-angle-right"></i></a>
                                 </li>
                             </ul>

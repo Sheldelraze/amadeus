@@ -7,17 +7,16 @@ import java.io.Serializable;
 
 /**
  * @author Mr.Minh
- * @since 04/02/2018
+ * @since 22/03/2018
  * Purpose:
  */
-@Table(name="ct_pm")
-public class CtPmEntity extends BaseEntity implements Serializable{
-
-    static final long serialVersionUID = 444443252634L;
+@Table(name = "ce_pm")
+public class CePmEntity extends BaseEntity implements Serializable {
+    static final long serialVersionUID = 12343252634L;
 
     @Id
-    @Column(name = "ctId")
-    private Integer ctId;
+    @Column(name = "ceId")
+    private Integer ceId;
 
     @Id
     @Column(name = "pmId")
@@ -25,6 +24,10 @@ public class CtPmEntity extends BaseEntity implements Serializable{
 
     @Column(name = "isHidden")
     private Integer isHidden;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Integer getIsHidden() {
         return isHidden;
@@ -34,12 +37,12 @@ public class CtPmEntity extends BaseEntity implements Serializable{
         this.isHidden = isHidden;
     }
 
-    public Integer getCtId() {
-        return ctId;
+    public Integer getCeId() {
+        return ceId;
     }
 
-    public void setCtId(Integer ctId) {
-        this.ctId = ctId;
+    public void setCeId(Integer ceId) {
+        this.ceId = ceId;
     }
 
     public Integer getPmId() {

@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Table(name = "ce_ml")
 public class CeMlEntity extends BaseEntity implements Serializable {
-    static final long serialVersionUID = 4430073252634L;
+    static final long serialVersionUID = 444477643252634L;
 
     @Id
     @Column(name = "ceId")

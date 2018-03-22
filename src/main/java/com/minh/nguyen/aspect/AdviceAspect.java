@@ -123,4 +123,8 @@ public class AdviceAspect {
         }
     }
 
+    @Before("courseController() && checkNotNullThird()")
+    public void ensureProblemInCourseNotNull(JoinPoint joinPoint) {
+        ensureContestNotNull(joinPoint);
+    }
 }

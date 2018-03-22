@@ -31,8 +31,8 @@
         AND tag.deleteFlg = '0'
         WHERE
         ur_pm_auy.deleteFlg = '0'
-        and ur_pm_auy.urId = #{urId}
-        and ur_pm_auy.auyId = #{read_problem_auyId}
+        AND ur_pm_auy.urId = #{urId}
+        AND ur_pm_auy.auyId = #{read_problem_auyId}
     </select>
     <select id="getAllPublicProblem" resultMap="problem">
         SELECT
@@ -61,7 +61,7 @@
     </select>
     <update id="resetFirstSolveTime">
         UPDATE problem
-        SET firstSolve = NULL,solveCnt = 0
+        SET firstSolve = NULL, solveCnt = 0
         WHERE id = #{pmId}
     </update>
     <select id="getProblemForContest" resultMap="problem">
@@ -79,6 +79,7 @@
         ON problem.id = ur_pm_auy.pmId
         AND ur_pm_auy.deleteFlg = '0'
         AND ur_pm_auy.auyId = #{can_view_problem_auth}
+        AND ur_pm_auy.urId = #{urId}
             LEFT JOIN pm_tg
                 ON pm_tg.pmId = problem.id
                    AND pm_tg.deleteFlg = '0'
@@ -93,7 +94,37 @@
             WHERE ctId = #{ctId}
         )
     </select>
-    <select id="getProblemToDisplay" resultType="ProblemDTO">
+    <select id="getProblemForCourse" resultMap="problem">
+        SELECT
+            problem.difficulty  AS dif,
+            problem.isPublished AS pub,
+            problem.id          AS pmId,
+            problem.code        AS pmCe,
+            problem.name        AS pmNe,
+            tag.name            AS tgNe,
+            tag.id              AS tgId
+        FROM
+            problem
+            INNER JOIN ur_pm_auy
+                ON problem.id = ur_pm_auy.pmId
+                   AND ur_pm_auy.deleteFlg = '0'
+                   AND ur_pm_auy.auyId = #{can_view_problem_auth}
+                   AND ur_pm_auy.urId = #{urId}
+            LEFT JOIN pm_tg
+                ON pm_tg.pmId = problem.id
+                   AND pm_tg.deleteFlg = '0'
+            LEFT JOIN tag
+                ON tag.id = pm_tg.tgId
+                   AND tag.deleteFlg = '0'
+        WHERE problem.deleteFlg = '0'
+              AND problem.isPublished = 1
+              AND problem.id NOT IN (
+            SELECT pmId
+            FROM ce_pm
+            WHERE ceId = #{ceId}
+        )
+    </select>
+    <select id="getProblemToDisplayInContest" resultType="ProblemDTO">
         SELECT
         problem.id,
         problem.name,
@@ -114,6 +145,27 @@
         problem.deleteFlg = '0'
 
     </select>
+    <select id="getProblemToDisplayInCourse" resultType="ProblemDTO">
+        SELECT
+        problem.id,
+        problem.name,
+        problem.timeLimit,
+        problem.memoryLimit,
+        problem.difficulty,
+        problem.solveCnt,
+        ce_pm.isHidden
+        FROM problem
+        INNER JOIN ce_pm
+        ON problem.id = ce_pm.pmId
+        AND ce_pm.ceId = #{ceId}
+        AND ce_pm.deleteFlg = '0'
+        <if test="!getAllProblem">
+            AND ce_pm.isHidden = 0
+        </if>
+        WHERE
+        problem.deleteFlg = '0'
+
+    </select>
     <select id="checkIfSolvedBefore" resultType="java.lang.Integer">
         SELECT count(*)
         FROM submission
@@ -122,7 +174,7 @@
               AND submission.deleteFlg = '0'
               AND submission.judgeStatus = 6
     </select>
-    <select id="getProblemToSubmit" resultType="ProblemDTO">
+    <select id="getProblemToSubmitInContest" resultType="ProblemDTO">
         SELECT
             problem.id,
             problem.name
@@ -133,7 +185,20 @@
                    AND ct_pm.isHidden = 0
                    AND ct_pm.deleteFlg = '0'
         WHERE
-            problem.deleteFlg = '0'
+        problem.deleteFlg = '0'
+    </select>
+    <select id="getProblemToSubmitInCourse" resultType="ProblemDTO">
+        SELECT
+        problem.id,
+        problem.name
+        FROM problem
+        INNER JOIN ce_pm
+        ON problem.id = ce_pm.pmId
+        AND ce_pm.ceId = #{ceId}
+        AND ce_pm.isHidden = 0
+        AND ce_pm.deleteFlg = '0'
+        WHERE
+        problem.deleteFlg = '0'
     </select>
     <select id="getProblemForLeaderboard" resultType="ProblemDTO">
         SELECT
