@@ -5647,6 +5647,7 @@ File: scss
     .mailbox .message-center a .mail-contnet {
       display: inline-block;
       width: 75%;
+      margin-left: 10px;
       vertical-align: middle; }
       .mailbox .message-center a .mail-contnet h5 {
         margin: 5px 0px 0; }
@@ -5668,6 +5669,9 @@ File: scss
   font-size: 24px;
   vertical-align: middle; }
 
+.notification-content {
+  margin-left: 15px;
+}
 /*******************
 /*States row*/
 /*******************/
