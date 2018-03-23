@@ -604,7 +604,7 @@ public class CourseService extends BaseService {
         judgeService.judge(problemDTO, languageDTO, submissionEntity, urId, null, ceId);
     }
 
-    public List<AnnouncementDTO> getAnnouncementListInContest(Integer ceId) {
+    public List<AnnouncementDTO> getAnnouncementListInCourse(Integer ceId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean getAllAnnouncement = false;
         if (null != auth && !StringUtil.isNull(auth.getName())) {
@@ -612,7 +612,7 @@ public class CourseService extends BaseService {
                 getAllAnnouncement = true;
             }
         }
-        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementListInContest(ceId, getAllAnnouncement);
+        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementListInCourse(ceId, getAllAnnouncement);
         for (AnnouncementDTO announce : lstAnnounce) {
             if (announce.getProblem().getId() != null && announce.getProblem().getId().equals(0)) {
                 announce.getProblem().setName("Thông báo chung");
@@ -661,6 +661,8 @@ public class CourseService extends BaseService {
         setCreateInfo(ceAtEntity);
         setUpdateInfo(ceAtEntity);
         ceAtMapper.insert(ceAtEntity);
+
+        sendAnswerNotification(announcementEntity,ceId);
     }
 
     public void changeAnnounceHiddenState(Integer atId, Integer newState) {
@@ -686,7 +688,7 @@ public class CourseService extends BaseService {
         return announcementEntity.getQuestion();
     }
 
-    public void answerQuestion(Integer atId, String answer) {
+    public void answerQuestion(Integer atId, String answer,Integer ceId) {
         AnnouncementEntity announcementEntity = new AnnouncementEntity();
         announcementEntity.setId(atId);
         announcementEntity.setIsAnswered(1);
@@ -694,5 +696,11 @@ public class CourseService extends BaseService {
         setUpdateInfo(announcementEntity);
         announcementEntity.setDeleteFlg("0");
         announcementMapper.updateNotNullByPK(announcementEntity);
+        sendAnswerNotification(announcementEntity,ceId);
+    }
+
+    @Async
+    public void sendAnswerNotification(AnnouncementEntity announcementEntity,Integer ceId){
+        simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.COURSE_ANNOUNCEMENT_TOPIC + ceId, announcementEntity);
     }
 }

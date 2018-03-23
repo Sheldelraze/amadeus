@@ -1,13 +1,17 @@
 var notifyClient = null;
 $(function () {
     if (urId != null) {
-        var socket = new SockJS('/chat');
-        notifyClient = Stomp.over(socket);
-        notifyClient.connect({}, onConnect, onConnectError);
+        if (notifyClient == null) {
+            var socket = new SockJS('/chat');
+            notifyClient = Stomp.over(socket);
+            notifyClient.connect({}, onConnectNotify, onConnectErrorNotify);
+        }else{
+            onConnectNotify();
+        }
     }
 });
 
-function onConnect() {
+function onConnectNotify() {
     notifyClient.subscribe('/message/topic.inbox/' + urId, onMessageNotifyReceived);
     notifyClient.subscribe('/message/topic.notification/' + urId, onMessageNotifyReceived);
 }
@@ -15,7 +19,7 @@ function onConnect() {
 function onMessageNotifyReceived(payload) {
     var message = JSON.parse(payload.body);
     //notification
-    if (message.type != null && message.content != null) {
+    if (message.link != null && message.type != null && message.content != null) {
         var noNotification = document.getElementById('noNotification');
         noNotification.style.display = 'none';
 
@@ -131,6 +135,6 @@ function onMessageNotifyReceived(payload) {
     }
 }
 
-function onConnectError(error) {
+function onConnectErrorNotify(error) {
 
 }

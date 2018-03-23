@@ -182,7 +182,7 @@
 <!-- This is data table -->
 <script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js" th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}" ></script>
 <script th:inline="javascript">
-    var topic = /*[[${topic}]]*/ null;
+    var leaderboardTopic = /*[[${leaderboardTopic}]]*/ null;
     $(document).ready(function () {
         $('#myTable').dataTable( {
             "bSort": false

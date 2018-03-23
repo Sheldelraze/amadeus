@@ -1,17 +1,23 @@
+var leaderClient = null;
 $(function () {
-    if (topic != 'NOT_CHOSEN') {
-        var socket = new SockJS('/chat');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, onError);
+    if (leaderboardTopic != null) {
+        if (leaderClient == null) {
+            var socket = new SockJS('/chat');
+            leaderClient = Stomp.over(socket);
+            leaderClient.connect({}, onConnectedLeaderboard, onErrorLeaderboard);
+        }
+        else{
+            leaderClient.subscribe('/message/topic.' + leaderboardTopic, onStatusUpdate);
+        }
     }
 });
 
-function onError(error) {
+function onErrorLeaderboard(error) {
 
 }
 
-function onConnected() {
-    stompClient.subscribe('/message/topic.' + topic, onStatusUpdate);
+function onConnectedLeaderboard() {
+    leaderClient.subscribe('/message/topic.' + leaderboardTopic, onStatusUpdate);
 }
 
 function onStatusUpdate(payload) {

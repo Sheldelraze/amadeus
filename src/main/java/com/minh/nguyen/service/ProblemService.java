@@ -74,7 +74,9 @@ public class ProblemService extends BaseService {
             String fileName = "Solution-" + problemDTO.getId() + "-" + problemDTO.getCode();
             String location = Constants.PROBLEM_LOCATION_PREFIX + problemDTO.getCode();
             File dir = new File(location);
-            dir.mkdir();
+            if (!dir.exists()){
+                dir.mkdir();
+            }
             CompileUtil.doCompile(languageDTO, problemDTO, location + "\\", fileName);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
             throw e;
@@ -213,10 +215,13 @@ public class ProblemService extends BaseService {
             e.printStackTrace();
             throw e;
         }
-        String location = Constants.PROBLEM_LOCATION_PREFIX + problemDTO.getCode()
-                + "\\";
+        String location = Constants.PROBLEM_LOCATION_PREFIX + problemDTO.getCode();
+        File dir = new File(location);
+        if (! dir.exists()){
+            dir.mkdir();
+        }
         String filename = "input-itId-" + inputEntity.getId();
-        FileUtil.createFileWithContent(location, filename, "txt",
+        FileUtil.createFileWithContent(location + "\\", filename, "txt",
                 inputEntity.getInput());
     }
 

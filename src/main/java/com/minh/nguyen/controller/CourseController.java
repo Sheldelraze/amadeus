@@ -234,7 +234,7 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @PreAuthorize("isAuthenticated() && hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/material")
     public ModelAndView getMaterial(@PathVariable("ceId") int ceId) {
         ModelAndView modelAndView = createGeneralModel(ceId);
@@ -252,7 +252,7 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/addMaterial")
     public ModelAndView addMaterial(@PathVariable("ceId") int ceId, CourseAddMaterialForm courseAddMaterialForm, boolean updateSuccess) {
         ModelAndView modelAndView = createGeneralModel(ceId);
@@ -270,7 +270,7 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @PreAuthorize("isAuthenticated() && hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @RequestMapping(value = "/{ceId}/download/{mlId}")
     @ResponseBody
     public ResponseEntity<?> getFile(@PathVariable("ceId") Integer ceId, @PathVariable("mlId") Integer mlId) {
@@ -295,7 +295,7 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
     @PostMapping("/{ceId}/addMaterial")
     public ModelAndView doAddMaterial(@PathVariable("ceId") int ceId, CourseAddMaterialForm courseAddMaterialForm, BindingResult bindingResult) {
         try {
@@ -383,7 +383,7 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @PreAuthorize("isAuthenticated() && hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/problem")
     public ModelAndView getProblem(@PathVariable("ceId") int ceId) {
         ModelAndView modelAndView = createGeneralModel(ceId);
@@ -396,7 +396,7 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @PreAuthorize("isAuthenticated() && hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') ||@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/problem/{pmId}/view")
     public ModelAndView viewProblem(@PathVariable("ceId") int ceId, @PathVariable("pmId") int pmId) {
         ModelAndView modelAndView = createGeneralModel(ceId);
@@ -456,12 +456,12 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @CourseValidator.checkParticipate(authentication,#ceId)")
+    @PreAuthorize("isAuthenticated() ||@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/my")
     public ModelAndView getMy(@PathVariable("ceId") int ceId) {
         ModelAndView modelAndView = createGeneralModel(ceId);
         modelAndView.setViewName(SUBMISSION_MY_VIEW);
-        modelAndView.addObject(Constants.TOPIC_TEXT, Constants.COURSE_TOPIC + ceId);
+        modelAndView.addObject(Constants.LEADERBOARD_TOPIC_TEXT, Constants.COURSE_TOPIC + ceId);
         List<SubmissionDTO> lstSubmission = courseService.getSubmissionInCourse(ceId, false);
         modelAndView.addObject(TAB, 4);
         modelAndView.addObject(COURSE_ID, ceId);
@@ -470,12 +470,12 @@ public class CourseController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @PreAuthorize("isAuthenticated() && hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') ||@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/all")
     public ModelAndView getAll(@PathVariable("ceId") int ceId) {
         ModelAndView modelAndView = createGeneralModel(ceId);
         modelAndView.setViewName(SUBMISSION_ALL_VIEW);
-        modelAndView.addObject(Constants.TOPIC_TEXT, Constants.COURSE_TOPIC + ceId);
+        modelAndView.addObject(Constants.LEADERBOARD_TOPIC_TEXT, Constants.COURSE_TOPIC + ceId);
         List<SubmissionDTO> lstSubmission = courseService.getSubmissionInCourse(ceId, true);
         modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
         modelAndView.addObject(TAB, 5);
@@ -503,7 +503,7 @@ public class CourseController extends BaseController {
 //    }
 //
 @CheckNotNullFirst
-@PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+@PreAuthorize("isAuthenticated() && hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
 @GetMapping("/{ceId}/announcement")
 public ModelAndView getAnnouncement(@PathVariable("ceId") int ceId, CourseAnnouncementForm courseAnnouncementForm, boolean updateSuccess) {
     ModelAndView modelAndView = createGeneralModel(ceId);
@@ -512,7 +512,7 @@ public ModelAndView getAnnouncement(@PathVariable("ceId") int ceId, CourseAnnoun
     if (null == courseAnnouncementForm) {
         courseAnnouncementForm = new CourseAnnouncementForm();
     }
-    List<AnnouncementDTO> lstAnnounce = courseService.getAnnouncementListInContest(ceId);
+    List<AnnouncementDTO> lstAnnounce = courseService.getAnnouncementListInCourse(ceId);
     modelAndView.addObject("courseAnnouncementForm", courseAnnouncementForm);
     modelAndView.addObject("lstProblem", lstProblem);
     modelAndView.addObject("lstAnnounce", lstAnnounce);
@@ -757,7 +757,7 @@ public ModelAndView getAnnouncement(@PathVariable("ceId") int ceId, CourseAnnoun
         if (bindingResult.hasErrors()) {
             return getQuestion(ceId, atId, courseAnswerForm, false);
         }
-        courseService.answerQuestion(Integer.parseInt(courseAnswerForm.getAtId()), courseAnswerForm.getAnswer());
+        courseService.answerQuestion(Integer.parseInt(courseAnswerForm.getAtId()), courseAnswerForm.getAnswer(),ceId);
         return getQuestion(ceId, atId, courseAnswerForm, true);
     }
 }

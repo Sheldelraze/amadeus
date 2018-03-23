@@ -105,7 +105,7 @@ public class StringUtil {
         } else{
             boolean correct = true;
             for(int i = 0;i < ans.length;i++){
-                if (!out[i].equals(ans[i])) {
+                if (!out[i].trim().equals(ans[i].trim())) {
                     result =  new StringBuilder().append("Sai kết quả ở dòng thứ ")
                             .append(i + 1)
                             .append(":\r\n")

@@ -213,9 +213,13 @@ $(function () {
                 sendMessage(event);
     });
     if (topic != 'NOT_CHOSEN') {
-        var socket = new SockJS('/chat');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, onError);
+        if (stompClient == null) {
+            var socket = new SockJS('/chat');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, onConnected, onError);
+        }else{
+            onConnected();
+        }
     } else {
         connectingElement.className = "p-10 bg-light-green";
         connectingElement.textContent = 'Vui lòng chọn người để chat cùng...';

@@ -70,7 +70,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form th:object="${contestAnswerForm}" th:action="|/contest/${ctId}/answer/${atId}|"
+                        <form th:object="${courseAnswerForm}" th:action="|/course/${ceId}/answer/${atId}|"
                               method="post">
                             <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                 <div class="alert alert-danger">
