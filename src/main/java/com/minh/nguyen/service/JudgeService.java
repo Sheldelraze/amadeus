@@ -71,6 +71,7 @@ public class JudgeService extends BaseService {
             String location = Constants.SUBMISSION_LOCATION_PREFIX;
             CompileUtil.doCompile(languageDTO, problemDTO, location, fileName);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
+            e.printStackTrace();
             // compile err
             submissionEntity.setJudgeStatus(Constants.STATUS_COMPILE_ERROR);
             submissionEntity.setVerdict(Constants.VERDICT_COMPILE_ERROR);
@@ -88,6 +89,8 @@ public class JudgeService extends BaseService {
             //send message
             sendMessage(submissionEntity, ctId, ceId);
             return;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         for (int i = 0; i < problemDTO.getLstInput().size(); i++) {
             InputDTO inputDTO = problemDTO.getLstInput().get(i);

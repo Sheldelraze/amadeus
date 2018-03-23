@@ -74,6 +74,38 @@
         WHERE submission.deleteFlg = '0'
         ORDER BY submission.createTime DESC
     </select>
+    <select id="getSubmissionInCourse" resultMap="submission">
+        SELECT
+        submission.id AS id,
+        problem.id AS pmId,
+        problem.name AS pmNm,
+        user.id AS urId,
+        user.fullname AS fullname,
+        submission.memoryUsed AS memoryUsed,
+        submission.timeRun AS timeRun,
+        submission.createTime AS createTime,
+        submission.judgeStatus AS judgeStatus,
+        submission.verdict AS verdict,
+        language.name AS leNm
+        FROM submission
+        INNER JOIN ce_sn
+        ON submission.id = ce_sn.snId
+        AND ce_sn.ceId = #{ceId}
+        INNER JOIN user
+        on submission.urId = user.id
+        AND user.deleteFlg = '0'
+        <if test="handle != null and handle.length > 0">
+            AND user.handle=#{handle}
+        </if>
+        LEFT JOIN problem
+        ON submission.pmId = problem.id
+        AND submission.deleteFlg = '0'
+        LEFT JOIN language
+        ON submission.leId = language.id
+        AND language.deleteFlg = '0'
+        WHERE submission.deleteFlg = '0'
+        ORDER BY submission.createTime DESC
+    </select>
     <select id="getSubmitDetail" resultMap="submission">
         SELECT
             submission.id           AS id,

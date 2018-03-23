@@ -3,6 +3,7 @@ package com.minh.nguyen.service;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.*;
+import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
@@ -71,6 +72,21 @@ public class CourseService extends BaseService {
 
     @Autowired
     private HttpSession httpSession;
+
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private LanguageMapper languageMapper;
+
+    @Autowired
+    private ProblemService problemService;
+
+    @Autowired
+    private InputMapper inputMapper;
+
+    @Autowired
+    private JudgeService judgeService;
 
     @Autowired
     private SimpMessageSendingOperations simpMessagingTemplate;
@@ -434,6 +450,7 @@ public class CourseService extends BaseService {
         //send message to view
         simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.NOTIFICATION_TOPIC + urId, notificationEntity);
     }
+
     public CourseDTO getInformation(int ceId) {
         //get course information
         CourseDTO courseDTO = new CourseDTO();
@@ -503,5 +520,179 @@ public class CourseService extends BaseService {
             }
         }
         return lst;
+    }
+
+    public List<ProblemDTO> getProblemToSubmit(Integer ceId) {
+        List<ProblemDTO> lst = problemMapper.getProblemToSubmitInCourse(ceId);
+        int cnt = 0;
+        for (ProblemDTO problemDTO : lst) {
+            String name = ++cnt + ". " + problemDTO.getName();
+            problemDTO.setName(name);
+        }
+        return lst;
+    }
+
+    @Transactional
+    public void addProblemToCourse(Integer ceId, String[] lstPmId) throws Exception {
+        for (String pmId : lstPmId) {
+            CePmEntity cePmEntity = new CePmEntity();
+            cePmEntity.setCeId(ceId);
+            cePmEntity.setPmId(Integer.parseInt(pmId));
+            cePmEntity.setIsHidden(0);
+            setUpdateInfo(cePmEntity);
+            setCreateInfo(cePmEntity);
+            cePmMapper.insert(cePmEntity);
+
+            //reset firstSolve time
+            problemMapper.resetFirstSolveTime(Integer.parseInt(pmId));
+        }
+    }
+
+    public List<SubmissionDTO> getSubmissionInCourse(Integer ceId, boolean getAll) {
+        List<SubmissionDTO> lst = null;
+        if (getAll) {
+            lst = submissionMapper.getSubmissionInCourse(ceId, null);
+        } else {
+            String handle = (String) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+            lst = submissionMapper.getSubmissionInCourse(ceId, handle);
+        }
+        for (SubmissionDTO submissionDTO : lst) {
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            String strDate = dateFormat.format(submissionDTO.getCreateTime());
+            submissionDTO.setSubmitTime(strDate);
+        }
+        return lst;
+    }
+
+    @Transactional
+    public void doSubmit(String sourceCode, Integer ceId, Integer leId, Integer pmId) {
+        LanguageEntity languageEntity = new LanguageEntity();
+        languageEntity.setId(leId);
+        languageEntity = languageMapper.selectByPK(languageEntity);
+        LanguageDTO languageDTO = new LanguageDTO();
+        modelMapper.map(languageEntity, languageDTO);
+        ProblemDTO problemDTO = new ProblemDTO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        List<InputDTO> lstInput = inputMapper.getAllTest(pmId);
+        problemDTO.setLstInput(lstInput);
+        problemDTO.setSourceCode(sourceCode);
+        Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (urId == null) {
+            rollBack(Constants.MSG_SESSION_TIMEOUT);
+        }
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setLeId(languageDTO.getId());
+        submissionEntity.setSourceCode(problemDTO.getSourceCode());
+        submissionEntity.setPmId(problemDTO.getId());
+        submissionEntity.setTimeRun(0);
+        submissionEntity.setMemoryUsed(0);
+        submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
+        submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
+        submissionEntity.setUrId(urId);
+        setUpdateInfo(submissionEntity);
+        setCreateInfo(submissionEntity);
+        submissionMapper.insertSubmission(submissionEntity);
+
+        CeSnEntity ceSnEntity = new CeSnEntity();
+        ceSnEntity.setCeId(ceId);
+        ceSnEntity.setSnId(submissionEntity.getId());
+        setCreateInfo(ceSnEntity);
+        setUpdateInfo(ceSnEntity);
+        ceSnMapper.insert(ceSnEntity);
+
+        judgeService.judge(problemDTO, languageDTO, submissionEntity, urId, null, ceId);
+    }
+
+    public List<AnnouncementDTO> getAnnouncementListInContest(Integer ceId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean getAllAnnouncement = false;
+        if (null != auth && !StringUtil.isNull(auth.getName())) {
+            if (courseValidator.checkPermission(auth, ceId, Constants.AUTH_EDIT_COURSE_TEXT)) {
+                getAllAnnouncement = true;
+            }
+        }
+        List<AnnouncementDTO> lstAnnounce = announcementMapper.getAnnouncementListInContest(ceId, getAllAnnouncement);
+        for (AnnouncementDTO announce : lstAnnounce) {
+            if (announce.getProblem().getId() != null && announce.getProblem().getId().equals(0)) {
+                announce.getProblem().setName("Thông báo chung");
+            }
+            SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            announce.setTimePosted(sdfr.format(announce.getUpdateTime()));
+        }
+        return lstAnnounce;
+    }
+
+    @Transactional
+    public void addQuestion(Integer ceId, Integer pmId, String question) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setPmId(pmId);
+        announcementEntity.setQuestion(question);
+        announcementEntity.setIsAnswered(0);
+        announcementEntity.setIsHidden(0);
+        announcementEntity.setIsFromCreator(0);
+        setUpdateInfo(announcementEntity);
+        setCreateInfo(announcementEntity);
+        announcementMapper.insertAnnouncement(announcementEntity);
+
+        CeAtEntity ceAtEntity = new CeAtEntity();
+        ceAtEntity.setCeId(ceId);
+        ceAtEntity.setAtId(announcementEntity.getId());
+        setCreateInfo(ceAtEntity);
+        setUpdateInfo(ceAtEntity);
+        ceAtMapper.insert(ceAtEntity);
+    }
+
+    @Transactional
+    public void addAnnouncement(Integer ceId, Integer pmId, String answer) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setPmId(pmId);
+        announcementEntity.setAnswer(answer);
+        announcementEntity.setIsAnswered(1);
+        announcementEntity.setIsHidden(0);
+        announcementEntity.setIsFromCreator(1);
+        setUpdateInfo(announcementEntity);
+        setCreateInfo(announcementEntity);
+        announcementMapper.insertAnnouncement(announcementEntity);
+
+        CeAtEntity ceAtEntity = new CeAtEntity();
+        ceAtEntity.setCeId(ceId);
+        ceAtEntity.setAtId(announcementEntity.getId());
+        setCreateInfo(ceAtEntity);
+        setUpdateInfo(ceAtEntity);
+        ceAtMapper.insert(ceAtEntity);
+    }
+
+    public void changeAnnounceHiddenState(Integer atId, Integer newState) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setId(atId);
+        announcementEntity.setIsHidden(newState);
+        setUpdateInfo(announcementEntity);
+        announcementEntity.setDeleteFlg("0");
+        int recordCnt = announcementMapper.updateNotNullByPK(announcementEntity);
+        if (0 == recordCnt) {
+            rollBack(Constants.MSG_UPDATE_ERR);
+        }
+    }
+
+    public String getQuestion(Integer atId) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setId(atId);
+        announcementEntity.setDeleteFlg("0");
+        announcementEntity = announcementMapper.selectByPK(announcementEntity);
+        if (announcementEntity == null) {
+            throw new NoSuchPageException("Announcement not found!");
+        }
+        return announcementEntity.getQuestion();
+    }
+
+    public void answerQuestion(Integer atId, String answer) {
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setId(atId);
+        announcementEntity.setIsAnswered(1);
+        announcementEntity.setAnswer(answer);
+        setUpdateInfo(announcementEntity);
+        announcementEntity.setDeleteFlg("0");
+        announcementMapper.updateNotNullByPK(announcementEntity);
     }
 }

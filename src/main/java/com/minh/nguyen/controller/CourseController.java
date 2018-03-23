@@ -4,10 +4,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
-import com.minh.nguyen.form.course.CourseAddMaterialForm;
-import com.minh.nguyen.form.course.CourseAddProblemForm;
-import com.minh.nguyen.form.course.CourseAddRoleForm;
-import com.minh.nguyen.form.course.CourseCreateForm;
+import com.minh.nguyen.form.course.*;
 import com.minh.nguyen.service.CourseService;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.MaterialService;
@@ -19,6 +16,8 @@ import com.minh.nguyen.validator.MaterialValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
 import com.minh.nguyen.vo.MessageVO;
+import com.minh.nguyen.vo.course.CourseSubmitVO;
+import com.minh.nguyen.vo.problem.ProblemPreviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
@@ -346,24 +345,24 @@ public class CourseController extends BaseController {
         modelAndView.addObject("courseAddProblemForm", courseAddProblemForm);
         return modelAndView;
     }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @PostMapping("/{ceId}/addProblem")
-//    public ModelAndView doAddProblem(@PathVariable("ceId") int ceId,
-//                                     CourseAddProblemForm courseAddProblemForm,
-//                                     BindingResult bindingResult) {
-//        try {
-//            courseService.addProblemToCourse(ceId, courseAddProblemForm.getLstPmId());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR);
-//        }
-//        if (bindingResult.hasErrors()) {
-//            return initAddProblem(ceId, courseAddProblemForm, false);
-//        }
-//        return initAddProblem(ceId, courseAddProblemForm, true);
-//    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @PostMapping("/{ceId}/addProblem")
+    public ModelAndView doAddProblem(@PathVariable("ceId") int ceId,
+                                     CourseAddProblemForm courseAddProblemForm,
+                                     BindingResult bindingResult) {
+        try {
+            courseService.addProblemToCourse(ceId, courseAddProblemForm.getLstPmId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR);
+        }
+        if (bindingResult.hasErrors()) {
+            return initAddProblem(ceId, courseAddProblemForm, false);
+        }
+        return initAddProblem(ceId, courseAddProblemForm, true);
+    }
 
     @CheckNotNullFirst
     @CheckNotNullThird
@@ -396,102 +395,94 @@ public class CourseController extends BaseController {
         return modelAndView;
     }
 
-//    @CheckNotNullFirst
-//    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
-//            "|| @CourseValidator.checkParticipate(authentication,#ceId) " +
-//            "|| @CourseValidator.checkOutsiderPermission(authentication,#ceId)")
-//    @GetMapping("/{ceId}/problem/{pmId}/view")
-//    public ModelAndView viewProblem(@PathVariable("ceId") int ceId, @PathVariable("pmId") int pmId) {
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        modelAndView.setViewName(PROBLEM_VIEW);
-//        ProblemDTO problemDTO = new ProblemDTO();
-//        problemDTO.setId(pmId);
-//        problemService.getProblemInfo(problemDTO);
-//        problemService.getShowInStatementTest(problemDTO);
-//        ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
-//        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())) {
-//            problemPreviewVO.setNote(null);
-//        }
-//        modelMapper.map(problemDTO, problemPreviewVO);
-//        modelAndView.addObject(TAB, 2);
-//        modelAndView.addObject("problemVO", problemPreviewVO);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        return modelAndView;
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
-//            "|| @CourseValidator.checkParticipate(authentication,#ceId)")
-//    @GetMapping("/{ceId}/submit")
-//    public ModelAndView getSubmit(@PathVariable("ceId") int ceId, CourseSubmitForm courseSubmitForm) {
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        CourseSubmitVO courseSubmitVO = new CourseSubmitVO();
-//        courseSubmitVO.setLstLanguage(problemService.getAllLanguage());
-//        courseSubmitVO.setLstProblem(courseService.getProblemToSubmit(ceId));
-//        if (courseSubmitForm.getId() != null) {
-//            courseSubmitVO.setSourceCode(courseSubmitForm.getSourceCode());
-//        } else {
-//            courseSubmitForm = new CourseSubmitForm();
-//        }
-//        modelAndView.setViewName(SUBMIT_VIEW);
-//        modelAndView.addObject(SUBMIT_FORM, courseSubmitForm);
-//        modelAndView.addObject(SUBMIT_VO, courseSubmitVO);
-//        modelAndView.addObject(TAB, 3);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        return modelAndView;
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkParticipate(authentication,#ceId)")
-//    @PostMapping("/{ceId}/submit")
-//    public ModelAndView doSubmit(@PathVariable("ceId") int ceId, CourseSubmitForm courseSubmitForm, BindingResult bindingResult) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        courseSubmitForm.setScreenName("submitForm");
-//        validate(courseSubmitForm, bindingResult);
-//        if (bindingResult.hasErrors()) {
-//            courseSubmitForm.setId(ceId);
-//            return getSubmit(ceId, courseSubmitForm);
-//        }
-//        courseService.doSubmit(courseSubmitForm.getSourceCode(), ceId,
-//                courseSubmitForm.getLeId(),
-//                courseSubmitForm.getPmId());
-//        modelAndView.setViewName("redirect:/course/" + ceId + "/my");
-//        return modelAndView;
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkParticipate(authentication,#ceId)")
-//    @GetMapping("/{ceId}/my")
-//    public ModelAndView getMy(@PathVariable("ceId") int ceId) {
-//        CourseLayoutForm courseSubmissionMyForm = new CourseSubmissionMyForm();
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        modelAndView.setViewName(SUBMISSION_MY_VIEW);
-//        modelAndView.addObject(Constants.TOPIC_TEXT, "course/" + ceId);
-//        modelAndView.addObject(SUBMISSION_MY_FORM, courseSubmissionMyForm);
-//        List<SubmissionDTO> lstSubmission = courseService.getSubmissionInCourse(ceId, false);
-//        modelAndView.addObject(TAB, 4);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
-//        return modelAndView;
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
-//            "|| (@CourseValidator.checkParticipate(authentication,#ceId) && @CourseValidator.canViewStatus(#ceId))")
-//    @GetMapping("/{ceId}/all")
-//    public ModelAndView getAll(@PathVariable("ceId") int ceId) {
-//        CourseLayoutForm courseSubmissionAllForm = new CourseSubmissionAllForm();
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        modelAndView.setViewName(SUBMISSION_ALL_VIEW);
-//        modelAndView.addObject(Constants.TOPIC_TEXT, "course/" + ceId);
-//        modelAndView.addObject(SUBMISSION_ALL_FORM, courseSubmissionAllForm);
-//        List<SubmissionDTO> lstSubmission = courseService.getSubmissionInCourse(ceId, true);
-//        modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
-//        modelAndView.addObject(TAB, 5);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        return modelAndView;
-//    }
-//
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/problem/{pmId}/view")
+    public ModelAndView viewProblem(@PathVariable("ceId") int ceId, @PathVariable("pmId") int pmId) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(PROBLEM_VIEW);
+        ProblemDTO problemDTO = new ProblemDTO();
+        problemDTO.setId(pmId);
+        problemService.getProblemInfo(problemDTO);
+        problemService.getShowInStatementTest(problemDTO);
+        ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
+        if (problemPreviewVO.getNote() != null && StringUtil.checkBlank(problemPreviewVO.getNote())) {
+            problemPreviewVO.setNote(null);
+        }
+        modelMapper.map(problemDTO, problemPreviewVO);
+        modelAndView.addObject(TAB, 2);
+        modelAndView.addObject("problemVO", problemPreviewVO);
+        modelAndView.addObject(COURSE_ID, ceId);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/submit")
+    public ModelAndView getSubmit(@PathVariable("ceId") int ceId, CourseSubmitForm courseSubmitForm) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        CourseSubmitVO courseSubmitVO = new CourseSubmitVO();
+        courseSubmitVO.setLstLanguage(problemService.getAllLanguage());
+        courseSubmitVO.setLstProblem(courseService.getProblemToSubmit(ceId));
+        if (courseSubmitForm.getId() != null) {
+            courseSubmitVO.setSourceCode(courseSubmitForm.getSourceCode());
+        } else {
+            courseSubmitForm = new CourseSubmitForm();
+        }
+        modelAndView.setViewName(SUBMIT_VIEW);
+        modelAndView.addObject(SUBMIT_FORM, courseSubmitForm);
+        modelAndView.addObject(SUBMIT_VO, courseSubmitVO);
+        modelAndView.addObject(TAB, 3);
+        modelAndView.addObject(COURSE_ID, ceId);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @PostMapping("/{ceId}/submit")
+    public ModelAndView doSubmit(@PathVariable("ceId") int ceId, CourseSubmitForm courseSubmitForm, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView();
+        courseSubmitForm.setScreenName("submitForm");
+        validate(courseSubmitForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            courseSubmitForm.setId(ceId);
+            return getSubmit(ceId, courseSubmitForm);
+        }
+        courseService.doSubmit(courseSubmitForm.getSourceCode(), ceId,
+                courseSubmitForm.getLeId(),
+                courseSubmitForm.getPmId());
+        modelAndView.setViewName("redirect:/course/" + ceId + "/my");
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkParticipate(authentication,#ceId)")
+    @GetMapping("/{ceId}/my")
+    public ModelAndView getMy(@PathVariable("ceId") int ceId) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(SUBMISSION_MY_VIEW);
+        modelAndView.addObject(Constants.TOPIC_TEXT, Constants.COURSE_TOPIC + ceId);
+        List<SubmissionDTO> lstSubmission = courseService.getSubmissionInCourse(ceId, false);
+        modelAndView.addObject(TAB, 4);
+        modelAndView.addObject(COURSE_ID, ceId);
+        modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/all")
+    public ModelAndView getAll(@PathVariable("ceId") int ceId) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(SUBMISSION_ALL_VIEW);
+        modelAndView.addObject(Constants.TOPIC_TEXT, Constants.COURSE_TOPIC + ceId);
+        List<SubmissionDTO> lstSubmission = courseService.getSubmissionInCourse(ceId, true);
+        modelAndView.addObject(SUBMISSION_LIST, lstSubmission);
+        modelAndView.addObject(TAB, 5);
+        modelAndView.addObject(COURSE_ID, ceId);
+        return modelAndView;
+    }
+
 //    @CheckNotNullFirst
 //    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
 //            "|| (@CourseValidator.checkParticipate(authentication,#ceId) && @CourseValidator.canViewStatus(#ceId)) " +
@@ -511,51 +502,49 @@ public class CourseController extends BaseController {
 //        return modelAndView;
 //    }
 //
-//    @CheckNotNullFirst
-//    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
-//            "|| @CourseValidator.checkParticipate(authentication,#ceId) " +
-//            "|| @CourseValidator.checkOutsiderPermission(authentication,#ceId)")
-//    @GetMapping("/{ceId}/announcement")
-//    public ModelAndView getAnnouncement(@PathVariable("ceId") int ceId, CourseAnnouncementForm courseAnnouncementForm, boolean updateSuccess) {
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        modelAndView.setViewName(ANNOUNCEMENT_VIEW);
-//        List<ProblemDTO> lstProblem = courseService.getProblemToSubmit(ceId);
-//        if (null == courseAnnouncementForm) {
-//            courseAnnouncementForm = new CourseAnnouncementForm();
-//        }
-//        List<AnnouncementDTO> lstAnnounce = courseService.getAnnouncementListInContest(ceId);
-//        modelAndView.addObject("courseAnnouncementForm", courseAnnouncementForm);
-//        modelAndView.addObject("lstProblem", lstProblem);
-//        modelAndView.addObject("lstAnnounce", lstAnnounce);
-//        modelAndView.addObject(TAB, 7);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        modelAndView.addObject("updateSuccess", updateSuccess);
-//        return modelAndView;
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkParticipate(authentication,#ceId)")
-//    @PostMapping("/{ceId}/addQuestion")
-//    public ModelAndView addQuestion(@PathVariable("ceId") int ceId, CourseAnnouncementForm courseAnnouncementForm, BindingResult bindingResult) {
-//        validate(courseAnnouncementForm, bindingResult);
-//        if (bindingResult.hasErrors()) {
-//            return getAnnouncement(ceId, courseAnnouncementForm, false);
-//        }
-//        courseService.addQuestion(ceId, Integer.parseInt(courseAnnouncementForm.getPmId()), courseAnnouncementForm.getQuestion());
-//        return getAnnouncement(ceId, courseAnnouncementForm, true);
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @PostMapping("/{ceId}/addAnnouncement")
-//    public ModelAndView addAnnouncement(@PathVariable("ceId") int ceId, CourseAnnouncementForm courseAnnouncementForm, BindingResult bindingResult) {
-//        validate(courseAnnouncementForm, bindingResult);
-//        if (bindingResult.hasErrors()) {
-//            return getAnnouncement(ceId, courseAnnouncementForm, false);
-//        }
-//        courseService.addAnnouncement(ceId, Integer.parseInt(courseAnnouncementForm.getPmId()), courseAnnouncementForm.getAnswer());
-//        return getAnnouncement(ceId, courseAnnouncementForm, true);
-//    }
+@CheckNotNullFirst
+@PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
+@GetMapping("/{ceId}/announcement")
+public ModelAndView getAnnouncement(@PathVariable("ceId") int ceId, CourseAnnouncementForm courseAnnouncementForm, boolean updateSuccess) {
+    ModelAndView modelAndView = createGeneralModel(ceId);
+    modelAndView.setViewName(ANNOUNCEMENT_VIEW);
+    List<ProblemDTO> lstProblem = courseService.getProblemToSubmit(ceId);
+    if (null == courseAnnouncementForm) {
+        courseAnnouncementForm = new CourseAnnouncementForm();
+    }
+    List<AnnouncementDTO> lstAnnounce = courseService.getAnnouncementListInContest(ceId);
+    modelAndView.addObject("courseAnnouncementForm", courseAnnouncementForm);
+    modelAndView.addObject("lstProblem", lstProblem);
+    modelAndView.addObject("lstAnnounce", lstAnnounce);
+    modelAndView.addObject(TAB, 7);
+    modelAndView.addObject(COURSE_ID, ceId);
+    modelAndView.addObject("updateSuccess", updateSuccess);
+    return modelAndView;
+}
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkParticipate(authentication,#ceId)")
+    @PostMapping("/{ceId}/addQuestion")
+    public ModelAndView addQuestion(@PathVariable("ceId") int ceId, CourseAnnouncementForm courseAnnouncementForm, BindingResult bindingResult) {
+        validate(courseAnnouncementForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return getAnnouncement(ceId, courseAnnouncementForm, false);
+        }
+        courseService.addQuestion(ceId, Integer.parseInt(courseAnnouncementForm.getPmId()), courseAnnouncementForm.getQuestion());
+        return getAnnouncement(ceId, courseAnnouncementForm, true);
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @PostMapping("/{ceId}/addAnnouncement")
+    public ModelAndView addAnnouncement(@PathVariable("ceId") int ceId, CourseAnnouncementForm courseAnnouncementForm, BindingResult bindingResult) {
+        validate(courseAnnouncementForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return getAnnouncement(ceId, courseAnnouncementForm, false);
+        }
+        courseService.addAnnouncement(ceId, Integer.parseInt(courseAnnouncementForm.getPmId()), courseAnnouncementForm.getAnswer());
+        return getAnnouncement(ceId, courseAnnouncementForm, true);
+    }
 //
 //    @CheckNotNullFirst
 //    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
@@ -735,42 +724,41 @@ public class CourseController extends BaseController {
     }
 
 
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @GetMapping("/{ceId}/changeAnnounceState/{atId}/to/{newState}")
-//    public ModelAndView changeAnnounceState(@PathVariable("ceId") Integer ceId, @PathVariable("atId") Integer atId, @PathVariable("newState") Integer newState) {
-//        courseService.changeAnnounceHiddenState(atId, newState);
-//        return getAnnouncement(ceId, null, true);
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @GetMapping("/{ceId}/answer/{atId}")
-//    public ModelAndView getQuestion(@PathVariable("ceId") Integer ceId, @PathVariable("atId") Integer atId, CourseAnswerForm courseAnswerForm, boolean updateSuccess) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName(ANSWER_VIEW);
-//        String question = courseService.getQuestion(atId);
-//        modelAndView.addObject("question", question);
-//        modelAndView.addObject("ceId", ceId);
-//        modelAndView.addObject("atId", atId);
-//        if (null == courseAnswerForm) {
-//            courseAnswerForm = new CourseAnswerForm();
-//        }
-//        modelAndView.addObject("courseAnswerForm", courseAnswerForm);
-//        modelAndView.addObject(UPDATE_SUCCESS, updateSuccess);
-//        return modelAndView;
-//    }
-//
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
-//    @PostMapping("/{ceId}/answer/{atId}")
-//    public ModelAndView doAnswer(@PathVariable("ceId") Integer ceId, @PathVariable("atId") Integer atId, CourseAnswerForm courseAnswerForm, BindingResult bindingResult) {
-//        validate(courseAnswerForm, bindingResult);
-//        if (bindingResult.hasErrors()) {
-//            return getQuestion(ceId, atId, courseAnswerForm, false);
-//        }
-//        courseService.answerQuestion(Integer.parseInt(courseAnswerForm.getAtId()), courseAnswerForm.getAnswer());
-//        return getQuestion(ceId, atId, courseAnswerForm, true);
-//    }
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/changeAnnounceState/{atId}/to/{newState}")
+    public ModelAndView changeAnnounceState(@PathVariable("ceId") Integer ceId, @PathVariable("atId") Integer atId, @PathVariable("newState") Integer newState) {
+        courseService.changeAnnounceHiddenState(atId, newState);
+        return getAnnouncement(ceId, null, true);
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @GetMapping("/{ceId}/answer/{atId}")
+    public ModelAndView getQuestion(@PathVariable("ceId") Integer ceId, @PathVariable("atId") Integer atId, CourseAnswerForm courseAnswerForm, boolean updateSuccess) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(ANSWER_VIEW);
+        String question = courseService.getQuestion(atId);
+        modelAndView.addObject("question", question);
+        modelAndView.addObject("ceId", ceId);
+        modelAndView.addObject("atId", atId);
+        if (null == courseAnswerForm) {
+            courseAnswerForm = new CourseAnswerForm();
+        }
+        modelAndView.addObject("courseAnswerForm", courseAnswerForm);
+        modelAndView.addObject(UPDATE_SUCCESS, updateSuccess);
+        return modelAndView;
+    }
+
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "')")
+    @PostMapping("/{ceId}/answer/{atId}")
+    public ModelAndView doAnswer(@PathVariable("ceId") Integer ceId, @PathVariable("atId") Integer atId, CourseAnswerForm courseAnswerForm, BindingResult bindingResult) {
+        validate(courseAnswerForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return getQuestion(ceId, atId, courseAnswerForm, false);
+        }
+        courseService.answerQuestion(Integer.parseInt(courseAnswerForm.getAtId()), courseAnswerForm.getAnswer());
+        return getQuestion(ceId, atId, courseAnswerForm, true);
+    }
 }
 

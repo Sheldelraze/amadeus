@@ -16,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -81,19 +80,10 @@ public class CourseValidator extends BaseValidator {
     }
 
     public boolean checkParticipate(Authentication auth, Integer ctId) throws NoSuchPageException {
-        //check if participator
-        CourseEntity courseEntity = getCourseById(ctId);
-        Date currentTime = new Date();
-        Date startTime = courseEntity.getCreateTime();
-        Date endTime = courseEntity.getEndTime();
-        List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, auth.getName());
+        List<AuthorityDTO> lstAuthority = authorityMapper.getCourseAuthority(ctId, auth.getName());
         for (AuthorityDTO curAuth : lstAuthority) {
             if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_COURSE_ID)) {
-                //if so then check conditions mentioned above
-                if (currentTime.compareTo(startTime) >= 0
-                        && currentTime.compareTo(endTime) <= 0) {
-                    return true;
-                }
+                return true;
             }
         }
 

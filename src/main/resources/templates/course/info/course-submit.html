@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -77,10 +77,11 @@
                     <div class="card">
                         <div class="card-body">
                             <ul class="nav nav-pills m-t-30 m-b-30"
-                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                                th:replace="course/info/course-layout::navtab(ceId = ${ceId},tab = ${tab})"></ul>
                             <div id="submit" class="tab-pane">
                                 <div class="card-body">
-                                    <form id="submitForm" method="post" th:action="|/contest/${ctId}/submit|" th:object="${contestSubmitForm}">
+                                    <form id="submitForm" method="post" th:action="|/course/${ceId}/submit|"
+                                          th:object="${courseSubmitForm}">
                                         <div style="margin-bottom: 20px">
                                             <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                                 <div class="alert alert-danger">
@@ -91,7 +92,7 @@
                                             <select class="select2" style="width: 50%; color: black"
                                                     th:field="*{pmId}"
                                                     th:remove="all-but-first">
-                                                <option th:each="problem : ${contestSubmitVO.lstProblem}"
+                                                <option th:each="problem : ${courseSubmitVO.lstProblem}"
                                                         th:value="${problem.id}"
                                                         th:text="${problem.name}"></option>
                                                 <option value="CPP">1. Tính tổng 2 số</option>
@@ -102,7 +103,7 @@
                                             <b style="color: black;">Chọn ngôn ngữ</b>
                                             <br/>
                                             <select class="select2" th:field="*{leId}" style="width: 30%; color: black">
-                                                <option th:each="language : ${contestSubmitVO.lstLanguage}"
+                                                <option th:each="language : ${courseSubmitVO.lstLanguage}"
                                                         th:value="${language.id}"
                                                         th:text="${language.name}">
                                                 </option>
@@ -116,7 +117,8 @@
                                         </th:block>
 
                                         <input type="hidden" th:field="*{sourceCode}"/>
-                                        <pre id="editor"><label th:text="${contestSubmitVO}?${contestSubmitVO.sourceCode}"></label></pre>
+                                        <pre id="editor"><label
+                                                th:text="${courseSubmitVO}?${courseSubmitVO.sourceCode}"></label></pre>
                                         <div style="margin-bottom: 20px; margin-top: 20px">
                                             <b style="color: black;">Hoặc tải từ máy lên (coming soon)</b>
 

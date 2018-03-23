@@ -78,7 +78,8 @@
                 <div class="col-lg-12 col-xlg-12 col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <ul class="nav nav-pills m-t-30 m-b-30" th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                            <ul class="nav nav-pills m-t-30 m-b-30"
+                                th:replace="course/info/course-layout::navtab(ceId = ${ceId},tab = ${tab})"></ul>
                             <div id="my" class="tab-pane">
                                 <div class="table-responsive">
                                     <table id="myTable" class="table table-bordered " style="text-align: center; color: black">
@@ -96,9 +97,11 @@
                                         </thead>
                                         <tbody th:remove="all-but-first">
                                         <tr th:each="submission : ${lstSubmission}">
-                                            <td><b><a  th:href="|/contest/${ctId}/submission/${submission.id}|"  th:text="${submission.id}">132</a></b></td>
+                                            <td><b><a th:href="|/course/${ceId}/submission/${submission.id}|"
+                                                      th:text="${submission.id}">132</a></b></td>
                                             <td><b><a href="#" th:text="${submission?.user?.fullname}">Makise Kurisu</a></b></td>
-                                            <td><b><a th:href="|/contest/${ctId}/problem/${submission.pmId}/view|" th:text="${submission.pmNm}">Tính tổng 2 số</a></b></td>
+                                            <td><b><a th:href="|/course/${ceId}/problem/${submission.pmId}/view|"
+                                                      th:text="${submission.pmNm}">Tính tổng 2 số</a></b></td>
                                             <td><label th:text="${submission.memoryUsed}"
                                                        th:id="|memoryUsed${submission.id}|">256KB</label>MB
                                             </td>

@@ -108,7 +108,7 @@ public class CompileUtil {
         state.setFileName(fileName);
         state.setExtension(languageDTO.getExtension());
         try {
-            timeLimiter.callWithTimeout(state, 5, TimeUnit.SECONDS, true);
+            timeLimiter.callWithTimeout(state, 10, TimeUnit.SECONDS, true);
             String err = state.getOutcome().getError();
             if (null != err && !Constants.BLANK.equals(err)) {
                 err = StringUtil.trimLocation(err, languageDTO.getExtension());
