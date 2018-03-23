@@ -21,7 +21,16 @@ public class SubmissionDTO extends BaseDTO {
     private String leNm;
     private List<SubmitDetailDTO> lstSubmitDetail;
     private ContestDTO contestDTO;
+    private CourseDTO courseDTO;
     private UserDTO user;
+
+    public CourseDTO getCourseDTO() {
+        return courseDTO;
+    }
+
+    public void setCourseDTO(CourseDTO courseDTO) {
+        this.courseDTO = courseDTO;
+    }
 
     public ContestDTO getContestDTO() {
         return contestDTO;

@@ -81,6 +81,9 @@ public class ContestValidator extends BaseValidator {
         boolean flag = false;
         List<AuthorityDTO> lstAuthority = authorityMapper.getContestAuthority(ctId, handle);
         for (AuthorityDTO curAuth : lstAuthority) {
+            if (curAuth.getId().equals(Constants.AUTH_VIEW_CONTEST_ID)) {
+                return true;
+            }
             if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_CONTEST_ID)) {
                 flag = true;
             }
@@ -111,7 +114,7 @@ public class ContestValidator extends BaseValidator {
 
         //else check current user has solved this problem and this contests allow to view solved problem's solutions
         if (contestEntity.getShowSubmit().equals(Constants.SHOW_SUBMIT_SOLVED)){
-            Integer solveCnt = submissionMapper.checkSolvedStatus(ctId,submissionEntity.getPmId(),submissionEntity.getUrId());
+            Integer solveCnt = submissionMapper.checkSolvedStatusInContest(ctId,submissionEntity.getPmId(),submissionEntity.getUrId());
             return solveCnt > 0;
         }
         return false;

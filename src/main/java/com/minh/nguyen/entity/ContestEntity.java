@@ -30,9 +30,6 @@ public class ContestEntity extends BaseEntity implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "isPublished")
-    private Integer isPublished;
-
     @Column(name = "requirement")
     private String requirement;
 
@@ -150,14 +147,6 @@ public class ContestEntity extends BaseEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getIsPublished() {
-        return isPublished;
-    }
-
-    public void setIsPublished(Integer isPublished) {
-        this.isPublished = isPublished;
     }
 
     public String getRequirement() {

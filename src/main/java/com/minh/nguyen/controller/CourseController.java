@@ -545,63 +545,55 @@ public ModelAndView getAnnouncement(@PathVariable("ceId") int ceId, CourseAnnoun
         courseService.addAnnouncement(ceId, Integer.parseInt(courseAnnouncementForm.getPmId()), courseAnnouncementForm.getAnswer());
         return getAnnouncement(ceId, courseAnnouncementForm, true);
     }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "') " +
-//            "|| @CourseValidator.checkShowSubmitPolicy(#ceId,#snId)")
-//    @GetMapping("/{ceId}/submission/{snId}")
-//    public ModelAndView getSubmission(@PathVariable("ceId") int ceId, @PathVariable("snId") int snId) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName(SUBMISSION_VIEW);
-//        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId, ceId);
-//        modelAndView.addObject("submitDetail", submissionDTO);
-//        modelAndView.addObject(TAB, 0);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        return modelAndView;
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "') ")
-//    @GetMapping("/{ceId}/setting")
-//    public ModelAndView getSetting(@PathVariable("ceId") int ceId, CourseSettingForm courseSettingForm, boolean updateSuccess) {
-//        ModelAndView modelAndView = createGeneralModel(ceId);
-//        modelAndView.setViewName(SETTING_VIEW);
-//        CourseSettingVO courseSettingVO = new CourseSettingVO();
-//        if (null == courseSettingForm.getId()) {
-//            courseSettingForm = new CourseSettingForm();
-//            CourseDTO courseDTO = courseService.getCourseInfo(ceId);
-//            modelMapper.map(courseDTO, courseSettingVO);
-//        } else {
-//            modelMapper.map(courseSettingForm, courseSettingVO);
-//        }
-//        modelAndView.addObject("updateSuccess", updateSuccess);
-//        modelAndView.addObject(SETTING_FORM, courseSettingForm);
-//        modelAndView.addObject(TAB, 8);
-//        modelAndView.addObject(COURSE_ID, ceId);
-//        modelAndView.addObject("courseSettingVO", courseSettingVO);
-//        modelAndView.addObject("courseSettingForm", courseSettingForm);
-//        return modelAndView;
-//    }
-//
-//    @CheckNotNullFirst
-//    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "') ")
-//    @PostMapping("/{ceId}/setting")
-//    public ModelAndView updateSetting(@PathVariable("ceId") int ceId, CourseSettingForm courseSettingForm, BindingResult bindingResult) {
-//        validate(courseSettingForm, bindingResult);
-//        if (bindingResult.hasErrors()) {
-//            courseSettingForm.setId(ceId);
-//            return getSetting(ceId, courseSettingForm, false);
-//        }
-//        try {
-//            courseSettingForm.setId(ceId);
-//            courseService.updateCourse(courseSettingForm);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
-//        }
-//        return getSetting(ceId, courseSettingForm, true);
-//    }
-//
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && hasAuthority('" + Constants.AUTH_VIEW_ALL_COURSE_TEXT + "') || @CourseValidator.checkViewSubmissionPermission(authentication,#snId,#ceId)")
+    @GetMapping("/{ceId}/submission/{snId}")
+    public ModelAndView getSubmission(@PathVariable("ceId") int ceId, @PathVariable("snId") int snId) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(SUBMISSION_VIEW);
+        SubmissionDTO submission = courseService.getSubmitDetail(snId, ceId);
+        modelAndView.addObject("submitDetail", submission);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "') ")
+    @GetMapping("/{ceId}/setting")
+    public ModelAndView getSetting(@PathVariable("ceId") int ceId, CourseSettingForm courseSettingForm, boolean updateSuccess) {
+        ModelAndView modelAndView = createGeneralModel(ceId);
+        modelAndView.setViewName(SETTING_VIEW);
+        if (null == courseSettingForm.getId()) {
+            CourseDTO courseDTO = courseService.getCourseInfo(ceId);
+            courseSettingForm = modelMapper.map(courseDTO,CourseSettingForm.class);
+        }
+        modelAndView.addObject("updateSuccess", updateSuccess);
+        modelAndView.addObject(SETTING_FORM, courseSettingForm);
+        modelAndView.addObject(TAB, 8);
+        modelAndView.addObject(COURSE_ID, ceId);
+        modelAndView.addObject("courseSettingForm", courseSettingForm);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated() && @CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_EDIT_COURSE_TEXT + "') ")
+    @PostMapping("/{ceId}/setting")
+    public ModelAndView updateSetting(@PathVariable("ceId") int ceId, CourseSettingForm courseSettingForm, BindingResult bindingResult) {
+        validate(courseSettingForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            courseSettingForm.setId(ceId);
+            return getSetting(ceId, courseSettingForm, false);
+        }
+        try {
+            courseSettingForm.setId(ceId);
+            courseService.updateCourse(courseSettingForm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            addLogicError(bindingResult, Constants.MSG_SYSTEM_ERR, new Object[]{});
+        }
+        return getSetting(ceId, courseSettingForm, true);
+    }
+
     @CheckNotNullFirst
     @PreAuthorize("@CourseValidator.checkPermission(authentication,#ceId,'" + Constants.AUTH_VIEW_COURSE_TEXT + "','" + Constants.AUTH_PARTICIPATE_COURSE_TEXT + "')")
     @GetMapping("/{ceId}/role")

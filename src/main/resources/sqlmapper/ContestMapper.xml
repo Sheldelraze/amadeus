@@ -25,6 +25,7 @@
                            GROUP BY ctId
                        ) AS countTbl
                 ON contest.id = countTbl.ctId
+        WHERE contest.deleteFlg = '0'
         ORDER BY contest.startTime DESC
     </select>
     <resultMap id="contestLst" type="ContestDTO">

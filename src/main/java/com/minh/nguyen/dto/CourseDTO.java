@@ -6,6 +6,8 @@ package com.minh.nguyen.dto;
  * Purpose:
  */
 public class CourseDTO extends BaseDTO {
+    private Integer id;
+
     private String name;
 
     private String startTime;
@@ -17,6 +19,16 @@ public class CourseDTO extends BaseDTO {
     private String description;
 
     private UserDTO creator;
+
+    private Integer showSubmit;
+
+    public Integer getShowSubmit() {
+        return showSubmit;
+    }
+
+    public void setShowSubmit(Integer showSubmit) {
+        this.showSubmit = showSubmit;
+    }
 
     public UserDTO getCreator() {
         return creator;
@@ -64,5 +76,13 @@ public class CourseDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -71,10 +71,10 @@
                         <div class="card-body">
 
                             <ul class="nav nav-pills m-t-30 m-b-30"
-                                th:replace="contest/info/contest-layout::navtab(ctId = ${ctId},tab = ${tab})"></ul>
+                                th:replace="course/info/course-layout::navtab(ceId = ${ceId},tab = ${tab})"></ul>
                             <div id="settings" class="tab-pane active" style="margin-top: 20px; color: black">
-                                <form method="post" th:object="${contestSettingForm}"
-                                      th:action="|/contest/${ctId}/setting|">
+                                <form method="post" th:object="${courseSettingForm}"
+                                      th:action="|/course/${ceId}/setting|">
                                     <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                         <div class="alert alert-danger">
                                             ✘ <label th:errors="*{screenMessage}"></label>
@@ -89,114 +89,70 @@
                                         <h3>Thông tin chung</h3>
                                     </div>
                                     <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Tên cuộc
-                                            thi</label>
+                                        <label class="col-2 col-form-label text-right">Tên khóa học</label>
                                         <div class="col-10">
-                                            <input th:value="${contestSettingVO.name}" class="form-control" type="text"
-                                                   style="color: black"
-                                                   id="name" name="name"/>
+                                            <input th:field="*{name}" class="form-control" type="text"
+                                                   style="color: black"/>
                                             <label
                                                     th:if="${#fields.hasErrors('name')}" th:class="'error'"
                                                     th:errors="*{name}">Name Error</label>
                                         </div>
                                     </div>
                                     <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Ngày
-                                            thi</label>
+                                        <label class="col-2 col-form-label text-right">Ngày bắt đầu</label>
                                         <div class="col-3">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" style="color: black"
-                                                       id="date" name="date" th:value="${contestSettingVO.date}"
+                                                      th:field="*{startTime}"
                                                        placeholder="mm/dd/yyyy"/>
                                                 <span class="input-group-addon"><i class="icon-calender"></i></span>
                                             </div>
                                         </div>
-                                        <label class="col-2 col-form-label text-right">Giờ
-                                            thi</label>
+                                        <label class="col-2 col-form-label text-right">Ngày kết thúc</label>
                                         <div class="col-3">
-                                            <div class="input-group clockpicker " data-placement="top" data-align="top"
-                                                 data-autoclose="true">
-                                                <input type="text" style="color: black" class="form-control"
-                                                       id="time" name="time" th:value="${contestSettingVO.time}"
-                                                       placeholder="hh:mm"/>
-                                                <span class="input-group-addon"><span
-                                                        class="fa fa-clock-o"></span></span>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" style="color: black"
+                                                       th:field="*{endTime}"
+                                                       placeholder="mm/dd/yyyy"/>
+                                                <span class="input-group-addon"><i class="icon-calender"></i></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <th:block th:if="${#fields.hasErrors('date') || #fields.hasErrors('time')}">
+                                    <th:block th:if="${#fields.hasErrors('startTime') || #fields.hasErrors('endTime')}">
                                         <div class="row" style="margin-top:-22px">
                                             <div class="col-2"></div>
                                             <div class="col-3">
                                                 <label
-                                                        th:if="${#fields.hasErrors('date')}" th:class="'error'"
-                                                        th:errors="*{date}">Name Error</label>
+                                                        th:if="${#fields.hasErrors('startTime')}" th:class="'error'"
+                                                        th:errors="*{startTime}">Name Error</label>
                                             </div>
                                             <div class="col-2"></div>
                                             <div class="col-3">
                                                 <label
-                                                        th:if="${#fields.hasErrors('time')}" th:class="'error'"
-                                                        th:errors="*{time}">Name Error</label>
+                                                        th:if="${#fields.hasErrors('endTime')}" th:class="'error'"
+                                                        th:errors="*{endTime}">Name Error</label>
                                             </div>
                                         </div>
                                     </th:block>
                                     <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Thời lượng
-                                            (phút)</label>
-                                        <div class="col-3">
-                                            <input class="form-control" type="text" style="color: black"
-                                                   id="duration" name="duration"
-                                                   th:value="${contestSettingVO.duration}"/>
-                                            <label
-                                                    th:if="${#fields.hasErrors('duration')}" th:class="'error'"
-                                                    th:errors="*{duration}">Name Error</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Cách tính
-                                            điểm (coming soon)</label>
+                                        <label class="col-2 col-form-label text-right">Cho phép xem
+                                            bài nộp</label>
                                         <div class="col-5">
-                                            <select id="judgeType" name="judgeType" class="form-control"
+                                            <select id="showSubmit" name="showSubmit" class="form-control"
                                                     style="height: 45px;color: black">
                                                 <option value="1"
-                                                        th:selected="${contestSettingVO.judgeType==1}?'selected'">Chỉ
-                                                    đúng hết hoặc sai
+                                                        th:selected="${courseSettingForm.showSubmit==1}?'selected'">Được
+                                                    xem tất cả mọi người
                                                 </option>
                                                 <option value="2"
-                                                        th:selected="${contestSettingVO.judgeType==2}?'selected'">Tính
-                                                    điểm dựa trên số test đúng
+                                                        th:selected="${courseSettingForm.showSubmit==2}?'selected'">Chỉ
+                                                    những bài đã giải được
+                                                </option>
+                                                <option value="3"
+                                                        th:selected="${courseSettingForm.showSubmit==3}?'selected'">Chỉ
+                                                    cá nhân
                                                 </option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Loại cuộc
-                                            thi</label>
-                                        <div class="col-6">
-                                            <select id="isPublic" name="isPublic" class="form-control"
-                                                    style="height: 45px;color:black">
-                                                <option value="1"
-                                                        th:selected="${contestSettingVO.isPublic==1}?'selected'">Public
-                                                    - Ai cũng có thể đăng ký tham gia
-                                                </option>
-                                                <option value="2"
-                                                        th:selected="${contestSettingVO.isPublic==2}?'selected'">Private
-                                                    - Chỉ những người được mời mới có thể tham gia
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Cho phép
-                                            người không đăng ký xem thông tin cuộc thi</label>
-                                        <div class="col-10" style="margin-top: 10px">
-                                            <input type="checkbox" id="showToAll" name="showToAll"
-                                                   class="filled-in chk-col-light-green"
-                                                   value="1"
-                                                   th:checked="${contestSettingVO.showToAll==1}?'checked'"/>
-                                            <label for="showToAll">Được xem thông tin về bài tập và BXH (Chỉ dùng
-                                                cho
-                                                loại Public)</label>
                                         </div>
                                     </div>
                                     <div class="form-group  row">
@@ -205,7 +161,7 @@
                                         <div class="col-10">
                                             <textarea class="form-control" id="description" name="description"
                                                       style="white-space: pre;color:black"
-                                                      rows="5" th:inline="text">[[${contestSettingVO.description}]]</textarea>
+                                                      rows="5" th:inline="text">[[${courseSettingForm.description}]]</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group  row">
@@ -215,96 +171,11 @@
                                             <textarea class="form-control"
                                                       id="requirement" name="requirement"
                                                       style="white-space: pre;color:black"
-                                                      rows="5" th:inline="text">[[${contestSettingVO.requirement}]]</textarea>
+                                                      rows="5" th:inline="text">[[${courseSettingForm.requirement}]]</textarea>
                                         </div>
                                     </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Giải
-                                            thưởng</label>
-                                        <div class="col-10">
-                                            <textarea class="form-control"
-                                                      id="prize" name="prize"
-                                                      style="white-space: pre;color:black"
-                                                      rows="5" th:inline="text">[[${contestSettingVO.prize}]]</textarea>
-                                        </div>
-                                    </div>
-                                    <hr style="width: 100%"/>
-                                    <div style="text-align: center">
-                                        <h3>Đối với sinh viên tham gia thi</h3>
-                                    </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Cho phép xem
-                                            test </label>
-                                        <div class="col-5">
-                                            <select id="showTest" name="showTest" class="form-control"
-                                                    style="height: 45px;color: black">
-                                                <option value="1"
-                                                        th:selected="${contestSettingVO.showTest==1}?'selected'">Xem tất
-                                                    cả
-                                                </option>
-                                                <option value="2"
-                                                        th:selected="${contestSettingVO.showTest==2}?'selected'">Chỉ
-                                                    được xem test bị sai(coming soon)
-                                                </option>
-                                                <option value="3"
-                                                        th:selected="${contestSettingVO.showTest==3}?'selected'">Không
-                                                    được xem
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Cho phép xem
-                                            bài nộp</label>
-                                        <div class="col-5">
-                                            <select id="showSubmit" name="showSubmit" class="form-control"
-                                                    style="height: 45px;color: black">
-                                                <option value="1"
-                                                        th:selected="${contestSettingVO.showSubmit==1}?'selected'">Được
-                                                    xem tất cả mọi người
-                                                </option>
-                                                <option value="2"
-                                                        th:selected="${contestSettingVO.showSubmit==2}?'selected'">Chỉ
-                                                    những bài đã giải được
-                                                </option>
-                                                <option value="3"
-                                                        th:selected="${contestSettingVO.showSubmit==3}?'selected'">Chỉ
-                                                    cá nhân
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Cho phép xem
-                                            thông tin chung </label>
-                                        <div class="col-10" style="margin-top: 10px">
-                                            <input type="checkbox" id="showStatus"
-                                                   name="showStatus"
-                                                   value="1"
-                                                   class="filled-in chk-col-light-green"
-                                                   th:checked="${contestSettingVO.showStatus==1}?'checked'"/>
-                                            <label for="showStatus">Bao gồm BXH và danh sách bài nộp của tất
-                                                cả</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Cho phép
-                                            luyện tập</label>
-                                        <div class="col-10" style="margin-top: 10px">
-                                            <input type="checkbox" id="canPractice" name="canPractice"
-                                                   class="filled-in chk-col-light-green"
-                                                   value="1"
-                                                   th:checked="${contestSettingVO.canPractice==1}?'checked'"/>
-                                            <label for="canPractice">Được nộp bài sau khi cuộc thi kết thúc</label>
-                                        </div>
-                                    </div>
-                                    <hr style="width: 100%"/>
                                     <div style="text-align: center">
                                         <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
-                                        <button type="button" class="btn btn-success" style="margin-left: 50px">Công
-                                            khai
-                                            cuộc thi
-                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -361,20 +232,16 @@
 <script src="../../../static/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"
         th:src="@{/assets/plugins/bootstrap-daterangepicker/daterangepicker.js}"></script>
 <script>
-    // Clock pickers
-    $('.clockpicker').clockpicker({
-        donetext: 'Done',
-    });
-    $('#check-minutes').click(function (e) {
-        // Have to stop propagation here
-        e.stopPropagation();
-        input.clockpicker('show').clockpicker('toggleView', 'minutes');
-    });
-    jQuery('#date').datepicker({
+    jQuery('#startTime').datepicker({
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        orientation: "bottom"
     });
-
+    jQuery('#endTime').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        orientation: "bottom"
+    });
 </script>
 <div th:replace="layout/layout::js"></div>
 </body>

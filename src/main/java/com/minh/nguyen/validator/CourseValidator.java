@@ -4,11 +4,13 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
 import com.minh.nguyen.entity.ApplicationEntity;
 import com.minh.nguyen.entity.CourseEntity;
+import com.minh.nguyen.entity.SubmissionEntity;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.form.BaseForm;
 import com.minh.nguyen.mapper.ApplicationMapper;
 import com.minh.nguyen.mapper.AuthorityMapper;
 import com.minh.nguyen.mapper.CourseMapper;
+import com.minh.nguyen.mapper.SubmissionMapper;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class CourseValidator extends BaseValidator {
 
     @Autowired
     private ApplicationMapper applicationMapper;
+
+    @Autowired
+    private SubmissionMapper submissionMapper;
 
     public boolean checkApplyPermission(Integer ceId, Integer urId) {
         if (urId == null || ceId == null) {
@@ -73,6 +78,48 @@ public class CourseValidator extends BaseValidator {
         return false;
     }
 
+    public boolean checkViewSubmissionPermission(Authentication auth,Integer snId,Integer ceId){
+        List<AuthorityDTO> lstAuthority = authorityMapper.getCourseAuthority(ceId, auth.getName());
+        boolean flag = false;
+        for (AuthorityDTO curAuth : lstAuthority) {
+            if (curAuth.getId().equals(Constants.AUTH_VIEW_COURSE_ID)) {
+                return true;
+            }
+            if (curAuth.getId().equals(Constants.AUTH_PARTICIPATE_COURSE_ID)) {
+                flag = true;
+            }
+        }
+        if (!flag){
+            return false;
+        }
+
+        CourseEntity courseEntity = getCourseById(ceId);
+        if (courseEntity.getShowSubmit().equals(Constants.SHOW_SUBMIT_ALL)){
+            return true;
+        }
+
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setId(snId);
+        List<SubmissionEntity> lstSubmission = submissionMapper.selectWithExample(submissionEntity);
+        if (lstSubmission.size() != 1){
+            throw new NoSuchPageException("Submission not found!");
+        }
+
+        //check if submission is from current user
+        submissionEntity = lstSubmission.get(0);
+        Integer currentUserId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (submissionEntity.getUrId().equals(currentUserId)){
+            return true;
+        }
+
+        //else check current user has solved this problem and this contests allow to view solved problem's solutions
+        if (courseEntity.getShowSubmit().equals(Constants.SHOW_SUBMIT_SOLVED)){
+            Integer solveCnt = submissionMapper.checkSolvedStatusInContest(ceId,submissionEntity.getPmId(),submissionEntity.getUrId());
+            return solveCnt > 0;
+        }
+
+        return false;
+    }
 
     public boolean checkRole(String roleName) {
         Object currentRole = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);

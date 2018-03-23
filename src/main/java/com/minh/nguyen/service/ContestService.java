@@ -78,6 +78,9 @@ public class ContestService extends BaseService {
     @Autowired
     private HttpSession httpSession;
 
+    @Autowired
+    private GeneralService generalService;
+
     @Transactional
     public int createContest(ContestDTO contestDTO) {
         ContestEntity contestEntity = new ContestEntity();
@@ -139,7 +142,6 @@ public class ContestService extends BaseService {
         setCreateInfo(contestEntity);
         setUpdateInfo(contestEntity);
         contestEntity.setIsPublic(1);
-        contestEntity.setIsPublished(0);
         contestEntity.setShowStatus(1);
         contestEntity.setCanPractice(1);
         contestEntity.setJudgeType(2);
@@ -388,17 +390,13 @@ public class ContestService extends BaseService {
     }
 
     public void updateContest(ContestSettingForm contestSettingForm) throws Exception {
-        try {
-            ContestEntity contestEntity = new ContestEntity();
-            String startTime = contestSettingForm.getDate() + " " + contestSettingForm.getTime();
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-            modelMapper.map(contestSettingForm, contestEntity);
-            contestEntity.setStartTime(dateFormat.parse(startTime));
-            setUpdateInfo(contestEntity);
-            contestMapper.updateNotNullByPK(contestEntity);
-        } catch (Exception e) {
-            throw e;
-        }
+        ContestEntity contestEntity = new ContestEntity();
+        String startTime = contestSettingForm.getDate() + " " + contestSettingForm.getTime();
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        modelMapper.map(contestSettingForm, contestEntity);
+        contestEntity.setStartTime(dateFormat.parse(startTime));
+        setUpdateInfo(contestEntity);
+        contestMapper.updateNotNullByPK(contestEntity);
     }
 
     @Transactional
@@ -641,5 +639,36 @@ public class ContestService extends BaseService {
         }
         contestLst.setOngoingLst(lstOngoing);
         contestLst.setPastLst(lstPast);
+    }
+
+    //submission in contest
+    public SubmissionDTO getSubmitDetail(int snId, Integer ctId) {
+        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId);
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setId(ctId);
+        contestEntity = contestMapper.selectByPK(contestEntity);
+        ContestDTO contestDTO = new ContestDTO();
+        contestDTO.setId(ctId);
+        contestDTO.setName(contestEntity.getName());
+        submissionDTO.setContestDTO(contestDTO);
+
+        //if contest creator does not allow participator to view test, then show compile error message only
+        if (!contestValidator.canViewTest(ctId)) {
+            if (submissionDTO.getJudgeStatus().equals(Constants.STATUS_COMPILE_ERROR)) {
+                List<SubmitDetailDTO> lstSubmit = new ArrayList<>();
+                SubmitDetailDTO submit = new SubmitDetailDTO();
+                submit.setResult(submissionDTO.getLstSubmitDetail().get(0).getResult());
+                submit.setTimeRun(0);
+                submit.setMemoryUsed(0);
+                submit.setAnswer("");
+                submit.setOutput("");
+                submit.setInput("");
+                lstSubmit.add(submit);
+                submissionDTO.setLstSubmitDetail(lstSubmit);
+            } else {
+                submissionDTO.setLstSubmitDetail(null);
+            }
+        }
+        return submissionDTO;
     }
 }

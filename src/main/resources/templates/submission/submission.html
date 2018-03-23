@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -105,7 +105,11 @@
                                             <td><b><a th:href="|/contest/${submitDetail.contestDTO.id}|" th:text="${submitDetail.contestDTO.name}">Lập trình hướng đối tượng</a></b></td>
                                             <td><b><a th:href="|/contest/${submitDetail.contestDTO.id}/problem/${submitDetail.pmId}/view|" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
                                         </th:block>
-                                        <th:block th:if="${submitDetail.contestDTO == null}">
+                                        <th:block th:if="${submitDetail.courseDTO != null}">
+                                            <td><b><a th:href="|/course/${submitDetail.courseDTO.id}|" th:text="${submitDetail.courseDTO.name}">Lập trình hướng đối tượng</a></b></td>
+                                            <td><b><a th:href="|/course/${submitDetail.courseDTO.id}/problem/${submitDetail.pmId}/view|" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                        </th:block>
+                                        <th:block th:if="${submitDetail.contestDTO == null && submitDetail.courseDTO == null}">
                                             <td><b>Bài tập tự do</b></td>
                                             <td><b><a href="#" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
                                         </th:block>

@@ -7,9 +7,9 @@
     <select id="getSubmission" resultMap="submission">
         SELECT
             submission.id          AS id,
-        submission.pmId AS pmId,
+            submission.pmId        AS pmId,
             user.id                AS urId,
-            user.fullname            AS fullname,
+            user.fullname          AS fullname,
             problem.name           AS pmNm,
             submission.memoryUsed  AS memoryUsed,
             submission.timeRun     AS timeRun,
@@ -19,7 +19,7 @@
             language.name          AS leNm
         FROM submission
             LEFT JOIN user
-                on submission.urId = user.id
+                ON submission.urId = user.id
                    AND user.deleteFlg = '0'
             LEFT JOIN problem
                 ON submission.pmId = problem.id
@@ -31,46 +31,60 @@
         ORDER BY submission.createTime DESC
         LIMIT 100
     </select>
-    <select id="checkSolvedStatus" resultType="java.lang.Integer">
-      select count(*)
-      from submission
-        INNER JOIN ct_sn
-            ON submission.id = ct_sn.snId
-               AND ct_sn.ctId = #{ctId}
-      WHERE submission.deleteFlg = '0'
-          AND submission.pmId=#{pmId}
-          AND submission.urId=#{urId}
-          AND submission.judgeStatus=6
-    </select>
-    <select id="getSubmissionInContest" resultMap="submission">
-        SELECT
-            submission.id          AS id,
-            problem.id            AS pmId,
-            problem.name           AS pmNm,
-            user.id               AS urId,
-            user.fullname            AS fullname,
-            submission.memoryUsed  AS memoryUsed,
-            submission.timeRun     AS timeRun,
-            submission.createTime  AS createTime,
-            submission.judgeStatus AS judgeStatus,
-            submission.verdict     AS verdict,
-            language.name          AS leNm
+    <select id="checkSolvedStatusInContest" resultType="java.lang.Integer">
+        SELECT count(*)
         FROM submission
             INNER JOIN ct_sn
                 ON submission.id = ct_sn.snId
                    AND ct_sn.ctId = #{ctId}
-           INNER JOIN user
-                on submission.urId = user.id
-                   AND user.deleteFlg = '0'
-            <if test="handle != null and handle.length > 0">
-                   AND user.handle=#{handle}
-            </if>
-            LEFT JOIN problem
-                ON submission.pmId = problem.id
-                   AND submission.deleteFlg = '0'
-            LEFT JOIN language
-                ON submission.leId = language.id
-                   AND language.deleteFlg = '0'
+        WHERE submission.deleteFlg = '0'
+              AND submission.pmId = #{pmId}
+              AND submission.urId = #{urId}
+              AND submission.judgeStatus = 6
+    </select>
+
+    <select id="checkSolvedStatusInCourse" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM submission
+            INNER JOIN ce_sn
+                ON submission.id = ce_sn.snId
+                   AND ce_sn.ceId = #{ceId}
+        WHERE submission.deleteFlg = '0'
+              AND submission.pmId = #{pmId}
+              AND submission.urId = #{urId}
+              AND submission.judgeStatus = 6
+    </select>
+
+
+    <select id="getSubmissionInContest" resultMap="submission">
+        SELECT
+        submission.id AS id,
+        problem.id AS pmId,
+        problem.name AS pmNm,
+        user.id AS urId,
+        user.fullname AS fullname,
+        submission.memoryUsed AS memoryUsed,
+        submission.timeRun AS timeRun,
+        submission.createTime AS createTime,
+        submission.judgeStatus AS judgeStatus,
+        submission.verdict AS verdict,
+        language.name AS leNm
+        FROM submission
+        INNER JOIN ct_sn
+        ON submission.id = ct_sn.snId
+        AND ct_sn.ctId = #{ctId}
+        INNER JOIN user
+        on submission.urId = user.id
+        AND user.deleteFlg = '0'
+        <if test="handle != null and handle.length > 0">
+            AND user.handle=#{handle}
+        </if>
+        LEFT JOIN problem
+        ON submission.pmId = problem.id
+        AND submission.deleteFlg = '0'
+        LEFT JOIN language
+        ON submission.leId = language.id
+        AND language.deleteFlg = '0'
         WHERE submission.deleteFlg = '0'
         ORDER BY submission.createTime DESC
     </select>
@@ -109,8 +123,8 @@
     <select id="getSubmitDetail" resultMap="submission">
         SELECT
             submission.id           AS id,
-            user.id                AS urId,
-            user.fullname            AS fullname,
+            user.id                 AS urId,
+            user.fullname           AS fullname,
             submission.pmId         AS pmId,
             problem.name            AS pmNm,
             submission.memoryUsed   AS memoryUsed,
@@ -133,8 +147,8 @@
                 ON submission.pmId = problem.id
                    AND submission.deleteFlg = '0'
             LEFT JOIN user
-                on submission.urId = user.id
-                    AND user.deleteFlg = '0'
+                ON submission.urId = user.id
+                   AND user.deleteFlg = '0'
             LEFT JOIN language
                 ON submission.leId = language.id
                    AND language.deleteFlg = '0'

@@ -32,6 +32,17 @@ public class CourseEntity extends BaseEntity implements Serializable {
     @Column(name = "endTime")
     private Date endTime;
 
+    @Column(name = "showSubmit")
+    private Integer showSubmit;
+
+    public Integer getShowSubmit() {
+        return showSubmit;
+    }
+
+    public void setShowSubmit(Integer showSubmit) {
+        this.showSubmit = showSubmit;
+    }
+
     public Date getStartTime() {
         return startTime;
     }

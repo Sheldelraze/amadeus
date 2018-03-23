@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author Mr.Minh
  * @since 29/01/2018
- * Purpose: Class designed for multithread judging process,
+ * Purpose: Class designed for asynchronous judging process,
  * you may configure more option in class SecurityConfig
  */
 @Service

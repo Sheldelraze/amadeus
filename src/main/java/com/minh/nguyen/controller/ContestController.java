@@ -429,13 +429,12 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
-            "|| @ContestValidator.checkShowSubmitPolicy(#ctId,#snId)")
+    @PreAuthorize("hasAuthority('" + Constants.AUTH_VIEW_ALL_CONTEST_TEXT + "') || @ContestValidator.checkShowSubmitPolicy(#ctId,#snId)")
     @GetMapping("/{ctId}/submission/{snId}")
     public ModelAndView getSubmission(@PathVariable("ctId") int ctId, @PathVariable("snId") int snId) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(SUBMISSION_VIEW);
-        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId, ctId);
+        SubmissionDTO submissionDTO = contestService.getSubmitDetail(snId, ctId);
         modelAndView.addObject("submitDetail", submissionDTO);
         modelAndView.addObject(TAB, 0);
         modelAndView.addObject(CONTEST_ID, ctId);

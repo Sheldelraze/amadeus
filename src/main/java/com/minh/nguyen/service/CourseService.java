@@ -5,6 +5,7 @@ import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
+import com.minh.nguyen.form.course.CourseSettingForm;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
@@ -89,6 +90,9 @@ public class CourseService extends BaseService {
     private JudgeService judgeService;
 
     @Autowired
+    private GeneralService generalService;
+
+    @Autowired
     private SimpMessageSendingOperations simpMessagingTemplate;
 
     public Integer getAnnouncementCount(Integer ctId) {
@@ -102,6 +106,16 @@ public class CourseService extends BaseService {
         return announcementMapper.countAnnouncementListInCourse(ctId, getAllAnnouncement);
     }
 
+    public void updateCourse(CourseSettingForm contestSettingForm) throws Exception {
+        CourseEntity courseEntity = new CourseEntity();
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        modelMapper.map(contestSettingForm, courseEntity);
+        courseEntity.setStartTime(dateFormat.parse(contestSettingForm.getStartTime()));
+        courseEntity.setEndTime(dateFormat.parse(contestSettingForm.getEndTime()));
+        setUpdateInfo(courseEntity);
+        courseMapper.updateNotNullByPK(courseEntity);
+    }
+
     @Transactional
     public int createCourse(CourseDTO courseDTO) throws ParseException {
         CourseEntity courseEntity = new CourseEntity();
@@ -109,6 +123,7 @@ public class CourseService extends BaseService {
         courseEntity.setStartTime(formatter.parse(courseDTO.getStartTime()));
         courseEntity.setEndTime(formatter.parse(courseDTO.getEndTime()));
         courseEntity.setName(courseDTO.getName());
+        courseEntity.setShowSubmit(Constants.SHOW_SUBMIT_ALL);
         try {
             //set initial course info and insert
             setCreateInfo(courseEntity);
@@ -662,7 +677,7 @@ public class CourseService extends BaseService {
         setUpdateInfo(ceAtEntity);
         ceAtMapper.insert(ceAtEntity);
 
-        sendAnswerNotification(announcementEntity,ceId);
+        sendAnswerNotification(announcementEntity, ceId);
     }
 
     public void changeAnnounceHiddenState(Integer atId, Integer newState) {
@@ -688,7 +703,7 @@ public class CourseService extends BaseService {
         return announcementEntity.getQuestion();
     }
 
-    public void answerQuestion(Integer atId, String answer,Integer ceId) {
+    public void answerQuestion(Integer atId, String answer, Integer ceId) {
         AnnouncementEntity announcementEntity = new AnnouncementEntity();
         announcementEntity.setId(atId);
         announcementEntity.setIsAnswered(1);
@@ -696,11 +711,35 @@ public class CourseService extends BaseService {
         setUpdateInfo(announcementEntity);
         announcementEntity.setDeleteFlg("0");
         announcementMapper.updateNotNullByPK(announcementEntity);
-        sendAnswerNotification(announcementEntity,ceId);
+        sendAnswerNotification(announcementEntity, ceId);
     }
 
     @Async
-    public void sendAnswerNotification(AnnouncementEntity announcementEntity,Integer ceId){
+    public void sendAnswerNotification(AnnouncementEntity announcementEntity, Integer ceId) {
         simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.COURSE_ANNOUNCEMENT_TOPIC + ceId, announcementEntity);
+    }
+
+    //submission in contest
+    public SubmissionDTO getSubmitDetail(int snId, Integer ceId) {
+        SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId);
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(ceId);
+        courseEntity = courseMapper.selectByPK(courseEntity);
+        CourseDTO course = new CourseDTO();
+        course.setId(ceId);
+        course.setName(courseEntity.getName());
+        submissionDTO.setCourseDTO(course);
+        return submissionDTO;
+    }
+
+    public CourseDTO getCourseInfo(int ceId) {
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(ceId);
+        courseEntity = courseMapper.selectByPK(courseEntity);
+        CourseDTO course = modelMapper.map(courseEntity, CourseDTO.class);
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        course.setStartTime(dateFormat.format(courseEntity.getStartTime()));
+        course.setEndTime(dateFormat.format(courseEntity.getEndTime()));
+        return course;
     }
 }
