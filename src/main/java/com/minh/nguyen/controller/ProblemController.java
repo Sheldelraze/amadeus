@@ -358,7 +358,7 @@ public class ProblemController extends BaseController {
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'" + Constants.AUTH_EDIT_PROBLEM_TEXT + "')")
     @GetMapping("/{pmId}/deleteTest/{itId}")
     public ModelAndView deleteTest(@PathVariable("pmId") Integer pmId, @PathVariable("itId") int itId) {
-        problemService.deleteTest(itId);
+        problemService.deleteTest(pmId,itId);
         return getTest(pmId, null, false, true);
     }
 

@@ -104,14 +104,14 @@
                                 <div th:remove="tag" th:utext="${problemVO}?${problemVO.statement}"
                                      style="white-space: pre-line">
                                 </div>
-                                <label style="font-weight: 900;font-size: large">Input</label><br/>
+                                <label style="font-weight: 900;font-size: large;display: block">Input</label>
                                 <div th:remove="tag" th:utext="${problemVO}?${problemVO.input}"
                                      style="white-space: pre-line"></div>
-                                <label style="font-weight: 900;font-size: large">Output</label><br/>
+                                <label style="font-weight: 900;font-size: large;display: block">Output</label>
                                 <div th:remove="tag" th:utext="${problemVO}?${problemVO.output}"
                                      style="white-space: pre-line"></div>
 
-                                <br/><label style="font-weight: 900;font-size: large">Ví dụ</label><br/>
+                                <label style="font-weight: 900;font-size: large;display: block">Ví dụ</label>
                                 <th:block th:if="${problemVO}?${problemVO.lstInput != null}">
 
                                     <table th:each="input : ${problemVO.lstInput}" style="width: 90%">
@@ -136,7 +136,7 @@
                                     </table>
                                 </th:block>
                                 <th:block th:if="${problemVO}?${problemVO.note != null}">
-                                    <label style="font-weight: 900;font-size: large">Ghi chú</label><br/>
+                                    <label style="font-weight: 900;font-size: large;display: block">Ghi chú</label>
                                     <div th:remove="tag" th:utext="${problemVO}?${problemVO.note}"
                                          style="white-space: pre-line"></div>
                                 </th:block>

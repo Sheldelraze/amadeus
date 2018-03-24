@@ -110,7 +110,7 @@
                                     th:each="problem,iter : ${contestAddProblemForm.lstProblemDTO}" >
                                     <td th:text="${problem.id}"></td>
                                     <td style="font-weight: 900;font-size: large"><a
-                                            th:href="|/problem/${problem.id}/view|" th:text="${problem.code}"></a>
+                                            th:href="|/problem/info/${problem.id}/view|" th:text="${problem.code}"></a>
                                     </td>
                                     <td th:text="${problem.name}"></td>
                                     <td>

@@ -112,7 +112,7 @@
                                     <div th:remove="tag" th:utext="${problemPreviewVO}?${problemPreviewVO.output}"
                                          style="white-space: pre-line"></div>
 
-                                    <br/><label style="font-weight: 900;font-size: large;display: block">Ví dụ</label>
+                                    <label style="font-weight: 900;font-size: large;display: block">Ví dụ</label>
                                     <th:block th:if="${problemPreviewVO}?${problemPreviewVO.lstInput != null}">
 
                                         <table th:each="input : ${problemPreviewVO.lstInput}" style="width: 90%">

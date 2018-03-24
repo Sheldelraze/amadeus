@@ -9,6 +9,7 @@ import com.minh.nguyen.form.course.CourseSettingForm;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
@@ -18,9 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -517,9 +518,9 @@ public class CourseService extends BaseService {
         cePmMapper.updateNotNullByPK(cePmEntity);
     }
 
-    public List<ProblemDTO> getProblemToAdd(int ctId) {
+    public List<ProblemDTO> getProblemToAdd(int ceId) {
         Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-        List<ProblemDTO> lst = problemMapper.getProblemForContest(urId, Constants.AUTH_VIEW_PROBLEM_ID, ctId);
+        List<ProblemDTO> lst = problemMapper.getProblemForCourse(urId, Constants.AUTH_VIEW_PROBLEM_ID, ceId);
         for (ProblemDTO problemDTO : lst) {
             StringBuilder stringBuilder = new StringBuilder();
             List<TagDTO> lstTag = problemDTO.getLstTag();
@@ -741,5 +742,105 @@ public class CourseService extends BaseService {
         course.setStartTime(dateFormat.format(courseEntity.getStartTime()));
         course.setEndTime(dateFormat.format(courseEntity.getEndTime()));
         return course;
+    }
+
+    public List<ProblemDTO> getProblemForLeaderboard(int ceId) {
+        List<ProblemDTO> lstProblem = problemMapper.getProblemForLeaderboardInCourse(ceId);
+        for (ProblemDTO problem : lstProblem) {
+            int ac = problem.getSolveCnt();
+            int all = problem.getTotalSubmission();
+            if (all == 0 || ac == 0) {
+                problem.setSolvePercentage("(0%)");
+                continue;
+            }
+            NumberFormat df = new DecimalFormat("#.00");
+            double percentage = (double) 100 * ac / all;
+            problem.setSolvePercentage("(" + df.format(percentage) + "%)");
+        }
+        return lstProblem;
+    }
+
+    //get leaderboard information here
+    public List<UserDTO> getLeaderboardInfor(Integer ctId) {
+
+        //1 user -> many problems
+        List<UserDTO> lstUser = userMapper.getLeaderboardInformationForCourse(ctId, Constants.AUTH_PARTICIPATE_COURSE_ID, Constants.STATUS_ACCEPTED);
+        for (UserDTO user : lstUser) {
+            int score = 0;
+            int penalty = 0;
+
+            long start = user.getContestStartTime().getTime();
+            /**
+             * 1 problem -> many submission
+             * however, we only need to calculate number of submissions and time penalty up to the first accepted one.
+             * which also means the first one to get all the correct answers in all tests
+             */
+            for (ProblemDTO problem : user.getLstProblem()) {
+                int isSolved = 0;
+                int time = 0;
+                String solveTime = "--:--";
+                problem.setIsFirstSolve(0);
+                if (null != problem.getLstSubmission()) {
+                    problem.setCorrectAns(0);
+                    for (SubmissionDTO submit : problem.getLstSubmission()) {
+
+                        //we will ignore any submissions submitted after the first AC-ed one.
+                        if (0 == isSolved) {
+                            if (submit.getCorrectAns() != null && submit.getCorrectAns().equals(problem.getTestCnt())) {
+                                isSolved = 1;
+
+                                //calculate submit time if AC-ed
+                                long current = submit.getCreateTime().getTime();
+                                long elapsed = current - start;
+                                if (elapsed > 0) {
+                                    int minutes = (int) Math.floor((elapsed / 1000 / 60) % 60);
+                                    int hours = (int) Math.floor(elapsed / (1000 * 60 * 60));
+                                    String h = StringUtils.leftPad(String.valueOf(hours), 2, "0");
+                                    String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
+                                    solveTime = h + ":" + m;
+
+                                    time += (int) Math.floor((elapsed / 1000 / 60));
+                                }else{
+                                    solveTime = "00:00";
+                                }
+                            } else {
+                                time += Constants.SUBMISSION_FAIL_PENALTY;
+                            }
+
+                            //if not AC-ed then add penalty
+                            if (submit.getCorrectAns() != null && submit.getCorrectAns().compareTo(problem.getCorrectAns()) > 0) {
+                                problem.setCorrectAns(submit.getCorrectAns());
+                            }
+                        }
+                    }
+                }
+
+                //score = number of AC-ed problems
+                score += isSolved;
+
+                //calculate penalty only when AC-ed
+                if (isSolved == 1) {
+                    penalty += time;
+                }
+                problem.setIsSolved(isSolved);
+                problem.setSolveTime(solveTime);
+            }
+            user.setScore(score);
+            user.setPenalty(penalty);
+        }
+        Collections.sort(lstUser, new ScoreboardComparator());
+        return lstUser;
+    }
+
+    //first we sort desc by score, then we sort asc by time penalty
+    class ScoreboardComparator implements Comparator<UserDTO> {
+
+        @Override
+        public int compare(UserDTO o1, UserDTO o2) {
+            if (o1.getScore().equals(o2.getScore())) {
+                return o1.getPenalty().compareTo(o2.getPenalty());
+            }
+            return o2.getScore().compareTo(o1.getScore());
+        }
     }
 }

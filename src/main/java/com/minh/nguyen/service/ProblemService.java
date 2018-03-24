@@ -280,6 +280,9 @@ public class ProblemService extends BaseService {
 
     @Transactional
     public void updateProblem(ProblemDTO problemDTO) {
+        problemDTO.setInput(StringUtil.trimStr(problemDTO.getInput()));
+        problemDTO.setOutput(StringUtil.trimStr(problemDTO.getOutput()));
+        problemDTO.setNote(StringUtil.trimStr(problemDTO.getNote()));
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setId(problemDTO.getId());
         try {
@@ -309,10 +312,16 @@ public class ProblemService extends BaseService {
         return lstLanguage;
     }
 
-    public void deleteTest(int itId) {
+    public void deleteTest(Integer pmId,Integer itId) {
         InputEntity inputEntity = new InputEntity();
         inputEntity.setId(itId);
-        inputMapper.deleteByPK(inputEntity);
+        setUpdateInfo(inputEntity);
+        inputMapper.updateNotNullByPK(inputEntity);
+        PmItEntity pmItEntity = new PmItEntity();
+        pmItEntity.setItId(itId);
+        pmItEntity.setPmId(pmId);
+        setUpdateInfo(pmItEntity);
+        pmItMapper.updateNotNullByPK(pmItEntity);
     }
 
     public void setCreateProblemInfo(ProblemEntity problemEntity) {

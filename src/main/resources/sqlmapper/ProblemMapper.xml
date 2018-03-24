@@ -200,7 +200,7 @@
         WHERE
         problem.deleteFlg = '0'
     </select>
-    <select id="getProblemForLeaderboard" resultType="ProblemDTO">
+    <select id="getProblemForLeaderboardInContest" resultType="ProblemDTO">
         SELECT
         problem.id,
         problem.name,
@@ -212,6 +212,21 @@
         AND ct_pm.ctId = #{ctId}
         AND ct_pm.isHidden = 0
         AND ct_pm.deleteFlg = '0'
+        WHERE
+        problem.deleteFlg = '0'
+    </select>
+    <select id="getProblemForLeaderboardInCourse" resultType="ProblemDTO">
+        SELECT
+        problem.id,
+        problem.name,
+        problem.totalSubmission,
+        problem.solveCnt
+        FROM problem
+        INNER JOIN ce_pm
+        ON problem.id = ce_pm.pmId
+        AND ce_pm.ceId = #{ceId}
+        AND ce_pm.isHidden = 0
+        AND ce_pm.deleteFlg = '0'
         WHERE
         problem.deleteFlg = '0'
     </select>

@@ -313,7 +313,8 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated() && @ContestValidator.checkParticipate(authentication,#ctId)")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkPermission(authentication,#ctId,'" + Constants.AUTH_VIEW_CONTEST_TEXT + "') " +
+            "|| (@ContestValidator.checkParticipate(authentication,#ctId) && @ContestValidator.canViewStatus(#ctId))")
     @PostMapping("/{ctId}/submit")
     public ModelAndView doSubmit(@PathVariable("ctId") int ctId, ContestSubmitForm contestSubmitForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();

@@ -196,11 +196,11 @@ public class ContestService extends BaseService {
     }
 
     public List<ProblemDTO> getProblemForLeaderboard(int ctId) {
-        List<ProblemDTO> lstProblem = problemMapper.getProblemForLeaderboard(ctId);
+        List<ProblemDTO> lstProblem = problemMapper.getProblemForLeaderboardInContest(ctId);
         for (ProblemDTO problem : lstProblem) {
             int ac = problem.getSolveCnt();
             int all = problem.getTotalSubmission();
-            if (all == 0) {
+            if (all == 0 || ac == 0) {
                 problem.setSolvePercentage("(0%)");
                 continue;
             }
@@ -235,7 +235,7 @@ public class ContestService extends BaseService {
     public List<UserDTO> getLeaderboardInfor(Integer ctId) {
 
         //1 user -> many problems
-        List<UserDTO> lstUser = userMapper.getLeaderboardInfor(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID);
+        List<UserDTO> lstUser = userMapper.getLeaderboardInformationForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID);
         for (UserDTO user : lstUser) {
             int score = 0;
             int penalty = 0;
@@ -262,13 +262,16 @@ public class ContestService extends BaseService {
                                 //calculate submit time if AC-ed
                                 long current = submit.getCreateTime().getTime();
                                 long elapsed = current - start;
-                                int minutes = (int) Math.floor((elapsed / 1000 / 60) % 60);
-                                int hours = (int) Math.floor((elapsed / (1000 * 60 * 60)));
-                                String h = StringUtils.leftPad(String.valueOf(hours), 2, "0");
-                                String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
-                                solveTime = h + ":" + m;
-                                time += (int) Math.floor((elapsed / 1000 / 60));
-
+                                if (elapsed > 0) {
+                                    int minutes = (int) Math.floor((elapsed / 1000 / 60) % 60);
+                                    int hours = (int) Math.floor((elapsed / (1000 * 60 * 60)));
+                                    String h = StringUtils.leftPad(String.valueOf(hours), 2, "0");
+                                    String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
+                                    solveTime = h + ":" + m;
+                                    time += (int) Math.floor((elapsed / 1000 / 60));
+                                }else{
+                                    solveTime = "00:00";
+                                }
                                 //check if first solver
                                 if (null != problem.getFirstSolveTime()) {
                                     if (problem.getFirstSolveTime().equals(submit.getCreateTime())) {

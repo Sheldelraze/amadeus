@@ -39,9 +39,27 @@ public class ProblemDTO extends BaseDTO {
     private Integer totalSubmission;
     private String solvePercentage;
     private String solveTime;
+    private Integer testCnt;
     private UserDTO creator;
     private List<SubmissionDTO> lstSubmission;
     private Date firstSolveTime;
+    private Integer correctAns;
+
+    public Integer getCorrectAns() {
+        return correctAns;
+    }
+
+    public void setCorrectAns(Integer correctAns) {
+        this.correctAns = correctAns;
+    }
+
+    public Integer getTestCnt() {
+        return testCnt;
+    }
+
+    public void setTestCnt(Integer testCnt) {
+        this.testCnt = testCnt;
+    }
 
     public Integer getIsPublic() {
         return isPublic;

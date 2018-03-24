@@ -23,6 +23,15 @@ public class SubmissionDTO extends BaseDTO {
     private ContestDTO contestDTO;
     private CourseDTO courseDTO;
     private UserDTO user;
+    private Integer correctAns;
+
+    public Integer getCorrectAns() {
+        return correctAns;
+    }
+
+    public void setCorrectAns(Integer correctAns) {
+        this.correctAns = correctAns;
+    }
 
     public CourseDTO getCourseDTO() {
         return courseDTO;

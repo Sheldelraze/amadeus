@@ -82,6 +82,7 @@
                                         <th style="text-align: center" width="230px">Người tạo</th>
                                         <th style="text-align: center" width="250px">Thể loại</th>
                                         <th style="text-align: center" width="170px">Trạng thái</th>
+                                        <th style="text-align: center" width="150px"></th>
                                     </tr>
                                     </thead>
                                     <tbody th:remove="all-but-first">
@@ -99,6 +100,10 @@
                                         <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị</td>
                                         <td th:if="${problem.isPublished==1}"><span class="label label-success">Đã xuất bản</span></td>
                                         <td th:unless="${problem.isPublished==1}"><span class="label label-danger">Chưa xuất bản</span></td>
+                                        <td>
+                                            <button type="button" th:onclick="|window.location='/problem/info/${problem.id}/statement'|"
+                                                               class="btn btn-outline-warning">Cập nhật</button>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>43152</td>
