@@ -54,7 +54,7 @@
             AND user.deleteFlg = '0'
     </select>
 
-    <select id="getLeaderboardInformationForContest" resultMap="leaderboard">
+    <select id="getLeaderboardIOIForContest" resultMap="leaderboard">
         SELECT
             user.id                AS urId,
             user.fullname          AS urName,
@@ -85,6 +85,58 @@
                 ON problem.id = submission.pmId
                    and submission.deleteFlg = '0'
                    AND user.id = submission.urId
+        WHERE user.deleteFlg = '0'
+        ORDER BY urId, pmId, submitTime
+    </select>
+
+    <select id="getLeaderboardACMForContest" resultMap="leaderboard">
+        SELECT
+        user.id                AS urId,
+        user.fullname          AS urName,
+        problem.id             AS pmId,
+        problem.name           AS pmName,
+        correctCnt.correctAns  as correctAns,
+        pmCnt.testCount        AS testCnt,
+        problem.firstSolve     AS firstSolve,
+        contest.startTime      AS startTime,
+        submission.id          AS snId,
+        submission.createTime  AS submitTime,
+        submission.judgeStatus AS judgeStatus
+        FROM user
+        INNER JOIN ur_ct_auy
+        ON user.id = ur_ct_auy.urId
+        AND ur_ct_auy.deleteFlg = '0'
+        AND ur_ct_auy.auyId = #{auth_participate_id}
+        AND ur_ct_auy.ctId = #{ctId}
+        INNER JOIN contest
+        ON ur_ct_auy.ctId = contest.id
+        LEFT JOIN ct_pm
+        ON ur_ct_auy.ctId = ct_pm.ctId
+        AND ct_pm.isHidden = 0
+        LEFT JOIN problem
+        ON ct_pm.pmId = problem.id
+        LEFT JOIN (
+        select pmId,count(*) as testCount
+        from pm_it
+        where pm_it.deleteFlg = '0'
+        group by pmId
+        )as pmCnt
+        on problem.id = pmCnt.pmId
+        LEFT JOIN submission
+        ON problem.id = submission.pmId
+        and submission.deleteFlg = '0'
+        AND user.id = submission.urId
+        left join(
+        select sn_sdl.snId,count(*) as correctAns
+        from submitDetail
+        inner join sn_sdl
+        on submitdetail.id = sn_sdl.sdlId
+        and sn_sdl.deleteFlg = '0'
+        where submitDetail.status=#{acceptedStatus}
+        and submitDetail.deleteFlg = '0'
+        group by sn_sdl.snId
+        )as correctCnt
+        on submission.id = correctCnt.snId
         WHERE user.deleteFlg = '0'
         ORDER BY urId, pmId, submitTime
     </select>

@@ -154,18 +154,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group  row">
-                                        <label class="col-2 col-form-label text-right">Cách tính
-                                            điểm (coming soon)</label>
+                                        <label class="col-2 col-form-label text-right">Cách tính điểm</label>
                                         <div class="col-5">
                                             <select id="judgeType" name="judgeType" class="form-control"
                                                     style="height: 45px;color: black">
                                                 <option value="1"
-                                                        th:selected="${contestSettingVO.judgeType==1}?'selected'">Chỉ
-                                                    đúng hết hoặc sai
+                                                        th:selected="${contestSettingVO.judgeType==1}?'selected'">Tính theo bài, chỉ đúng hết tất cả test hoặc sai (kiểu ACM)
                                                 </option>
                                                 <option value="2"
-                                                        th:selected="${contestSettingVO.judgeType==2}?'selected'">Tính
-                                                    điểm dựa trên số test đúng
+                                                        th:selected="${contestSettingVO.judgeType==2}?'selected'">Tính theo số test làm đúng(kiểu IOI)
                                                 </option>
                                             </select>
                                         </div>

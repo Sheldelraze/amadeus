@@ -761,10 +761,10 @@ public class CourseService extends BaseService {
     }
 
     //get leaderboard information here
-    public List<UserDTO> getLeaderboardInfor(Integer ctId) {
+    public List<UserDTO> getLeaderboardInfor(Integer ceId) {
 
         //1 user -> many problems
-        List<UserDTO> lstUser = userMapper.getLeaderboardInformationForCourse(ctId, Constants.AUTH_PARTICIPATE_COURSE_ID, Constants.STATUS_ACCEPTED);
+        List<UserDTO> lstUser = userMapper.getLeaderboardInformationForCourse(ceId, Constants.AUTH_PARTICIPATE_COURSE_ID, Constants.STATUS_ACCEPTED);
         for (UserDTO user : lstUser) {
             int score = 0;
             int penalty = 0;

@@ -22,6 +22,11 @@
             font-weight: 900;
         }
 
+        .ongoing {
+            color: #ffd82f;
+            font-weight: 900;
+        }
+
         .center {
             padding-top: 10px;
         }
@@ -128,39 +133,53 @@
                                             <td th:if="${null == problem.lstSubmission or #lists.size(problem.lstSubmission) == 0}"></td>
 
                                             <!--first solve-->
-                                            <td th:if="${problem.isFirstSolve == 1}" class="firstSolve">
-                                                <div style="margin-bottom: -35px">
-                                                    <b style="font-weight: 900;">
-                                                        <label>+</label>
-                                                        <label th:text="${problem.submitCnt == 1}?'':${problem.submitCnt - 1}"></label>
-                                                    </b>
-                                                </div>
-                                                <br/>
-                                                <div style="margin-bottom: -15px">
-                                                    <label th:text="${problem.solveTime}"></label>
-                                                </div>
-                                            </td>
-
-                                            <!--other case (fail or AC but not first solve)-->
-                                            <td th:if="${problem.isFirstSolve != 1}"
-                                                th:unless="${null == problem.lstSubmission or #lists.size(problem.lstSubmission) == 0}">
-                                                <div style="margin-bottom: -35px"
-                                                     th:classappend="${problem.isSolved != 1}?'center'">
-                                                    <b th:classappend="${problem.isSolved == 1}?'accepted':'fail'">
-                                                        <label th:text="${problem.isSolved == 1}?'+':'-'"></label>
-                                                        <th:block th:if="${problem.isSolved == 1}">
+                                            <th:block th:if="${judgeType == 1}">
+                                                <td th:if="${problem.isFirstSolve == 1}" class="firstSolve">
+                                                    <div style="margin-bottom: -35px">
+                                                        <b style="font-weight: 900;">
+                                                            <label>+</label>
                                                             <label th:text="${problem.submitCnt == 1}?'':${problem.submitCnt - 1}"></label>
-                                                        </th:block>
-                                                        <th:block th:unless="${problem.isSolved == 1}">
-                                                            <label th:text="${problem.submitCnt}"></label>
-                                                        </th:block>
-                                                    </b>
-                                                </div>
-                                                <br/>
-                                                <div style="margin-bottom: -15px" th:if="${problem.isSolved == 1}">
-                                                    <label th:text="${problem.solveTime}"></label>
-                                                </div>
-                                            </td>
+                                                        </b>
+                                                    </div>
+                                                    <br/>
+                                                    <div style="margin-bottom: -15px">
+                                                        <label th:text="${problem.solveTime}"></label>
+                                                    </div>
+                                                </td>
+
+                                                <!--other case (fail or AC but not first solve)-->
+                                                <td th:if="${problem.isFirstSolve != 1}"
+                                                    th:unless="${null == problem.lstSubmission or #lists.size(problem.lstSubmission) == 0}">
+                                                    <div style="margin-bottom: -35px"
+                                                         th:classappend="${problem.isSolved != 1}?'center'">
+                                                        <b th:classappend="${problem.isSolved == 1}?'accepted':'fail'">
+                                                            <label th:text="${problem.isSolved == 1}?'+':'-'"></label>
+                                                            <th:block th:if="${problem.isSolved == 1}">
+                                                                <label th:text="${problem.submitCnt == 1}?'':${problem.submitCnt - 1}"></label>
+                                                            </th:block>
+                                                            <th:block th:unless="${problem.isSolved == 1}">
+                                                                <label th:text="${problem.submitCnt}"></label>
+                                                            </th:block>
+                                                        </b>
+                                                    </div>
+                                                    <br/>
+                                                    <div style="margin-bottom: -15px" th:if="${problem.isSolved == 1}">
+                                                        <label th:text="${problem.solveTime}"></label>
+                                                    </div>
+                                                </td>
+                                            </th:block>
+                                            <th:block th:unless="${judgeType == 1}">
+                                                <td th:unless="${null == problem.lstSubmission or #lists.size(problem.lstSubmission) == 0}">
+                                                    <div style="margin-bottom: -20px">
+                                                        <b th:classappend="${problem.isSolved == 1?'accepted':problem.correctAns == 0?'fail' : 'ongoing'}"
+                                                           th:text="|${problem.correctAns}/${problem.testCnt}|" ></b>
+                                                    </div>
+                                                    <br/>
+                                                    <div style="margin-bottom: -15px" th:if="${problem.solveTime != null}">
+                                                        <label th:text="${problem.solveTime}"></label>
+                                                    </div>
+                                                </td>
+                                            </th:block>
                                         </th:block>
                                     </tr>
                                     <tr>

@@ -374,7 +374,9 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = createGeneralModel(ctId);
         List<UserDTO> lstUser = contestService.getLeaderboardInfor(ctId);
         List<ProblemDTO> lstProblem = contestService.getProblemForLeaderboard(ctId);
+        ContestDTO contest = contestService.getContestInfo(ctId);
         modelAndView.addObject("lstUser", lstUser);
+        modelAndView.addObject("judgeType", contest.getJudgeType());
         modelAndView.addObject("lstProb", lstProblem);
         modelAndView.setViewName(LEADERBOARD_VIEW);
         modelAndView.addObject(LEADERBOARD_FORM, contestLeaderboardForm);

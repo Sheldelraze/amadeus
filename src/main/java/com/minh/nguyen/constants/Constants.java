@@ -180,4 +180,7 @@ public class Constants {
     public static final String NOTIFICATION_APPLICATION_ACCEPTED_CONTENT = "Bạn đã được chấp nhận tham gia khóa học  ";
     public static final String NOTIFICATION_APPLICATION_DENIED_CONTENT = "Bạn đã bị từ chối tham gia khóa học  ";
     public static final String NOTIFICATION_COURSE_KICKED_CONTENT = "Bạn đã bị loại khỏi khóa học  ";
+
+    public static final Integer JUDGE_TYPE_ACM = 1;
+    public static final Integer JUDGE_TYPE_IOI = 2;
 }

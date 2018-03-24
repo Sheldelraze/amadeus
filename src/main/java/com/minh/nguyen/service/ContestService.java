@@ -233,9 +233,14 @@ public class ContestService extends BaseService {
 
     //get leaderboard information here
     public List<UserDTO> getLeaderboardInfor(Integer ctId) {
-
+        ContestDTO contest = getContestInfo(ctId);
+        List<UserDTO> lstUser = null;
         //1 user -> many problems
-        List<UserDTO> lstUser = userMapper.getLeaderboardInformationForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID);
+        if (contest.getJudgeType().equals(Constants.JUDGE_TYPE_ACM)) {
+            lstUser = userMapper.getLeaderboardIOIForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID);
+        }else{
+            lstUser = userMapper.getLeaderboardACMForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID,Constants.STATUS_ACCEPTED);
+        }
         for (UserDTO user : lstUser) {
             int score = 0;
             int penalty = 0;
@@ -251,47 +256,82 @@ public class ContestService extends BaseService {
                 int time = 0;
                 String solveTime = "--:--";
                 problem.setIsFirstSolve(0);
+
                 if (null != problem.getLstSubmission()) {
+                    problem.setCorrectAns(0);
                     for (SubmissionDTO submit : problem.getLstSubmission()) {
 
                         //we will ignore any submissions submitted after the first AC-ed one.
                         if (0 == isSolved) {
-                            if (submit.getJudgeStatus().equals(Constants.STATUS_ACCEPTED)) {
-                                isSolved = 1;
+                            //judge by ACM type (only accepted by correct all answers)
+                            if (contest.getJudgeType().equals(Constants.JUDGE_TYPE_ACM)) {
+                                if (submit.getJudgeStatus().equals(Constants.STATUS_ACCEPTED)) {
+                                    isSolved = 1;
 
-                                //calculate submit time if AC-ed
-                                long current = submit.getCreateTime().getTime();
-                                long elapsed = current - start;
-                                if (elapsed > 0) {
-                                    int minutes = (int) Math.floor((elapsed / 1000 / 60) % 60);
-                                    int hours = (int) Math.floor((elapsed / (1000 * 60 * 60)));
-                                    String h = StringUtils.leftPad(String.valueOf(hours), 2, "0");
-                                    String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
-                                    solveTime = h + ":" + m;
-                                    time += (int) Math.floor((elapsed / 1000 / 60));
-                                }else{
-                                    solveTime = "00:00";
-                                }
-                                //check if first solver
-                                if (null != problem.getFirstSolveTime()) {
-                                    if (problem.getFirstSolveTime().equals(submit.getCreateTime())) {
-                                        problem.setIsFirstSolve(1);
+                                    //calculate submit time if AC-ed
+                                    long current = submit.getCreateTime().getTime();
+                                    long elapsed = current - start;
+                                    if (elapsed > 0) {
+                                        int minutes = (int) Math.floor((elapsed / 1000 / 60) % 60);
+                                        int hours = (int) Math.floor((elapsed / (1000 * 60 * 60)));
+                                        String h = StringUtils.leftPad(String.valueOf(hours), 2, "0");
+                                        String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
+                                        solveTime = h + ":" + m;
+                                        time += (int) Math.floor((elapsed / 1000 / 60));
+                                    } else {
+                                        solveTime = "00:00";
                                     }
+                                    //check if first solver
+                                    if (null != problem.getFirstSolveTime()) {
+                                        if (problem.getFirstSolveTime().equals(submit.getCreateTime())) {
+                                            problem.setIsFirstSolve(1);
+                                        }
+                                    }
+                                } else {
+                                    //if not AC-ed then add penalty
+                                    time += Constants.SUBMISSION_FAIL_PENALTY;
                                 }
-                            } else {
-                                //if not AC-ed then add penalty
-                                time += Constants.SUBMISSION_FAIL_PENALTY;
-                            }
 
-                            //add submission count up to the first AC-ed one
-                            submitCnt++;
+                                //add submission count up to the first AC-ed one
+                                submitCnt++;
+
+                            }else{ //judge by IOI style (total correct ans / total test)
+                                if (submit.getCorrectAns() != null && submit.getCorrectAns().equals(problem.getTestCnt())) {
+                                    isSolved = 1;
+
+                                    //calculate submit time if AC-ed
+                                    long current = submit.getCreateTime().getTime();
+                                    long elapsed = current - start;
+                                    if (elapsed >= 0) {
+                                        int minutes = (int) Math.floor((elapsed / 1000 / 60) % 60);
+                                        int hours = (int) Math.floor(elapsed / (10000 * 6 * 60));
+                                        String h = StringUtils.leftPad(String.valueOf(hours), 2, "0");
+                                        String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
+                                        solveTime = h + ":" + m;
+                                        time += (int) Math.floor((elapsed / 1000 / 60));
+                                    }else{
+                                        solveTime = "00:00";
+                                    }
+                                } else {
+                                    time += Constants.SUBMISSION_FAIL_PENALTY;
+                                }
+
+                                //if not AC-ed then add penalty
+                                if (submit.getCorrectAns() != null && submit.getCorrectAns().compareTo(problem.getCorrectAns()) > 0) {
+                                    problem.setCorrectAns(submit.getCorrectAns());
+                                }
+                            }
                         }
                     }
                 }
 
                 //score = number of AC-ed problems
-                score += isSolved;
-
+                if (contest.getJudgeType().equals(Constants.JUDGE_TYPE_ACM)) {
+                    score += isSolved;
+                }
+                else{
+                    score += problem.getCorrectAns();
+                }
                 //calculate penalty only when AC-ed
                 if (isSolved == 1) {
                     penalty += time;
@@ -304,6 +344,7 @@ public class ContestService extends BaseService {
             user.setPenalty(penalty);
         }
         Collections.sort(lstUser, new ScoreboardComparator());
+
         return lstUser;
     }
 

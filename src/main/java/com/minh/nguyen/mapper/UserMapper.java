@@ -17,7 +17,9 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     List<UserDTO> getUserAuthority(@Param("handle") String handle);
 
-    List<UserDTO> getLeaderboardInformationForContest(@Param("ctId") Integer ctId, @Param("auth_participate_id") Integer authParticipateId);
+    List<UserDTO> getLeaderboardIOIForContest(@Param("ctId") Integer ctId, @Param("auth_participate_id") Integer authParticipateId);
+
+    List<UserDTO> getLeaderboardACMForContest(@Param("ctId") Integer ctId, @Param("auth_participate_id") Integer authParticipateId,@Param("acceptedStatus")Integer acceptedStatus);
 
     List<UserDTO> getLeaderboardInformationForCourse(@Param("ceId") Integer ceId, @Param("auth_participate_id") Integer authParticipateId,@Param("acceptedStatus")Integer acceptedStatus);
 
