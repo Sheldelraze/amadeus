@@ -63,6 +63,7 @@ public class CourseController extends BaseController {
     private static final String SETTING_VIEW = "course/info/course-setting";
     private static final String ANSWER_VIEW = "course/other/course-answer";
     private static final String LIST_ALL_VIEW = "course/list/course-list-all";
+    private static final String LIST_MY_VIEW = "course/list/course-list-my";
     private static final String SUBMISSION_VIEW = "submission/submission";
     private static final String ANNOUNCEMENT_VIEW = "course/info/course-announcement";
     private static final String ADD_ROLE_VIEW = "course/other/course-add-role";
@@ -162,6 +163,16 @@ public class CourseController extends BaseController {
         if (atCnt > 0) {
             modelAndView.addObject("atCnt", atCnt);
         }
+        return modelAndView;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/my")
+    public ModelAndView getMyCourse() {
+        ModelAndView modelAndView = createGeneralModel();
+        modelAndView.setViewName(LIST_MY_VIEW);
+        List<CourseDTO> lstCourse = courseService.getCourseForCurrentUser();
+        modelAndView.addObject("lstCourse",lstCourse);
         return modelAndView;
     }
 

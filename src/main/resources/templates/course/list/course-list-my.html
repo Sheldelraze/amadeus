@@ -61,8 +61,7 @@
                     <div class="card">
                         <div class="card-outline-info">
                             <div class="card-header">
-                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Khóa học
-                                    sắp/đang diễn ra</h4>
+                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Khóa học của tôi</h4>
                             </div>
                         </div>
                         <div class="card-body">
@@ -80,7 +79,7 @@
                                         <th style="width: 130px">Số người</th>
                                     </tr>
                                     </thead>
-                                    <tr th:each="course,iter : ${ongoingLst}">
+                                    <tr th:each="course,iter : ${lstCourse}">
                                         <td th:text="${iter.count}"></td>
                                         <td><a th:href="|/course/${course.id}|" th:text="${course.name}"></a></td>
                                         <td><a href="#" th:text="${course.creator.fullname}"></a></td>
@@ -95,55 +94,6 @@
                                         </td>
                                         <td th:text="${course.startTime}"></td>
                                         <td th:text="${course.endTime}" style="white-space: pre"></td>
-                                        <td><i class="mdi mdi-account"></i>x<label th:text="${course.userCnt}"></label>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-outline-info">
-                            <div class="card-header">
-                                <h4 class="m-b-0 text-white"><i class="mdi mdi-book-open-page-variant"></i>Khóa học đã kết thúc</h4>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="myTable1" class="table table-bordered "
-                                       style="text-align: center; color: black; font-size: 14px">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Tên cuộc thi</th>
-                                        <th>Người quản lý</th>
-                                        <th>Mô tả</th>
-                                        <th style="width: 150px">Ngày bắt đầu</th>
-                                        <th style="width: 180px">Ngày kết thúc</th>
-                                        <th style="width: 130px">Số người</th>
-                                    </tr>
-                                    </thead>
-                                    <tr th:each="course,iter : ${pastLst}">
-                                        <td th:text="${iter.count}"></td>
-                                        <td><a th:href="|/course/${course.id}|" th:text="${course.name}"></a></td>
-                                        <td><a href="#" th:text="${course.creator.fullname}"></a></td>
-                                        <td th:if="${course.preview != null}">
-                                            <label data-toggle="tooltip" data-placement="auto"
-                                                   style="text-align: left;white-space: pre-line"
-                                                   th:text="${course.preview}"
-                                                   th:attr="title=${course.description}"></label>
-                                        </td>
-                                        <td th:if="${course.preview == null}">
-                                            <label class="font-light text-muted">Không có mô tả</label>
-                                        </td>
-                                        <td th:text="${course.startTime}"></td>
-                                        <td th:text="${course.endTime}" style="white-space: pre"></td>
-                                        <td>
-                                            <button type="button" th:onclick="|redirect(${course.id})|"
-                                                    class="btn btn-outline-success">Xem xếp hạng
-                                            </button>
-                                        </td>
                                         <td><i class="mdi mdi-account"></i>x<label th:text="${course.userCnt}"></label>
                                         </td>
                                     </tr>
@@ -192,9 +142,6 @@
 
     $(document).ready(function () {
         $('#myTable').dataTable({
-            "bSort": false
-        });
-        $('#myTable1').dataTable({
             "bSort": false
         });
         $('[data-toggle="tooltip"]').tooltip();

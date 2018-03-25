@@ -22,4 +22,6 @@ public interface CourseMapper extends BaseMapper<CourseEntity> {
     Integer countApplication(@Param("ceId") Integer ceId);
 
     List<CourseDTO> getAllCourse(@Param("auth_participate_course_id") Integer participateCourseAuthId);
+
+    List<CourseDTO> getCourseForUser(@Param("auth_participate_course_id") Integer participateCourseAuthId,@Param("urId")Integer urId);
 }

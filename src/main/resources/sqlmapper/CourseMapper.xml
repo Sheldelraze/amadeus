@@ -35,6 +35,36 @@
         WHERE course.deleteFlg = '0'
         ORDER BY course.startTime DESC
     </select>
+    <select id="getCourseForUser" resultMap="courseLst">
+        SELECT
+            course.id,
+            course.name,
+            course.startTime,
+            course.endTime,
+            course.description,
+            user.fullname,
+            user.id AS urId,
+            countTbl.userCnt
+        FROM course
+            INNER JOIN user
+                ON course.createUser = user.handle
+            INNER JOIN (
+                           SELECT
+                               ceId,
+                               count(*) AS userCnt
+                           FROM ur_ce_auy
+                           WHERE auyId = #{auth_participate_course_id}
+                           GROUP BY ceId
+                       ) AS countTbl
+                ON course.id = countTbl.ceId
+        WHERE course.deleteFlg = '0'
+            and course.id in (
+                select DISTINCT ceId from ur_ce_auy
+                where ur_ce_auy.urId = #{urId}
+                and ur_ce_auy.deleteFlg = '0'
+            )
+        ORDER BY course.startTime DESC
+    </select>
     <resultMap id="courseLst" type="CourseDTO">
         <id column="id" property="id"/>
         <result column="name" property="name"/>

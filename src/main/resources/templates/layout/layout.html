@@ -324,7 +324,7 @@
                                 class="mdi mdi-clipboard-text"></i><span class="hide-menu">Khoá học</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a th:href="@{/course/all}">Tất cả khóa học</a></li>
-                            <li><a th:href="@{/course/my}">Khóa học của tôi</a></li>
+                            <li th:if="${urId != null}"><a th:href="@{/course/my}">Khóa học của tôi</a></li>
                         </ul>
                     </li>
                     <li><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i

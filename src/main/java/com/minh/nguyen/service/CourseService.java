@@ -886,4 +886,18 @@ public class CourseService extends BaseService {
         return courseListVO;
 
     }
+
+    public List<CourseDTO> getCourseForCurrentUser(){
+        Integer currentUserID = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        List<CourseDTO> lstCourse = courseMapper.getCourseForUser(Constants.AUTH_PARTICIPATE_COURSE_ID,currentUserID);
+        for(CourseDTO course : lstCourse){
+            //set preview
+            if (!StringUtil.isNull(course.getDescription()) && course.getDescription().length() > Constants.MAX_DESCRIPTION_LENGTH) {
+                course.setPreview(StringUtil.getFirstPartOfString(course.getDescription(), Constants.MAX_DESCRIPTION_LENGTH) + "...");
+            } else {
+                course.setPreview(course.getDescription());
+            }
+        }
+        return lstCourse;
+    }
 }
