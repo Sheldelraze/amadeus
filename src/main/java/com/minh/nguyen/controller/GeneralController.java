@@ -63,6 +63,7 @@ public class GeneralController extends BaseController {
             generalService.removeNotification(urId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

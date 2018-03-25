@@ -106,6 +106,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+
                                 <tr th:if="${contestAddProblemForm.lstProblemDTO != null}"
                                     th:each="problem,iter : ${contestAddProblemForm.lstProblemDTO}" >
                                     <td th:text="${problem.id}"></td>
