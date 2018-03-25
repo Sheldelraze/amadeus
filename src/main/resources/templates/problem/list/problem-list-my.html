@@ -97,31 +97,16 @@
                                         </td>
                                         <td>Lập trình C++</td>
                                         <td><a href="#" th:text="${problem.creator.fullname}"></a></td>
-                                        <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị</td>
+                                        <td>
+                                            <label th:if="${problem.tag == null}" class="font-light text-muted">Chưa có thể loại</label>
+                                            <label th:if="${problem.tag != null}" th:text="${problem.tag}"></label>
+                                        </td>
                                         <td th:if="${problem.isPublished==1}"><span class="label label-success">Đã xuất bản</span></td>
                                         <td th:unless="${problem.isPublished==1}"><span class="label label-danger">Chưa xuất bản</span></td>
                                         <td>
                                             <button type="button" th:onclick="|window.location='/problem/info/${problem.id}/statement'|"
                                                                class="btn btn-outline-warning">Cập nhật</button>
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>43152</td>
-                                        <td><a href="ProblemInfo.aspx">SUM</a></td>
-                                        <td>Tính tổng</td>
-                                        <td>Lập trình C++</td>
-                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                        <td>Cơ bản, đồ thị</td>
-                                        <td><span class="label label-success">Đã xuất bản</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>43152</td>
-                                        <td><a href="ProblemInfo.aspx">MINUS</a></td>
-                                        <td>Tính hiệu 2 số</td>
-                                        <td>Lập trình Java</td>
-                                        <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                        <td>Hình học, quy hoạch động</td>
-                                        <td><span class="label label-danger">Chưa xuất bản</span></td>
                                     </tr>
                                     </tbody>
                                 </table>

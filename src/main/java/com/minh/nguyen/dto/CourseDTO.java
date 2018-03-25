@@ -1,5 +1,7 @@
 package com.minh.nguyen.dto;
 
+import java.util.Date;
+
 /**
  * @author Mr.Minh
  * @since 14/03/2018
@@ -21,6 +23,46 @@ public class CourseDTO extends BaseDTO {
     private UserDTO creator;
 
     private Integer showSubmit;
+
+    private Date start;
+
+    private Date end;
+
+    private Integer userCnt;
+
+    private String preview;
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
+    public Integer getUserCnt() {
+        return userCnt;
+    }
+
+    public void setUserCnt(Integer userCnt) {
+        this.userCnt = userCnt;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public void setEnd(Date end) {
+        this.end = end;
+    }
 
     public Integer getShowSubmit() {
         return showSubmit;

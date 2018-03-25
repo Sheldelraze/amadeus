@@ -608,7 +608,18 @@ public class ContestService extends BaseService {
         }
         return lstAnnounce;
     }
-
+    public void doApply(Integer urId,Integer ctId){
+        if (!contestValidator.checkApplyPermission(ctId,urId)){
+            rollBack(Constants.MSG_ALREADY_IN_CONTEST_ERR);
+        }
+        UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
+        urCtAuyEntity.setCtId(ctId);
+        urCtAuyEntity.setUrId(urId);
+        urCtAuyEntity.setAuyId(Constants.AUTH_PARTICIPATE_CONTEST_ID);
+        setCreateInfo(urCtAuyEntity);
+        setUpdateInfo(urCtAuyEntity);
+        urCtAuyMapper.insert(urCtAuyEntity);
+    }
     public void deleteRole(Integer ctId, Integer urId) {
         UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
         urCtAuyEntity.setCtId(ctId);
@@ -715,4 +726,6 @@ public class ContestService extends BaseService {
         }
         return submissionDTO;
     }
+
+
 }

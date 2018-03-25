@@ -81,6 +81,8 @@ public class Constants {
     public static final String MSG_ALREADY_APPLIED_ERR = "msg023";
     public static final String MSG_APPLICATION_ACCEPTED_SUCCESS = "msg024";
     public static final String MSG_APPLICATION_DECLINED_SUCCESS = "msg025";
+    public static final String MSG_CONTEST_APPLY_SUCCESS = "msg026";
+    public static final String MSG_ALREADY_IN_CONTEST_ERR = "msg027";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;

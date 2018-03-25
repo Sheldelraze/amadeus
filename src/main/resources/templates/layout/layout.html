@@ -311,8 +311,8 @@
                     <li><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
                             class="mdi mdi-calendar-question"></i><span class="hide-menu">Bài tập</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="#">Tất cả bài tập</a></li>
-                            <li th:if="${canCreateProblem}"><a href="/problem/info/my">Bài tập của tôi</a></li>
+                            <li><a th:href="@{/problem/info/all}">Tất cả bài tập</a></li>
+                            <li th:if="${canCreateProblem}"><a th:href="@{/problem/info/my}">Bài tập của tôi</a></li>
                         </ul>
                     </li>
                     <li>
@@ -320,26 +320,30 @@
                                 class="mdi mdi-bank"></i><span class="hide-menu">Bảng chấm bài</span></a>
                     </li>
                     <li>
-                        <a class="waves-effect waves-dark" href="CourseList.aspx" aria-expanded="false"><i
+                        <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
                                 class="mdi mdi-clipboard-text"></i><span class="hide-menu">Khoá học</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a th:href="@{/course/all}">Tất cả khóa học</a></li>
+                            <li><a th:href="@{/course/my}">Khóa học của tôi</a></li>
+                        </ul>
                     </li>
                     <li><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
                             class="mdi mdi-trophy-variant-outline"></i><span class="hide-menu">Kì thi</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a href="/contest/all">Tất cả kì thi</a></li>
+                            <li><a th:href="@{/contest/all}">Tất cả kì thi</a></li>
                             <li th:if="${canCreateContest}"><a href="/contest/my">Kì thi của tôi</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a class="waves-effect waves-dark" href="UserList.aspx" aria-expanded="false"><i
+                        <a class="waves-effect waves-dark" th:href="@{/user/all}" aria-expanded="false"><i
                                 class="mdi mdi-account-multiple"></i><span class="hide-menu">Người dùng</span></a>
                     </li>
                     <li>
-                        <a class="waves-effect waves-dark" href="#" aria-expanded="false"><i
+                        <a class="waves-effect waves-dark" th:href="@{/message}" aria-expanded="false"><i
                                 class="mdi mdi-email-outline"></i><span class="hide-menu">Tin nhắn</span></a>
                     </li>
                     <li>
-                        <a class="waves-effect waves-dark" href="Profile.aspx" aria-expanded="false"><i
+                        <a class="waves-effect waves-dark" th:href="@{/profile/__${urId}__}" aria-expanded="false"><i
                                 class="mdi mdi-settings"></i><span class="hide-menu">Tài khoản</span></a>
                     </li>
                 </ul>

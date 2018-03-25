@@ -120,7 +120,10 @@
                                     </td>
                                     <td>Lập trình C++</td>
                                     <td><a href="#">Nguyễn Tuấn Minh</a></td>
-                                    <td th:text="${problem.tag}?${problem.tag}:'<<chưa có thể loại>>'">Cơ bản, đồ thị
+                                    <td>
+                                        <label th:if="${problem.tag == null}" class="font-light text-muted">Chưa có thể loại</label>
+                                        <label th:if="${problem.tag != null}" th:text="${problem.tag}"></label>
+                                    </td>
                                     </td>
 
                                     <td>

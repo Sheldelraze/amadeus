@@ -75,8 +75,9 @@
                                             <th style="text-align: center">Tên bài</th>
                                             <th style="text-align: center">Thời gian chạy</th>
                                             <th style="text-align: center">Bộ nhớ</th>
-                                            <th style="text-align: center">Độ khó</th>
-                                            <th style="text-align: center">Số người giải được</th>
+                                            <th style="text-align: center" width="230px">Độ khó</th>
+                                            <th style="text-align: center" width="200px">Thể loại</th>
+                                            <th style="text-align: center" width="200px">Số người giải được</th>
                                             <th style="text-align: center">Ẩn/Hiện</th>
                                         </tr>
                                         </thead>
@@ -93,6 +94,10 @@
                                                 <th:block th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
                                                     <img th:src="@{/assets/images/star.png}"/>
                                                 </th:block>
+                                            </td>
+                                            <td>
+                                                <label th:if="${problem.tag == null}" class="font-light text-muted">Chưa có thể loại</label>
+                                                <label th:if="${problem.tag != null}" th:text="${problem.tag}"></label>
                                             </td>
                                             <td><i class="mdi mdi-account"></i>x<label th:text="${problem.solveCnt}"></label></td>
                                             <td th:if="${problem.isHidden==0}">

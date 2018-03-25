@@ -12,7 +12,7 @@
             problem.code        AS pmCe,
             problem.name        AS pmNe,
             tag.name            AS tgNe,
-        tag.id AS tgId,
+            tag.id             AS tgId,
         user.fullname AS fullname,
         user.id AS urId
         FROM
@@ -145,15 +145,17 @@
         problem.deleteFlg = '0'
 
     </select>
-    <select id="getProblemToDisplayInCourse" resultType="ProblemDTO">
+    <select id="getProblemToDisplayInCourse" resultMap="problem">
         SELECT
-        problem.id,
-        problem.name,
+        problem.id as pmId,
+        problem.name as pmNe,
         problem.timeLimit,
         problem.memoryLimit,
-        problem.difficulty,
+        problem.difficulty as dif,
         problem.solveCnt,
-        ce_pm.isHidden
+        ce_pm.isHidden,
+        tag.name            AS tgNe,
+        tag.id             AS tgId
         FROM problem
         INNER JOIN ce_pm
         ON problem.id = ce_pm.pmId
@@ -162,6 +164,12 @@
         <if test="!getAllProblem">
             AND ce_pm.isHidden = 0
         </if>
+        LEFT JOIN pm_tg
+        ON pm_tg.pmId = problem.id
+        AND pm_tg.deleteFlg = '0'
+        LEFT JOIN tag
+        ON tag.id = pm_tg.tgId
+        AND tag.deleteFlg = '0'
         WHERE
         problem.deleteFlg = '0'
 
@@ -236,6 +244,10 @@
         <result column="pmNe" property="name"/>
         <result column="dif" property="difficulty"/>
         <result column="pub" property="isPublished"/>
+        <result column="timeLimit" property="timeLimit"/>
+        <result column="memoryLimit" property="memoryLimit"/>
+        <result column="isHidden" property="isHidden"/>
+        <result column="solveCnt" property="solveCnt"/>
         <association property="creator" javaType="UserDTO">
             <id property="id" column="urId"/>
             <result property="fullname" column="fullname"/>

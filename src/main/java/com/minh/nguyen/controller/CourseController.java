@@ -16,6 +16,7 @@ import com.minh.nguyen.validator.MaterialValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
 import com.minh.nguyen.vo.MessageVO;
+import com.minh.nguyen.vo.course.CourseListVO;
 import com.minh.nguyen.vo.course.CourseSubmitVO;
 import com.minh.nguyen.vo.problem.ProblemPreviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,6 +169,9 @@ public class CourseController extends BaseController {
     public ModelAndView getAllCourse() {
         ModelAndView modelAndView = createGeneralModel();
         modelAndView.setViewName(LIST_ALL_VIEW);
+        CourseListVO courseLst = courseService.getAllCourse();
+        modelAndView.addObject("ongoingLst",courseLst.getOngoingLst());
+        modelAndView.addObject("pastLst",courseLst.getPastLst());
         return modelAndView;
     }
 

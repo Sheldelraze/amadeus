@@ -2,8 +2,10 @@ package com.minh.nguyen.validator;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
+import com.minh.nguyen.entity.ApplicationEntity;
 import com.minh.nguyen.entity.ContestEntity;
 import com.minh.nguyen.entity.SubmissionEntity;
+import com.minh.nguyen.entity.UrCtAuyEntity;
 import com.minh.nguyen.exception.InputCheckException;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.form.BaseForm;
@@ -11,6 +13,7 @@ import com.minh.nguyen.form.contest.ContestSubmitForm;
 import com.minh.nguyen.mapper.AuthorityMapper;
 import com.minh.nguyen.mapper.ContestMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
+import com.minh.nguyen.mapper.UrCtAuyMapper;
 import com.minh.nguyen.validator.common.BaseValidator;
 import com.minh.nguyen.validator.common.BindingResult;
 import org.apache.commons.lang3.time.DateUtils;
@@ -39,6 +42,9 @@ public class ContestValidator extends BaseValidator {
 
     @Autowired
     private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private UrCtAuyMapper urCtAuyMapper;
 
     @Autowired
     private HttpSession httpSession;
@@ -195,6 +201,18 @@ public class ContestValidator extends BaseValidator {
     @Override
     public void validateField(String fieldName, String fieldValue, BindingResult errors) {
 
+    }
+
+    public boolean checkApplyPermission(Integer ctId, Integer urId) {
+        if (urId == null || ctId == null) {
+            return false;
+        }
+
+        UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
+        urCtAuyEntity.setUrId(urId);
+        urCtAuyEntity.setCtId(ctId);
+        List<UrCtAuyEntity> lstAuy = urCtAuyMapper.selectWithExample(urCtAuyEntity);
+        return lstAuy == null || lstAuy.size() == 0;
     }
 
     @Override

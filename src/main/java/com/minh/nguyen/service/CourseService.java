@@ -9,6 +9,7 @@ import com.minh.nguyen.form.course.CourseSettingForm;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
+import com.minh.nguyen.vo.course.CourseListVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -20,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.text.*;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Mr.Minh
@@ -505,6 +503,20 @@ public class CourseService extends BaseService {
             } else {
                 problemDTO.setAlias(-1);
             }
+            StringBuilder stringBuilder = new StringBuilder();
+            if (problemDTO.getLstTag() != null) {
+                List<TagDTO> lstTag = problemDTO.getLstTag();
+                for (int i = 0; i < lstTag.size(); ++i) {
+                    stringBuilder.append(lstTag.get(i).getName());
+                    if (i < lstTag.size() - 1) {
+                        stringBuilder.append(",");
+                    }
+                }
+            }
+            problemDTO.setTag(stringBuilder.toString());
+            if (Constants.BLANK.equals(stringBuilder.toString())) {
+                problemDTO.setTag(null);
+            }
         }
         return lst;
     }
@@ -842,5 +854,36 @@ public class CourseService extends BaseService {
             }
             return o2.getScore().compareTo(o1.getScore());
         }
+    }
+
+    public CourseListVO getAllCourse(){
+        List<CourseDTO> lstCourse = courseMapper.getAllCourse(Constants.AUTH_PARTICIPATE_COURSE_ID);
+        List<CourseDTO> ongoingLst = new ArrayList<>();
+        List<CourseDTO> pastLst = new ArrayList<>();
+        CourseListVO courseListVO = new CourseListVO();
+        for(CourseDTO course : lstCourse){
+
+            //set preview
+            if (!StringUtil.isNull(course.getDescription()) && course.getDescription().length() > Constants.MAX_DESCRIPTION_LENGTH) {
+                course.setPreview(StringUtil.getFirstPartOfString(course.getDescription(), Constants.MAX_DESCRIPTION_LENGTH) + "...");
+            } else {
+                course.setPreview(course.getDescription());
+            }
+
+            //check if course finished or not
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            course.setStartTime(dateFormat.format(course.getStart()));
+            course.setEndTime(dateFormat.format(course.getEnd()));
+            Date now = new Date();
+            if (now.compareTo(course.getEnd()) > 0){
+                pastLst.add(course);
+            }else{
+                ongoingLst.add(course);
+            }
+        }
+        courseListVO.setOngoingLst(ongoingLst);
+        courseListVO.setPastLst(pastLst);
+        return courseListVO;
+
     }
 }

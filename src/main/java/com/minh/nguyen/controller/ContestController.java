@@ -12,6 +12,7 @@ import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.ContestValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
+import com.minh.nguyen.vo.MessageVO;
 import com.minh.nguyen.vo.contest.*;
 import com.minh.nguyen.vo.problem.ProblemPreviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -190,9 +192,31 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(INFORMATION_VIEW);
         ContestInformationVO contestInformationVO = contestService.getInformation(ctId);
+        boolean canApply = false;
+        Integer currentUserId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        canApply = contestValidator.checkApplyPermission(ctId,currentUserId);
+        modelAndView.addObject("canApply",canApply);
         modelAndView.addObject("contestInformationVO", contestInformationVO);
         modelAndView.addObject(TAB, 1);
         modelAndView.addObject(CONTEST_ID, ctId);
+        return modelAndView;
+    }
+
+    @CheckNotNullFirst
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{ctId}/apply/{urId}")
+    public ModelAndView doApply(@PathVariable("ctId") Integer ctId, @PathVariable("urId") Integer urId) throws UserTryingToBeSmartException {
+        ModelAndView modelAndView = getInformation(ctId);
+        try {
+            contestService.doApply(urId, ctId);
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.SUCCESS.toString(), Constants.MSG_CONTEST_APPLY_SUCCESS));
+            return getInformation(ctId);
+        } catch (RollbackException e) {
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            modelAndView.addObject("message", new MessageVO(MessageDTO.MessageType.ERROR.toString(), Constants.MSG_SYSTEM_ERR));
+        }
         return modelAndView;
     }
 

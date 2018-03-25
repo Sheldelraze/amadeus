@@ -71,30 +71,32 @@
                                        style="text-align: center; color: black; font-size: 14px">
                                     <thead>
                                     <tr>
-                                        <th>Tên kỳ thi</th>
-                                        <th>Người ra đề</th>
-                                        <th style="width: 150px">Bắt đầu</th>
-                                        <th style="width: 180px">Thời lượng (phút)</th>
+                                        <th>#</th>
+                                        <th style="width: 300px">Tên kỳ thi</th>
+                                        <th>Người quản lý</th>
+                                        <th>Mô tả</th>
+                                        <th style="width: 150px">Ngày bắt đầu</th>
+                                        <th style="width: 180px">Ngày kết thúc</th>
                                         <th style="width: 130px">Số người</th>
-                                        <th style="width: 200px">Trạng thái</th>
                                     </tr>
                                     </thead>
-                                    <tr th:each="contest : ${contestListVO.ongoingLst}">
-                                        <td><a th:href="|/contest/${contest.id}|" th:text="${contest.name}"></a></td>
-                                        <td><a href="#" th:text="${contest.creator.fullname}"></a></td>
-                                        <td th:text="${contest.date}"></td>
-                                        <td th:text="${contest.duration}" style="white-space: pre"></td>
-                                        <td><i class="mdi mdi-account"></i>x<label th:text="${contest.userCnt}"></label>
+                                    <tr th:each="course,iter : ${ongoingLst}">
+                                        <td th:text="${iter.count}"></td>
+                                        <td><a th:href="|/course/${course.id}|" th:text="${course.name}"></a></td>
+                                        <td><a href="#" th:text="${course.creator.fullname}"></a></td>
+                                        <td th:if="${course.preview != null}">
+                                            <label data-toggle="tooltip" data-placement="auto"
+                                                   style="text-align: left;white-space: pre-line"
+                                                   th:text="${course.preview}"
+                                                   th:attr="title=${course.description}"></label>
                                         </td>
-                                        <th:block th:if="${contest.ongoing}">
-                                            <td><h3><span class="badge badge-warning">Đang thi</span></h3></td>
-                                        </th:block>
-                                        <th:block th:unless="${contest.ongoing}">
-                                            ` <input type="hidden" th:id="|cd${contest.id}input|"
-                                                     th:value="${contest.startTime}"/>
-                                            <td>Chưa thi:<h4><span class="badge badge-success" th:id="|cd${contest.id}|"
-                                                                   th:text="${contest.startTime}"></span></h4></td>
-                                        </th:block>
+                                        <td th:if="${course.preview == null}">
+                                            <label class="font-light text-muted">Không có mô tả</label>
+                                        </td>
+                                        <td th:text="${course.startTime}"></td>
+                                        <td th:text="${course.endTime}" style="white-space: pre"></td>
+                                        <td><i class="mdi mdi-account"></i>x<label th:text="${course.userCnt}"></label>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -114,25 +116,36 @@
                                        style="text-align: center; color: black; font-size: 14px">
                                     <thead>
                                     <tr>
-                                        <th>Tên kỳ thi</th>
-                                        <th>Người ra đề</th>
-                                        <th>Bắt đầu</th>
-                                        <th>Thời gian</th>
-                                        <th style="width: 130px">BXH</th>
-                                        <th style="width: 100px">Số người</th>
+                                        <th>#</th>
+                                        <th>Tên cuộc thi</th>
+                                        <th>Người quản lý</th>
+                                        <th>Mô tả</th>
+                                        <th style="width: 150px">Ngày bắt đầu</th>
+                                        <th style="width: 180px">Ngày kết thúc</th>
+                                        <th style="width: 130px">Số người</th>
                                     </tr>
                                     </thead>
-                                    <tr th:each="contest : ${contestListVO.pastLst}">
-                                        <td><a th:href="|/contest/${contest.id}|" th:text="${contest.name}"></a></td>
-                                        <td><a href="#" th:text="${contest.creator.fullname}"></a></td>
-                                        <td th:text="${contest.date}"></td>
-                                        <td th:text="${contest.duration}" style="white-space: pre"></td>
+                                    <tr th:each="course,iter : ${pastLst}">
+                                        <td th:text="${iter.count}"></td>
+                                        <td><a th:href="|/course/${course.id}|" th:text="${course.name}"></a></td>
+                                        <td><a href="#" th:text="${course.creator.fullname}"></a></td>
+                                        <td th:if="${course.preview != null}">
+                                            <label data-toggle="tooltip" data-placement="auto"
+                                                   style="text-align: left;white-space: pre-line"
+                                                   th:text="${course.preview}"
+                                                   th:attr="title=${course.description}"></label>
+                                        </td>
+                                        <td th:if="${course.preview == null}">
+                                            <label class="font-light text-muted">Không có mô tả</label>
+                                        </td>
+                                        <td th:text="${course.startTime}"></td>
+                                        <td th:text="${course.endTime}" style="white-space: pre"></td>
                                         <td>
-                                            <button type="button" th:onclick="|redirect(${contest.id})|"
+                                            <button type="button" th:onclick="|redirect(${course.id})|"
                                                     class="btn btn-outline-success">Xem xếp hạng
                                             </button>
                                         </td>
-                                        <td><i class="mdi mdi-account"></i>x<label th:text="${contest.userCnt}"></label>
+                                        <td><i class="mdi mdi-account"></i>x<label th:text="${course.userCnt}"></label>
                                         </td>
                                     </tr>
                                 </table>
@@ -174,8 +187,8 @@
 ></script>
 <script th:src="@{/js/timer.js}"></script>
 <script>
-    function redirect(ctId) {
-        window.location = "/contest/" + ctId + "/leaderboard";
+    function redirect(ceId) {
+        window.location = "/course/" + ceId + "/leaderboard";
     }
 
     $(document).ready(function () {
@@ -185,6 +198,7 @@
         $('#myTable1').dataTable({
             "bSort": false
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
     $('span[id^="cd"]').each(function () {
         var id = $(this).attr('id');
