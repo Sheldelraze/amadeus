@@ -16,37 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `admin`
---
-
-DROP TABLE IF EXISTS `admin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `admin` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
-  `createClass` varchar(100) DEFAULT NULL,
-  `createUser` varchar(30) DEFAULT NULL,
-  `createTime` datetime DEFAULT NULL,
-  `updateUser` varchar(45) DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL,
-  `updateClass` varchar(45) DEFAULT NULL,
-  `deleteFlg` varchar(1) DEFAULT '0',
-  `deleteTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`,`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `admin`
---
-
-LOCK TABLES `admin` WRITE;
-/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `announcement`
 --
 
@@ -118,37 +87,6 @@ LOCK TABLES `application` WRITE;
 /*!40000 ALTER TABLE `application` DISABLE KEYS */;
 INSERT INTO `application` VALUES (6,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-21 23:30:20','admin','2018-03-21 23:47:43','com.minh.nguyen.service.CourseService','0',NULL),(7,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 11:24:47','admin','2018-03-22 11:28:04','com.minh.nguyen.service.CourseService','0',NULL),(8,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 11:28:44','admin','2018-03-22 11:29:45','com.minh.nguyen.service.CourseService','0',NULL),(9,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 11:30:10','admin','2018-03-22 11:31:06','com.minh.nguyen.service.CourseService','0',NULL),(10,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 11:31:47','admin','2018-03-22 11:32:26','com.minh.nguyen.service.CourseService','0',NULL),(11,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 11:37:51','admin','2018-03-22 11:38:28','com.minh.nguyen.service.CourseService','0',NULL),(12,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 13:23:46','admin','2018-03-22 13:24:20','com.minh.nguyen.service.CourseService','0',NULL),(13,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 13:25:10','admin','2018-03-22 13:25:43','com.minh.nguyen.service.CourseService','0',NULL),(14,2,3,-1,'com.minh.nguyen.service.CourseService','user','2018-03-22 13:27:30','admin','2018-03-22 13:28:06','com.minh.nguyen.service.CourseService','0',NULL),(15,2,3,1,'com.minh.nguyen.service.CourseService','user','2018-03-22 14:07:40','admin','2018-03-22 14:07:56','com.minh.nguyen.service.CourseService','0',NULL);
 /*!40000 ALTER TABLE `application` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `at_qn`
---
-
-DROP TABLE IF EXISTS `at_qn`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `at_qn` (
-  `atId` int(11) NOT NULL,
-  `qnId` int(11) NOT NULL,
-  `createClass` varchar(100) DEFAULT NULL,
-  `createUser` varchar(30) DEFAULT NULL,
-  `createTime` datetime DEFAULT NULL,
-  `updateUser` varchar(45) DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL,
-  `updateClass` varchar(45) DEFAULT NULL,
-  `deleteFlg` varchar(1) DEFAULT '0',
-  `deleteTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`atId`,`qnId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `at_qn`
---
-
-LOCK TABLES `at_qn` WRITE;
-/*!40000 ALTER TABLE `at_qn` DISABLE KEYS */;
-/*!40000 ALTER TABLE `at_qn` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -657,38 +595,6 @@ INSERT INTO `language` VALUES (1,'C','c',NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL)
 UNLOCK TABLES;
 
 --
--- Table structure for table `lecturer`
---
-
-DROP TABLE IF EXISTS `lecturer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `lecturer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
-  `degree` varchar(45) DEFAULT NULL,
-  `createClass` varchar(100) DEFAULT NULL,
-  `createUser` varchar(30) DEFAULT NULL,
-  `createTime` datetime DEFAULT NULL,
-  `updateUser` varchar(45) DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL,
-  `updateClass` varchar(45) DEFAULT NULL,
-  `deleteFlg` varchar(1) DEFAULT '0',
-  `deleteTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`,`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `lecturer`
---
-
-LOCK TABLES `lecturer` WRITE;
-/*!40000 ALTER TABLE `lecturer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lecturer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `material`
 --
 
@@ -748,7 +654,7 @@ CREATE TABLE `message` (
   `deleteTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `conversation_message_id` (`cnId`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -757,8 +663,41 @@ CREATE TABLE `message` (
 
 LOCK TABLES `message` WRITE;
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
-INSERT INTO `message` VALUES (13,1,20,'qweqwe',NULL,NULL,'2018-03-13 19:02:02',NULL,NULL,NULL,'0',NULL),(14,1,20,'what',NULL,NULL,'2018-03-13 19:14:40',NULL,NULL,NULL,'0',NULL),(15,1,20,'hi friend',NULL,NULL,'2018-03-13 20:54:29',NULL,NULL,NULL,'0',NULL),(16,1,20,'hohahah',NULL,NULL,'2018-03-13 20:54:39',NULL,NULL,NULL,'0',NULL),(17,2,20,'howdy',NULL,NULL,'2018-03-14 10:56:29',NULL,NULL,NULL,'0',NULL),(18,2,20,'random',NULL,NULL,'2018-03-14 10:56:35',NULL,NULL,NULL,'0',NULL),(19,2,19,'ups',NULL,NULL,'2018-03-14 11:24:59',NULL,NULL,NULL,'0',NULL),(20,2,19,'qwe',NULL,NULL,'2018-03-14 11:25:01',NULL,NULL,NULL,'0',NULL),(21,2,20,'what',NULL,NULL,'2018-03-14 11:25:15',NULL,NULL,NULL,'0',NULL),(22,2,21,'1',NULL,NULL,'2018-03-14 11:26:37',NULL,NULL,NULL,'0',NULL),(23,2,19,'2',NULL,NULL,'2018-03-14 11:26:39',NULL,NULL,NULL,'0',NULL),(24,2,20,'3',NULL,NULL,'2018-03-14 11:26:42',NULL,NULL,NULL,'0',NULL),(25,2,19,'upsq',NULL,NULL,'2018-03-14 11:26:49',NULL,NULL,NULL,'0',NULL),(26,2,24,'hi',NULL,NULL,'2018-03-14 11:26:57',NULL,NULL,NULL,'0',NULL),(27,2,20,'1 message',NULL,NULL,'2018-03-14 11:27:09',NULL,NULL,NULL,'0',NULL),(28,2,19,'2 message',NULL,NULL,'2018-03-14 11:27:15',NULL,NULL,NULL,'0',NULL),(29,2,19,'3 message',NULL,NULL,'2018-03-14 11:27:23',NULL,NULL,NULL,'0',NULL),(30,2,19,'wer',NULL,NULL,'2018-03-14 11:27:26',NULL,NULL,NULL,'0',NULL),(31,2,21,'random message',NULL,NULL,'2018-03-14 11:27:32',NULL,NULL,NULL,'0',NULL),(32,2,19,'africa',NULL,NULL,'2018-03-14 11:27:48',NULL,NULL,NULL,'0',NULL),(33,2,20,'waka waka',NULL,NULL,'2018-03-14 11:27:53',NULL,NULL,NULL,'0',NULL),(34,4,26,'hi there',NULL,NULL,'2018-03-14 12:29:09',NULL,NULL,NULL,'0',NULL),(35,6,29,'hi',NULL,NULL,'2018-03-14 13:05:29',NULL,NULL,NULL,'0',NULL),(36,10,31,'qwe',NULL,NULL,'2018-03-14 13:05:47',NULL,NULL,NULL,'0',NULL),(37,11,32,'this is a test of  a very long message',NULL,NULL,'2018-03-14 13:07:51',NULL,NULL,NULL,'0',NULL),(38,1,20,'hi',NULL,NULL,'2018-03-14 13:46:48',NULL,NULL,NULL,'0',NULL),(39,1,20,'what',NULL,NULL,'2018-03-14 13:46:55',NULL,NULL,NULL,'0',NULL),(40,1,20,'send message',NULL,NULL,'2018-03-14 13:47:21',NULL,NULL,NULL,'0',NULL),(41,1,20,'try',NULL,NULL,'2018-03-14 13:47:36',NULL,NULL,NULL,'0',NULL),(42,1,20,'wqwe',NULL,NULL,'2018-03-14 13:47:51',NULL,NULL,NULL,'0',NULL),(43,1,20,'hi there',NULL,NULL,'2018-03-14 13:49:00',NULL,NULL,NULL,'0',NULL),(44,1,20,'magic',NULL,NULL,'2018-03-14 13:50:28',NULL,NULL,NULL,'0',NULL),(45,1,20,'qwe',NULL,NULL,'2018-03-14 13:52:37',NULL,NULL,NULL,'0',NULL),(46,1,20,'what',NULL,NULL,'2018-03-14 13:53:08',NULL,NULL,NULL,'0',NULL),(47,1,20,'werwer',NULL,NULL,'2018-03-14 13:53:41',NULL,NULL,NULL,'0',NULL),(48,1,20,'magic here',NULL,NULL,'2018-03-14 13:55:33',NULL,NULL,NULL,'0',NULL),(49,1,20,'werwer',NULL,NULL,'2018-03-14 13:57:32',NULL,NULL,NULL,'0',NULL),(50,1,20,'blah blayh blah',NULL,NULL,'2018-03-14 13:57:48',NULL,NULL,NULL,'0',NULL),(51,2,20,'h sao',NULL,NULL,'2018-03-14 13:59:32',NULL,NULL,NULL,'0',NULL),(52,2,20,'rrrr',NULL,NULL,'2018-03-14 14:02:50',NULL,NULL,NULL,'0',NULL),(53,2,20,'hehe',NULL,NULL,'2018-03-14 14:04:26',NULL,NULL,NULL,'0',NULL),(54,2,20,'howdy',NULL,NULL,'2018-03-14 14:21:40',NULL,NULL,NULL,'0',NULL),(55,2,20,'what\'s up',NULL,NULL,'2018-03-14 14:24:20',NULL,NULL,NULL,'0',NULL),(56,2,20,'qweqwe',NULL,NULL,'2018-03-14 14:27:07',NULL,NULL,NULL,'0',NULL),(57,2,20,'eeeeeee',NULL,NULL,'2018-03-14 14:30:16',NULL,NULL,NULL,'0',NULL),(58,2,20,'qweqwe',NULL,NULL,'2018-03-14 14:34:04',NULL,NULL,NULL,'0',NULL),(59,2,20,'hehehe',NULL,NULL,'2018-03-14 14:34:25',NULL,NULL,NULL,'0',NULL),(60,2,20,'haha yes',NULL,NULL,'2018-03-14 14:38:01',NULL,NULL,NULL,'0',NULL),(61,2,1,'haha yes',NULL,NULL,'2018-03-14 14:38:15',NULL,NULL,NULL,'0',NULL),(62,2,1,'test',NULL,NULL,'2018-03-21 18:40:42',NULL,NULL,NULL,'0',NULL),(63,2,1,'okok',NULL,NULL,'2018-03-21 18:41:07',NULL,NULL,NULL,'0',NULL),(64,2,20,'hehe of course',NULL,NULL,'2018-03-21 21:30:00',NULL,NULL,NULL,'0',NULL),(65,2,20,'no',NULL,NULL,'2018-03-21 21:34:16',NULL,NULL,NULL,'0',NULL),(66,2,20,'yo',NULL,NULL,'2018-03-21 21:35:32',NULL,NULL,NULL,'0',NULL),(67,2,20,'huhuhu',NULL,NULL,'2018-03-21 21:40:06',NULL,NULL,NULL,'0',NULL);
+INSERT INTO `message` VALUES (13,1,20,'qweqwe',NULL,NULL,'2018-03-13 19:02:02',NULL,NULL,NULL,'0',NULL),(14,1,20,'what',NULL,NULL,'2018-03-13 19:14:40',NULL,NULL,NULL,'0',NULL),(15,1,20,'hi friend',NULL,NULL,'2018-03-13 20:54:29',NULL,NULL,NULL,'0',NULL),(16,1,20,'hohahah',NULL,NULL,'2018-03-13 20:54:39',NULL,NULL,NULL,'0',NULL),(17,2,20,'howdy',NULL,NULL,'2018-03-14 10:56:29',NULL,NULL,NULL,'0',NULL),(18,2,20,'random',NULL,NULL,'2018-03-14 10:56:35',NULL,NULL,NULL,'0',NULL),(19,2,19,'ups',NULL,NULL,'2018-03-14 11:24:59',NULL,NULL,NULL,'0',NULL),(20,2,19,'qwe',NULL,NULL,'2018-03-14 11:25:01',NULL,NULL,NULL,'0',NULL),(21,2,20,'what',NULL,NULL,'2018-03-14 11:25:15',NULL,NULL,NULL,'0',NULL),(22,2,21,'1',NULL,NULL,'2018-03-14 11:26:37',NULL,NULL,NULL,'0',NULL),(23,2,19,'2',NULL,NULL,'2018-03-14 11:26:39',NULL,NULL,NULL,'0',NULL),(24,2,20,'3',NULL,NULL,'2018-03-14 11:26:42',NULL,NULL,NULL,'0',NULL),(25,2,19,'upsq',NULL,NULL,'2018-03-14 11:26:49',NULL,NULL,NULL,'0',NULL),(26,2,24,'hi',NULL,NULL,'2018-03-14 11:26:57',NULL,NULL,NULL,'0',NULL),(27,2,20,'1 message',NULL,NULL,'2018-03-14 11:27:09',NULL,NULL,NULL,'0',NULL),(28,2,19,'2 message',NULL,NULL,'2018-03-14 11:27:15',NULL,NULL,NULL,'0',NULL),(29,2,19,'3 message',NULL,NULL,'2018-03-14 11:27:23',NULL,NULL,NULL,'0',NULL),(30,2,19,'wer',NULL,NULL,'2018-03-14 11:27:26',NULL,NULL,NULL,'0',NULL),(31,2,21,'random message',NULL,NULL,'2018-03-14 11:27:32',NULL,NULL,NULL,'0',NULL),(32,2,19,'africa',NULL,NULL,'2018-03-14 11:27:48',NULL,NULL,NULL,'0',NULL),(33,2,20,'waka waka',NULL,NULL,'2018-03-14 11:27:53',NULL,NULL,NULL,'0',NULL),(34,4,26,'hi there',NULL,NULL,'2018-03-14 12:29:09',NULL,NULL,NULL,'0',NULL),(35,6,29,'hi',NULL,NULL,'2018-03-14 13:05:29',NULL,NULL,NULL,'0',NULL),(36,10,31,'qwe',NULL,NULL,'2018-03-14 13:05:47',NULL,NULL,NULL,'0',NULL),(37,11,32,'this is a test of  a very long message',NULL,NULL,'2018-03-14 13:07:51',NULL,NULL,NULL,'0',NULL),(38,1,20,'hi',NULL,NULL,'2018-03-14 13:46:48',NULL,NULL,NULL,'0',NULL),(39,1,20,'what',NULL,NULL,'2018-03-14 13:46:55',NULL,NULL,NULL,'0',NULL),(40,1,20,'send message',NULL,NULL,'2018-03-14 13:47:21',NULL,NULL,NULL,'0',NULL),(41,1,20,'try',NULL,NULL,'2018-03-14 13:47:36',NULL,NULL,NULL,'0',NULL),(42,1,20,'wqwe',NULL,NULL,'2018-03-14 13:47:51',NULL,NULL,NULL,'0',NULL),(43,1,20,'hi there',NULL,NULL,'2018-03-14 13:49:00',NULL,NULL,NULL,'0',NULL),(44,1,20,'magic',NULL,NULL,'2018-03-14 13:50:28',NULL,NULL,NULL,'0',NULL),(45,1,20,'qwe',NULL,NULL,'2018-03-14 13:52:37',NULL,NULL,NULL,'0',NULL),(46,1,20,'what',NULL,NULL,'2018-03-14 13:53:08',NULL,NULL,NULL,'0',NULL),(47,1,20,'werwer',NULL,NULL,'2018-03-14 13:53:41',NULL,NULL,NULL,'0',NULL),(48,1,20,'magic here',NULL,NULL,'2018-03-14 13:55:33',NULL,NULL,NULL,'0',NULL),(49,1,20,'werwer',NULL,NULL,'2018-03-14 13:57:32',NULL,NULL,NULL,'0',NULL),(50,1,20,'blah blayh blah',NULL,NULL,'2018-03-14 13:57:48',NULL,NULL,NULL,'0',NULL),(51,2,20,'h sao',NULL,NULL,'2018-03-14 13:59:32',NULL,NULL,NULL,'0',NULL),(52,2,20,'rrrr',NULL,NULL,'2018-03-14 14:02:50',NULL,NULL,NULL,'0',NULL),(53,2,20,'hehe',NULL,NULL,'2018-03-14 14:04:26',NULL,NULL,NULL,'0',NULL),(54,2,20,'howdy',NULL,NULL,'2018-03-14 14:21:40',NULL,NULL,NULL,'0',NULL),(55,2,20,'what\'s up',NULL,NULL,'2018-03-14 14:24:20',NULL,NULL,NULL,'0',NULL),(56,2,20,'qweqwe',NULL,NULL,'2018-03-14 14:27:07',NULL,NULL,NULL,'0',NULL),(57,2,20,'eeeeeee',NULL,NULL,'2018-03-14 14:30:16',NULL,NULL,NULL,'0',NULL),(58,2,20,'qweqwe',NULL,NULL,'2018-03-14 14:34:04',NULL,NULL,NULL,'0',NULL),(59,2,20,'hehehe',NULL,NULL,'2018-03-14 14:34:25',NULL,NULL,NULL,'0',NULL),(60,2,20,'haha yes',NULL,NULL,'2018-03-14 14:38:01',NULL,NULL,NULL,'0',NULL),(61,2,1,'haha yes',NULL,NULL,'2018-03-14 14:38:15',NULL,NULL,NULL,'0',NULL),(62,2,1,'test',NULL,NULL,'2018-03-21 18:40:42',NULL,NULL,NULL,'0',NULL),(63,2,1,'okok',NULL,NULL,'2018-03-21 18:41:07',NULL,NULL,NULL,'0',NULL),(64,2,20,'hehe of course',NULL,NULL,'2018-03-21 21:30:00',NULL,NULL,NULL,'0',NULL),(65,2,20,'no',NULL,NULL,'2018-03-21 21:34:16',NULL,NULL,NULL,'0',NULL),(66,2,20,'yo',NULL,NULL,'2018-03-21 21:35:32',NULL,NULL,NULL,'0',NULL),(67,2,20,'huhuhu',NULL,NULL,'2018-03-21 21:40:06',NULL,NULL,NULL,'0',NULL),(68,1,20,'hola amigo',NULL,NULL,'2018-04-02 13:29:50',NULL,NULL,NULL,'0',NULL);
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `messagenotification`
+--
+
+DROP TABLE IF EXISTS `messagenotification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `messagenotification` (
+  `meId` int(11) NOT NULL AUTO_INCREMENT,
+  `urId` int(10) NOT NULL,
+  `isRead` int(11) DEFAULT '0',
+  `createClass` varchar(100) DEFAULT NULL,
+  `createUser` varchar(30) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateUser` varchar(45) DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
+  `updateClass` varchar(45) DEFAULT NULL,
+  `deleteFlg` varchar(1) DEFAULT '0',
+  `deleteTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`meId`,`urId`)
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `messagenotification`
+--
+
+LOCK TABLES `messagenotification` WRITE;
+/*!40000 ALTER TABLE `messagenotification` DISABLE KEYS */;
+INSERT INTO `messagenotification` VALUES (13,1,1,NULL,NULL,'2018-03-13 19:02:02',NULL,NULL,NULL,'0',NULL),(13,2,1,NULL,NULL,'2018-03-13 19:02:02',NULL,NULL,NULL,'0',NULL),(14,1,1,NULL,NULL,'2018-03-13 19:14:40',NULL,NULL,NULL,'0',NULL),(14,2,1,NULL,NULL,'2018-03-13 19:14:40',NULL,NULL,NULL,'0',NULL),(15,1,1,NULL,NULL,'2018-03-13 20:54:29',NULL,NULL,NULL,'0',NULL),(15,2,1,NULL,NULL,'2018-03-13 20:54:29',NULL,NULL,NULL,'0',NULL),(16,1,1,NULL,NULL,'2018-03-13 20:54:39',NULL,NULL,NULL,'0',NULL),(16,2,1,NULL,NULL,'2018-03-13 20:54:39',NULL,NULL,NULL,'0',NULL),(17,1,1,NULL,NULL,'2018-03-14 10:56:29',NULL,NULL,NULL,'0',NULL),(17,2,1,NULL,NULL,'2018-03-14 10:56:29',NULL,NULL,NULL,'0',NULL),(18,1,1,NULL,NULL,'2018-03-14 10:56:35',NULL,NULL,NULL,'0',NULL),(18,2,1,NULL,NULL,'2018-03-14 10:56:35',NULL,NULL,NULL,'0',NULL),(19,2,1,NULL,NULL,'2018-03-14 11:24:59',NULL,NULL,NULL,'0',NULL),(19,3,0,NULL,NULL,'2018-03-14 11:24:59',NULL,NULL,NULL,'0',NULL),(20,2,1,NULL,NULL,'2018-03-14 11:25:01',NULL,NULL,NULL,'0',NULL),(20,3,0,NULL,NULL,'2018-03-14 11:25:01',NULL,NULL,NULL,'0',NULL),(21,1,1,NULL,NULL,'2018-03-14 11:25:15',NULL,NULL,NULL,'0',NULL),(21,2,1,NULL,NULL,'2018-03-14 11:25:15',NULL,NULL,NULL,'0',NULL),(22,2,1,NULL,NULL,'2018-03-14 11:26:37',NULL,NULL,NULL,'0',NULL),(22,4,0,NULL,NULL,'2018-03-14 11:26:37',NULL,NULL,NULL,'0',NULL),(23,2,1,NULL,NULL,'2018-03-14 11:26:39',NULL,NULL,NULL,'0',NULL),(23,3,0,NULL,NULL,'2018-03-14 11:26:39',NULL,NULL,NULL,'0',NULL),(24,1,1,NULL,NULL,'2018-03-14 11:26:42',NULL,NULL,NULL,'0',NULL),(24,2,1,NULL,NULL,'2018-03-14 11:26:42',NULL,NULL,NULL,'0',NULL),(25,2,1,NULL,NULL,'2018-03-14 11:26:49',NULL,NULL,NULL,'0',NULL),(25,3,0,NULL,NULL,'2018-03-14 11:26:49',NULL,NULL,NULL,'0',NULL),(26,2,1,NULL,NULL,'2018-03-14 11:26:57',NULL,NULL,NULL,'0',NULL),(26,13,0,NULL,NULL,'2018-03-14 11:26:57',NULL,NULL,NULL,'0',NULL),(27,1,1,NULL,NULL,'2018-03-14 11:27:09',NULL,NULL,NULL,'0',NULL),(27,2,1,NULL,NULL,'2018-03-14 11:27:09',NULL,NULL,NULL,'0',NULL),(28,2,1,NULL,NULL,'2018-03-14 11:27:15',NULL,NULL,NULL,'0',NULL),(28,3,0,NULL,NULL,'2018-03-14 11:27:15',NULL,NULL,NULL,'0',NULL),(29,2,1,NULL,NULL,'2018-03-14 11:27:23',NULL,NULL,NULL,'0',NULL),(29,3,0,NULL,NULL,'2018-03-14 11:27:23',NULL,NULL,NULL,'0',NULL),(30,2,1,NULL,NULL,'2018-03-14 11:27:26',NULL,NULL,NULL,'0',NULL),(30,3,0,NULL,NULL,'2018-03-14 11:27:26',NULL,NULL,NULL,'0',NULL),(31,2,1,NULL,NULL,'2018-03-14 11:27:32',NULL,NULL,NULL,'0',NULL),(31,4,0,NULL,NULL,'2018-03-14 11:27:32',NULL,NULL,NULL,'0',NULL),(32,2,1,NULL,NULL,'2018-03-14 11:27:48',NULL,NULL,NULL,'0',NULL),(32,3,0,NULL,NULL,'2018-03-14 11:27:48',NULL,NULL,NULL,'0',NULL),(33,1,1,NULL,NULL,'2018-03-14 11:27:53',NULL,NULL,NULL,'0',NULL),(33,2,1,NULL,NULL,'2018-03-14 11:27:53',NULL,NULL,NULL,'0',NULL),(34,1,1,NULL,NULL,'2018-03-14 12:29:09',NULL,NULL,NULL,'0',NULL),(34,4,1,NULL,NULL,'2018-03-14 12:29:09',NULL,NULL,NULL,'0',NULL),(35,1,1,NULL,NULL,'2018-03-14 13:05:29',NULL,NULL,NULL,'0',NULL),(35,6,1,NULL,NULL,'2018-03-14 13:05:29',NULL,NULL,NULL,'0',NULL),(36,1,1,NULL,NULL,'2018-03-14 13:05:47',NULL,NULL,NULL,'0',NULL),(36,10,1,NULL,NULL,'2018-03-14 13:05:47',NULL,NULL,NULL,'0',NULL),(37,1,1,NULL,NULL,'2018-03-14 13:07:51',NULL,NULL,NULL,'0',NULL),(37,11,1,NULL,NULL,'2018-03-14 13:07:51',NULL,NULL,NULL,'0',NULL),(38,1,1,NULL,NULL,'2018-03-14 13:46:48',NULL,NULL,NULL,'0',NULL),(38,2,1,NULL,NULL,'2018-03-14 13:46:48',NULL,NULL,NULL,'0',NULL),(39,1,1,NULL,NULL,'2018-03-14 13:46:55',NULL,NULL,NULL,'0',NULL),(39,2,1,NULL,NULL,'2018-03-14 13:46:55',NULL,NULL,NULL,'0',NULL),(40,1,1,NULL,NULL,'2018-03-14 13:47:21',NULL,NULL,NULL,'0',NULL),(40,2,1,NULL,NULL,'2018-03-14 13:47:21',NULL,NULL,NULL,'0',NULL),(41,1,1,NULL,NULL,'2018-03-14 13:47:36',NULL,NULL,NULL,'0',NULL),(41,2,1,NULL,NULL,'2018-03-14 13:47:36',NULL,NULL,NULL,'0',NULL),(42,1,1,NULL,NULL,'2018-03-14 13:47:51',NULL,NULL,NULL,'0',NULL),(42,2,1,NULL,NULL,'2018-03-14 13:47:51',NULL,NULL,NULL,'0',NULL),(43,1,1,NULL,NULL,'2018-03-14 13:49:00',NULL,NULL,NULL,'0',NULL),(43,2,1,NULL,NULL,'2018-03-14 13:49:00',NULL,NULL,NULL,'0',NULL),(44,1,1,NULL,NULL,'2018-03-14 13:50:28',NULL,NULL,NULL,'0',NULL),(44,2,1,NULL,NULL,'2018-03-14 13:50:28',NULL,NULL,NULL,'0',NULL),(45,1,1,NULL,NULL,'2018-03-14 13:52:37',NULL,NULL,NULL,'0',NULL),(45,2,1,NULL,NULL,'2018-03-14 13:52:37',NULL,NULL,NULL,'0',NULL),(46,1,1,NULL,NULL,'2018-03-14 13:53:08',NULL,NULL,NULL,'0',NULL),(46,2,1,NULL,NULL,'2018-03-14 13:53:08',NULL,NULL,NULL,'0',NULL),(47,1,1,NULL,NULL,'2018-03-14 13:53:41',NULL,NULL,NULL,'0',NULL),(47,2,1,NULL,NULL,'2018-03-14 13:53:41',NULL,NULL,NULL,'0',NULL),(48,1,1,NULL,NULL,'2018-03-14 13:55:33',NULL,NULL,NULL,'0',NULL),(48,2,1,NULL,NULL,'2018-03-14 13:55:33',NULL,NULL,NULL,'0',NULL),(49,1,1,NULL,NULL,'2018-03-14 13:57:32',NULL,NULL,NULL,'0',NULL),(49,2,1,NULL,NULL,'2018-03-14 13:57:32',NULL,NULL,NULL,'0',NULL),(50,1,1,NULL,NULL,'2018-03-14 13:57:48',NULL,NULL,NULL,'0',NULL),(50,2,1,NULL,NULL,'2018-03-14 13:57:48',NULL,NULL,NULL,'0',NULL),(51,1,1,NULL,NULL,'2018-03-14 13:59:32',NULL,NULL,NULL,'0',NULL),(51,2,1,NULL,NULL,'2018-03-14 13:59:32',NULL,NULL,NULL,'0',NULL),(52,1,1,NULL,NULL,'2018-03-14 14:02:50',NULL,NULL,NULL,'0',NULL),(52,2,1,NULL,NULL,'2018-03-14 14:02:50',NULL,NULL,NULL,'0',NULL),(53,1,1,NULL,NULL,'2018-03-14 14:04:26',NULL,NULL,NULL,'0',NULL),(53,2,1,NULL,NULL,'2018-03-14 14:04:26',NULL,NULL,NULL,'0',NULL),(54,1,1,NULL,NULL,'2018-03-14 14:21:40',NULL,NULL,NULL,'0',NULL),(54,2,1,NULL,NULL,'2018-03-14 14:21:40',NULL,NULL,NULL,'0',NULL),(55,1,1,NULL,NULL,'2018-03-14 14:24:20',NULL,NULL,NULL,'0',NULL),(55,2,1,NULL,NULL,'2018-03-14 14:24:20',NULL,NULL,NULL,'0',NULL),(56,1,1,NULL,NULL,'2018-03-14 14:27:07',NULL,NULL,NULL,'0',NULL),(56,2,1,NULL,NULL,'2018-03-14 14:27:07',NULL,NULL,NULL,'0',NULL),(57,1,1,NULL,NULL,'2018-03-14 14:30:16',NULL,NULL,NULL,'0',NULL),(57,2,1,NULL,NULL,'2018-03-14 14:30:16',NULL,NULL,NULL,'0',NULL),(58,1,1,NULL,NULL,'2018-03-14 14:34:04',NULL,NULL,NULL,'0',NULL),(58,2,1,NULL,NULL,'2018-03-14 14:34:04',NULL,NULL,NULL,'0',NULL),(59,1,1,NULL,NULL,'2018-03-14 14:34:25',NULL,NULL,NULL,'0',NULL),(59,2,1,NULL,NULL,'2018-03-14 14:34:25',NULL,NULL,NULL,'0',NULL),(60,1,1,NULL,NULL,'2018-03-14 14:38:01',NULL,NULL,NULL,'0',NULL),(60,2,1,NULL,NULL,'2018-03-14 14:38:01',NULL,NULL,NULL,'0',NULL),(64,1,1,NULL,NULL,'2018-03-21 21:30:00',NULL,NULL,NULL,'0',NULL),(64,2,1,NULL,NULL,'2018-03-21 21:30:00',NULL,NULL,NULL,'0',NULL),(65,1,1,NULL,NULL,'2018-03-21 21:34:16',NULL,NULL,NULL,'0',NULL),(65,2,1,NULL,NULL,'2018-03-21 21:34:16',NULL,NULL,NULL,'0',NULL),(66,1,1,NULL,NULL,'2018-03-21 21:35:32',NULL,NULL,NULL,'0',NULL),(66,2,1,NULL,NULL,'2018-03-21 21:35:32',NULL,NULL,NULL,'0',NULL),(67,1,1,NULL,NULL,'2018-03-21 21:40:06',NULL,NULL,NULL,'0',NULL),(67,2,1,NULL,NULL,'2018-03-21 21:40:06',NULL,NULL,NULL,'0',NULL),(68,1,1,NULL,NULL,'2018-04-02 13:29:50',NULL,NULL,NULL,'0',NULL),(68,2,0,NULL,NULL,'2018-04-02 13:29:50',NULL,NULL,NULL,'0',NULL);
+/*!40000 ALTER TABLE `messagenotification` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1029,7 +968,7 @@ CREATE TABLE `spring_session` (
 
 LOCK TABLES `spring_session` WRITE;
 /*!40000 ALTER TABLE `spring_session` DISABLE KEYS */;
-INSERT INTO `spring_session` VALUES ('524aed2e-3caa-4ebf-94d5-aada68442813',1521820871753,1521820913321,1800,'admin');
+INSERT INTO `spring_session` VALUES ('85406a56-79b9-4fe6-b195-466f7fc92b59',1522650596580,1522650598022,1800,'user');
 /*!40000 ALTER TABLE `spring_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1056,40 +995,8 @@ CREATE TABLE `spring_session_attributes` (
 
 LOCK TABLES `spring_session_attributes` WRITE;
 /*!40000 ALTER TABLE `spring_session_attributes` DISABLE KEYS */;
-INSERT INTO `spring_session_attributes` VALUES ('524aed2e-3caa-4ebf-94d5-aada68442813','currentUserAuthorities','¨\Ì\0sr\0java.util.ArrayListxÅ\“ô\«aù\0I\0sizexp\0\0\0\nw\0\0\0\nsr\0java.lang.Integer‚†§˜Åá8\0I\0valuexr\0java.lang.NumberÜ¨ïî\‡ã\0\0xp\0\0\0sq\0~\0\0\0\0sq\0~\0\0\0\0sq\0~\0\0\0\0sq\0~\0\0\0\0\nsq\0~\0\0\0\0sq\0~\0\0\0\0\rsq\0~\0\0\0\0sq\0~\0\0\0\0sq\0~\0\0\0\0x'),('524aed2e-3caa-4ebf-94d5-aada68442813','currentUserFullname','¨\Ì\0t\0MakiseKurisu'),('524aed2e-3caa-4ebf-94d5-aada68442813','currentUserHandle','¨\Ì\0t\0admin'),('524aed2e-3caa-4ebf-94d5-aada68442813','currentUserId','¨\Ì\0sr\0java.lang.Integer‚†§˜Åá8\0I\0valuexr\0java.lang.NumberÜ¨ïî\‡ã\0\0xp\0\0\0'),('524aed2e-3caa-4ebf-94d5-aada68442813','currentUserRoleId','¨\Ì\0sr\0java.lang.Integer‚†§˜Åá8\0I\0valuexr\0java.lang.NumberÜ¨ïî\‡ã\0\0xp\0\0\0'),('524aed2e-3caa-4ebf-94d5-aada68442813','currentUserRoleName','¨\Ì\0t\0Qu·∫£n tr·ªã vi√™n'),('524aed2e-3caa-4ebf-94d5-aada68442813','org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN','¨\Ì\0sr\06org.springframework.security.web.csrf.DefaultCsrfTokenZ\Ô∑\»/¢˚\’\0L\0\nheaderNamet\0Ljava/lang/String;L\0\rparameterNameq\0~\0L\0tokenq\0~\0xpt\0X-CSRF-TOKENt\0_csrft\0$4ec1a44d-2e9b-441f-8f4c-d23f7ab1f27c'),('524aed2e-3caa-4ebf-94d5-aada68442813','SPRING_SECURITY_CONTEXT','¨\Ì\0sr\0=org.springframework.security.core.context.SecurityContextImpl\0\0\0\0\0\0§\0L\0authenticationt\02Lorg/springframework/security/core/Authentication;xpsr\0Oorg.springframework.security.authentication.UsernamePasswordAuthenticationToken\0\0\0\0\0\0§\0L\0credentialst\0Ljava/lang/Object;L\0	principalq\0~\0xr\0Gorg.springframework.security.authentication.AbstractAuthenticationToken”™(~nGd\0Z\0\rauthenticatedL\0authoritiest\0Ljava/util/Collection;L\0detailsq\0~\0xpsr\0&java.util.Collections$UnmodifiableList¸%1µ\Ïé\0L\0listt\0Ljava/util/List;xr\0,java.util.Collections$UnmodifiableCollectionB\0Ä\À^˜\0L\0cq\0~\0xpsr\0java.util.ArrayListxÅ\“ô\«aù\0I\0sizexp\0\0\0\nw\0\0\0\nsr\0Borg.springframework.security.core.authority.SimpleGrantedAuthority\0\0\0\0\0\0§\0L\0rolet\0Ljava/lang/String;xpt\0CAN_CREATE_CONTESTsq\0~\0t\0CAN_CREATE_COURSEsq\0~\0t\0CAN_CREATE_PROBLEMsq\0~\0t\0CAN_CREATE_USERsq\0~\0t\0\rCAN_EDIT_USERsq\0~\0t\0CAN_UPLOAD_MATERIALsq\0~\0t\0CAN_VIEW_ALL_CONTESTsq\0~\0t\0CAN_VIEW_ALL_MATERIALsq\0~\0t\0CAN_VIEW_ALL_PROBLEMsq\0~\0t\0CAN_VIEW_ALL_SUBMISSIONxq\0~\0\rsr\0Horg.springframework.security.web.authentication.WebAuthenticationDetails\0\0\0\0\0\0§\0L\0\rremoteAddressq\0~\0L\0	sessionIdq\0~\0xpt\00:0:0:0:0:0:0:1t\0$0fa050d1-6a86-41aa-b6c1-596bac73de83psr\02org.springframework.security.core.userdetails.User\0\0\0\0\0\0§\0Z\0accountNonExpiredZ\0accountNonLockedZ\0credentialsNonExpiredZ\0enabledL\0authoritiest\0Ljava/util/Set;L\0passwordq\0~\0L\0usernameq\0~\0xpsr\0%java.util.Collections$UnmodifiableSetÄí—èõÄU\0\0xq\0~\0\nsr\0java.util.TreeSet›òPìï\Ìá[\0\0xpsr\0Forg.springframework.security.core.userdetails.User$AuthorityComparator\0\0\0\0\0\0§\0\0xpw\0\0\0\nq\0~\0q\0~\0q\0~\0q\0~\0q\0~\0q\0~\0\Zq\0~\0q\0~\0q\0~\0 q\0~\0\"xpt\0admin');
+INSERT INTO `spring_session_attributes` VALUES ('85406a56-79b9-4fe6-b195-466f7fc92b59','currentUserAuthorities','¨\Ì\0sr\0java.util.ArrayListxÅ\“ô\«aù\0I\0sizexp\0\0\0\0w\0\0\0\0x'),('85406a56-79b9-4fe6-b195-466f7fc92b59','currentUserFullname','¨\Ì\0t\0Okabe'),('85406a56-79b9-4fe6-b195-466f7fc92b59','currentUserHandle','¨\Ì\0t\0user'),('85406a56-79b9-4fe6-b195-466f7fc92b59','currentUserId','¨\Ì\0sr\0java.lang.Integer‚†§˜Åá8\0I\0valuexr\0java.lang.NumberÜ¨ïî\‡ã\0\0xp\0\0\0'),('85406a56-79b9-4fe6-b195-466f7fc92b59','currentUserRoleId','¨\Ì\0sr\0java.lang.Integer‚†§˜Åá8\0I\0valuexr\0java.lang.NumberÜ¨ïî\‡ã\0\0xp\0\0\0'),('85406a56-79b9-4fe6-b195-466f7fc92b59','currentUserRoleName','¨\Ì\0t\0\nSinh vi√™n'),('85406a56-79b9-4fe6-b195-466f7fc92b59','org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN','¨\Ì\0sr\06org.springframework.security.web.csrf.DefaultCsrfTokenZ\Ô∑\»/¢˚\’\0L\0\nheaderNamet\0Ljava/lang/String;L\0\rparameterNameq\0~\0L\0tokenq\0~\0xpt\0X-CSRF-TOKENt\0_csrft\0$9c63285c-b09e-4f0c-aa2e-cd6111ab6242'),('85406a56-79b9-4fe6-b195-466f7fc92b59','SPRING_SECURITY_CONTEXT','¨\Ì\0sr\0=org.springframework.security.core.context.SecurityContextImpl\0\0\0\0\0\0§\0L\0authenticationt\02Lorg/springframework/security/core/Authentication;xpsr\0Oorg.springframework.security.authentication.UsernamePasswordAuthenticationToken\0\0\0\0\0\0§\0L\0credentialst\0Ljava/lang/Object;L\0	principalq\0~\0xr\0Gorg.springframework.security.authentication.AbstractAuthenticationToken”™(~nGd\0Z\0\rauthenticatedL\0authoritiest\0Ljava/util/Collection;L\0detailsq\0~\0xpsr\0&java.util.Collections$UnmodifiableList¸%1µ\Ïé\0L\0listt\0Ljava/util/List;xr\0,java.util.Collections$UnmodifiableCollectionB\0Ä\À^˜\0L\0cq\0~\0xpsr\0java.util.ArrayListxÅ\“ô\«aù\0I\0sizexp\0\0\0\0w\0\0\0\0xq\0~\0\rsr\0Horg.springframework.security.web.authentication.WebAuthenticationDetails\0\0\0\0\0\0§\0L\0\rremoteAddresst\0Ljava/lang/String;L\0	sessionIdq\0~\0xpt\00:0:0:0:0:0:0:1t\0$63d9f97d-d0a1-4a8b-a19e-8e206ebf3929psr\02org.springframework.security.core.userdetails.User\0\0\0\0\0\0§\0Z\0accountNonExpiredZ\0accountNonLockedZ\0credentialsNonExpiredZ\0enabledL\0authoritiest\0Ljava/util/Set;L\0passwordq\0~\0L\0usernameq\0~\0xpsr\0%java.util.Collections$UnmodifiableSetÄí—èõÄU\0\0xq\0~\0\nsr\0java.util.TreeSet›òPìï\Ìá[\0\0xpsr\0Forg.springframework.security.core.userdetails.User$AuthorityComparator\0\0\0\0\0\0§\0\0xpw\0\0\0\0xpt\0user'),('85406a56-79b9-4fe6-b195-466f7fc92b59','SPRING_SECURITY_LAST_EXCEPTION','¨\Ì\0sr\0Rorg.springframework.security.authentication.InternalAuthenticationServiceException¨ReÛòP\0\0xr\0Jorg.springframework.security.authentication.AuthenticationServiceException\È\Èhh~t,\ƒ\0\0xr\09org.springframework.security.core.AuthenticationExceptionQ0\‚gT\0\0xr\0\Zjava.lang.RuntimeExceptionû_G\n4É\Â\0\0xr\0java.lang.Exception\–˝>\Z;\ƒ\0\0xr\0java.lang.Throwable\’\∆5\'9w∏\À\0L\0causet\0Ljava/lang/Throwable;L\0\rdetailMessaget\0Ljava/lang/String;[\0\nstackTracet\0[Ljava/lang/StackTraceElement;L\0suppressedExceptionst\0Ljava/util/List;xpsr\0/org.springframework.jdbc.BadSqlGrammarException<\Í\Ì\‘.\’{\—\0L\0sqlq\0~\0xr\0?org.springframework.dao.InvalidDataAccessResourceUsageException6£e¬ôŸ±\0\0xr\07org.springframework.dao.NonTransientDataAccessExceptionåµ9µ¿\“\0\0xr\0+org.springframework.dao.DataAccessException∑®Bw\ \Z\≈\n\0\0xr\0/org.springframework.core.NestedRuntimeExceptionK~vHÀèü\0\0\0xq\0~\0sr\09com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException`o˜˝\ËÇd\0\0xr\0 java.sql.SQLSyntaxErrorException\ÊidÉ5)\0\0xr\0!java.sql.SQLNonTransientExceptionÅ¶º\nwÛ\—}\0\0xr\0java.sql.SQLException°\È0\€>u\‹\0I\0\nvendorCodeL\0SQLStateq\0~\0L\0nextt\0Ljava/sql/SQLException;xq\0~\0q\0~\0t\0,Unknown column \'accountType\' in \'field list\'ur\0[Ljava.lang.StackTraceElement;F*<<˝\"9\0\0xp\0\0\0msr\0java.lang.StackTraceElementa	≈ö&6›Ö\0I\0\nlineNumberL\0declaringClassq\0~\0L\0fileNameq\0~\0L\0\nmethodNameq\0~\0xpˇˇˇ˛t\0)sun.reflect.NativeConstructorAccessorImplt\0\"NativeConstructorAccessorImpl.javat\0newInstance0sq\0~\0\Z\0\0\09q\0~\0q\0~\0t\0newInstancesq\0~\0\Z\0\0\0-t\0-sun.reflect.DelegatingConstructorAccessorImplt\0&DelegatingConstructorAccessorImpl.javaq\0~\0 sq\0~\0\Z\0\0t\0java.lang.reflect.Constructort\0Constructor.javaq\0~\0 sq\0~\0\Z\0\0©t\0com.mysql.jdbc.Utilt\0	Util.javat\0handleNewInstancesq\0~\0\Z\0\0òq\0~\0(q\0~\0)t\0getInstancesq\0~\0\Z\0\0Øt\0com.mysql.jdbc.SQLErrort\0\rSQLError.javat\0createSQLExceptionsq\0~\0\Z\0\0Öt\0com.mysql.jdbc.MysqlIOt\0MysqlIO.javat\0checkErrorPacketsq\0~\0\Z\0\0Eq\0~\02q\0~\03q\0~\04sq\0~\0\Z\0\0	\ﬂq\0~\02q\0~\03t\0sendCommandsq\0~\0\Z\0\0\nxq\0~\02q\0~\03t\0sqlQueryDirectsq\0~\0\Z\0\0	∑t\0com.mysql.jdbc.ConnectionImplt\0ConnectionImpl.javat\0execSQLsq\0~\0\Z\0\0Bt\0 com.mysql.jdbc.PreparedStatementt\0PreparedStatement.javat\0executeInternalsq\0~\0\Z\0\0≠q\0~\0?q\0~\0@t\0executesq\0~\0\Zˇˇˇ˛t\0$sun.reflect.NativeMethodAccessorImplt\0NativeMethodAccessorImpl.javat\0invoke0sq\0~\0\Z\0\0\09q\0~\0Eq\0~\0Ft\0invokesq\0~\0\Z\0\0\0+t\0(sun.reflect.DelegatingMethodAccessorImplt\0!DelegatingMethodAccessorImpl.javaq\0~\0Isq\0~\0\Z\0\0^t\0java.lang.reflect.Methodt\0Method.javaq\0~\0Isq\0~\0\Z\0\0\0rt\0:org.apache.tomcat.jdbc.pool.StatementFacade$StatementProxyt\0StatementFacade.javaq\0~\0Isq\0~\0\Zˇˇˇˇt\0com.sun.proxy.$Proxy144pq\0~\0Csq\0~\0\Zˇˇˇ˛q\0~\0Eq\0~\0Fq\0~\0Gsq\0~\0\Z\0\0\09q\0~\0Eq\0~\0Fq\0~\0Isq\0~\0\Z\0\0\0+q\0~\0Kq\0~\0Lq\0~\0Isq\0~\0\Z\0\0^q\0~\0Nq\0~\0Oq\0~\0Isq\0~\0\Z\0\0\0;t\06org.apache.ibatis.logging.jdbc.PreparedStatementLoggert\0PreparedStatementLogger.javaq\0~\0Isq\0~\0\Zˇˇˇˇt\0com.sun.proxy.$Proxy145pq\0~\0Csq\0~\0\Z\0\0\0?t\0=org.apache.ibatis.executor.statement.PreparedStatementHandlert\0PreparedStatementHandler.javat\0querysq\0~\0\Z\0\0\0Ot\0<org.apache.ibatis.executor.statement.RoutingStatementHandlert\0RoutingStatementHandler.javaq\0~\0asq\0~\0\Z\0\0\0?t\0)org.apache.ibatis.executor.SimpleExecutort\0SimpleExecutor.javat\0doQuerysq\0~\0\Z\0\0Dt\0\'org.apache.ibatis.executor.BaseExecutort\0BaseExecutor.javat\0queryFromDatabasesq\0~\0\Z\0\0\0úq\0~\0jq\0~\0kq\0~\0asq\0~\0\Z\0\0\0mt\0*org.apache.ibatis.executor.CachingExecutort\0CachingExecutor.javaq\0~\0asq\0~\0\Z\0\0\0Sq\0~\0oq\0~\0pq\0~\0asq\0~\0\Z\0\0\0ît\04org.apache.ibatis.session.defaults.DefaultSqlSessiont\0DefaultSqlSession.javat\0\nselectListsq\0~\0\Z\0\0\0çq\0~\0sq\0~\0tq\0~\0usq\0~\0\Zˇˇˇ˛q\0~\0Eq\0~\0Fq\0~\0Gsq\0~\0\Z\0\0\09q\0~\0Eq\0~\0Fq\0~\0Isq\0~\0\Z\0\0\0+q\0~\0Kq\0~\0Lq\0~\0Isq\0~\0\Z\0\0^q\0~\0Nq\0~\0Oq\0~\0Isq\0~\0\Z\0\0±t\0;org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptort\0SqlSessionTemplate.javaq\0~\0Isq\0~\0\Zˇˇˇˇt\0com.sun.proxy.$Proxy86pq\0~\0usq\0~\0\Z\0\0\0\Êt\0%org.mybatis.spring.SqlSessionTemplateq\0~\0}q\0~\0usq\0~\0\Z\0\0\0ât\0&org.apache.ibatis.binding.MapperMethodt\0MapperMethod.javat\0executeForManysq\0~\0\Z\0\0\0Kq\0~\0Éq\0~\0Ñq\0~\0Csq\0~\0\Z\0\0\0;t\0%org.apache.ibatis.binding.MapperProxyt\0MapperProxy.javaq\0~\0Isq\0~\0\Zˇˇˇˇt\0com.sun.proxy.$Proxy93pt\0selectWithExamplesq\0~\0\Z\0\0\0/t\02com.minh.nguyen.config.Security.UserAuthenticationt\0UserAuthentication.javat\0loadUserByUsernamesq\0~\0\Z\0\0\0rt\0Iorg.springframework.security.authentication.dao.DaoAuthenticationProvidert\0DaoAuthenticationProvider.javat\0retrieveUsersq\0~\0\Z\0\0\0êt\0Yorg.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvidert\0.AbstractUserDetailsAuthenticationProvider.javat\0authenticatesq\0~\0\Z\0\0\0Æt\0;org.springframework.security.authentication.ProviderManagert\0ProviderManager.javaq\0~\0òsq\0~\0\Z\0\0\0\«q\0~\0öq\0~\0õq\0~\0òsq\0~\0\Z\0\0\0^t\0Torg.springframework.security.web.authentication.UsernamePasswordAuthenticationFiltert\0)UsernamePasswordAuthenticationFilter.javat\0attemptAuthenticationsq\0~\0\Z\0\0\0\‘t\0Vorg.springframework.security.web.authentication.AbstractAuthenticationProcessingFiltert\0+AbstractAuthenticationProcessingFilter.javat\0doFiltersq\0~\0\Z\0\0Kt\0Dorg.springframework.security.web.FilterChainProxy$VirtualFilterChaint\0FilterChainProxy.javaq\0~\0§sq\0~\0\Z\0\0\0tt\0Corg.springframework.security.web.authentication.logout.LogoutFiltert\0LogoutFilter.javaq\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0|t\00org.springframework.security.web.csrf.CsrfFiltert\0CsrfFilter.javat\0doFilterInternalsq\0~\0\Z\0\0\0kt\03org.springframework.web.filter.OncePerRequestFiltert\0OncePerRequestFilter.javaq\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0@t\0:org.springframework.security.web.header.HeaderWriterFiltert\0HeaderWriterFilter.javaq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0it\0Iorg.springframework.security.web.context.SecurityContextPersistenceFiltert\0%SecurityContextPersistenceFilter.javaq\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\08t\0Worg.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFiltert\0%WebAsyncManagerIntegrationFilter.javaq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0\÷t\01org.springframework.security.web.FilterChainProxyq\0~\0ßq\0~\0Øsq\0~\0\Z\0\0\0±q\0~\0\√q\0~\0ßq\0~\0§sq\0~\0\Z\0\0[t\04org.springframework.web.filter.DelegatingFilterProxyt\0\ZDelegatingFilterProxy.javat\0invokeDelegatesq\0~\0\Z\0\0q\0~\0\∆q\0~\0\«q\0~\0§sq\0~\0\Z\0\0\0¡t\0/org.apache.catalina.core.ApplicationFilterChaint\0ApplicationFilterChain.javat\0internalDoFiltersq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0ct\03org.springframework.web.filter.RequestContextFiltert\0RequestContextFilter.javaq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0lt\07org.springframework.web.filter.HttpPutFormContentFiltert\0HttpPutFormContentFilter.javaq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0Qt\05org.springframework.web.filter.HiddenHttpMethodFiltert\0HiddenHttpMethodFilter.javaq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0ßt\0<org.springframework.session.web.http.SessionRepositoryFiltert\0SessionRepositoryFilter.javaq\0~\0Øsq\0~\0\Z\0\0\0Pt\09org.springframework.session.web.http.OncePerRequestFilterq\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0\≈t\06org.springframework.web.filter.CharacterEncodingFiltert\0CharacterEncodingFilter.javaq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0\«t\0-org.apache.catalina.core.StandardWrapperValvet\0StandardWrapperValve.javaq\0~\0Isq\0~\0\Z\0\0\0`t\0-org.apache.catalina.core.StandardContextValvet\0StandardContextValve.javaq\0~\0Isq\0~\0\Z\0\0\ﬁt\03org.apache.catalina.authenticator.AuthenticatorBaset\0AuthenticatorBase.javaq\0~\0Isq\0~\0\Z\0\0\0åt\0*org.apache.catalina.core.StandardHostValvet\0StandardHostValve.javaq\0~\0Isq\0~\0\Z\0\0\0Qt\0+org.apache.catalina.valves.ErrorReportValvet\0ErrorReportValve.javaq\0~\0Isq\0~\0\Z\0\0\0Wt\0,org.apache.catalina.core.StandardEngineValvet\0StandardEngineValve.javaq\0~\0Isq\0~\0\Z\0\0Vt\0+org.apache.catalina.connector.CoyoteAdaptert\0CoyoteAdapter.javat\0servicesq\0~\0\Z\0\0#t\0(org.apache.coyote.http11.Http11Processort\0Http11Processor.javaq\0~sq\0~\0\Z\0\0\0Bt\0(org.apache.coyote.AbstractProcessorLightt\0AbstractProcessorLight.javat\0processsq\0~\0\Z\0\0dt\04org.apache.coyote.AbstractProtocol$ConnectionHandlert\0AbstractProtocol.javaq\0~\nsq\0~\0\Z\0\0≥t\06org.apache.tomcat.util.net.NioEndpoint$SocketProcessort\0NioEndpoint.javat\0doRunsq\0~\0\Z\0\0\01t\0.org.apache.tomcat.util.net.SocketProcessorBaset\0SocketProcessorBase.javat\0runsq\0~\0\Z\0\0yt\0\'java.util.concurrent.ThreadPoolExecutort\0ThreadPoolExecutor.javat\0	runWorkersq\0~\0\Z\0\0gt\0.java.util.concurrent.ThreadPoolExecutor$Workerq\0~q\0~sq\0~\0\Z\0\0\0=t\0:org.apache.tomcat.util.threads.TaskThread$WrappingRunnablet\0TaskThread.javaq\0~sq\0~\0\Z\0\0\Èt\0java.lang.Threadt\0Thread.javaq\0~sr\0&java.util.Collections$UnmodifiableList¸%1µ\Ïé\0L\0listq\0~\0	xr\0,java.util.Collections$UnmodifiableCollectionB\0Ä\À^˜\0L\0ct\0Ljava/util/Collection;xpsr\0java.util.ArrayListxÅ\“ô\«aù\0I\0sizexp\0\0\0\0w\0\0\0\0xq\0~\'x\0\0t\042S22pts\r\n### Error querying database.  Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column \'accountType\' in \'field list\'\r\n### The error may exist in com/minh/nguyen/mapper/UserMapper.java (best guess)\r\n### The error may involve com.minh.nguyen.mapper.UserMapper.selectWithExample-Inline\r\n### The error occurred while setting parameters\r\n### SQL: SELECT id AS id,handle AS handle,password AS password,fullname AS fullname,phoneNumber AS phoneNumber,emailAddress AS emailAddress,dateOfBirth AS dateOfBirth,avatar AS avatar,description AS description,loginAttempt AS loginAttempt,isOnline AS isOnline,isActived AS isActived,isLocked AS isLocked,reId AS reId,lastLogin AS lastLogin,expiredDate AS expiredDate,accountType AS accountType,createTime AS createTime,createUser AS createUser,createClass AS createClass,updateTime AS updateTime,updateUser AS updateUser,updateClass AS updateClass,deleteFlg AS deleteFlg,deleteTime AS deleteTime FROM user WHERE (handle = ? AND deleteFlg=\'0\')\r\n### Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column \'accountType\' in \'field list\'\n; bad SQL grammar []uq\0~\0\0\0\0Isq\0~\0\Z\0\0\0\Át\0Corg.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslatort\0\'SQLErrorCodeSQLExceptionTranslator.javat\0doTranslatesq\0~\0\Z\0\0\0It\0Gorg.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslatort\0+AbstractFallbackSQLExceptionTranslator.javat\0	translatesq\0~\0\Z\0\0\0It\0-org.mybatis.spring.MyBatisExceptionTranslatort\0MyBatisExceptionTranslator.javat\0translateExceptionIfPossiblesq\0~\0\Z\0\0æq\0~\0|q\0~\0}q\0~\0Isq\0~\0\Zˇˇˇˇq\0~\0pq\0~\0usq\0~\0\Z\0\0\0\Êq\0~\0Åq\0~\0}q\0~\0usq\0~\0\Z\0\0\0âq\0~\0Éq\0~\0Ñq\0~\0Ösq\0~\0\Z\0\0\0Kq\0~\0Éq\0~\0Ñq\0~\0Csq\0~\0\Z\0\0\0;q\0~\0àq\0~\0âq\0~\0Isq\0~\0\Zˇˇˇˇq\0~\0ãpq\0~\0åsq\0~\0\Z\0\0\0/q\0~\0éq\0~\0èq\0~\0êsq\0~\0\Z\0\0\0rq\0~\0íq\0~\0ìq\0~\0îsq\0~\0\Z\0\0\0êq\0~\0ñq\0~\0óq\0~\0òsq\0~\0\Z\0\0\0Æq\0~\0öq\0~\0õq\0~\0òsq\0~\0\Z\0\0\0\«q\0~\0öq\0~\0õq\0~\0òsq\0~\0\Z\0\0\0^q\0~\0ûq\0~\0üq\0~\0†sq\0~\0\Z\0\0\0\‘q\0~\0¢q\0~\0£q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0tq\0~\0©q\0~\0™q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0|q\0~\0≠q\0~\0Æq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0@q\0~\0µq\0~\0∂q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0iq\0~\0∫q\0~\0ªq\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\08q\0~\0æq\0~\0øq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0\÷q\0~\0\√q\0~\0ßq\0~\0Øsq\0~\0\Z\0\0\0±q\0~\0\√q\0~\0ßq\0~\0§sq\0~\0\Z\0\0[q\0~\0\∆q\0~\0\«q\0~\0\»sq\0~\0\Z\0\0q\0~\0\∆q\0~\0\«q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0cq\0~\0\–q\0~\0\—q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0lq\0~\0\÷q\0~\0\◊q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0Qq\0~\0\‹q\0~\0\›q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0ßq\0~\0\‚q\0~\0\„q\0~\0Øsq\0~\0\Z\0\0\0Pq\0~\0\Âq\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0\≈q\0~\0\Èq\0~\0\Íq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0\«q\0~\0\Ôq\0~\0q\0~\0Isq\0~\0\Z\0\0\0`q\0~\0Úq\0~\0Ûq\0~\0Isq\0~\0\Z\0\0\ﬁq\0~\0ıq\0~\0ˆq\0~\0Isq\0~\0\Z\0\0\0åq\0~\0¯q\0~\0˘q\0~\0Isq\0~\0\Z\0\0\0Qq\0~\0˚q\0~\0¸q\0~\0Isq\0~\0\Z\0\0\0Wq\0~\0˛q\0~\0ˇq\0~\0Isq\0~\0\Z\0\0Vq\0~q\0~q\0~sq\0~\0\Z\0\0#q\0~q\0~q\0~sq\0~\0\Z\0\0\0Bq\0~q\0~	q\0~\nsq\0~\0\Z\0\0dq\0~q\0~\rq\0~\nsq\0~\0\Z\0\0≥q\0~q\0~q\0~sq\0~\0\Z\0\0\01q\0~q\0~q\0~sq\0~\0\Z\0\0yq\0~q\0~q\0~sq\0~\0\Z\0\0gq\0~q\0~q\0~sq\0~\0\Z\0\0\0=q\0~q\0~q\0~sq\0~\0\Z\0\0\Èq\0~ q\0~!q\0~q\0~%xt\0\0t\r\n### Error querying database.  Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column \'accountType\' in \'field list\'\r\n### The error may exist in com/minh/nguyen/mapper/UserMapper.java (best guess)\r\n### The error may involve com.minh.nguyen.mapper.UserMapper.selectWithExample-Inline\r\n### The error occurred while setting parameters\r\n### SQL: SELECT id AS id,handle AS handle,password AS password,fullname AS fullname,phoneNumber AS phoneNumber,emailAddress AS emailAddress,dateOfBirth AS dateOfBirth,avatar AS avatar,description AS description,loginAttempt AS loginAttempt,isOnline AS isOnline,isActived AS isActived,isLocked AS isLocked,reId AS reId,lastLogin AS lastLogin,expiredDate AS expiredDate,accountType AS accountType,createTime AS createTime,createUser AS createUser,createClass AS createClass,updateTime AS updateTime,updateUser AS updateUser,updateClass AS updateClass,deleteFlg AS deleteFlg,deleteTime AS deleteTime FROM user WHERE (handle = ? AND deleteFlg=\'0\')\r\n### Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column \'accountType\' in \'field list\'\n; bad SQL grammar []; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column \'accountType\' in \'field list\'uq\0~\0\0\0\0>sq\0~\0\Z\0\0\0~q\0~\0íq\0~\0ìq\0~\0îsq\0~\0\Z\0\0\0êq\0~\0ñq\0~\0óq\0~\0òsq\0~\0\Z\0\0\0Æq\0~\0öq\0~\0õq\0~\0òsq\0~\0\Z\0\0\0\«q\0~\0öq\0~\0õq\0~\0òsq\0~\0\Z\0\0\0^q\0~\0ûq\0~\0üq\0~\0†sq\0~\0\Z\0\0\0\‘q\0~\0¢q\0~\0£q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0tq\0~\0©q\0~\0™q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0|q\0~\0≠q\0~\0Æq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0@q\0~\0µq\0~\0∂q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0iq\0~\0∫q\0~\0ªq\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\08q\0~\0æq\0~\0øq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0Kq\0~\0¶q\0~\0ßq\0~\0§sq\0~\0\Z\0\0\0\÷q\0~\0\√q\0~\0ßq\0~\0Øsq\0~\0\Z\0\0\0±q\0~\0\√q\0~\0ßq\0~\0§sq\0~\0\Z\0\0[q\0~\0\∆q\0~\0\«q\0~\0\»sq\0~\0\Z\0\0q\0~\0\∆q\0~\0\«q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0cq\0~\0\–q\0~\0\—q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0lq\0~\0\÷q\0~\0\◊q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0Qq\0~\0\‹q\0~\0\›q\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0ßq\0~\0\‚q\0~\0\„q\0~\0Øsq\0~\0\Z\0\0\0Pq\0~\0\Âq\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0\≈q\0~\0\Èq\0~\0\Íq\0~\0Øsq\0~\0\Z\0\0\0kq\0~\0±q\0~\0≤q\0~\0§sq\0~\0\Z\0\0\0¡q\0~\0\Àq\0~\0\Ãq\0~\0\Õsq\0~\0\Z\0\0\0¶q\0~\0\Àq\0~\0\Ãq\0~\0§sq\0~\0\Z\0\0\0\«q\0~\0\Ôq\0~\0q\0~\0Isq\0~\0\Z\0\0\0`q\0~\0Úq\0~\0Ûq\0~\0Isq\0~\0\Z\0\0\ﬁq\0~\0ıq\0~\0ˆq\0~\0Isq\0~\0\Z\0\0\0åq\0~\0¯q\0~\0˘q\0~\0Isq\0~\0\Z\0\0\0Qq\0~\0˚q\0~\0¸q\0~\0Isq\0~\0\Z\0\0\0Wq\0~\0˛q\0~\0ˇq\0~\0Isq\0~\0\Z\0\0Vq\0~q\0~q\0~sq\0~\0\Z\0\0#q\0~q\0~q\0~sq\0~\0\Z\0\0\0Bq\0~q\0~	q\0~\nsq\0~\0\Z\0\0dq\0~q\0~\rq\0~\nsq\0~\0\Z\0\0≥q\0~q\0~q\0~sq\0~\0\Z\0\0\01q\0~q\0~q\0~sq\0~\0\Z\0\0yq\0~q\0~q\0~sq\0~\0\Z\0\0gq\0~q\0~q\0~sq\0~\0\Z\0\0\0=q\0~q\0~q\0~sq\0~\0\Z\0\0\Èq\0~ q\0~!q\0~q\0~%x');
 /*!40000 ALTER TABLE `spring_session_attributes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `student`
---
-
-DROP TABLE IF EXISTS `student`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `student` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
-  `probSolveCnt` int(11) DEFAULT NULL,
-  `createClass` varchar(100) DEFAULT NULL,
-  `createUser` varchar(30) DEFAULT NULL,
-  `createTime` datetime DEFAULT NULL,
-  `updateUser` varchar(45) DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL,
-  `updateClass` varchar(45) DEFAULT NULL,
-  `deleteFlg` varchar(1) DEFAULT '0',
-  `deleteTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`,`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `student`
---
-
-LOCK TABLES `student` WRITE;
-/*!40000 ALTER TABLE `student` DISABLE KEYS */;
-/*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1204,30 +1111,6 @@ INSERT INTO `submitdetail` VALUES (68,'1 2',NULL,'1\r\n2\r\n3','L·ªói runtime',0
 UNLOCK TABLES;
 
 --
--- Table structure for table `supervisor`
---
-
-DROP TABLE IF EXISTS `supervisor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `supervisor` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
-  `degree` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`,`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `supervisor`
---
-
-LOCK TABLES `supervisor` WRITE;
-/*!40000 ALTER TABLE `supervisor` DISABLE KEYS */;
-/*!40000 ALTER TABLE `supervisor` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tag`
 --
 
@@ -1329,6 +1212,37 @@ LOCK TABLES `tbl_survey_question` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ur_auy`
+--
+
+DROP TABLE IF EXISTS `ur_auy`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ur_auy` (
+  `urId` int(11) NOT NULL,
+  `auyId` int(11) NOT NULL,
+  `createClass` varchar(100) DEFAULT NULL,
+  `createUser` varchar(30) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `updateUser` varchar(45) DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
+  `updateClass` varchar(45) DEFAULT NULL,
+  `deleteFlg` varchar(1) DEFAULT '0',
+  `deleteTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`urId`,`auyId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ur_auy`
+--
+
+LOCK TABLES `ur_auy` WRITE;
+/*!40000 ALTER TABLE `ur_auy` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ur_auy` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ur_ce_auy`
 --
 
@@ -1427,62 +1341,6 @@ INSERT INTO `ur_ct_auy` VALUES (1,5,7,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(1
 UNLOCK TABLES;
 
 --
--- Table structure for table `ur_gt`
---
-
-DROP TABLE IF EXISTS `ur_gt`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ur_gt` (
-  `gtId` int(11) NOT NULL AUTO_INCREMENT,
-  `urId` int(11) NOT NULL,
-  PRIMARY KEY (`gtId`,`urId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ur_gt`
---
-
-LOCK TABLES `ur_gt` WRITE;
-/*!40000 ALTER TABLE `ur_gt` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ur_gt` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ur_me`
---
-
-DROP TABLE IF EXISTS `ur_me`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ur_me` (
-  `meId` int(11) NOT NULL AUTO_INCREMENT,
-  `urId` int(10) NOT NULL,
-  `isRead` int(11) DEFAULT '0',
-  `createClass` varchar(100) DEFAULT NULL,
-  `createUser` varchar(30) DEFAULT NULL,
-  `createTime` datetime DEFAULT NULL,
-  `updateUser` varchar(45) DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL,
-  `updateClass` varchar(45) DEFAULT NULL,
-  `deleteFlg` varchar(1) DEFAULT '0',
-  `deleteTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`meId`,`urId`)
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ur_me`
---
-
-LOCK TABLES `ur_me` WRITE;
-/*!40000 ALTER TABLE `ur_me` DISABLE KEYS */;
-INSERT INTO `ur_me` VALUES (13,1,1,NULL,NULL,'2018-03-13 19:02:02',NULL,NULL,NULL,'0',NULL),(13,2,1,NULL,NULL,'2018-03-13 19:02:02',NULL,NULL,NULL,'0',NULL),(14,1,1,NULL,NULL,'2018-03-13 19:14:40',NULL,NULL,NULL,'0',NULL),(14,2,1,NULL,NULL,'2018-03-13 19:14:40',NULL,NULL,NULL,'0',NULL),(15,1,1,NULL,NULL,'2018-03-13 20:54:29',NULL,NULL,NULL,'0',NULL),(15,2,1,NULL,NULL,'2018-03-13 20:54:29',NULL,NULL,NULL,'0',NULL),(16,1,1,NULL,NULL,'2018-03-13 20:54:39',NULL,NULL,NULL,'0',NULL),(16,2,1,NULL,NULL,'2018-03-13 20:54:39',NULL,NULL,NULL,'0',NULL),(17,1,1,NULL,NULL,'2018-03-14 10:56:29',NULL,NULL,NULL,'0',NULL),(17,2,1,NULL,NULL,'2018-03-14 10:56:29',NULL,NULL,NULL,'0',NULL),(18,1,1,NULL,NULL,'2018-03-14 10:56:35',NULL,NULL,NULL,'0',NULL),(18,2,1,NULL,NULL,'2018-03-14 10:56:35',NULL,NULL,NULL,'0',NULL),(19,2,1,NULL,NULL,'2018-03-14 11:24:59',NULL,NULL,NULL,'0',NULL),(19,3,0,NULL,NULL,'2018-03-14 11:24:59',NULL,NULL,NULL,'0',NULL),(20,2,1,NULL,NULL,'2018-03-14 11:25:01',NULL,NULL,NULL,'0',NULL),(20,3,0,NULL,NULL,'2018-03-14 11:25:01',NULL,NULL,NULL,'0',NULL),(21,1,1,NULL,NULL,'2018-03-14 11:25:15',NULL,NULL,NULL,'0',NULL),(21,2,1,NULL,NULL,'2018-03-14 11:25:15',NULL,NULL,NULL,'0',NULL),(22,2,1,NULL,NULL,'2018-03-14 11:26:37',NULL,NULL,NULL,'0',NULL),(22,4,0,NULL,NULL,'2018-03-14 11:26:37',NULL,NULL,NULL,'0',NULL),(23,2,1,NULL,NULL,'2018-03-14 11:26:39',NULL,NULL,NULL,'0',NULL),(23,3,0,NULL,NULL,'2018-03-14 11:26:39',NULL,NULL,NULL,'0',NULL),(24,1,1,NULL,NULL,'2018-03-14 11:26:42',NULL,NULL,NULL,'0',NULL),(24,2,1,NULL,NULL,'2018-03-14 11:26:42',NULL,NULL,NULL,'0',NULL),(25,2,1,NULL,NULL,'2018-03-14 11:26:49',NULL,NULL,NULL,'0',NULL),(25,3,0,NULL,NULL,'2018-03-14 11:26:49',NULL,NULL,NULL,'0',NULL),(26,2,1,NULL,NULL,'2018-03-14 11:26:57',NULL,NULL,NULL,'0',NULL),(26,13,0,NULL,NULL,'2018-03-14 11:26:57',NULL,NULL,NULL,'0',NULL),(27,1,1,NULL,NULL,'2018-03-14 11:27:09',NULL,NULL,NULL,'0',NULL),(27,2,1,NULL,NULL,'2018-03-14 11:27:09',NULL,NULL,NULL,'0',NULL),(28,2,1,NULL,NULL,'2018-03-14 11:27:15',NULL,NULL,NULL,'0',NULL),(28,3,0,NULL,NULL,'2018-03-14 11:27:15',NULL,NULL,NULL,'0',NULL),(29,2,1,NULL,NULL,'2018-03-14 11:27:23',NULL,NULL,NULL,'0',NULL),(29,3,0,NULL,NULL,'2018-03-14 11:27:23',NULL,NULL,NULL,'0',NULL),(30,2,1,NULL,NULL,'2018-03-14 11:27:26',NULL,NULL,NULL,'0',NULL),(30,3,0,NULL,NULL,'2018-03-14 11:27:26',NULL,NULL,NULL,'0',NULL),(31,2,1,NULL,NULL,'2018-03-14 11:27:32',NULL,NULL,NULL,'0',NULL),(31,4,0,NULL,NULL,'2018-03-14 11:27:32',NULL,NULL,NULL,'0',NULL),(32,2,1,NULL,NULL,'2018-03-14 11:27:48',NULL,NULL,NULL,'0',NULL),(32,3,0,NULL,NULL,'2018-03-14 11:27:48',NULL,NULL,NULL,'0',NULL),(33,1,1,NULL,NULL,'2018-03-14 11:27:53',NULL,NULL,NULL,'0',NULL),(33,2,1,NULL,NULL,'2018-03-14 11:27:53',NULL,NULL,NULL,'0',NULL),(34,1,1,NULL,NULL,'2018-03-14 12:29:09',NULL,NULL,NULL,'0',NULL),(34,4,1,NULL,NULL,'2018-03-14 12:29:09',NULL,NULL,NULL,'0',NULL),(35,1,1,NULL,NULL,'2018-03-14 13:05:29',NULL,NULL,NULL,'0',NULL),(35,6,1,NULL,NULL,'2018-03-14 13:05:29',NULL,NULL,NULL,'0',NULL),(36,1,1,NULL,NULL,'2018-03-14 13:05:47',NULL,NULL,NULL,'0',NULL),(36,10,1,NULL,NULL,'2018-03-14 13:05:47',NULL,NULL,NULL,'0',NULL),(37,1,1,NULL,NULL,'2018-03-14 13:07:51',NULL,NULL,NULL,'0',NULL),(37,11,1,NULL,NULL,'2018-03-14 13:07:51',NULL,NULL,NULL,'0',NULL),(38,1,1,NULL,NULL,'2018-03-14 13:46:48',NULL,NULL,NULL,'0',NULL),(38,2,1,NULL,NULL,'2018-03-14 13:46:48',NULL,NULL,NULL,'0',NULL),(39,1,1,NULL,NULL,'2018-03-14 13:46:55',NULL,NULL,NULL,'0',NULL),(39,2,1,NULL,NULL,'2018-03-14 13:46:55',NULL,NULL,NULL,'0',NULL),(40,1,1,NULL,NULL,'2018-03-14 13:47:21',NULL,NULL,NULL,'0',NULL),(40,2,1,NULL,NULL,'2018-03-14 13:47:21',NULL,NULL,NULL,'0',NULL),(41,1,1,NULL,NULL,'2018-03-14 13:47:36',NULL,NULL,NULL,'0',NULL),(41,2,1,NULL,NULL,'2018-03-14 13:47:36',NULL,NULL,NULL,'0',NULL),(42,1,1,NULL,NULL,'2018-03-14 13:47:51',NULL,NULL,NULL,'0',NULL),(42,2,1,NULL,NULL,'2018-03-14 13:47:51',NULL,NULL,NULL,'0',NULL),(43,1,1,NULL,NULL,'2018-03-14 13:49:00',NULL,NULL,NULL,'0',NULL),(43,2,1,NULL,NULL,'2018-03-14 13:49:00',NULL,NULL,NULL,'0',NULL),(44,1,1,NULL,NULL,'2018-03-14 13:50:28',NULL,NULL,NULL,'0',NULL),(44,2,1,NULL,NULL,'2018-03-14 13:50:28',NULL,NULL,NULL,'0',NULL),(45,1,1,NULL,NULL,'2018-03-14 13:52:37',NULL,NULL,NULL,'0',NULL),(45,2,1,NULL,NULL,'2018-03-14 13:52:37',NULL,NULL,NULL,'0',NULL),(46,1,1,NULL,NULL,'2018-03-14 13:53:08',NULL,NULL,NULL,'0',NULL),(46,2,1,NULL,NULL,'2018-03-14 13:53:08',NULL,NULL,NULL,'0',NULL),(47,1,1,NULL,NULL,'2018-03-14 13:53:41',NULL,NULL,NULL,'0',NULL),(47,2,1,NULL,NULL,'2018-03-14 13:53:41',NULL,NULL,NULL,'0',NULL),(48,1,1,NULL,NULL,'2018-03-14 13:55:33',NULL,NULL,NULL,'0',NULL),(48,2,1,NULL,NULL,'2018-03-14 13:55:33',NULL,NULL,NULL,'0',NULL),(49,1,1,NULL,NULL,'2018-03-14 13:57:32',NULL,NULL,NULL,'0',NULL),(49,2,1,NULL,NULL,'2018-03-14 13:57:32',NULL,NULL,NULL,'0',NULL),(50,1,1,NULL,NULL,'2018-03-14 13:57:48',NULL,NULL,NULL,'0',NULL),(50,2,1,NULL,NULL,'2018-03-14 13:57:48',NULL,NULL,NULL,'0',NULL),(51,1,1,NULL,NULL,'2018-03-14 13:59:32',NULL,NULL,NULL,'0',NULL),(51,2,1,NULL,NULL,'2018-03-14 13:59:32',NULL,NULL,NULL,'0',NULL),(52,1,1,NULL,NULL,'2018-03-14 14:02:50',NULL,NULL,NULL,'0',NULL),(52,2,1,NULL,NULL,'2018-03-14 14:02:50',NULL,NULL,NULL,'0',NULL),(53,1,1,NULL,NULL,'2018-03-14 14:04:26',NULL,NULL,NULL,'0',NULL),(53,2,1,NULL,NULL,'2018-03-14 14:04:26',NULL,NULL,NULL,'0',NULL),(54,1,1,NULL,NULL,'2018-03-14 14:21:40',NULL,NULL,NULL,'0',NULL),(54,2,1,NULL,NULL,'2018-03-14 14:21:40',NULL,NULL,NULL,'0',NULL),(55,1,1,NULL,NULL,'2018-03-14 14:24:20',NULL,NULL,NULL,'0',NULL),(55,2,1,NULL,NULL,'2018-03-14 14:24:20',NULL,NULL,NULL,'0',NULL),(56,1,1,NULL,NULL,'2018-03-14 14:27:07',NULL,NULL,NULL,'0',NULL),(56,2,1,NULL,NULL,'2018-03-14 14:27:07',NULL,NULL,NULL,'0',NULL),(57,1,1,NULL,NULL,'2018-03-14 14:30:16',NULL,NULL,NULL,'0',NULL),(57,2,1,NULL,NULL,'2018-03-14 14:30:16',NULL,NULL,NULL,'0',NULL),(58,1,1,NULL,NULL,'2018-03-14 14:34:04',NULL,NULL,NULL,'0',NULL),(58,2,1,NULL,NULL,'2018-03-14 14:34:04',NULL,NULL,NULL,'0',NULL),(59,1,1,NULL,NULL,'2018-03-14 14:34:25',NULL,NULL,NULL,'0',NULL),(59,2,1,NULL,NULL,'2018-03-14 14:34:25',NULL,NULL,NULL,'0',NULL),(60,1,1,NULL,NULL,'2018-03-14 14:38:01',NULL,NULL,NULL,'0',NULL),(60,2,1,NULL,NULL,'2018-03-14 14:38:01',NULL,NULL,NULL,'0',NULL),(64,1,1,NULL,NULL,'2018-03-21 21:30:00',NULL,NULL,NULL,'0',NULL),(64,2,1,NULL,NULL,'2018-03-21 21:30:00',NULL,NULL,NULL,'0',NULL),(65,1,1,NULL,NULL,'2018-03-21 21:34:16',NULL,NULL,NULL,'0',NULL),(65,2,1,NULL,NULL,'2018-03-21 21:34:16',NULL,NULL,NULL,'0',NULL),(66,1,1,NULL,NULL,'2018-03-21 21:35:32',NULL,NULL,NULL,'0',NULL),(66,2,1,NULL,NULL,'2018-03-21 21:35:32',NULL,NULL,NULL,'0',NULL),(67,1,0,NULL,NULL,'2018-03-21 21:40:06',NULL,NULL,NULL,'0',NULL),(67,2,1,NULL,NULL,'2018-03-21 21:40:06',NULL,NULL,NULL,'0',NULL);
-/*!40000 ALTER TABLE `ur_me` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ur_pm_auy`
 --
 
@@ -1539,7 +1397,6 @@ CREATE TABLE `user` (
   `isLocked` int(11) DEFAULT '0',
   `lastLogin` datetime DEFAULT NULL,
   `expiredDate` datetime DEFAULT NULL,
-  `accountType` int(11) DEFAULT NULL,
   `createClass` varchar(100) DEFAULT NULL,
   `createUser` varchar(30) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
@@ -1561,7 +1418,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','MakiseKurisu',NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(2,'user','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Okabe',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(3,'student','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Haru',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(4,'lecturer','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Suzuha',NULL,NULL,NULL,NULL,NULL,2,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(5,'supervisor','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Ferris',NULL,NULL,NULL,NULL,NULL,4,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(6,'student1','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student1',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(7,'student2','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student2',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(8,'student3','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student3',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(9,'student4','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student4',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(10,'student5','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student5',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(11,'student6','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student6',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(12,'student7','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student7',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(13,'student8','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student8',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(14,'student9','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student9',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(15,'student10','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student10',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL);
+INSERT INTO `user` VALUES (1,'admin','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','MakiseKurisu',NULL,NULL,NULL,NULL,NULL,1,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(2,'user','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Okabe',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(3,'student','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Haru',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(4,'lecturer','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Suzuha',NULL,NULL,NULL,NULL,NULL,2,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(5,'supervisor','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','Ferris',NULL,NULL,NULL,NULL,NULL,4,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(6,'student1','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student1',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(7,'student2','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student2',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(8,'student3','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student3',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(9,'student4','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student4',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(10,'student5','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student5',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(11,'student6','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student6',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(12,'student7','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student7',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(13,'student8','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student8',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(14,'student9','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student9',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL),(15,'student10','$2a$10$uZ.FzqENy9bWinvCb66DF.JjnTD/G3wH3GaqSv.8Z7GXv8LrEgEuy','student10',NULL,NULL,NULL,NULL,NULL,3,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1574,4 +1431,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-24 14:30:20
+-- Dump completed on 2018-04-02 13:32:03

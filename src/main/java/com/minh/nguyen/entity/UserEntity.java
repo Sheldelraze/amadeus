@@ -62,9 +62,6 @@ public class UserEntity extends BaseEntity implements Serializable {
     @Column(name = "expiredDate")
     private Date expiredDate;
 
-    @Column(name = "accountType")
-    private Integer accountType;
-
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -195,13 +192,5 @@ public class UserEntity extends BaseEntity implements Serializable {
 
     public void setExpiredDate(Date expiredDate) {
         this.expiredDate = expiredDate;
-    }
-
-    public Integer getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(Integer accountType) {
-        this.accountType = accountType;
     }
 }

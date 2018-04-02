@@ -10,8 +10,8 @@ import java.io.Serializable;
  * @since 12/03/2018
  * Purpose:
  */
-@Table(name = "ur_me")
-public class UrMeEntity extends BaseEntity implements Serializable {
+@Table(name = "messagenotification")
+public class MessageNotificationEntity extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3330039343L;
 
     @Id

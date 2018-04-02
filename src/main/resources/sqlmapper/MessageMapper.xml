@@ -12,36 +12,36 @@
             temp.createTime AS createTime,
             message.content
         FROM
-            ur_me
+            messagenotification
             INNER JOIN
             message
-                ON ur_me.meId = message.id
+                ON messagenotification.meId = message.id
                    AND message.deleteFlg = '0'
             INNER JOIN
             (
                 SELECT
-                    ur_me.urId,
-                    MAX(ur_me.createTime) AS createTime,
+                    messagenotification.urId,
+                    MAX(messagenotification.createTime) AS createTime,
                     message.cnId
                 FROM
                     message
-                    INNER JOIN ur_me
-                        ON ur_me.meId = message.id
-                           AND ur_me.deleteFlg = '0'
-                           AND ur_me.urId = #{urId}
-                           AND ur_me.isRead = 0
+                    INNER JOIN messagenotification
+                        ON messagenotification.meId = message.id
+                           AND messagenotification.deleteFlg = '0'
+                           AND messagenotification.urId = #{urId}
+                           AND messagenotification.isRead = 0
                     INNER JOIN conversation ON message.cnId = conversation.id
                 GROUP BY conversation.id
             ) AS temp
-                ON ur_me.createTime = temp.createTime
-                   AND ur_me.deleteFlg = '0'
-                   AND ur_me.urId = temp.urId
+                ON messagenotification.createTime = temp.createTime
+                   AND messagenotification.deleteFlg = '0'
+                   AND messagenotification.urId = temp.urId
                    AND message.cnId = temp.cnId
             INNER JOIN user
                 ON message.urId = user.id
     </select>
     <update id="updateMessageStatus">
-        UPDATE ur_me
+        UPDATE messagenotification
         SET isRead = 1
         WHERE isRead = 0
               AND urId = #{urId}
@@ -59,7 +59,7 @@
             user.id,
             message.createTime,
             message.content,
-            ur_me.isRead
+            messagenotification.isRead
         FROM message
             INNER JOIN
             conversation
@@ -69,10 +69,10 @@
             INNER JOIN user
                 ON message.urID = user.id
                    AND user.deleteFlg = '0'
-            INNER JOIN ur_me
-                ON message.id = ur_me.meId
-                   AND ur_me.deleteFlg = '0'
-                   AND ur_me.urId = #{urId}
+            INNER JOIN messagenotification
+                ON message.id = messagenotification.meId
+                   AND messagenotification.deleteFlg = '0'
+                   AND messagenotification.urId = #{urId}
         WHERE message.deleteFlg = '0'
         ORDER BY message.createTime DESC
         LIMIT #{from}, #{size}

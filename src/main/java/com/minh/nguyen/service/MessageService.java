@@ -46,7 +46,7 @@ public class MessageService extends BaseService {
     private UrCnMapper urCnMapper;
 
     @Autowired
-    private UrMeMapper urMeMapper;
+    private MessageNotificationMapper messageNotificationMapper;
 
     @Async
     public void insertMessage(MessageDTO message, String topic) {
@@ -66,19 +66,19 @@ public class MessageService extends BaseService {
         if (!topic.equals(Constants.PUBLIC_TOPIC) && !topic.equals(Constants.DEFAULT_TOPIC)) {
             String urId = message.getUrId();
             String[] lstUrId = topic.split("_");
-            UrMeEntity urMeEntity = new UrMeEntity();
-            urMeEntity.setDeleteFlg("0");
-            urMeEntity.setMeId(messageEntity.getId());
-            urMeEntity.setCreateTime(message.getCreateTime());
+            MessageNotificationEntity messageNotificationEntity = new MessageNotificationEntity();
+            messageNotificationEntity.setDeleteFlg("0");
+            messageNotificationEntity.setMeId(messageEntity.getId());
+            messageNotificationEntity.setCreateTime(message.getCreateTime());
             for (String id : lstUrId) {
                 if (!id.equals(urId)) {
-                    urMeEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
+                    messageNotificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
                     sendMessageNotify(message, id);
                 } else {
-                    urMeEntity.setIsRead(Constants.MESSAGE_READ_FLAG);
+                    messageNotificationEntity.setIsRead(Constants.MESSAGE_READ_FLAG);
                 }
-                urMeEntity.setUrId(Integer.parseInt(id));
-                urMeMapper.insert(urMeEntity);
+                messageNotificationEntity.setUrId(Integer.parseInt(id));
+                messageNotificationMapper.insert(messageNotificationEntity);
             }
         }
 
