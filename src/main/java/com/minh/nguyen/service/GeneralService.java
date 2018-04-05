@@ -5,10 +5,8 @@ import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.dto.SubmitDetailDTO;
 import com.minh.nguyen.entity.BaseEntity;
 import com.minh.nguyen.entity.NotificationEntity;
-import com.minh.nguyen.mapper.ContestMapper;
 import com.minh.nguyen.mapper.NotificationMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
-import com.minh.nguyen.validator.ContestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,15 +28,6 @@ public class GeneralService extends BaseService {
 
     @Autowired
     private SubmissionMapper submissionMapper;
-
-    @Autowired
-    private ContestMapper contestMapper;
-
-    @Autowired
-    private ContestValidator contestValidator;
-
-    @Autowired
-    private CourseService courseService;
 
     @Autowired
     private NotificationMapper notificationMapper;
