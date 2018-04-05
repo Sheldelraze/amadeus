@@ -1,7 +1,5 @@
 package com.minh.nguyen.util;
 
-import com.sun.javafx.beans.annotations.NonNull;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +10,7 @@ import java.util.Set;
  */
 public class ExceptionUtil {
 
-    public static String getMessage(@NonNull Throwable t) {
+    public static String getMessage(Throwable t) {
         String message = t.getMessage();
 
         while (message == null) {

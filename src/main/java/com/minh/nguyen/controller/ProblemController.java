@@ -11,7 +11,6 @@ import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.vo.problem.*;
-import com.sun.javafx.beans.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -494,7 +493,7 @@ public class ProblemController extends BaseController {
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'" + Constants.AUTH_EDIT_PROBLEM_TEXT + "')")
     @PostMapping("/{pmId}/updateStatement")
     public ModelAndView updateStatement(@PathVariable("pmId") Integer pmId,
-                                        @NonNull ProblemStatementForm problemStatementForm,
+                                         ProblemStatementForm problemStatementForm,
                                         BindingResult result) {
         ModelAndView modelAndView = null;
         validate(problemStatementForm, result);
@@ -524,7 +523,7 @@ public class ProblemController extends BaseController {
     @PreAuthorize(value = "isAuthenticated() && @ProblemValidator.checkPermission(authentication,#pmId,'" + Constants.AUTH_EDIT_PROBLEM_TEXT + "')")
     @PostMapping("/{pmId}/updateSolution")
     public ModelAndView updateSolution(@PathVariable("pmId") Integer pmId,
-                                       @NonNull ProblemSolutionForm problemSolutionForm,
+                                       ProblemSolutionForm problemSolutionForm,
                                        BindingResult bindingResult) {
         problemSolutionForm.setScreenName("problemSolutionScreen");
         ProblemDTO problemDTO = new ProblemDTO();
