@@ -47,9 +47,6 @@ public class CourseService extends BaseService {
     private ProblemMapper problemMapper;
 
     @Autowired
-    private MaterialMapper materialMapper;
-
-    @Autowired
     private CourseValidator courseValidator;
 
     @Autowired

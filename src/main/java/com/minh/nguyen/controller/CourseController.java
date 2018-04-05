@@ -6,13 +6,11 @@ import com.minh.nguyen.dto.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.course.*;
 import com.minh.nguyen.service.CourseService;
-import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.MaterialService;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.util.MediaTypeUtil;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.CourseValidator;
-import com.minh.nguyen.validator.MaterialValidator;
 import com.minh.nguyen.validator.annotation.CheckNotNullFirst;
 import com.minh.nguyen.validator.annotation.CheckNotNullThird;
 import com.minh.nguyen.vo.MessageVO;
@@ -85,12 +83,6 @@ public class CourseController extends BaseController {
 
     @Autowired
     private ProblemService problemService;
-
-    @Autowired
-    private GeneralService generalService;
-
-    @Autowired
-    private MaterialValidator materialValidator;
 
     @Autowired
     private MaterialService materialService;
