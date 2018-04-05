@@ -78,7 +78,9 @@
                                             <th style="text-align: center" width="230px">Độ khó</th>
                                             <th style="text-align: center" width="200px">Thể loại</th>
                                             <th style="text-align: center" width="200px">Số người giải được</th>
-                                            <th style="text-align: center">Ẩn/Hiện</th>
+                                            <th style="text-align: center" th:if="${contestAuth == 'CAN_EDIT_COURSE'}">
+                                                Ẩn/Hiện
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody th:remove="all-but-first">
@@ -96,20 +98,26 @@
                                                 </th:block>
                                             </td>
                                             <td>
-                                                <label th:if="${problem.tag == null}" class="font-light text-muted">Chưa có thể loại</label>
+                                                <label th:if="${problem.tag == null}" class="font-light text-muted">Chưa
+                                                    có thể loại</label>
                                                 <label th:if="${problem.tag != null}" th:text="${problem.tag}"></label>
                                             </td>
-                                            <td><i class="mdi mdi-account"></i>x<label th:text="${problem.solveCnt}"></label></td>
-                                            <td th:if="${problem.isHidden==0}">
-                                                <button type="button" th:onclick="|hideProblem(${ceId},${problem.id})|"
-                                                        class="btn btn-outline-danger">Ẩn đi
-                                                </button>
-                                            </td>
-                                            <td th:if="${problem.isHidden==1}">
-                                                <button type="button" th:onclick="|showProblem(${ceId},${problem.id})|"
-                                                        class="btn btn-outline-success">Hiện
-                                                </button>
-                                            </td>
+                                            <td><i class="mdi mdi-account"></i>x<label
+                                                    th:text="${problem.solveCnt}"></label></td>
+                                            <th:block th:if="${contestAuth == 'CAN_EDIT_COURSE'}">
+                                                <td th:if="${problem.isHidden==0}">
+                                                    <button type="button"
+                                                            th:onclick="|hideProblem(${ceId},${problem.id})|"
+                                                            class="btn btn-outline-danger">Ẩn đi
+                                                    </button>
+                                                </td>
+                                                <td th:if="${problem.isHidden==1}">
+                                                    <button type="button"
+                                                            th:onclick="|showProblem(${ceId},${problem.id})|"
+                                                            class="btn btn-outline-success">Hiện
+                                                    </button>
+                                                </td>
+                                            </th:block>
                                         </tr>
                                         <tr>
                                             <td>1</td>
@@ -167,7 +175,8 @@
                                             <td><i class="mdi mdi-account"></i>x2</td>
                                             <td>
                                                 <button
-                                                        type="button" class="btn btn-outline-danger">Ẩn đi</button>
+                                                        type="button" class="btn btn-outline-danger">Ẩn đi
+                                                </button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -175,7 +184,8 @@
                                 </div>
                                 <div style="float: left" th:if="${courseAuth == 'CAN_EDIT_COURSE'}">
                                     <button type="button" th:onclick="|popup(${ceId})|"
-                                            class="btn btn-outline-success">Thêm bài tập</button>
+                                            class="btn btn-outline-success">Thêm bài tập
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -217,19 +227,20 @@
             '1426494439650',
             'width=1500,height=1000,toolbar=0,menubar=0,location=1,status=1,scrollbars=1,resizable=1,left=0,top=0')
     }
+
     function HandlePopupResult() {
         location.reload();
     }
 
     function showProblem(ceId, pmId) {
-        if (!confirm("Bạn có chắc không?")){
+        if (!confirm("Bạn có chắc không?")) {
             return false;
         }
         window.location.replace("/course/" + ceId + "/showProblem/" + pmId);
     }
 
     function hideProblem(ceId, pmId) {
-        if (!confirm("Bạn có chắc không?")){
+        if (!confirm("Bạn có chắc không?")) {
             return false;
         }
         window.location.replace("/course/" + ceId + "/hideProblem/" + pmId);

@@ -23,7 +23,7 @@
         FROM course
             INNER JOIN user
                 ON course.createUser = user.handle
-            INNER JOIN (
+            LEFT JOIN (
                            SELECT
                                ceId,
                                count(*) AS userCnt
@@ -48,7 +48,7 @@
         FROM course
             INNER JOIN user
                 ON course.createUser = user.handle
-            INNER JOIN (
+            LEFT JOIN (
                            SELECT
                                ceId,
                                count(*) AS userCnt
