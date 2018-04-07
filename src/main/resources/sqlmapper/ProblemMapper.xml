@@ -126,7 +126,7 @@
         problem.timeLimit,
         problem.memoryLimit,
         problem.difficulty,
-        problem.solveCnt,
+        ct_pm.solveCnt,
         ct_pm.isHidden
         FROM problem
         INNER JOIN ct_pm
@@ -147,7 +147,7 @@
         problem.timeLimit,
         problem.memoryLimit,
         problem.difficulty as dif,
-        problem.solveCnt,
+        ce_pm.solveCnt,
         ce_pm.isHidden,
         tag.name AS tgNe,
         tag.id AS tgId

@@ -204,7 +204,7 @@
             document.getElementById("progress-bar").style.width = t.percentage + "%";
             if (t.total <= 0) {
                 clearInterval(timeinterval);
-                alert('Cuộc thi đã kết thúc, vui lòng reload lại trang!');
+                swal('Cuộc thi đã kết thúc!','Vui lòng reload lại trang!','info');
             }
         }
 
@@ -223,7 +223,7 @@
             curTime.style.color = "#008000";
             if (t.total <= 0) {
                 clearInterval(doCountdown);
-                alert('Cuộc thi đã bắt đầu, vui lòng reload lại trang!');
+                swal('Cuộc thi đã bắt đầu!','Vui lòng reload lại trang!','info');
             }
         }
 

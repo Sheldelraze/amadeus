@@ -34,6 +34,15 @@ public class UserDTO extends BaseDTO{
     private List<AuthorityDTO> lstAuthority;
     private ConversationDTO conversation;
     private ClassDTO inClass;
+    private LevelDTO level;
+
+    public LevelDTO getLevel() {
+        return level;
+    }
+
+    public void setLevel(LevelDTO level) {
+        this.level = level;
+    }
 
     public ClassDTO getInClass() {
         return inClass;
