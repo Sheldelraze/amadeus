@@ -6,7 +6,6 @@ import com.minh.nguyen.dto.*;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.form.contest.*;
 import com.minh.nguyen.service.ContestService;
-import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.ProblemService;
 import com.minh.nguyen.util.StringUtil;
 import com.minh.nguyen.validator.ContestValidator;
@@ -72,9 +71,6 @@ public class ContestController extends BaseController {
 
     @Autowired
     private ProblemService problemService;
-
-    @Autowired
-    private GeneralService generalService;
 
     @Autowired
     private HttpSession httpSession;
@@ -192,9 +188,8 @@ public class ContestController extends BaseController {
         ModelAndView modelAndView = createGeneralModel(ctId);
         modelAndView.setViewName(INFORMATION_VIEW);
         ContestInformationVO contestInformationVO = contestService.getInformation(ctId);
-        boolean canApply = false;
         Integer currentUserId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
-        canApply = contestValidator.checkApplyPermission(ctId,currentUserId);
+        boolean canApply = contestValidator.checkApplyPermission(ctId,currentUserId);
         modelAndView.addObject("canApply",canApply);
         modelAndView.addObject("contestInformationVO", contestInformationVO);
         modelAndView.addObject(TAB, 1);

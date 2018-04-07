@@ -101,7 +101,7 @@ public class CourseController extends BaseController {
         //add common information
         ModelAndView modelAndView = createGeneralModel();
 
-        //add authority of current user (CAN_VIEW and CAN_PARTICIPATE only) and application count
+        //add authority of current user (CAN_VIEW and CAN_PARTICIPATE only) and pending application count
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer appCnt = 0;
         if (null != auth && !StringUtil.isNull(auth.getName())) {

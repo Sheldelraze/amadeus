@@ -46,5 +46,8 @@ public interface ProblemMapper extends BaseMapper<ProblemEntity> {
 
     Integer checkIfSolvedBefore(@Param("pmId") Integer pmId,@Param("urId")Integer urId);
 
-    Integer resetFirstSolveTime(@Param("pmId")Integer pmId);
+    Integer checkIfSolvedBeforeInContest(@Param("pmId") Integer pmId,@Param("ctId")Integer ctId,@Param("urId")Integer urId);
+
+    Integer checkIfSolvedBeforeInCourse(@Param("pmId") Integer pmId,@Param("ceId")Integer ceId,@Param("urId")Integer urId);
+
 }

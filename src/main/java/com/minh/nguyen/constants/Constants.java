@@ -163,6 +163,8 @@ public class Constants {
 
     public static final Integer MAX_DESCRIPTION_LENGTH = 150;
 
+    public static final Integer MAX_COMPILE_TIME = 10000;
+
     public static final Integer HIDDEN_FLAG = 1;
     public static final Integer NOT_HIDDEN_FLAG = 0;
 

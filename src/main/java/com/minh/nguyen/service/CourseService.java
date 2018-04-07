@@ -564,12 +564,11 @@ public class CourseService extends BaseService {
             cePmEntity.setCeId(ceId);
             cePmEntity.setPmId(Integer.parseInt(pmId));
             cePmEntity.setIsHidden(0);
+            cePmEntity.setTotalSubmission(0);
+            cePmEntity.setSolveCnt(0);
             setUpdateInfo(cePmEntity);
             setCreateInfo(cePmEntity);
             cePmMapper.insert(cePmEntity);
-
-            //reset firstSolve time
-            problemMapper.resetFirstSolveTime(Integer.parseInt(pmId));
         }
     }
 
@@ -760,6 +759,9 @@ public class CourseService extends BaseService {
             int all = problem.getTotalSubmission();
             if (all == 0 || ac == 0) {
                 problem.setSolvePercentage("(0%)");
+                continue;
+            }else if (ac == all){
+                problem.setSolvePercentage("(100%)");
                 continue;
             }
             NumberFormat df = new DecimalFormat("#.00");

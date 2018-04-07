@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -24,6 +25,39 @@ public class CePmEntity extends BaseEntity implements Serializable {
 
     @Column(name = "isHidden")
     private Integer isHidden;
+
+    @Column(name = "solveCnt")
+    private Integer solveCnt;
+
+    @Column(name = "firstSolve")
+    private Date firstSolve;
+
+    @Column(name = "totalSubmission")
+    private Integer totalSubmission;
+
+    public Integer getSolveCnt() {
+        return solveCnt;
+    }
+
+    public void setSolveCnt(Integer solveCnt) {
+        this.solveCnt = solveCnt;
+    }
+
+    public Date getFirstSolve() {
+        return firstSolve;
+    }
+
+    public void setFirstSolve(Date firstSolve) {
+        this.firstSolve = firstSolve;
+    }
+
+    public Integer getTotalSubmission() {
+        return totalSubmission;
+    }
+
+    public void setTotalSubmission(Integer totalSubmission) {
+        this.totalSubmission = totalSubmission;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

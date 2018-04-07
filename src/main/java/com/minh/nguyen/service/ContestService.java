@@ -203,6 +203,9 @@ public class ContestService extends BaseService {
             if (all == 0 || ac == 0) {
                 problem.setSolvePercentage("(0%)");
                 continue;
+            }else if (all == ac){
+                problem.setSolvePercentage("(100%)");
+                continue;
             }
             NumberFormat df = new DecimalFormat("#.00");
             double percentage = 100.0 * ac / all;
@@ -247,7 +250,7 @@ public class ContestService extends BaseService {
 
             long start = user.getContestStartTime().getTime();
             /**
-             * 1 problem -> many submission
+             * 1 user can submit many times for 1 problem
              * however, we only need to calculate number of submissions and time penalty up to the first accepted one.
              */
             for (ProblemDTO problem : user.getLstProblem()) {
@@ -377,12 +380,11 @@ public class ContestService extends BaseService {
                 ctPmEntity.setCtId(ctId);
                 ctPmEntity.setPmId(Integer.parseInt(pmId));
                 ctPmEntity.setIsHidden(0);
+                ctPmEntity.setSolveCnt(0);
+                ctPmEntity.setTotalSubmission(0);
                 setUpdateInfo(ctPmEntity);
                 setCreateInfo(ctPmEntity);
                 ctPmMapper.insert(ctPmEntity);
-
-                //reset firstSolve time
-                problemMapper.resetFirstSolveTime(Integer.parseInt(pmId));
             }
         } catch (Exception e) {
             throw e;

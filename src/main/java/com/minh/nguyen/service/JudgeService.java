@@ -5,10 +5,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.InputDTO;
 import com.minh.nguyen.dto.LanguageDTO;
 import com.minh.nguyen.dto.ProblemDTO;
-import com.minh.nguyen.entity.ProblemEntity;
-import com.minh.nguyen.entity.SnSDlEntity;
-import com.minh.nguyen.entity.SubmissionEntity;
-import com.minh.nguyen.entity.SubmitDetailEntity;
+import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.CompileErrorException;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.CompileUtil;
@@ -38,15 +35,6 @@ public class JudgeService extends BaseService {
     private ProblemMapper problemMapper;
 
     @Autowired
-    private InputMapper inputMapper;
-
-    @Autowired
-    private PmItMapper pmItMapper;
-
-    @Autowired
-    private LanguageMapper languageMapper;
-
-    @Autowired
     private SubmitDetailMapper submitDetailMapper;
 
     @Autowired
@@ -55,9 +43,15 @@ public class JudgeService extends BaseService {
     @Autowired
     private SubmissionMapper submissionMapper;
 
+    @Autowired
+    private CtPmMapper ctPmMapper;
+
+    @Autowired
+    private CePmMapper cePmMapper;
+
     @Async
     public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO, SubmissionEntity submissionEntity, Integer urId, Integer ctId, Integer ceId) {
-        logger.debug("Doing me a heavy and magical discomfort judging....");
+        logger.debug("Doing me a heavy discomfort....");
         boolean runTimeErr = false;
         boolean wrongAns = false;
         boolean timeLimitErr = false;
@@ -66,8 +60,7 @@ public class JudgeService extends BaseService {
         SnSDlEntity snSDlEntity = new SnSDlEntity();
         SubmitDetailEntity submitDetailEntity = new SubmitDetailEntity();
         try {
-            String fileName = ("submission-snId-" + submissionEntity.getId())
-                    + "-" + problemDTO.getCode();
+            String fileName = StringUtil.buildString("submission-snId-",submissionEntity.getId().toString(),"-" ,problemDTO.getCode());
             String location = Constants.SUBMISSION_LOCATION_PREFIX;
             CompileUtil.doCompile(languageDTO, problemDTO, location, fileName);
         } catch (CompileErrorException | UncheckedTimeoutException e) {
@@ -96,7 +89,7 @@ public class JudgeService extends BaseService {
             InputDTO inputDTO = problemDTO.getLstInput().get(i);
             submissionEntity.setVerdict(Constants.VERDICT_JUDGING + (i + 1));
 
-            //send message
+            //send message contains judging status to view
             sendMessage(submissionEntity, ctId, ceId);
 
             //set id = null de insert = BaseMapper không bị lỗi
@@ -106,16 +99,19 @@ public class JudgeService extends BaseService {
             try {
                 Outcome outcome = CompileUtil.doRun(languageDTO, problemDTO, inputDTO
                         , submissionEntity.getId());
+
                 //outcome.timeelapse là nano giây -> ms giây
                 int timeElapsed = (int) (outcome.getTimeElapsed() == null ? 0 : outcome.getTimeElapsed() / 1000000);
                 timeElapsed = Math.max(timeElapsed, 15);
                 submitDetailEntity.setTimeRun(timeElapsed);
+
                 //run time err
                 if (outcome.getExitCode() != 0) {
                     runTimeErr = true;
                     submitDetailEntity.setResult(Constants.VERDICT_RUNTIME_ERROR);
                 }
-                //run success
+
+                //successful run
                 else {
                     StringUtil.CompareResult compareResult = StringUtil.compareString(outcome.getOutput(), inputDTO.getOutput());
                     submitDetailEntity.setResult(compareResult.getResult());
@@ -129,8 +125,8 @@ public class JudgeService extends BaseService {
                 }
 
             } catch (UncheckedTimeoutException e) {
-                //time limit err
 
+                //time limit err
                 timeLimitErr = true;
                 submitDetailEntity.setTimeRun(problemDTO.getTimeLimit());
                 submitDetailEntity.setResult(Constants.VERDICT_TIME_LIMIT_EXCEEDED);
@@ -165,32 +161,92 @@ public class JudgeService extends BaseService {
             submissionEntity.setJudgeStatus(Constants.STATUS_ACCEPTED);
             submissionEntity.setVerdict(Constants.VERDICT_ACCEPTED);
             timeTotal /= testCount == 0 ? 1 : testCount;
-
-            //increase solve count if this user has not solved this problem before
-            ProblemEntity problemEntity = new ProblemEntity();
-            problemEntity.setId(problemDTO.getId());
-            problemEntity = problemMapper.selectByPK(problemEntity);
-            Integer cntSolvedBefore = problemMapper.checkIfSolvedBefore(problemDTO.getId(), urId);
-            if (cntSolvedBefore == 0) {
-                problemEntity.setSolveCnt(1 + problemEntity.getSolveCnt());
-            }
-
-            //check if first solve
-            if (problemEntity.getFirstSolveTime() == null) {
-                problemEntity.setFirstSolveTime(submissionEntity.getCreateTime());
-            }
-
-            //increase total submission
-            problemEntity.setTotalSubmission(1 + problemEntity.getTotalSubmission());
-            problemMapper.updateNotNullByPK(problemEntity);
         }
         submissionEntity.setTimeRun(timeTotal);
         submissionMapper.updateNotNullByPK(submissionEntity);
 
-        //send message
+        //send message to scoreboard as update
         sendMessage(submissionEntity, ctId, ceId);
+
+        //if submission is AC then we perform more magic
+        if (!runTimeErr && ! timeLimitErr && !wrongAns){
+            updateProblemInformation(ctId,ceId,submissionEntity,problemDTO,urId);
+        }
     }
 
+    private void updateProblemInformation(Integer ctId,Integer ceId,SubmissionEntity submissionEntity,ProblemDTO problemDTO,Integer urId){
+
+        //increase solve count if this user has not solved this problem before
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setId(problemDTO.getId());
+        problemEntity = problemMapper.selectByPK(problemEntity);
+        setUpdateInfo(problemEntity);
+
+        //check if user solve this problem before, if not then update solve count
+        Integer cntSolvedBefore = problemMapper.checkIfSolvedBefore(problemDTO.getId(), urId);
+        if (cntSolvedBefore == 0) {
+            problemEntity.setSolveCnt(1 + problemEntity.getSolveCnt());
+        }
+
+        //check if first solve
+        if (problemEntity.getFirstSolveTime() == null) {
+            problemEntity.setFirstSolveTime(submissionEntity.getCreateTime());
+        }
+
+        //increase total submission
+        problemEntity.setTotalSubmission(1 + problemEntity.getTotalSubmission());
+        problemMapper.updateNotNullByPK(problemEntity);
+
+        //if problem in contest then update contest information
+        if (ctId != null){
+            CtPmEntity ctPmEntity = new CtPmEntity();
+            ctPmEntity.setCtId(ctId);
+            ctPmEntity.setPmId(problemDTO.getId());
+            ctPmEntity = ctPmMapper.selectByPK(ctPmEntity);
+            setUpdateInfo(ctPmEntity);
+
+            //check if user solve this problem before, if not then update solve count
+            Integer checkIfSolved = problemMapper.checkIfSolvedBeforeInContest(problemDTO.getId(),ctId, urId);
+
+            //we just update submission status above so if this is really the first time user solve then solve count should be exactly 1
+            if (checkIfSolved == 1) {
+                ctPmEntity.setSolveCnt(1 + ctPmEntity.getSolveCnt());
+            }
+
+            //check if first solve
+            if (ctPmEntity.getFirstSolve() == null) {
+                ctPmEntity.setFirstSolve(submissionEntity.getCreateTime());
+            }
+
+            //increase total submission
+            ctPmEntity.setTotalSubmission(1 + ctPmEntity.getTotalSubmission());
+            ctPmMapper.updateNotNullByPK(ctPmEntity);
+        }
+
+        //if problem in course then update course
+        if (ceId != null){
+            CePmEntity cePmEntity = new CePmEntity();
+            cePmEntity.setCeId(ceId);
+            cePmEntity.setPmId(problemDTO.getId());
+            cePmEntity = cePmMapper.selectByPK(cePmEntity);
+            setUpdateInfo(cePmEntity);
+
+            //check if user solve this problem before, if not then update solve count
+            Integer checkIfSolved = problemMapper.checkIfSolvedBeforeInCourse(problemDTO.getId(),ceId, urId);
+            if (checkIfSolved == 1) {
+                cePmEntity.setSolveCnt(1 + cePmEntity.getSolveCnt());
+            }
+
+            //check if first solve
+            if (cePmEntity.getFirstSolve() == null) {
+                cePmEntity.setFirstSolve(submissionEntity.getCreateTime());
+            }
+
+            //increase total submission
+            cePmEntity.setTotalSubmission(1 + cePmEntity.getTotalSubmission());
+            cePmMapper.updateNotNullByPK(cePmEntity);
+        }
+    }
     private void sendMessage(SubmissionEntity submissionEntity, Integer ctId, Integer ceId) {
         simpMessagingTemplate.convertAndSend(Constants.WEB_SOCKET_PREFIX + Constants.STATUS_TOPIC, submissionEntity);
         if (ctId != null) {

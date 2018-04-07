@@ -160,9 +160,7 @@
 <!-- All Jquery -->
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
-<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
-        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
-></script>
+<script th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
 
 <script th:inline="javascript">
     var topic = /*[[${topic}]]*/ null;

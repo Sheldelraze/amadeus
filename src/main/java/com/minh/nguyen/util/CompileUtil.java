@@ -24,7 +24,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class CompileUtil {
     public static Outcome tryRun(File file, String extension,
-                                 File inputFile, int memoryLimit) throws CompileErrorException {
+                                 File inputFile, int memoryLimit) {
         Params.Builder builder = new Params.Builder();
         builder.setRedirectInputFile(inputFile);
         StringBuilder stringBuilder = new StringBuilder();
@@ -42,29 +42,30 @@ public class CompileUtil {
         return ProcessRunner.run(command, builder.newInstance());
     }
 
-    public static Outcome tryCompile(File file, String extension, String fileName) throws CompileErrorException {
+    public static Outcome tryCompile(File file, String extension, String fileName) {
         Params.Builder builder = new Params.Builder();
-        builder.setTimeLimit(10000);
+
+        //limit time for compile is MAX_COMPILE_TIME (ms)
+        builder.setTimeLimit(Constants.MAX_COMPILE_TIME);
         StringBuilder stringBuilder = new StringBuilder();
-        String command;
+
         if (Constants.CPP_EXTENSION.equals(extension)) {
             stringBuilder.append(Constants.CPP_COMPILER)
                     .append(" ")
                     .append(file.getPath())
                     .append(" -o ")
-                    .append(file.getParent())
+                    .append(file.getParent()) //output folder same as this file
                     .append("\\")
                     .append(fileName)
                     .append(".exe ")
-                    .append(Constants.CPP_ARGS);
+                    .append(Constants.CPP_ARGS); //default params
 
         } else if (Constants.JAVA_EXTENSION.equals(extension)) {
             stringBuilder.append(Constants.JAVA_COMPILER);
             stringBuilder.append(" ");
             stringBuilder.append(file.getPath());
         }
-        command = stringBuilder.toString();
-        return ProcessRunner.run(command, builder.newInstance());
+        return ProcessRunner.run(stringBuilder.toString(), builder.newInstance());
     }
 
     public static Outcome doRun(LanguageDTO languageDTO, ProblemDTO problemDTO, InputDTO inputDTO, int snId) {
