@@ -134,7 +134,10 @@ public class Constants {
     public static final Integer AUTH_CREATE_COURSE_ID = 18;
     public static final Integer AUTH_UPLOAD_MATERIAL_ID = 19;
     public static final Integer AUTH_VIEW_ALL_MATERIAL_ID = 20;
+    public static final Integer AUTH_EDIT_AUTHORITY_ID = 21;
 
+    public static final String AUTH_CREATE_USER_TEXT = "CAN_CREATE_USER";
+    public static final String AUTH_EDIT_AUTHORITY_TEXT = "CAN_EDIT_AUTHORITY";
     public static final String AUTH_CREATE_PROBLEM_TEXT = "CAN_CREATE_PROBLEM";
     public static final String AUTH_VIEW_PROBLEM_TEXT = "CAN_VIEW_PROBLEM";
     public static final String AUTH_EDIT_PROBLEM_TEXT = "CAN_EDIT_PROBLEM";

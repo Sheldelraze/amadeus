@@ -42,16 +42,15 @@
             user.password  AS password,
             authority.id   AS auyId,
             authority.name AS auyName
-        FROM user
-            LEFT JOIN role
-                ON user.reId = role.id
-            LEFT JOIN re_auy
-                ON role.id = re_auy.reId
-            LEFT JOIN authority
-                ON re_auy.auyId = authority.id
-        WHERE
-            user.handle = #{handle}
-            AND user.deleteFlg = '0'
+        FROM ur_auy
+            INNER JOIN user
+                ON ur_auy.urId = user.id
+                and user.deleteFlg = '0'
+                and user.handle = #{handle}
+            INNER JOIN authority
+              on ur_auy.auyId = authority.id
+              and authority.deleteFlg = '0'
+        WHERE ur_auy.deleteFlg = '0'
     </select>
 
     <select id="getLeaderboardIOIForContest" resultMap="leaderboard">

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+
+    <div th:replace="layout/layout::meta"></div>
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+    <link href="../../../static/assets/plugins/select2/dist/css/select2.min.css"
+          th:href="@{/assets/plugins/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+    <div th:replace="layout/layout::css"></div>
+</head>
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <div class="row" style="margin-top:30px;color:black">
+            <!-- Column -->
+            <!-- Column -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form th:action="|/user/create|"
+                              th:object="${userCraeteForm}" method="post">
+                            <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                <div class="alert alert-danger">
+                                    ✘ <label th:errors="*{screenMessage}"></label>
+                                </div>
+                            </th:block>
+                            <th:block th:if="${updateSuccess}">
+                                <div class="alert alert-success">
+                                    ✔ Cập nhật thành công
+                                </div>
+                            </th:block>
+                            <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()"
+                                    style="margin-left: 50px">Đóng cứa sổ
+                            </button>
+                            <div style="text-align: center">
+                                <h3>Thêm người dùng</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="handle">Tên tài khoản <b style="color:red">(*)</b></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="handle" name="handle" placeholder="Nhập tên đăng nhập (không quá 30 ký tự)">
+                                    <div class="input-group-addon"><i class="ti-user"></i></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Mật khẩu <b style="color:red">(*)</b></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu (ít nhất 3 ký tự và không quá 30 ký tự)">
+                                    <div class="input-group-addon"><i class="ti-lock"></i></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fullname">Tên người dùng</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="fullname" name="fullname" placeholder="Không quá 40 ký tự (ví dụ Nguyễn Văn X....)">
+                                    <div class="input-group-addon"><i class="ti-face-smile"></i></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Tên người dùng</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="exampleInputpwd3" placeholder="Không quá 40 ký tự (ví dụ Nguyễn Văn X....)">
+                                    <div class="input-group-addon"><i class="ti-face-smile"></i></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Loại tài khoản</label>
+                                <select class="form-control custom-select">
+                                    <option value="1">Quản trị</option>
+                                    <option value="2">Giảng viên</option>
+                                    <option value="3" selected="selected">Sinh viên</option>
+                                    <option value="4">Lãnh đạo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quyền</label>
+                                <div class="input-group">
+                                    <ul class="icheck-list">
+                                        <li>
+                                            <input type="checkbox" class="check" id="minimal-checkbox-1">
+                                            <label for="minimal-checkbox-1">Checkbox 1</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="check" id="minimal-checkbox-2" checked>
+                                            <label for="minimal-checkbox-2">Checkbox 2</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="check" id="minimal-checkbox-disabled" disabled>
+                                            <label for="minimal-checkbox-disabled">Disabled</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="check" id="minimal-checkbox-disabled-checked" checked disabled>
+                                            <label for="minimal-checkbox-disabled-checked">Disabled &amp; checked</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <button type="submit" class="btn btn-success">Thêm người dùng
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Container fluid  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End footer -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<div th:replace="layout/layout::js"></div>
+<script src="../../../static/assets/plugins/jquery/jquery.min.js"
+        th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+<script src="../../../static/assets/plugins/datatables/jquery.dataTables.min.js"
+        th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"
+></script>
+<!--Custom JavaScript -->
+<script>
+    function CloseMySelf() {
+        try {
+            window.opener.HandlePopupResult();
+        }
+        catch (err) {
+        }
+        window.close();
+        return false;
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+    $(function () {
+        $('#parent').on('change', function () {
+            $('[id^=lstUrId]').prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--c3 JavaScript -->
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

@@ -41,6 +41,10 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-messaging</artifactId>
+        </dependency>
         <!-- Following additional dependency is required for Full Featured STOMP Broker Relay -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

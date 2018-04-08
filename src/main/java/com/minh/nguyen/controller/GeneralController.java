@@ -34,6 +34,7 @@ public class GeneralController extends BaseController {
     @Autowired
     private MessageService messageService;
 
+
     @GetMapping({"/login", "/login/"})
     public ModelAndView getLogin(Boolean logout) {
         ModelAndView modelAndView = new ModelAndView();

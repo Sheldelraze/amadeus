@@ -141,7 +141,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().clearAuthentication(true).logoutSuccessHandler(new LogoutSuccessHandler()).logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true).permitAll()
                 .and()
-                .exceptionHandling().accessDeniedHandler(getAccessDeniedHandler());
+                .exceptionHandling().accessDeniedHandler(getAccessDeniedHandler())
+                .and()
+                .csrf().ignoringAntMatchers("/chat/**")
+                .ignoringAntMatchers("https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js")
+                .and()
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+                .cacheControl()
+                .and().xssProtection()
+                .and().contentTypeOptions()
+                .and().httpStrictTransportSecurity();
     }
 
     //better not touch here too...
