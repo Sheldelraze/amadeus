@@ -1,5 +1,10 @@
 package com.minh.nguyen.constants;
 
+import com.minh.nguyen.dto.AuthorityDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Mr.Minh
  * @since 07/01/2018
@@ -166,7 +171,7 @@ public class Constants {
 
     public static final Integer MAX_DESCRIPTION_LENGTH = 150;
 
-    public static final Integer MAX_COMPILE_TIME = 10000;
+    public static final Integer MAX_COMPILE_TIME = 10000; // in milliseconds
 
     public static final Integer HIDDEN_FLAG = 1;
     public static final Integer NOT_HIDDEN_FLAG = 0;
@@ -190,4 +195,18 @@ public class Constants {
 
     public static final Integer JUDGE_TYPE_ACM = 1;
     public static final Integer JUDGE_TYPE_IOI = 2;
+
+    public static List<AuthorityDTO> LST_DEFAULT_AUTHORITY = new ArrayList<>();
+
+    static {
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_CREATE_CONTEST_ID,"Tạo cuộc thi"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_CONTEST_ID,"Xem tất cả cuộc thi"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_CREATE_COURSE_ID,"Tạo khóa học"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_COURSE_ID,"Xem tất cả khóa học"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_CREATE_USER_ID,"Tạo tài khoản mới"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_UPLOAD_MATERIAL_ID,"Upload tài liệu mới"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_MATERIAL_ID,"Xem tất cả tài liệu"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_SUBMISSION_ID,"Xem tất cả bài nộp"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_PROBLEM_ID,"Xem tất cả bài tập"));
+    }
 }

@@ -6,11 +6,11 @@
 <mapper namespace="com.minh.nguyen.mapper.AuthorityMapper">
     <select id="getProblemAuthority" resultType="AuthorityDTO">
         SELECT
-        authority.id,
-        authority.name
+            authority.id,
+            authority.name
         FROM authority
             INNER JOIN ur_pm_auy
-        ON authority.id = ur_pm_auy.auyId
+                ON authority.id = ur_pm_auy.auyId
                    AND ur_pm_auy.pmId = #{pmId}
                    AND ur_pm_auy.deleteFlg = '0'
             INNER JOIN user
@@ -18,6 +18,19 @@
                    AND user.handle = #{handle}
         WHERE authority.deleteFlg = '0'
     </select>
+    <select id="getDefaultAuthorityForRole" resultType="AuthorityDTO">
+        SELECT
+            authority.id,
+            authority.name
+        FROM re_auy
+            INNER JOIN authority
+                ON authority.id = re_auy.auyId
+                   AND authority.deleteFlg = '0'
+        WHERE re_auy.reId = ${reId}
+              AND re_auy.deleteFlg = '0'
+
+    </select>
+
     <select id="getContestAuthority" resultType="AuthorityDTO">
         SELECT
             authority.id,

@@ -8,6 +8,24 @@ package com.minh.nguyen.dto;
 public class AuthorityDTO extends BaseDTO {
     private Integer id;
     private String name;
+    private Boolean isCheck;
+
+    public Boolean getCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(Boolean check) {
+        isCheck = check;
+    }
+
+    public AuthorityDTO() {
+    }
+
+    public AuthorityDTO(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+        isCheck = false;
+    }
 
     public Integer getId() {
         return id;
