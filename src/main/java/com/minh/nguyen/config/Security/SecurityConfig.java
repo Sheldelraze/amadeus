@@ -144,7 +144,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(getAccessDeniedHandler())
                 .and()
                 .csrf().ignoringAntMatchers("/chat/**")
-                .ignoringAntMatchers("https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js")
                 .and()
                 .headers()
                 .frameOptions()

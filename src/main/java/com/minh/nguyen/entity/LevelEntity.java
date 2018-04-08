@@ -18,7 +18,7 @@ public class LevelEntity extends BaseEntity implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name`")
     private String name;
 
     @Column(name = "color")
