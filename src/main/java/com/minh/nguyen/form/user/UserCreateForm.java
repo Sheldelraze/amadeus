@@ -25,8 +25,8 @@ public class UserCreateForm extends BaseForm {
 
     @Required(displayFieldName = "reId")
     @Number(minValue = 1,maxValue = 4,displayFieldName = "reId")
-    private Integer reId;
-    private Integer[] lstAuyId;
+    private String reId;
+    private String[] lstAuyId;
 
     public String getHandle() {
         return handle;
@@ -52,19 +52,19 @@ public class UserCreateForm extends BaseForm {
         this.fullname = fullname;
     }
 
-    public Integer getReId() {
+    public String getReId() {
         return reId;
     }
 
-    public void setReId(Integer reId) {
+    public void setReId(String reId) {
         this.reId = reId;
     }
 
-    public Integer[] getLstAuyId() {
+    public String[] getLstAuyId() {
         return lstAuyId;
     }
 
-    public void setLstAuyId(Integer[] lstAuyId) {
+    public void setLstAuyId(String[] lstAuyId) {
         this.lstAuyId = lstAuyId;
     }
 }

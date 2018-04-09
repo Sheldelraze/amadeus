@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class UserDTO extends BaseDTO{
     private Integer id;
+    private Integer reId;
     private String handle;
     private String password;
     private String fullname;
@@ -35,6 +36,23 @@ public class UserDTO extends BaseDTO{
     private ConversationDTO conversation;
     private ClassDTO inClass;
     private LevelDTO level;
+    private String[] lstAuyId;
+
+    public Integer getReId() {
+        return reId;
+    }
+
+    public void setReId(Integer reId) {
+        this.reId = reId;
+    }
+
+    public String[] getLstAuyId() {
+        return lstAuyId;
+    }
+
+    public void setLstAuyId(String[] lstAuyId) {
+        this.lstAuyId = lstAuyId;
+    }
 
     public LevelDTO getLevel() {
         return level;

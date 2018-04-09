@@ -18,4 +18,5 @@ public interface AuthorityMapper extends BaseMapper<AuthorityEntity> {
     List<AuthorityDTO> getCourseAuthority(@Param("ceId") Integer ceId, @Param("handle") String handle);
 
     List<AuthorityDTO> getDefaultAuthorityForRole(@Param("reId") Integer reId);
+
 }

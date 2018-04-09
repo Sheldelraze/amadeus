@@ -38,19 +38,16 @@ public class UserController extends BaseController{
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_USER_TEXT + "')")
     @GetMapping("/create")
     public ModelAndView getCreate(UserCreateForm userCreateForm,boolean updateSuccess) {
-        ModelAndView modelAndView = createGeneralModel();
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("user/user-create");
         if (userCreateForm == null){
             userCreateForm = new UserCreateForm();
         }
         List<Integer> lstDefaultAuthOfCurrentUser = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
-        boolean canEditAuth = lstDefaultAuthOfCurrentUser != null;
-        if (canEditAuth){
-            canEditAuth = lstDefaultAuthOfCurrentUser.contains(Constants.AUTH_EDIT_AUTHORITY_ID);
-        }
+        boolean canEditAuth = lstDefaultAuthOfCurrentUser != null &&  lstDefaultAuthOfCurrentUser.contains(Constants.AUTH_EDIT_AUTHORITY_ID);
         modelAndView.addObject("lstDefaultAuth",Constants.LST_DEFAULT_AUTHORITY);
         modelAndView.addObject("canEditAuth",canEditAuth);
-        modelAndView.addObject("userCraeteForm", userCreateForm);
+        modelAndView.addObject("userCreateForm", userCreateForm);
         modelAndView.addObject("updateSuccess", updateSuccess);
         return modelAndView;
     }
@@ -73,6 +70,9 @@ public class UserController extends BaseController{
             return getCreate(userCreateForm,false);
         }
         UserDTO userDTO = modelMapper.map(userCreateForm,UserDTO.class);
+        if (userCreateForm.getLstAuyId() != null){
+            userDTO.setLstAuyId(userCreateForm.getLstAuyId());
+        }
         userService.createUser(userDTO);
         return getCreate(userCreateForm,true);
     }
