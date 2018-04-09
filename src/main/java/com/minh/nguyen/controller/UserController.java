@@ -5,6 +5,7 @@ import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.AuthorityDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.form.user.UserCreateForm;
+import com.minh.nguyen.form.user.UserUpdateForm;
 import com.minh.nguyen.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +53,27 @@ public class UserController extends BaseController{
         return modelAndView;
     }
 
+    @PreAuthorize("isAuthenticated() && @UserValidator.checkIfCreatorOrAdmin(authentication,#urId)")
+    @GetMapping("/{urId}/update")
+    public ModelAndView updateUser(@PathVariable("urId")Integer urId, UserUpdateForm userUpdateForm, boolean updateSuccess) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user/user-update");
+        if (userUpdateForm.getId() == null){
+            UserDTO userDTO = userService.getUserInformationToUpdate(urId);
+            userUpdateForm = modelMapper.map(userDTO,UserUpdateForm.class);
+        }
+        List<Integer> lstDefaultAuthOfCurrentUser = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
+        boolean canEditAuth = lstDefaultAuthOfCurrentUser != null &&  lstDefaultAuthOfCurrentUser.contains(Constants.AUTH_EDIT_AUTHORITY_ID);
+        modelAndView.addObject("urId",urId);
+        modelAndView.addObject("lstDefaultAuth",userService.getDefaultAuthoritiesForUser(urId));
+        modelAndView.addObject("canEditAuth",canEditAuth);
+        modelAndView.addObject("userUpdateForm", userUpdateForm);
+        modelAndView.addObject("updateSuccess", updateSuccess);
+        return modelAndView;
+    }
+
     @GetMapping("/getDefaultAuth/{reId}")
-    public ResponseEntity<?> getUserInConversation(@PathVariable("reId") Integer reId) {
+    public ResponseEntity<?> getDefaultAuthForRole(@PathVariable("reId") Integer reId) {
         try {
             List<AuthorityDTO> lstDefaultAuth = userService.getDefaultAuthority(reId);
             return ResponseEntity.ok(lstDefaultAuth);
@@ -75,5 +95,20 @@ public class UserController extends BaseController{
         }
         userService.createUser(userDTO);
         return getCreate(userCreateForm,true);
+    }
+
+    @PreAuthorize("isAuthenticated() && @UserValidator.checkIfCreatorOrAdmin(authentication,#urId)")
+    @PostMapping("/{urId}/update")
+    public ModelAndView doUpdate(@PathVariable("urId")Integer urId, UserUpdateForm userUpdateForm, BindingResult bindingResult){
+        validate(userUpdateForm,bindingResult);
+        if (bindingResult.hasErrors()){
+            return updateUser(urId,userUpdateForm,false);
+        }
+        UserDTO userDTO = modelMapper.map(userUpdateForm,UserDTO.class);
+        if (userUpdateForm.getLstAuyId() != null){
+            userDTO.setLstAuyId(userUpdateForm.getLstAuyId());
+        }
+        userService.updateUser(userDTO);
+        return updateUser(urId,userUpdateForm,true);
     }
 }

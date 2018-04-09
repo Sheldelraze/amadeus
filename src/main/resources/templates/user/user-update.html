@@ -57,8 +57,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form th:action="|/user/create|"
-                              th:object="${userCreateForm}" method="post">
+                        <form th:action="|/user/${urId}/update|"
+                              th:object="${userUpdateForm}" method="post">
                             <th:block th:if="${#fields.hasErrors('screenMessage')}">
                                 <div class="alert alert-danger">
                                     ✘ <label th:errors="*{screenMessage}"></label>
@@ -66,7 +66,7 @@
                             </th:block>
                             <th:block th:if="${updateSuccess}">
                                 <div class="alert alert-success">
-                                    ✔ Thêm thành công
+                                    ✔ Cập nhật thành công
                                 </div>
                             </th:block>
                             <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()"
@@ -75,39 +75,39 @@
                             <div style="text-align: center">
                                 <h3>Thêm người dùng</h3>
                             </div>
+                            <input name="id" th:value="${urId}" type="hidden"/>
                             <div class="form-group">
-                                <label for="handle">Tên tài khoản <b style="color:red">(*)</b></label>
-                                <small th:if="${#fields.hasErrors('handle')}" style="color:red" th:errors="*{handle}"></small>
+                                <label>Tên tài khoản </label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="handle" name="handle" placeholder="Nhập tên đăng nhập (không quá 30 ký tự)">
+                                    <input type="hidden" th:field="*{handle}"/>
+                                    <input style="color:black" type="text" class="form-control" th:value="${userUpdateForm.handle}" disabled="disabled">
                                     <div class="input-group-addon"><i class="ti-user"></i></div>
-
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="password">Mật khẩu <b style="color:red">(*)</b></label>
                                 <small th:if="${#fields.hasErrors('password')}" style="color:red" th:errors="*{password}"></small>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu (không quá 30 ký tự)">
+                                    <input type="text" class="form-control"  id="password" name="password" placeholder="Nhập mật khẩu mới, để trống nếu không muốn thay đổi (không quá 30 ký tự)">
                                     <div class="input-group-addon"><i class="ti-lock"></i></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="fullname">Tên người dùng</label>
+                                <label >Tên người dùng</label>
                                 <small th:if="${#fields.hasErrors('fullname')}" style="color:red" th:errors="*{fullname}"></small>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Không quá 40 ký tự (ví dụ Nguyễn Văn X....)">
+                                    <input style="color:black" type="text" class="form-control" th:field="*{fullname}" placeholder="Không quá 40 ký tự ">
                                     <div class="input-group-addon"><i class="ti-face-smile"></i></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Loại tài khoản</label>
                                 <small th:if="${#fields.hasErrors('reId')}" style="color:red" th:errors="*{reId}"></small>
-                                <select id="reId" name="reId" onchange="doMagic()" th:attr="disabled=${canEditAuth ? null : 'disabled'}" class="form-control custom-select">
-                                    <option value="1">Quản trị</option>
-                                    <option value="2">Giảng viên</option>
-                                    <option value="3" selected="selected">Sinh viên</option>
-                                    <option value="4">Lãnh đạo</option>
+                                <select style="color:black" id="reId" name="reId" onchange="doMagic()" th:attr="disabled=${canEditAuth ? null : 'disabled'}" class="form-control custom-select">
+                                    <option value="1" th:selected="${userUpdateForm.reId == '1' ? 'selected' : null}">Quản trị</option>
+                                    <option value="2" th:selected="${userUpdateForm.reId == '2' ? 'selected' : null}">Giảng viên</option>
+                                    <option value="3" th:selected="${userUpdateForm.reId == '3' ? 'selected' : null}">Sinh viên</option>
+                                    <option value="4" th:selected="${userUpdateForm.reId == '4' ? 'selected' : null}">Lãnh đạo</option>
                                 </select>
                             </div>
                             <div class="form-group" th:if="${canEditAuth}">
@@ -116,8 +116,8 @@
                                     <ul style="list-style: none;" class="list-inline">
                                         <li th:each="auth : ${lstDefaultAuth}">
                                             <div style="margin:5px">
-                                            <input type="checkbox" class="check" th:value="${auth.id}" th:id="|auth${auth.id}|" name="lstAuyId">
-                                            <label th:for="|auth${auth.id}|" th:text="${auth.name}"></label>
+                                                <input th:checked="${auth.check ? 'checked' : null}"  type="checkbox" class="check" th:value="${auth.id}" th:id="|auth${auth.id}|" name="lstAuyId">
+                                                <label th:for="|auth${auth.id}|" th:text="${auth.name}"></label>
                                             </div>
                                         </li>
 
@@ -126,7 +126,7 @@
                                 </div>
                             </div>
                             <div style="text-align: center">
-                                <button type="submit" class="btn btn-success">Thêm người dùng
+                                <button type="submit" class="btn btn-success">Cập nhật người dùng
                                 </button>
                             </div>
                         </form>
@@ -197,7 +197,6 @@
         return false;
     }
 </script>
-
 <!-- ============================================================== -->
 <!-- This page plugins -->
 <!-- ============================================================== -->

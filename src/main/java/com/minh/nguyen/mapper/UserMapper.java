@@ -14,6 +14,7 @@ import java.util.List;
 @Component("UserMapper")
 @Mapper
 public interface UserMapper extends BaseMapper<UserEntity> {
+
     UserDTO findUserByHandle(@Param("handle") String handle);
 
     UserDTO findUserById(@Param("urId") Integer urId);

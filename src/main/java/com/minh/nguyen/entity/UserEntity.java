@@ -50,9 +50,6 @@ public class UserEntity extends BaseEntity implements Serializable {
     @Column(name = "isActived")
     private Integer isActived;
 
-    @Column(name = "isLocked")
-    private Integer isLocked;
-
     @Column(name = "reId")
     private Integer reId;
 
@@ -168,14 +165,6 @@ public class UserEntity extends BaseEntity implements Serializable {
 
     public void setIsActived(Integer isActived) {
         this.isActived = isActived;
-    }
-
-    public Integer getIsLocked() {
-        return isLocked;
-    }
-
-    public void setIsLocked(Integer isLocked) {
-        this.isLocked = isLocked;
     }
 
     public Date getLastLogin() {

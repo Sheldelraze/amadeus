@@ -30,7 +30,17 @@
               AND re_auy.deleteFlg = '0'
 
     </select>
-
+    <select id="getDefaultAuthorityForUser" resultType="AuthorityDTO">
+        SELECT
+            authority.id,
+            authority.name
+        FROM ur_auy
+            INNER JOIN authority
+                ON authority.id = ur_auy.auyId
+                   AND authority.deleteFlg = '0'
+        WHERE ur_auy.deleteFlg = '0'
+              AND ur_auy.urId = #{urId}
+    </select>
     <select id="getContestAuthority" resultType="AuthorityDTO">
         SELECT
             authority.id,
@@ -59,4 +69,8 @@
                    AND user.handle = #{handle}
         WHERE authority.deleteFlg = '0'
     </select>
+    <delete id="deleteAllDefaultAuthForUser">
+        delete from ur_auy
+            where urId = #{urId}
+    </delete>
 </mapper>

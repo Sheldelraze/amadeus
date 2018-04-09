@@ -2,6 +2,7 @@ package com.minh.nguyen.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * @since 09/04/2018
  * Purpose:
  */
+@Table(name = "ur_auy")
 public class UrAuyEntity extends BaseEntity implements Serializable {
     static final long serialVersionUID = 93430009L;
     @Id

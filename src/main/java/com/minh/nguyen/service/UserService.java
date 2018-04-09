@@ -8,12 +8,15 @@ import com.minh.nguyen.entity.UserEntity;
 import com.minh.nguyen.mapper.AuthorityMapper;
 import com.minh.nguyen.mapper.UrAuyMapper;
 import com.minh.nguyen.mapper.UserMapper;
+import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,10 +46,20 @@ public class UserService extends BaseService{
 
         return lstAuth;
     }
+
+    @Transactional
     public void createUser(UserDTO userDTO){
 
+        //check if handle already taken
+        UserEntity userEntity = new UserEntity();
+        userEntity.setHandle(userDTO.getHandle());
+        int checkExclusive = userMapper.countWithExample(userEntity);
+        if (checkExclusive > 0){
+            rollBack(Constants.MSG_HANDLE_EXISTED_ERR);
+        }
+
         //insert user table first
-        UserEntity userEntity = modelMapper.map(userDTO,UserEntity.class);
+        userEntity = modelMapper.map(userDTO,UserEntity.class);
         userEntity.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         setCreateInfo(userEntity);
         setUpdateInfo(userEntity);
@@ -76,6 +89,62 @@ public class UserService extends BaseService{
 
         if (userDTO.getReId().equals(Constants.ROLE_STUDENT_ID)){
 
+        }
+    }
+
+    public UserDTO getUserInformationToUpdate(Integer urId){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(urId);
+        userEntity = userMapper.selectByPK(userEntity);
+        return modelMapper.map(userEntity,UserDTO.class);
+    }
+
+    //first we get all default authorities, then we check if current user has that authority, if they do then we set isCheck = true
+    public List<AuthorityDTO> getDefaultAuthoritiesForUser(Integer urId){
+        List<AuthorityDTO> lstAllDefaultAuth = new ArrayList<>();
+        List<AuthorityDTO> lstUserDefaultAuth = authorityMapper.getDefaultAuthorityForUser(urId);
+        for(AuthorityDTO defaultAuth : Constants.LST_DEFAULT_AUTHORITY){
+            AuthorityDTO auth = new AuthorityDTO(defaultAuth.getId(),defaultAuth.getName());
+            for(AuthorityDTO currentAuth : lstUserDefaultAuth){
+                if (currentAuth.getId().equals(defaultAuth.getId())){
+                    auth.setCheck(true);
+                    break;
+                }
+            }
+            lstAllDefaultAuth.add(auth);
+        }
+        return lstAllDefaultAuth;
+    }
+
+    @Transactional
+    public void updateUser(UserDTO user){
+        UserEntity userEntity = modelMapper.map(user,UserEntity.class);
+        if (!StringUtil.isEmpty(user.getPassword())){
+            userEntity.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
+        setUpdateInfo(userEntity);
+
+        //we don't update handle here
+        userEntity.setHandle(null);
+
+        int recordCnt = userMapper.updateNotNullByPK(userEntity);
+        if (recordCnt == 0){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+
+        //delete all old default authorities
+        authorityMapper.deleteAllDefaultAuthForUser(user.getId());
+
+        //insert new default authorities (if any)
+        if (user.getLstAuyId() != null) {
+            UrAuyEntity urAuyEntity = new UrAuyEntity();
+            setUpdateInfo(urAuyEntity);
+            setCreateInfo(urAuyEntity);
+            urAuyEntity.setUrId(user.getId());
+            for (String authStr : user.getLstAuyId()) {
+                urAuyEntity.setAuyId(Integer.valueOf(authStr));
+                urAuyMapper.insert(urAuyEntity);
+            }
         }
     }
 }

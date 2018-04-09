@@ -88,6 +88,7 @@ public class Constants {
     public static final String MSG_APPLICATION_DECLINED_SUCCESS = "msg025";
     public static final String MSG_CONTEST_APPLY_SUCCESS = "msg026";
     public static final String MSG_ALREADY_IN_CONTEST_ERR = "msg027";
+    public static final String MSG_HANDLE_EXISTED_ERR = "msg028";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;
@@ -196,7 +197,7 @@ public class Constants {
     public static final Integer JUDGE_TYPE_ACM = 1;
     public static final Integer JUDGE_TYPE_IOI = 2;
 
-    public static List<AuthorityDTO> LST_DEFAULT_AUTHORITY = new ArrayList<>();
+    public static final List<AuthorityDTO> LST_DEFAULT_AUTHORITY = new ArrayList<>();
 
     static {
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_CREATE_CONTEST_ID,"Tạo cuộc thi"));

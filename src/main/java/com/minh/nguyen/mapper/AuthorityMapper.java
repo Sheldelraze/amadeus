@@ -19,4 +19,7 @@ public interface AuthorityMapper extends BaseMapper<AuthorityEntity> {
 
     List<AuthorityDTO> getDefaultAuthorityForRole(@Param("reId") Integer reId);
 
+    List<AuthorityDTO> getDefaultAuthorityForUser(@Param("urId") Integer urId);
+
+    Integer deleteAllDefaultAuthForUser(@Param("urId")Integer urId);
 }

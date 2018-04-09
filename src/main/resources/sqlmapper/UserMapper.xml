@@ -45,11 +45,11 @@
         FROM ur_auy
             INNER JOIN user
                 ON ur_auy.urId = user.id
-                and user.deleteFlg = '0'
-                and user.handle = #{handle}
+                   AND user.deleteFlg = '0'
+                   AND user.handle = #{handle}
             INNER JOIN authority
-              on ur_auy.auyId = authority.id
-              and authority.deleteFlg = '0'
+                ON ur_auy.auyId = authority.id
+                   AND authority.deleteFlg = '0'
         WHERE ur_auy.deleteFlg = '0'
     </select>
 
@@ -367,6 +367,25 @@
         WHERE ur_ct_auy.ctId = #{ctId}
               AND ur_ct_auy.deleteFlg = '0'
     </select>
+    <select id="getUserInforToUpdate" resultMap="userAndRole">
+        SELECT
+            user.id,
+            user.fullname,
+            user.handle,
+            user.reId,
+            authority.id,
+            authority.name
+        FROM user
+            INNER JOIN ur_auy
+                ON user.id = ur_auy.urId
+                   AND ur_auy.deleteFlg = '0'
+            INNER JOIN authority
+                ON authority.id = ur_auy.auyId
+                   AND authority.deleteFlg = '0'
+        WHERE
+            user.deleteFlg = '0'
+            AND user.id = #[urId}
+    </select>
     <resultMap id="userAndRole" type="UserDTO">
         <id column="urId" property="id"/>
         <result column="handle" property="handle"/>
@@ -377,6 +396,7 @@
         </association>
         <collection property="lstAuthority" ofType="AuthorityDTO">
             <id column="auyId" property="id"/>
+            <id column="name" property="name"/>
         </collection>
     </resultMap>
     <resultMap id="leaderboard" type="UserDTO">

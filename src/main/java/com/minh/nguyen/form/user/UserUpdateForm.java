@@ -7,25 +7,25 @@ import com.minh.nguyen.validator.annotation.Required;
 
 /**
  * @author Mr.Minh
- * @since 08/04/2018
+ * @since 09/04/2018
  * Purpose:
  */
-public class UserCreateForm extends BaseForm {
+public class UserUpdateForm extends BaseForm {
 
-    @Required(displayFieldName = "handle")
-    @MaxLength(displayFieldName = "handle", maxlength = 30)
+    private Integer id;
+
     private String handle;
 
-    @Required(displayFieldName = "password")
     @MaxLength(displayFieldName = "password", maxlength = 30)
     private String password;
 
-    @MaxLength(displayFieldName = "fullname", maxlength = 40)
+    @MaxLength(displayFieldName = "fullnamen", maxlength = 40)
     private String fullname;
 
     @Required(displayFieldName = "reId")
     @Number(minValue = 1,maxValue = 4,displayFieldName = "reId")
     private String reId;
+
     private String[] lstAuyId;
 
     public String getHandle() {
@@ -34,6 +34,14 @@ public class UserCreateForm extends BaseForm {
 
     public void setHandle(String handle) {
         this.handle = handle;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getPassword() {
