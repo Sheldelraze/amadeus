@@ -386,6 +386,47 @@
             user.deleteFlg = '0'
             AND user.id = #[urId}
     </select>
+    <select id="getTopUser" resultMap="rank">
+        select user.id,
+            user.avatar,
+            user.handle,
+            user.fullname,
+            student.solveCnt,
+            student.point,
+            level.color,
+            level.id as llId,
+            level.name
+        from user
+            inner join student
+                on student.urId = user.id
+                   and student.deleteFlg = '0'
+            inner join (
+                           select student.urId,
+                               max(level.point) as point
+                           from student inner join
+                               level on student.point >= level.point
+                           group by urId
+                       ) as score
+                on score.urId = student.urId
+            inner join level
+                on level.point = score.point
+        where user.reId = #{role_student_id}
+              and user.deleteFlg = '0'
+        order by point desc
+    </select>
+    <resultMap id="rank" type="StudentDTO">
+        <id column="id" property="id"/>
+        <result column="avatar" property="avatar"/>
+        <result column="handle" property="handle"/>
+        <result column="fullname" property="fullname"/>
+        <result column="solveCnt" property="solveCnt"/>
+        <result column="point" property="point"/>
+        <association property="level" javaType="LevelDTO">
+            <id property="id" column="llId"/>
+            <result property="color" column="color"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
     <resultMap id="userAndRole" type="UserDTO">
         <id column="urId" property="id"/>
         <result column="handle" property="handle"/>

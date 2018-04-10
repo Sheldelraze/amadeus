@@ -1,6 +1,8 @@
 package com.minh.nguyen.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -9,43 +11,55 @@ import java.io.Serializable;
  * Purpose:
  */
 @Table(name = "student")
-public class StudentEntity extends  UserEntity implements Serializable {
+public class StudentEntity extends  BaseEntity implements Serializable {
     static final long serialVersionUID = 1111142L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
 
     @Id
-    @Column(name = "userId")
-    private Integer userId;
+    @Column(name = "urId")
+    private Integer urId;
 
-    @Column(name = "probSolveCnt")
-    private Integer probSolveCnt;
+    @Column(name = "csId")
+    private Integer csId;
 
-    @Override
-    public Integer getId() {
-        return id;
+    @Column(name = "point")
+    private Integer point;
+
+    @Column(name = "solveCnt")
+    private Integer solveCnt;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getCsId() {
+        return csId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public void setCsId(Integer csId) {
+        this.csId = csId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public Integer getPoint() {
+        return point;
     }
 
-    public Integer getProbSolveCnt() {
-        return probSolveCnt;
+    public void setPoint(Integer point) {
+        this.point = point;
     }
 
-    public void setProbSolveCnt(Integer probSolveCnt) {
-        this.probSolveCnt = probSolveCnt;
+    public Integer getSolveCnt() {
+        return solveCnt;
+    }
+
+    public void setSolveCnt(Integer solveCnt) {
+        this.solveCnt = solveCnt;
+    }
+
+    public Integer getUrId() {
+        return urId;
+    }
+
+    public void setUrId(Integer urId) {
+        this.urId = urId;
     }
 }

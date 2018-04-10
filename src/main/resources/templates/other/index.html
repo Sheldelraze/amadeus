@@ -12,6 +12,9 @@
         card-body {
             margin-top: -10px;
         }
+        .table-leaderboard tbody tr:hover{
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
@@ -62,6 +65,7 @@
             <!-- ============================================================== -->
             <!-- ============================================================== -->
             <!-- Start Page Content -->
+
             <div class="row">
                 <div class="col-12">
                     <div class="card m-b-0">
@@ -126,6 +130,53 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row" style="margin-top: 20px">
+                <div class="col-12">
+                    <div class="card m-b-0">
+                        <!-- .chat-row -->
+                        <div class="chat-main-box">
+                            <!-- .chat-left-panel -->
+                            <!-- .chat-left-panel -->
+                            <!-- .chat-right-panel -->
+                            <div>
+                                <div class="card-outline-info">
+                                    <div class="card-header">
+                                        <h4 class="m-b-0 text-white"><i class="mdi mdi-trophy-award"></i>Bảng xếp hạng</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-leaderboard table-hover" style="color: black; text-align: center">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center;width: 10px">#</th>
+                                    <th style="text-align: center;width: 30px">Avatar</th>
+                                    <th style="text-align: center">Tài khoản</th>
+                                    <th style="text-align: center">Tên người dùng</th>
+                                    <th style="text-align: center">Số bài</th>
+                                    <th style="text-align: center">Điểm</th>
+                                    <th style="text-align: center">Danh hiệu</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:id="|user${user.id}|" th:each="user,iter : ${lstRank}">
+                                        <td th:text="${iter.count}"></td>
+                                        <td><img src="../../static/assets/images/users/1.jpg" th:src="@{${user.avatar}}"
+                                                 th:alt="${user.fullname}" class="leaderboard-profile"/></td>
+                                        <td th:text="${user.handle}">admin</td>
+                                        <td th:text="${user.fullname}">Makise Kurisu</td>
+                                        <td th:text="${user.solveCnt}">10</td>
+                                        <td th:text="${user.point}">5000</td>
+                                        <td><label th:style="'color : __${user.level.color}__'" th:classappend="${user.level.id == 8} ? 'legendary'" class="font-bold" th:text="${user.level.name}">Cao thủ</label></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- .chat-right-panel -->
+                        </div>
+                        <!-- /.chat-row -->
+                    </div>
+                </div>
+            </div>
             <!-- ============================================================== -->
             <!-- End PAge Content -->
             <!-- ============================================================== -->
@@ -155,6 +206,11 @@
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
 <script th:src="@{/js/chatbox.js}"></script>
+<script>
+    $(".table-leaderboard tbody tr").click(function(){
+        alert('redirect to user with ID:' + $(this).attr('id').match(/\d+/));
+    });
+</script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

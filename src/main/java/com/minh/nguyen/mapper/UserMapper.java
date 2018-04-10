@@ -1,5 +1,6 @@
 package com.minh.nguyen.mapper;
 
+import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.entity.UserEntity;
 import com.minh.nguyen.mapper.provider.BaseProvider;
@@ -42,6 +43,8 @@ public interface UserMapper extends BaseMapper<UserEntity> {
     List<UserDTO> findListUserByFullnameOrHandle(@Param("text") String textm, @Param("urId") Integer currentUserID, @Param("from") Integer limitFrom, @Param("size") Integer maxUserPerFetch);
 
     List<UserDTO> findUserInConversation(@Param("topic") String topic);
+
+    List<StudentDTO> getTopUser(@Param("role_student_id")Integer roleStudentID);
 
     @InsertProvider(type = BaseProvider.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")

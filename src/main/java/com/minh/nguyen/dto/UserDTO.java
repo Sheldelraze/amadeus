@@ -38,6 +38,7 @@ public class UserDTO extends BaseDTO{
     private LevelDTO level;
     private String[] lstAuyId;
 
+
     public Integer getReId() {
         return reId;
     }

@@ -5105,7 +5105,10 @@ Pricing Page
   width: 100px;
   left: 0px;
   right: 0px; }
-
+.leaderboard-profile{
+  width: 30px;
+  border-radius: 100%;
+}
 /*******************
 chat application Page
 ******************/
@@ -6285,6 +6288,9 @@ Author: Themedesigner
 Email: niravjoshi87@gmail.com
 File: scss
 */
+.legendary::first-letter{
+  color:black
+}
 @media (min-width: 1600px) {
   .col-xlg-1,
   .col-xlg-10,

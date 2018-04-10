@@ -1,6 +1,8 @@
 package com.minh.nguyen.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -9,36 +11,26 @@ import java.io.Serializable;
  * Purpose:
  */
 @Table(name = "lecturer")
-public class LecturerEntity extends UserEntity implements Serializable {
+public class LecturerEntity extends BaseEntity implements Serializable {
     static final long serialVersionUID = 1462L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
-
-    @Id
-    @Column(name="userId")
-    private Integer userId;
-
-    public Integer getId() {
-        return id;
-    }
+    @Column(name="urId")
+    private Integer urId;
 
     @Column(name="degree")
     private String degree;
 
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getUrId() {
+        return urId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUrId(Integer urId) {
+        this.urId = urId;
     }
 
     public String getDegree() {

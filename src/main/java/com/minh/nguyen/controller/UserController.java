@@ -99,7 +99,7 @@ public class UserController extends BaseController{
 
     @PreAuthorize("isAuthenticated() && @UserValidator.checkIfCreatorOrAdmin(authentication,#urId)")
     @PostMapping("/{urId}/update")
-    public ModelAndView doUpdate(@PathVariable("urId")Integer urId, UserUpdateForm userUpdateForm, BindingResult bindingResult){
+    public ModelAndView doUpdateM(@PathVariable("urId")Integer urId, UserUpdateForm userUpdateForm, BindingResult bindingResult){
         validate(userUpdateForm,bindingResult);
         if (bindingResult.hasErrors()){
             return updateUser(urId,userUpdateForm,false);

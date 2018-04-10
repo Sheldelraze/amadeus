@@ -3,6 +3,7 @@ package com.minh.nguyen.controller;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.MessageDTO;
+import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.MessageService;
@@ -49,7 +50,9 @@ public class GeneralController extends BaseController {
         Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
         Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
         List<MessageDTO> lstMessage = messageService.getRecentMessage(Constants.PUBLIC_TOPIC, 0, null);
+        List<StudentDTO> lstRank = generalService.getListUserRank();
         modelAndView.addObject("urId", urId);
+        modelAndView.addObject("lstRank", lstRank);
         modelAndView.addObject(Constants.TOPIC_TEXT, Constants.PUBLIC_TOPIC);
         modelAndView.addObject("username", username);
         modelAndView.addObject("messagePerFetch", Constants.MAX_MESSAGE_PER_FETCH);

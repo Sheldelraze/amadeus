@@ -1,12 +1,14 @@
 package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
+import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.dto.SubmitDetailDTO;
 import com.minh.nguyen.entity.BaseEntity;
 import com.minh.nguyen.entity.NotificationEntity;
 import com.minh.nguyen.mapper.NotificationMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
+import com.minh.nguyen.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +33,9 @@ public class GeneralService extends BaseService {
 
     @Autowired
     private NotificationMapper notificationMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     public List<SubmissionDTO> getSubmission() {
         List<SubmissionDTO> lstSubmission = submissionMapper.getSubmission();
@@ -95,5 +100,11 @@ public class GeneralService extends BaseService {
         entity.setUpdateClass(GeneralService.class.getName());
         entity.setUpdateTime(time);
         entity.setUpdateUser(currentUser);
+    }
+
+    public List<StudentDTO> getListUserRank(){
+        List<StudentDTO> lstUser = userMapper.getTopUser(Constants.ROLE_STUDENT_ID);
+
+        return lstUser;
     }
 }
