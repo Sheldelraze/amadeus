@@ -234,10 +234,10 @@
                     <!-- ============================================================== -->
                     <!-- Profile -->
                     <!-- ============================================================== -->
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" th:if="${urId != null}">
                         <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="#"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="../../static/assets/images/users/1.jpg" th:src="@{/assets/images/users/1.jpg}"
+                            <img th:src="@{${avatar}}"
                                  alt="user" class="profile-pic"/></a>
                         <div class="dropdown-menu dropdown-menu-right scale-up">
                             <ul class="dropdown-user">
@@ -278,17 +278,15 @@
         <!-- Sidebar scroll-->
         <div class="scroll-sidebar">
             <!-- User profile -->
-            <div class="user-profile" th:inline="text"
-                 th:style="|background:url(@{/assets/images/background/user-info.jpg})  no-repeat;|"
-            >
+            <div class="user-profile" th:inline="text" th:if="${urId != null}"
+                 th:style="|background:url(@{/assets/images/background/user-info.jpg})  no-repeat;|">
 
                 <!-- User profile image -->
                 <div class="profile-img">
-                    <img src="../../static/assets/images/users/profile.png" th:src="@{/assets/images/users/profile.png}"
-                         alt="user"/>
+                    <img th:src="@{${avatar}}" alt="user"/>
                 </div>
                 <!-- User profile text-->
-                <div class="profile-text">
+                <div class="profile-text" >
                     <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="true">Makise Kurisu</a>
                     <div class="dropdown-menu animated flipInY">
@@ -353,13 +351,13 @@
         </div>
         <!-- End Sidebar scroll-->
         <!-- Bottom points-->
-        <div class="sidebar-footer">
+        <div class="sidebar-footer" th:if="${urId != null}">
             <!-- item-->
             <a href="#" class="link" data-toggle="tooltip" title="Settings"><i class="ti-settings"></i></a>
             <!-- item-->
             <a href="#" class="link" data-toggle="tooltip" title="Email"><i class="mdi mdi-gmail"></i></a>
             <!-- item-->
-            <a href="#" class="link" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a>
+            <a href="/logout" class="link" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a>
         </div>
         <!-- End Bottom points-->
     </aside>
@@ -424,6 +422,7 @@
         var urId = /*[[${urId}]]*/ null;
         var topic = /*[[${topic}]]*/ null;
         var username = /*[[${username}]]*/ 'user';
+        var avatar = /*[[${avatar}]]*/ '/assets/images/users/1.jpg';
         var increment = /*[[${increment}]]*/ 50;
         var currentUserIndex = increment;
         var messagePerFetch = /*[[${messagePerFetch}]]*/ 15;

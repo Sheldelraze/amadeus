@@ -175,6 +175,7 @@ function sendMessage(event) {
         var chatMessage = {
             username: username,
             urId: urId,
+            avatar : avatar,
             content: messageInput.value
         };
         stompClient.send("/message/send." + topic, {}, JSON.stringify(chatMessage));

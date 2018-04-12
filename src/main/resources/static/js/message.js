@@ -201,7 +201,7 @@ function addUser(data) {
 
     //user avatar
     var userAvatar = document.createElement('img');
-    userAvatar.src = '/assets/images/users/1.jpg';
+    userAvatar.src = data.avatar;
     userAvatar.alt = data.fullname;
     userAvatar.className = "img-circle";
 

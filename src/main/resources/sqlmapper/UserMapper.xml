@@ -35,11 +35,12 @@
         </if>
         limit #{from},#{size}
     </select>
-    <select id="getUserAuthority" resultMap="UserDetail">
+    <select id="getUserInformationWhenLogin" resultMap="UserDetail">
         SELECT
             user.id        AS urId,
             user.handle    AS handle,
             user.password  AS password,
+            user.avatar    AS avatar,
             authority.id   AS auyId,
             authority.name AS auyName
         FROM ur_auy

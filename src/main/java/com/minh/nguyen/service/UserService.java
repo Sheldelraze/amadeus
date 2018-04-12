@@ -76,6 +76,7 @@ public class UserService extends BaseService{
         //insert user table first
         userEntity = modelMapper.map(userDTO,UserEntity.class);
         userEntity.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        userEntity.setAvatar(Constants.DEFAULT_AVATAR);
         setCreateInfo(userEntity);
         setUpdateInfo(userEntity);
         int recordCnt = userMapper.insertUser(userEntity);

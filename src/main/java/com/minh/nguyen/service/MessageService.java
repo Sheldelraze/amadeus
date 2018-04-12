@@ -37,9 +37,6 @@ public class MessageService extends BaseService {
     private ConversationMapper conversationMapper;
 
     @Autowired
-    private UrCtAuyMapper urCtAuyMapper;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -65,6 +62,9 @@ public class MessageService extends BaseService {
         //insert notification
         if (!topic.equals(Constants.PUBLIC_TOPIC) && !topic.equals(Constants.DEFAULT_TOPIC)) {
             String urId = message.getUrId();
+
+            //topic names are stored like this: <userID1>_<userID2> (provided userID1 < userID2). Ex: 1_3,4_5,10_12,...
+            //so we first split the topic name by character '_'
             String[] lstUrId = topic.split("_");
             MessageNotificationEntity messageNotificationEntity = new MessageNotificationEntity();
             messageNotificationEntity.setDeleteFlg("0");
@@ -72,9 +72,12 @@ public class MessageService extends BaseService {
             messageNotificationEntity.setCreateTime(message.getCreateTime());
             for (String id : lstUrId) {
                 if (!id.equals(urId)) {
+                    //if sender is not current user then we send notification to all other users and insert to database
                     messageNotificationEntity.setIsRead(Constants.MESSAGE_NOT_READ_FLAG);
                     sendMessageNotify(message, id);
                 } else {
+
+                    //else if sender is current logging in user then we only insert to database
                     messageNotificationEntity.setIsRead(Constants.MESSAGE_READ_FLAG);
                 }
                 messageNotificationEntity.setUrId(Integer.parseInt(id));

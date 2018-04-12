@@ -57,6 +57,7 @@
         SELECT
             user.fullname AS username,
             user.id,
+            user.avatar,
             message.createTime,
             message.content,
             messagenotification.isRead
@@ -81,6 +82,7 @@
         SELECT
             user.fullname AS username,
             user.id,
+            user.avatar,
             message.createTime,
             message.content
         FROM message

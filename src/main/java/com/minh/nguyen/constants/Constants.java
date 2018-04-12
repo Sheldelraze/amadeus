@@ -16,6 +16,8 @@ public class Constants {
     public static final Integer MAX_UPLOAD_SIZE = 50;
     public static final Integer MAX_FILENAME_LENGTH_SIZE = 100;
 
+    public static final String DEFAULT_AVATAR = "/assets/images/users/1.jpg";
+
     public static final Integer UPLOAD_FILE_PENDING_FLAG = 0;
     public static final Integer UPLOAD_FILE_SUCCESS_FLAG = 1;
     public static final Integer UPLOAD_FILE_FAIL_FLAG = -1;
@@ -44,6 +46,7 @@ public class Constants {
 
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";
+    public static final String CURRENT_LOGIN_USER_AVATAR = "currentUserAvatar";
     public static final String CURRENT_LOGIN_USER_FULLNAME = "currentUserFullname";
     public static final String CURRENT_LOGIN_USER_ROLE_ID = "currentUserRoleId";
     public static final String CURRENT_LOGIN_USER_ROLE_NAME = "currentUserRoleName";

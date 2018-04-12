@@ -241,6 +241,7 @@ public class BaseController {
         }
         Object currewntUserId = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
         Object username = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME);
+        Object avatar = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_AVATAR);
         Object roleName = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME);
         if (currewntUserId != null) {
             List<MessageDTO> lstMessageNotify = messageService.getMessageNotify((Integer) currewntUserId);
@@ -254,6 +255,7 @@ public class BaseController {
         modelAndView.addObject("canCreateProblem", canCreateProblem);
         modelAndView.addObject("canCreateContest", canCreateContest);
         modelAndView.addObject("username", username);
+        modelAndView.addObject("avatar", avatar);
         modelAndView.addObject("urId", currewntUserId);
         modelAndView.addObject("roleName", roleName);
         modelAndView.addObject("increment", Constants.MAX_USER_PER_SEARCH);

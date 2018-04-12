@@ -25,6 +25,8 @@ public class MessageDTO extends BaseDTO implements Serializable {
 
     private String username;
 
+    private String avatar;
+
     private String sendTime;
 
     private Integer limitFrom;
@@ -34,6 +36,14 @@ public class MessageDTO extends BaseDTO implements Serializable {
     private Integer isRead;
 
     private UserDTO sender;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

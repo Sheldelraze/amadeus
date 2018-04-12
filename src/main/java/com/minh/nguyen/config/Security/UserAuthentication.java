@@ -41,22 +41,24 @@ public class UserAuthentication implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         //get user's default authorities (if any)
-        List<UserDTO> lstUser = userMapper.getUserAuthority(username);
+        List<UserDTO> lstUser = userMapper.getUserInformationWhenLogin(username);
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        List<Integer> defaultAuth = new ArrayList<>();
         UserEntity userEntity = new UserEntity();
         userEntity.setHandle(username);
         List<UserEntity> lst = userMapper.selectWithExample(userEntity);
-        if (null == lstUser || 0 == lstUser.size() || 0 == lst.size()) {
+        if (null == lstUser || 0 == lst.size()) {
             throw new UsernameNotFoundException("User not found");
         }
 
-        //save authorities (remember these are only default authorities)
-        UserDTO user = lstUser.get(0);
-        List<AuthorityDTO> lstAuthority = user.getLstAuthority();
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        List<Integer> defaultAuth = new ArrayList<>();
-        for(AuthorityDTO authority : lstAuthority){
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
-            defaultAuth.add(authority.getId());
+        //save authorities if any (remember these are only default authorities)
+        if (lstUser.size() > 0) {
+            UserDTO user = lstUser.get(0);
+            List<AuthorityDTO> lstAuthority = user.getLstAuthority();
+            for (AuthorityDTO authority : lstAuthority) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+                defaultAuth.add(authority.getId());
+            }
         }
 
         //save current user information for future use
@@ -67,12 +69,13 @@ public class UserAuthentication implements UserDetailsService {
 
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ID,lst.get(0).getId());
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_HANDLE,lst.get(0).getHandle());
+        httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_AVATAR,lst.get(0).getAvatar());
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME, lst.get(0).getFullname());
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ROLE_ID, lst.get(0).getReId());
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_ROLE_NAME, roleEntity.getText());
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES,defaultAuth);
 
-        return new org.springframework.security.core.userdetails.User(user.getHandle(), user.getPassword(),
+        return new org.springframework.security.core.userdetails.User(lst.get(0).getHandle(), lst.get(0).getPassword(),
                 grantedAuthorities);
     }
 }

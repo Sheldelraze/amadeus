@@ -14,6 +14,10 @@ import com.minh.nguyen.vo.contest.ContestListVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Mr.Minh
@@ -81,6 +87,51 @@ public class ContestService extends BaseService {
     @Autowired
     private GeneralService generalService;
 
+    @Autowired
+    private TaskScheduler scheduler;
+
+    @Configurable
+    public class UpdateContestRankTask implements Runnable {
+
+        @Autowired
+        private UrCtAuyMapper smallUrCtAuyMapper;
+
+        @Autowired
+        private UserMapper smallUserMapper;
+
+        private Date finishTime;
+
+        private Integer ctId;
+
+        public UpdateContestRankTask(Integer ctId,Date finishTime) {
+            this.ctId = ctId;
+            this.finishTime = finishTime;
+        }
+
+        @Override
+        public void run() {
+            List<UserDTO> lstRank = userMapper.getLeaderboardIOIForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID);
+            UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
+            urCtAuyEntity.setCtId(ctId);
+            urCtAuyEntity.setAuyId(Constants.AUTH_PARTICIPATE_CONTEST_ID);
+            urCtAuyEntity.setUpdateTime(finishTime);
+            int rank = 1;
+            for(UserDTO user : lstRank){
+                urCtAuyEntity.setUrId(user.getId());
+                urCtAuyEntity.setRank(rank++);
+                urCtAuyMapper.updateNotNullByPK(urCtAuyEntity);
+            }
+        }
+    }
+
+    @Async
+    public void updateAfterContestFinish(Integer ctId,Date finishDateTime) {
+        ScheduledExecutorService localExecutor = Executors.newSingleThreadScheduledExecutor();
+        scheduler = new ConcurrentTaskScheduler(localExecutor);
+        UpdateContestRankTask updateContestRankTask = new UpdateContestRankTask(ctId,finishDateTime);
+        scheduler.schedule(updateContestRankTask,finishDateTime);
+    }
+
     @Transactional
     public int createContest(ContestDTO contestDTO) {
         ContestEntity contestEntity = new ContestEntity();
@@ -131,6 +182,9 @@ public class ContestService extends BaseService {
                 rollBack(Constants.MSG_SYSTEM_ERR);
             }
 
+            //set up schedule to update rank after contest finish
+            Date endTime = DateUtils.addMinutes(contestEntity.getStartTime(), contestEntity.getDuration());
+            updateAfterContestFinish(contestEntity.getId(),endTime);
             return contestEntity.getId();
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,7 +257,7 @@ public class ContestService extends BaseService {
             if (all == 0 || ac == 0) {
                 problem.setSolvePercentage("(0%)");
                 continue;
-            }else if (all == ac){
+            } else if (all == ac) {
                 problem.setSolvePercentage("(100%)");
                 continue;
             }
@@ -241,8 +295,8 @@ public class ContestService extends BaseService {
         //1 user -> many problems
         if (contest.getJudgeType().equals(Constants.JUDGE_TYPE_ACM)) {
             lstUser = userMapper.getLeaderboardIOIForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID);
-        }else{
-            lstUser = userMapper.getLeaderboardACMForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID,Constants.STATUS_ACCEPTED);
+        } else {
+            lstUser = userMapper.getLeaderboardACMForContest(ctId, Constants.AUTH_PARTICIPATE_CONTEST_ID, Constants.STATUS_ACCEPTED);
         }
         for (UserDTO user : lstUser) {
             int score = 0;
@@ -298,7 +352,7 @@ public class ContestService extends BaseService {
                                 //add submission count up to the first AC-ed one
                                 submitCnt++;
 
-                            }else{ //judge by IOI style (total correct ans / total test)
+                            } else { //judge by IOI style (total correct ans / total test)
                                 if (submit.getCorrectAns() != null && submit.getCorrectAns().equals(problem.getTestCnt())) {
                                     isSolved = 1;
 
@@ -312,7 +366,7 @@ public class ContestService extends BaseService {
                                         String m = StringUtils.leftPad(String.valueOf(minutes), 2, "0");
                                         solveTime = h + ":" + m;
                                         time += (int) Math.floor((elapsed / 1000 / 60));
-                                    }else{
+                                    } else {
                                         solveTime = "00:00";
                                     }
                                 } else {
@@ -331,8 +385,7 @@ public class ContestService extends BaseService {
                 //score = number of AC-ed problems
                 if (contest.getJudgeType().equals(Constants.JUDGE_TYPE_ACM)) {
                     score += isSolved;
-                }
-                else{
+                } else {
                     score += problem.getCorrectAns();
                 }
                 //calculate penalty only when AC-ed
@@ -443,6 +496,10 @@ public class ContestService extends BaseService {
         contestEntity.setStartTime(dateFormat.parse(startTime));
         setUpdateInfo(contestEntity);
         contestMapper.updateNotNullByPK(contestEntity);
+
+        //set schedule update rank after contest
+        Date endTime = DateUtils.addMinutes(contestEntity.getStartTime(), contestEntity.getDuration());
+        updateAfterContestFinish(contestEntity.getId(),endTime);
     }
 
     @Transactional
@@ -610,8 +667,9 @@ public class ContestService extends BaseService {
         }
         return lstAnnounce;
     }
-    public void doApply(Integer urId,Integer ctId){
-        if (!contestValidator.checkApplyPermission(ctId,urId)){
+
+    public void doApply(Integer urId, Integer ctId) {
+        if (!contestValidator.checkApplyPermission(ctId, urId)) {
             rollBack(Constants.MSG_ALREADY_IN_CONTEST_ERR);
         }
         UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
@@ -622,6 +680,7 @@ public class ContestService extends BaseService {
         setUpdateInfo(urCtAuyEntity);
         urCtAuyMapper.insert(urCtAuyEntity);
     }
+
     public void deleteRole(Integer ctId, Integer urId) {
         UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
         urCtAuyEntity.setCtId(ctId);

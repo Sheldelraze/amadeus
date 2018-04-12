@@ -26,7 +26,7 @@ public class UrCtAuyEntity  extends BaseEntity implements Serializable {
     @Column(name = "auyId")
     private Integer auyId;
 
-    @Column(name = "auyId")
+    @Column(name = "rank")
     private Integer rank;
 
     public Integer getRank() {

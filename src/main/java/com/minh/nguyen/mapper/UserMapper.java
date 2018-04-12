@@ -20,7 +20,7 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     UserDTO findUserById(@Param("urId") Integer urId);
 
-    List<UserDTO> getUserAuthority(@Param("handle") String handle);
+    List<UserDTO> getUserInformationWhenLogin(@Param("handle") String handle);
 
     List<UserDTO> getLeaderboardIOIForContest(@Param("ctId") Integer ctId, @Param("auth_participate_id") Integer authParticipateId);
 
