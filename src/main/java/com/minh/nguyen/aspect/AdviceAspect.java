@@ -50,18 +50,16 @@ public class AdviceAspect {
     public void contestController(){}
 
     @Pointcut("execution(public * com.minh.nguyen.controller.CourseController.*(..))")
-    public void courseController() {
-    }
+    public void courseController(){}
 
     @Pointcut("execution(public * com.minh.nguyen.controller.MaterialController.*(..))")
-    public void materialController() {
-    }
+    public void materialController(){}
 
     @Pointcut("@annotation(com.minh.nguyen.validator.annotation.CheckNotNullFirst)")
     public void checkNotNullFirst(){}
 
     @Pointcut("@annotation(com.minh.nguyen.validator.annotation.CheckNotNullThird)")
-    public void checkNotNullThird(){}
+    public void checkNotNullThird() {}
 
     @Before("problemController() && checkNotNullFirst()")
     public void ensureProblemNotNull(JoinPoint joinPoint){
