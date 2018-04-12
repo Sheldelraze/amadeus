@@ -184,6 +184,7 @@ public class ContestService extends BaseService {
 
             //set up schedule to update rank after contest finish
             Date endTime = DateUtils.addMinutes(contestEntity.getStartTime(), contestEntity.getDuration());
+            endTime = DateUtils.addMinutes(endTime, Constants.UPDATE_CONTEST_DELAY);
             updateAfterContestFinish(contestEntity.getId(),endTime);
             return contestEntity.getId();
         } catch (Exception e) {
@@ -499,6 +500,7 @@ public class ContestService extends BaseService {
 
         //set schedule update rank after contest
         Date endTime = DateUtils.addMinutes(contestEntity.getStartTime(), contestEntity.getDuration());
+        endTime = DateUtils.addMinutes(endTime, Constants.UPDATE_CONTEST_DELAY);
         updateAfterContestFinish(contestEntity.getId(),endTime);
     }
 
