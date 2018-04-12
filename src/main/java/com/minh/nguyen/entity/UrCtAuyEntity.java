@@ -1,6 +1,8 @@
 package com.minh.nguyen.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -23,6 +25,17 @@ public class UrCtAuyEntity  extends BaseEntity implements Serializable {
     @Id
     @Column(name = "auyId")
     private Integer auyId;
+
+    @Column(name = "auyId")
+    private Integer rank;
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

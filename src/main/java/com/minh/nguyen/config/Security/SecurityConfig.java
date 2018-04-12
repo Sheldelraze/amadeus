@@ -128,6 +128,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/course/{\\d+}/information").permitAll()
                 .antMatchers("/contest/{\\d+}/leaderboard").permitAll()
                 .antMatchers("/course/{\\d+}/leaderboard").permitAll()
+                .antMatchers("/user/{\\d+}/profile").permitAll()
                 .antMatchers("/contest/{\\d+}").permitAll()
                 .antMatchers("/course/{\\d+}").permitAll()
                 .antMatchers("/message/getMessage").permitAll()

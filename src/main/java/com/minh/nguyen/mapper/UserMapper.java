@@ -46,6 +46,8 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     List<StudentDTO> getTopUser(@Param("role_student_id")Integer roleStudentID);
 
+    Integer getRoleForUser(@Param("urId")Integer urId);
+
     @InsertProvider(type = BaseProvider.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Integer insertUser(UserEntity record);

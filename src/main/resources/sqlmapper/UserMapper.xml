@@ -386,33 +386,42 @@
             user.deleteFlg = '0'
             AND user.id = #[urId}
     </select>
+    <select id="getRoleForUser" resultType="java.lang.Integer">
+        SELECT reId
+        FROM user
+        WHERE user.id = #{urId}
+              AND USER.deleteFlg = '0'
+    </select>
     <select id="getTopUser" resultMap="rank">
-        select user.id,
+        SELECT
+            user.id,
             user.avatar,
             user.handle,
             user.fullname,
             student.solveCnt,
             student.point,
             level.color,
-            level.id as llId,
+            level.id AS llId,
             level.name
-        from user
-            inner join student
-                on student.urId = user.id
-                   and student.deleteFlg = '0'
-            inner join (
-                           select student.urId,
-                               max(level.point) as point
-                           from student inner join
-                               level on student.point >= level.point
-                           group by urId
-                       ) as score
-                on score.urId = student.urId
-            inner join level
-                on level.point = score.point
-        where user.reId = #{role_student_id}
-              and user.deleteFlg = '0'
-        order by point desc
+        FROM user
+            INNER JOIN student
+                ON student.urId = user.id
+                   AND student.deleteFlg = '0'
+            INNER JOIN (
+                           SELECT
+                               student.urId,
+                               max(level.point) AS point
+                           FROM student
+                               INNER JOIN
+                               level ON student.point >= level.point
+                           GROUP BY urId
+                       ) AS score
+                ON score.urId = student.urId
+            INNER JOIN level
+                ON level.point = score.point
+        WHERE user.reId = #{role_student_id}
+              AND user.deleteFlg = '0'
+        ORDER BY point DESC
     </select>
     <resultMap id="rank" type="StudentDTO">
         <id column="id" property="id"/>

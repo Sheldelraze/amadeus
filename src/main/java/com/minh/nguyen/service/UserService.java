@@ -3,11 +3,12 @@ package com.minh.nguyen.service;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
 import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.entity.LecturerEntity;
+import com.minh.nguyen.entity.StudentEntity;
 import com.minh.nguyen.entity.UrAuyEntity;
 import com.minh.nguyen.entity.UserEntity;
-import com.minh.nguyen.mapper.AuthorityMapper;
-import com.minh.nguyen.mapper.UrAuyMapper;
-import com.minh.nguyen.mapper.UserMapper;
+import com.minh.nguyen.exception.NoSuchPageException;
+import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,10 +42,24 @@ public class UserService extends BaseService{
     @Autowired
     private AuthorityMapper authorityMapper;
 
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private LecturerMapper lecturerMapper;
+
     public List<AuthorityDTO> getDefaultAuthority(Integer reId){
         List<AuthorityDTO> lstAuth = authorityMapper.getDefaultAuthorityForRole(reId);
 
         return lstAuth;
+    }
+
+    public Integer getUserRoleByID(Integer urId){
+        Integer roleId = userMapper.getRoleForUser(urId);
+        if (roleId == null || roleId == 0){
+            throw new NoSuchPageException("User not found");
+        }
+        return roleId;
     }
 
     @Transactional
@@ -88,7 +103,28 @@ public class UserService extends BaseService{
         }
 
         if (userDTO.getReId().equals(Constants.ROLE_STUDENT_ID)){
-
+            StudentEntity studentEntity = new StudentEntity();
+            setCreateInfo(studentEntity);
+            setUpdateInfo(studentEntity);
+            studentEntity.setPoint(0);
+            studentEntity.setSolveCnt(0);
+            studentEntity.setUrId(userEntity.getId());
+            recordCnt = studentMapper.insert(studentEntity);
+            if (recordCnt == 0){
+                rollBack(Constants.MSG_SYSTEM_ERR);
+            }
+        }
+        //we will treat admin, lecturer and supervisor the same (which means their information will be stored in 'lecturer' table in database)
+        //TODO: might need to update this logic later
+        else{
+            LecturerEntity lecturerEntity = new LecturerEntity();
+            setUpdateInfo(lecturerEntity);
+            setCreateInfo(lecturerEntity);
+            lecturerEntity.setUrId(userEntity.getId());
+            recordCnt = lecturerMapper.insert(lecturerEntity);
+            if (recordCnt == 0){
+                rollBack(Constants.MSG_SYSTEM_ERR);
+            }
         }
     }
 

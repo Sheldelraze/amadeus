@@ -21,6 +21,61 @@ public class LecturerEntity extends BaseEntity implements Serializable {
     @Column(name="degree")
     private String degree;
 
+    @Column(name="education")
+    private String education;
+
+    @Column(name="career")
+    private String career;
+
+    @Column(name="research")
+    private String research;
+
+    @Column(name="publication")
+    private String publication;
+
+    @Column(name="award")
+    private String award;
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getCareer() {
+        return career;
+    }
+
+    public void setCareer(String career) {
+        this.career = career;
+    }
+
+    public String getResearch() {
+        return research;
+    }
+
+    public void setResearch(String research) {
+        this.research = research;
+    }
+
+    public String getPublication() {
+        return publication;
+    }
+
+    public void setPublication(String publication) {
+        this.publication = publication;
+    }
+
+    public String getAward() {
+        return award;
+    }
+
+    public void setAward(String award) {
+        this.award = award;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

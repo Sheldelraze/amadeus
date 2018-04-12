@@ -111,4 +111,26 @@ public class UserController extends BaseController{
         userService.updateUser(userDTO);
         return updateUser(urId,userUpdateForm,true);
     }
+
+    @GetMapping("/{urId}/profile")
+    public ModelAndView getProfile(@PathVariable("urId")Integer urId){
+        ModelAndView modelAndView = createGeneralModel();
+        modelAndView.setViewName("user/profile/profile-layout");
+        Integer roleId = userService.getUserRoleByID(urId);
+        modelAndView.addObject("reId",roleId);
+        if (roleId.equals(Constants.ROLE_STUDENT_ID)){
+            return getStudentProfile(modelAndView,urId);
+        }
+        return getLecturerProfile(modelAndView,urId);
+    }
+
+    private ModelAndView getStudentProfile(ModelAndView modelAndView,Integer urId){
+        modelAndView.addObject("dataview","user/profile/profile-student-view");
+        return modelAndView;
+    }
+
+    private ModelAndView getLecturerProfile(ModelAndView modelAndView,Integer urId){
+        modelAndView.addObject("dataview","user/profile/profile-lecturer-view");
+        return modelAndView;
+    }
 }

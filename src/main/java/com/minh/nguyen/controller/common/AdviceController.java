@@ -4,6 +4,7 @@ import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.exception.UserTryingToBeSmartException;
 import com.minh.nguyen.util.ExceptionUtil;
+import com.minh.nguyen.util.MessageUtil;
 import com.minh.nguyen.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +18,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
  * @author Mr.Minh
  * @since 06/02/2018
- * Purpose: handle every error occurs in the system, add more if you feel necessary
+ * Purpose: handle every error (exception) occurs in the system, add more if you feel necessary
  */
 @Component("AdviceController")
 @ControllerAdvice
@@ -32,6 +34,9 @@ public class AdviceController {
 
     @Autowired
     private HttpSession httpSession;
+
+    @Autowired
+    private MessageUtil messageUtil;
 
     //404: page not found
     @ExceptionHandler({NoSuchPageException.class, MethodArgumentTypeMismatchException.class, NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
@@ -71,7 +76,24 @@ public class AdviceController {
         return mav;
     }
 
-    //500: other errors and exceptions
+    //500: rollback exception (usually system error)
+    @ExceptionHandler(RollbackException.class)
+    public ModelAndView rollbackExceptionHandler(HttpServletRequest req, Exception e) throws Exception {
+        ModelAndView mav = new ModelAndView();
+        String errCode = e.toString();
+        logger.error("Request: " + req.getRequestURL());
+        logger.error("warn: " + messageUtil.getMessage(errCode));
+        String url = req.getHeader("referer");
+        if (StringUtil.isNull(url)) {
+            url = "";
+        }
+        mav.addObject("previous", url);
+        mav.setViewName("share/500");
+        mav.addObject("error", messageUtil.getMessage(errCode));
+        return mav;
+    }
+
+    //500: all other errors and exceptions
     @ExceptionHandler(Exception.class)
     public ModelAndView globalErrorHandle(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
