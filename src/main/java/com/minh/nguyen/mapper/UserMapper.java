@@ -48,6 +48,8 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     Integer getRoleForUser(@Param("urId")Integer urId);
 
+    Integer increasePoint(@Param("urId")Integer urId,@Param("point")Integer point);
+
     @InsertProvider(type = BaseProvider.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Integer insertUser(UserEntity record);

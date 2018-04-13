@@ -6,7 +6,7 @@ package com.minh.nguyen.vo.problem;
  * Purpose:
  */
 public class ProblemLayoutVO {
-    public static final Integer[] difficultValue = new Integer[]{1,2,3,4,5};
+    public static final Integer[] difficultValue = new Integer[]{1,2,3,4,5,6,7,8,9,10};
     private Integer id;
     private String code;
     private String name;

@@ -106,6 +106,7 @@ public class ProblemService extends BaseService {
         submissionEntity.setSourceCode(problemDTO.getSourceCode());
         submissionEntity.setPmId(problemDTO.getId());
         submissionEntity.setTimeRun(0);
+        submissionEntity.setPoint(0);
         submissionEntity.setMemoryUsed(0);
         submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
         submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);

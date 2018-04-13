@@ -18,6 +18,8 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Mr.Minh
  * @since 29/01/2018
@@ -48,6 +50,12 @@ public class JudgeService extends BaseService {
 
     @Autowired
     private CePmMapper cePmMapper;
+
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Async
     public void judge(ProblemDTO problemDTO, LanguageDTO languageDTO, SubmissionEntity submissionEntity, Integer urId, Integer ctId, Integer ceId) {
@@ -169,8 +177,14 @@ public class JudgeService extends BaseService {
         sendMessage(submissionEntity, ctId, ceId);
 
         //if submission is AC then we perform more magic
+        //however, if the user who submitted was not a student (admin, lecturer, supervisor) then we DON'T update common information (solve count, first solve time,...)
         if (!runTimeErr && ! timeLimitErr && !wrongAns){
-            updateProblemInformation(ctId,ceId,submissionEntity,problemDTO,urId);
+            UserEntity userEntity = new UserEntity();
+            userEntity.setId(urId);
+            userEntity = userMapper.selectByPK(userEntity);
+            if (userEntity.getReId().equals(Constants.ROLE_STUDENT_ID)) {
+                updateProblemInformation(ctId, ceId, submissionEntity, problemDTO, urId);
+            }
         }
     }
 
@@ -184,8 +198,33 @@ public class JudgeService extends BaseService {
 
         //check if user solve this problem before, if not then update solve count
         Integer cntSolvedBefore = problemMapper.checkIfSolvedBefore(problemDTO.getId(), urId);
-        if (cntSolvedBefore == 0) {
+
+        //we just update submission status above so if this is really the first time user solve then solve count should be exactly 1
+        if (cntSolvedBefore.equals(1)) {
             problemEntity.setSolveCnt(1 + problemEntity.getSolveCnt());
+
+            //add point for this user.
+            //Formula: point = max(1, (difficulty * 10) - (numberOfAttempt - 1) * difficulty)
+            SubmissionEntity countAttempEntity = new SubmissionEntity();
+            countAttempEntity.setPmId(problemDTO.getId());
+            countAttempEntity.setUrId(urId);
+            List<SubmissionEntity> lstAttempt = submissionMapper.selectWithExample(countAttempEntity);
+            if (lstAttempt.size() >= 1){
+
+                //calculate point
+                int point = problemEntity.getDifficulty() * 10 - (lstAttempt.size() - 1) * problemEntity.getDifficulty();
+                if (point < 1){
+                    point = 1;
+                }
+                submissionEntity.setPoint(point);
+
+                //update submission's information
+                setUpdateInfo(submissionEntity);
+                submissionMapper.updateNotNullByPK(submissionEntity);
+
+                //update student's point
+                userMapper.increasePoint(urId,point);
+            }
         }
 
         //check if first solve

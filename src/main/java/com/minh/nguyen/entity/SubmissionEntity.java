@@ -2,7 +2,6 @@ package com.minh.nguyen.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Mr.Minh
@@ -43,6 +42,17 @@ public class SubmissionEntity extends BaseEntity implements Serializable {
 
     @Column(name = "isPublic")
     private Integer isPublic;
+
+    @Column(name = "point")
+    private Integer point;
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
 
     public Integer getUrId() {
         return urId;

@@ -44,7 +44,7 @@ public class Constants {
     public static final Integer MESSAGE_NOT_READ_FLAG = 0;
     public static final Integer MESSAGE_READ_FLAG = 1;
 
-    public static final Integer UPDATE_CONTEST_DELAY = 15; //update 10 minutes after contest finish
+    public static final Integer UPDATE_CONTEST_DELAY = 15; //update 15 minutes after contest finish
 
     public static final String CURRENT_LOGIN_USER_ID = "currentUserId";
     public static final String CURRENT_LOGIN_USER_HANDLE = "currentUserHandle";

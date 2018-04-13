@@ -118,7 +118,7 @@
                                                 th:if="${#fields.hasErrors('output')}" th:class="'error'"
                                                 th:errors="*{output}">Name Error</label>
                                         <br/>
-                                        <h4 style="margin-top: 10px">Ghi chú khác (không quá 20000 ký tự)</h4>
+                                        <h4 style="margin-top: 10px">Ghi chú khác nếu có(không quá 20000 ký tự)</h4>
                                         <div class="summernote" id="noteEditor">
                                             <th:block
                                                     th:utext="${problemStatementVO}?${problemStatementVO.note}"></th:block>

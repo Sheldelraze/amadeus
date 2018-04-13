@@ -91,8 +91,11 @@
                                         <td style="font-weight: 900;font-size: large"><a th:href="|/problem/info/${problem.id}/view|" th:text="${problem.code}"></a></td>
                                         <td th:text="${problem.name}"></td>
                                         <td>
-                                            <th:block th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
+                                            <th:block th:if="${problem.difficulty <= 4}" th:each="i: ${#numbers.sequence(1, problem.difficulty)}">
                                                 <img th:src="@{/assets/images/star.png}"/>
+                                            </th:block>
+                                            <th:block th:unless="${problem.difficulty <= 4}">
+                                                <img th:src="@{/assets/images/star.png}"/>x<label th:text="${problem.difficulty}"></label>
                                             </th:block>
                                         </td>
                                         <td>Lập trình C++</td>

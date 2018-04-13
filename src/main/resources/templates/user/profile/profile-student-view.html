@@ -9,7 +9,45 @@
     <h6>KTPM_CLC_K9</h6>
 </div>
 <div class="col-8" th:fragment="data" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="accordionexample" class="accordion" role="tablist" aria-multiselectable="true">
+        <!--Contest participated-->
+        <div class="card">
+            <div class="card-header" role="tab" id="educationArea">
+                <h5 class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordionexample" href="#educationToggle"
+                       aria-expanded="true" aria-controls="educationToggle">
+                        Các cuộc thi đã tham gia
+                    </a>
+                </h5>
+            </div>
+            <div id="educationToggle" class="collapse show" role="tabpanel" aria-labelledby="educationArea">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                    wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                    eiusmod.
+                </div>
+            </div>
+        </div>
 
+        <!--Solved problem-->
+        <div class="card">
+            <div class="card-header" role="tab" id="careerArea">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionexample" href="#careerToggle"
+                       aria-expanded="false" aria-controls="careerToggle">
+                        Các bài tập đã giải được
+                    </a>
+                </h5>
+            </div>
+            <div id="careerToggle" class="collapse" role="tabpanel" aria-labelledby="careerArea">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                    wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                    eiusmod.
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div th:fragment="js" xmlns:th="http://www.w3.org/1999/xhtml">
 

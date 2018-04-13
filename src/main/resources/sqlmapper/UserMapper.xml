@@ -35,6 +35,13 @@
         </if>
         limit #{from},#{size}
     </select>
+
+    <update id="increasePoint">
+        UPDATE student
+        SET point = point + #{point}
+        WHERE student.urId = #{urId}
+    </update>
+
     <select id="getUserInformationWhenLogin" resultMap="UserDetail">
         SELECT
             user.id        AS urId,

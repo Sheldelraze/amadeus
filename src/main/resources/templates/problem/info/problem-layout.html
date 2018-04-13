@@ -122,9 +122,9 @@
                                 <label
                                         th:if="${#fields.hasErrors('memoryLimit')}" th:class="'error'"
                                         th:errors="*{memoryLimit}">Name Error</label>
-                                <small class="text-muted p-t-10 db">Độ khó</small>
+                                <small class="text-muted p-t-10 db">Độ khó (sẽ dùng để tính điểm)</small>
                                 <div style="width: 30%">
-                                    <select class="form-control" th:remove="all-but-first" id="difficulty"
+                                    <select class="select2" th:remove="all-but-first" id="difficulty"
                                             name="difficulty" style="color:black">
                                         <th:block th:if="${problemLayoutVO != null} ">
                                             <option th:selected="${problemLayoutVO.difficulty==difValue}?'selected'"
@@ -132,11 +132,6 @@
                                                     th:value="${difValue}" th:text="${difValue}">
                                             </option>
                                         </th:block>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
                                     </select>
                                 </div>
 
