@@ -78,7 +78,7 @@ public class FileUtil {
         stringBuilder.append(fileName);
         stringBuilder.append(".");
         stringBuilder.append(extension);
-        File file = new File(stringBuilder.toString());
+        File file = new File(stringBuilder.toString()).getAbsoluteFile();
         try {
             file.createNewFile();
         } catch (IOException e) {

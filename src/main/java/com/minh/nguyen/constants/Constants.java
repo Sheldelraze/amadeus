@@ -60,9 +60,9 @@ public class Constants {
     public static final String JAVA_COMPILER = "javac";
     public static final String JAVA_EXECUTOR = "java";
     public static final String JAVA_EXTENSION = "java";
-    public static final String PROBLEM_LOCATION_PREFIX = "E:\\storage\\problem\\";
-    public static final String SUBMISSION_LOCATION_PREFIX = "E:\\storage\\submission\\";
-    public static final String MATERIAL_LOCATION_PREFIX = "E:\\storage\\material\\";
+    public static final String PROBLEM_LOCATION_PREFIX = "src\\main\\resources\\storage\\problem\\";
+    public static final String SUBMISSION_LOCATION_PREFIX = "src\\main\\resources\\storage\\submission\\";
+    public static final String MATERIAL_LOCATION_PREFIX = "src\\main\\resources\\storage\\material\\";
     public static final String BLANK = "";
 
     public static final String MSG_TOTAL_ERR = "msg000";

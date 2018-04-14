@@ -93,7 +93,7 @@ public class GeneralController extends BaseController {
         modelAndView.setViewName("share/status");
         StatusVO statusVO = new StatusVO();
         statusVO.setLstSubmission(generalService.getSubmission());
-        modelAndView.addObject("topic", Constants.STATUS_TOPIC);
+        modelAndView.addObject(Constants.LEADERBOARD_TOPIC_TEXT, Constants.STATUS_TOPIC);
         modelAndView.addObject("statusVO", statusVO);
         return modelAndView;
     }
