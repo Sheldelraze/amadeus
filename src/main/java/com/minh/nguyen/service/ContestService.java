@@ -93,12 +93,6 @@ public class ContestService extends BaseService {
     @Configurable
     public class UpdateContestRankTask implements Runnable {
 
-        @Autowired
-        private UrCtAuyMapper smallUrCtAuyMapper;
-
-        @Autowired
-        private UserMapper smallUserMapper;
-
         private Date finishTime;
 
         private Integer ctId;
@@ -115,15 +109,19 @@ public class ContestService extends BaseService {
             urCtAuyEntity.setCtId(ctId);
             urCtAuyEntity.setAuyId(Constants.AUTH_PARTICIPATE_CONTEST_ID);
             urCtAuyEntity.setUpdateTime(finishTime);
-            int rank = 1;
+            setUpdateInfo(urCtAuyEntity);
+            int curRank = 1;
             for(UserDTO user : lstRank){
                 urCtAuyEntity.setUrId(user.getId());
-                urCtAuyEntity.setRank(rank++);
+                urCtAuyEntity.setRank(curRank++);
                 urCtAuyMapper.updateNotNullByPK(urCtAuyEntity);
             }
         }
     }
 
+    //this function will be schedule every time contest is created or updated
+    //it will schedule a function implement in a subclass of Runnable class to be executed Constants.UPDATE_CONTEST_DELAY minutes after contest has finished
+    //It's purpose is to update the contest rank to database
     @Async
     public void updateAfterContestFinish(Integer ctId,Date finishDateTime) {
         ScheduledExecutorService localExecutor = Executors.newSingleThreadScheduledExecutor();
