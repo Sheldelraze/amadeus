@@ -28,6 +28,35 @@
         WHERE contest.deleteFlg = '0'
         ORDER BY contest.startTime DESC
     </select>
+    <select id="getParticipatedContest" resultMap="contestParticipated">
+        SELECT
+            contest.id,
+            contest.name,
+            contest.startTime,
+            user.id as urId,
+            user.fullname,
+            ur_ct_auy.rank
+        FROM ur_ct_auy
+            INNER JOIN contest
+                ON contest.id = ur_ct_auy.ctId
+                   AND contest.deleteFlg = '0'
+            INNER JOIN user
+                ON user.handle = contest.createUser
+                   AND user.deleteFlg = '0'
+        WHERE ur_ct_auy.urId = #{urId}
+              AND ur_ct_auy.auyId = #{auth_participate_contest_id}
+              AND ur_ct_auy.deleteFlg = '0'
+    </select>
+    <resultMap id="contestParticipated" type="ContestDTO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="createTime" column="startTime"/>
+        <result property="rank" column="rank"/>
+        <association property="creator" javaType="UserDTO">
+            <id property="id" column="id"/>
+            <result column="fullname" property="fullname"/>
+        </association>
+    </resultMap>
     <resultMap id="contestLst" type="ContestDTO">
         <id column="id" property="id"/>
         <result column="name" property="name"/>

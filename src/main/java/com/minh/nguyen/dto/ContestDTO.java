@@ -29,6 +29,15 @@ public class ContestDTO extends BaseDTO {
     private UserDTO creator;
     private Integer userCnt;
     private Boolean isOngoing;
+    private Integer rank;
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
 
     public UserDTO getCreator() {
         return creator;

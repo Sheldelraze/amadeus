@@ -14,8 +14,8 @@ public class UserDTO extends BaseDTO{
     private String handle;
     private String password;
     private String fullname;
-    private String phoneNumber;
-    private String emailAddress;
+    private String phone;
+    private String email;
     private String dateOfBirth;
     private String avatar;
     private String description;
@@ -175,20 +175,20 @@ public class UserDTO extends BaseDTO{
         this.fullname = fullname;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDateOfBirth() {

@@ -46,6 +46,8 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     List<StudentDTO> getTopUser(@Param("role_student_id")Integer roleStudentID);
 
+    StudentDTO getStudentProfile(@Param("urId")Integer urId);
+
     Integer getRoleForUser(@Param("urId")Integer urId);
 
     Integer increasePoint(@Param("urId")Integer urId,@Param("point")Integer point);

@@ -26,11 +26,11 @@ public class UserEntity extends BaseEntity implements Serializable {
     @Column(name = "fullname")
     private String fullname;
 
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
+    @Column(name = "phone")
+    private String phone;
 
-    @Column(name = "emailAddress")
-    private String emailAddress;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "dateOfBirth")
     private String dateOfBirth;
@@ -103,20 +103,20 @@ public class UserEntity extends BaseEntity implements Serializable {
         this.fullname = fullname;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDateOfBirth() {

@@ -179,6 +179,8 @@ public class Constants {
 
     public static final Integer MAX_COMPILE_TIME = 10000; // in milliseconds
 
+    public static final Integer CONSOLATION_POINT = 1;
+
     public static final Integer HIDDEN_FLAG = 1;
     public static final Integer NOT_HIDDEN_FLAG = 0;
 

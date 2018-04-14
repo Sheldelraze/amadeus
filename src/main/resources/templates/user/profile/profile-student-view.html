@@ -1,14 +1,17 @@
 <div th:fragment="information" xmlns:th="http://www.w3.org/1999/xhtml">
     <small class="text-muted">Trình độ</small>
-    <h6>Cao thủ</h6>
+    <h6 th:classappend="${user.level.id == 8} ? 'legendary'"
+        th:style="'color : __${user.level.color}__;font-weight: 600'" th:text="${user.level.name}">Cao thủ</h6>
     <small class="text-muted">Số bài giải được</small>
-    <h6>123</h6>
+    <h6 th:text="${user.solveCnt}">123</h6>
     <small class="text-muted">Tổng số điểm</small>
-    <h6>1234</h6>
-    <small class="text-muted">Lớp</small>
-    <h6>KTPM_CLC_K9</h6>
+    <h6 th:text="${user.point}">1234</h6>
+    <th:block th:if="${user.classDTO != null and user.classDTO.name != null}">
+        <small class="text-muted">Lớp</small>
+        <h6 th:text="${user.classDTO.name}">KTPM_CLC_K9</h6>
+    </th:block>
 </div>
-<div class="col-8" th:fragment="data" xmlns:th="http://www.w3.org/1999/xhtml">
+<div class="col-9" th:fragment="data" xmlns:th="http://www.w3.org/1999/xhtml">
     <div id="accordionexample" class="accordion" role="tablist" aria-multiselectable="true">
         <!--Contest participated-->
         <div class="card">
@@ -21,10 +24,28 @@
                 </h5>
             </div>
             <div id="educationToggle" class="collapse show" role="tabpanel" aria-labelledby="educationArea">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                    wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                    eiusmod.
+                <div class="card-body" style="margin-bottom: 30px">
+                    <table id="contestTable" class="table table-bordered table-leaderboard table-hover"
+                           style="color: black; text-align: center">
+                        <thead>
+                        <tr>
+                            <th style="text-align: center;width: 10px">#</th>
+                            <th style="text-align: center">Tên cuộc thi</th>
+                            <th style="text-align: center">Người tạo</th>
+                            <th style="text-align: center">Ngày</th>
+                            <th style="text-align: center;width: 10px">Hạng</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>teswsdfsd sfgsdfg sd fs</td>
+                            <td>sdfsdf asdfasdf asdfasd</td>
+                            <td>12/02/1994</td>
+                            <td>1</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -40,15 +61,60 @@
                 </h5>
             </div>
             <div id="careerToggle" class="collapse" role="tabpanel" aria-labelledby="careerArea">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                    wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                    eiusmod.
+                <div class="card-body" style="margin-bottom: 30px">
+                    <div class="table-responsive">
+                        <table id="problemTable" class="table table-bordered"
+                               style="color: black; text-align: center;">
+                            <thead>
+                            <tr>
+                                <th style="text-align: center;width: 5px">#</th>
+                                <th style="text-align: center">Tên</th>
+                                <th style="text-align: center">Độ khó</th>
+                                <th style="text-align: center">Thời điểm</th>
+                                <th style="text-align: center">Ngôn ngữ</th>
+                                <th style="text-align: center;width: 5px">Điểm</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="submit : ${user.lstSolved}">
+                                <td>
+                                    <a th:href="|/submission/${submit.id}|" th:text="${submit.id}"></a>
+                                    <i data-toggle="tooltip" data-placement="bottom" title="Không công khai"
+                                       th:if="${submit.isPublic == 0}" class="text-danger fa fa-exclamation-circle"></i>
+                                </td>
+                                <td>
+                                    <a th:href="|/problem/info/${submit.problem.id}/view|"
+                                       th:text="${submit.problem.name}"></a>
+                                    <i data-toggle="tooltip" data-placement="bottom" title="Không công khai"
+                                       th:if="${submit.problem.isPublic == 0}"
+                                       class="text-danger fa fa-exclamation-circle"></i>
+                                </td>
+                                <td>
+                                    <img th:src="@{/assets/images/star.png}"/>x<label
+                                        th:text="${submit.problem.difficulty}"></label>
+                                </td>
+                                <td th:text="${submit.submitTime}"></td>
+                                <td th:text="${submit.language.name}"></td>
+                                <td th:text="${submit.point}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div th:fragment="js" xmlns:th="http://www.w3.org/1999/xhtml">
-
-</div>
+<th:block th:fragment="js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#contestTable').dataTable({
+                "bSort": false
+            });
+            $('#problemTable').dataTable({
+                "bSort": false
+            });
+        });
+    </script>
+</th:block>

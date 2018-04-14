@@ -24,6 +24,42 @@ public class SubmissionDTO extends BaseDTO {
     private CourseDTO courseDTO;
     private UserDTO user;
     private Integer correctAns;
+    private ProblemDTO problem;
+    private LanguageDTO language;
+    private Integer isPublic;
+    private Integer point;
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public LanguageDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(LanguageDTO language) {
+        this.language = language;
+    }
+
+    public ProblemDTO getProblem() {
+        return problem;
+    }
+
+    public void setProblem(ProblemDTO problem) {
+        this.problem = problem;
+    }
 
     public Integer getCorrectAns() {
         return correctAns;

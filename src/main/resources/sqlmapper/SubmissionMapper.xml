@@ -160,6 +160,46 @@
         WHERE submission.deleteFlg = '0'
               AND submission.id = #{snId}
     </select>
+    <select id="getAllSolvedProblem" resultMap="lstSovledProblem">
+        SELECT
+            submission.id,
+            submission.point,
+            submission.createTime,
+            submission.isPublic,
+            language.id as leId,
+            language.name as leName,
+            problem.id as pmId,
+            problem.difficulty,
+            problem.name as pmNamme,
+            problem.isPublic as pmIsPublic
+        FROM
+            submission
+            INNER JOIN problem
+                ON submission.pmId = problem.id
+                   AND problem.deleteFlg = '0'
+            INNER JOIN language
+                ON submission.leId = language.id
+                   AND language.deleteFlg = '0'
+        WHERE
+            submission.point > 0
+            AND submission.urId = #{urId}
+    </select>
+    <resultMap id="lstSovledProblem" type="SubmissionDTO">
+        <id property="id" column="id"/>
+        <result property="point" column="point"/>
+        <result property="createTime" column="createTime"/>
+        <result property="isPublic" column="isPublic"/>
+        <association property="language" javaType="LanguageDTO">
+            <id column="leId" property="id"/>
+            <result column="leName" property="name"/>
+        </association>
+        <association property="problem" javaType="ProblemDTO">
+            <id column="pmId" property="id"/>
+            <result column="difficulty" property="difficulty"/>
+            <result column="pmNamme" property="name"/>
+            <result column="pmIsPublic" property="isPublic"/>
+        </association>
+    </resultMap>
     <resultMap id="submission" type="SubmissionDTO">
         <id column="id" property="id"/>
         <result column="pmNm" property="pmNm"/>

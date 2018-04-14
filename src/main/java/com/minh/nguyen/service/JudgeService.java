@@ -213,8 +213,10 @@ public class JudgeService extends BaseService {
 
                 //calculate point
                 int point = problemEntity.getDifficulty() * 10 - (lstAttempt.size() - 1) * problemEntity.getDifficulty();
-                if (point < 1){
-                    point = 1;
+
+                //Nếu sai >= 10 lần thi vẫn đc 1 điểm an ủi =))
+                if (point < Constants.CONSOLATION_POINT){
+                    point = Constants.CONSOLATION_POINT;
                 }
                 submissionEntity.setPoint(point);
 

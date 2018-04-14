@@ -8,6 +8,11 @@
     <!-- Favicon icon -->
     <title>Amadeus system</title>
     <div th:replace="layout/layout::css"></div>
+    <style>
+        a:hover {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="fix-header fix-sidebar card-no-border">
 <!-- ============================================================== -->
@@ -63,13 +68,13 @@
             <!-- ============================================================== -->
             <!-- Start Page Content -->
             <div class="row">
-                <div class="col-4">
+                <div class="col-3">
                     <div class="card">
                         <div class="card-body">
                             <div style="text-align: center;margin-top: 10px">
-                                <img th:src="@{/assets/images/users/5.jpg}" class="img-thumbnail" width="200"/>
-                                <h4 class="card-title m-t-10">Hanna Gover</h4>
-                                <h6 class="card-subtitle" style="margin-bottom: -5px">Giảng viên</h6>
+                                <img th:src="@{${user.avatar}}" class="img-thumbnail" width="200"/>
+                                <h4 class="card-title m-t-10" th:text="${user.fullname}">Hanna Gover</h4>
+                                <h6 class="card-subtitle" style="margin-bottom: -5px" th:text="${user.role.text}">Giảng viên</h6>
                             </div>
                         </div>
                         <div>
@@ -77,16 +82,24 @@
                         </div>
                         <div class="card-body">
                             <small class="text-muted">Tên tài khoản</small>
-                            <h6>admin</h6>
+                            <h6 th:text="${user.handle}">admin</h6>
                             <div th:replace="__${dataview}__ :: information"></div>
-                            <small class="text-muted">Ngày sinh</small>
-                            <h6>04/05/1996</h6>
-                            <small class="text-muted">Email</small>
-                            <h6>hannagover@gmail.com</h6>
-                            <small class="text-muted">Điện thoại</small>
-                            <h6>+91 654 784 547</h6>
-                            <small class="text-muted">Mô tả về bản thân</small>
-                            <h6>heehe</h6>
+                            <th:block th:if="${user.dateOfBirth != null}">
+                                <small class="text-muted">Ngày sinh</small>
+                                <h6 th:text="${user.dateOfBirth}">04/05/196</h6>
+                            </th:block>
+                            <th:block th:if="${user.email != null}">
+                                <small class="text-muted">Email</small>
+                                <h6 th:text="${user.email}">hannagover@gmail.com</h6>
+                            </th:block>
+                            <th:block th:if="${user.phone != null}">
+                                <small class="text-muted">Điện thoại</small>
+                                <h6 th:text="${user.phone}">+91 654 784 547</h6>
+                            </th:block>
+                            <th:block th:if="${user.description != null}">
+                                <small class="text-muted">Mô tả về bản thân</small>
+                                <h6 th:text="${user.description}">heehe</h6>
+                            </th:block>
                         </div>
                     </div>
                 </div>

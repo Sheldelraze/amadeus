@@ -206,7 +206,7 @@
 <script th:src="@{/js/chatbox.js}"></script>
 <script>
     $(".table-leaderboard tbody tr").click(function(){
-        alert('redirect to user with ID:' + $(this).attr('id').match(/\d+/));
+        window.location = "/user/" + $(this).attr('id').match(/\d+/) + "/profile";
     });
 </script>
 </body>

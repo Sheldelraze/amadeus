@@ -431,6 +431,75 @@
               AND user.deleteFlg = '0'
         ORDER BY point DESC
     </select>
+    <select id="getStudentProfile" resultMap="studentProfile">
+        SELECT
+            user.id,
+            user.handle,
+            user.fullname,
+            user.dateOfBirth,
+            user.email,
+            user.phone,
+            user.avatar,
+            user.description,
+            level.id          AS llId,
+            level.name  AS lvName,
+            level.color AS lvColor,
+            role.id as reId,
+            role.text as reText,
+            student.point,
+            student.solveCnt,
+            class.id    AS csId,
+            class.name  AS csName
+        FROM student
+            INNER JOIN user
+                ON student.urId = user.id
+                   AND user.deleteFlg = '0'
+            INNER JOIN (
+                           SELECT
+                               student.urId,
+                               max(level.point) AS point
+                           FROM student
+                               INNER JOIN
+                               level ON student.point >= level.point
+                            where student.urId = #{urId}
+                       ) AS score
+                ON score.urId = student.urId
+            INNER JOIN level
+                ON level.point = score.point
+            and level.deleteFlg = '0'
+            LEFT JOIN class
+                ON student.csId = class.id
+                   AND class.deleteFlg = '0'
+            LEFT JOIN role
+                on user.reId = role.id
+                and role.deleteFlg = '0'
+        WHERE student.urId = #{urId}
+    </select>
+    <resultMap id="studentProfile" type="StudentDTO">
+        <id column="id" property="id"/>
+        <result column="handle" property="handle"/>
+        <result column="fullname" property="fullname"/>
+        <result column="dateOfBirth" property="dateOfBirth"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="avatar" property="avatar"/>
+        <result column="description" property="description"/>
+        <result column="point" property="point"/>
+        <result column="solveCnt" property="solveCnt"/>
+        <association property="role" javaType="RoleDTO">
+            <id column="reId" property="id"/>
+            <result column="reText" property="text"/>
+        </association>
+        <association property="classDTO" javaType="classDTO">
+            <id column="csId" property="id"/>
+            <result column="csName" property="name"/>
+        </association>
+        <association property="level" javaType="LevelDTO">
+            <id column="llId" property="id"/>
+            <result column="lvName" property="name"/>
+            <result column="lvColor" property="color"/>
+        </association>
+    </resultMap>
     <resultMap id="rank" type="StudentDTO">
         <id column="id" property="id"/>
         <result column="avatar" property="avatar"/>

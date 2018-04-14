@@ -1,8 +1,7 @@
 package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
-import com.minh.nguyen.dto.AuthorityDTO;
-import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.dto.*;
 import com.minh.nguyen.entity.LecturerEntity;
 import com.minh.nguyen.entity.StudentEntity;
 import com.minh.nguyen.entity.UrAuyEntity;
@@ -17,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,12 @@ public class UserService extends BaseService{
 
     @Autowired
     private LecturerMapper lecturerMapper;
+
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private ContestMapper contestMapper;
 
     public List<AuthorityDTO> getDefaultAuthority(Integer reId){
         List<AuthorityDTO> lstAuth = authorityMapper.getDefaultAuthorityForRole(reId);
@@ -183,5 +190,32 @@ public class UserService extends BaseService{
                 urAuyMapper.insert(urAuyEntity);
             }
         }
+    }
+
+    public StudentDTO getStudentProfile(Integer urId){
+
+        //get general information
+        StudentDTO student = userMapper.getStudentProfile(urId);
+
+        //get solved problem list
+        List<SubmissionDTO> lstSolvedProblem = submissionMapper.getAllSolvedProblem(urId);
+
+        //format submit time
+        for (SubmissionDTO submissionDTO : lstSolvedProblem) {
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            String strDate = dateFormat.format(submissionDTO.getCreateTime());
+            submissionDTO.setSubmitTime(strDate);
+        }
+        student.setLstSolved(lstSolvedProblem);
+
+        //get contest participated and rank
+        List<ContestDTO> lstContest = contestMapper.getParticipatedContest(urId,Constants.AUTH_PARTICIPATE_CONTEST_ID);
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        for(ContestDTO contest : lstContest){
+            contest.setStartTime(dateFormat.format(contest.getCreateTime()));
+        }
+        student.setLstContest(lstContest);
+
+        return student;
     }
 }

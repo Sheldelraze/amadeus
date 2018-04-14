@@ -585,6 +585,7 @@ public class ContestService extends BaseService {
         submissionEntity.setTimeRun(0);
         submissionEntity.setMemoryUsed(0);
         submissionEntity.setPoint(0);
+        submissionEntity.setIsPublic(Constants.PUBLIC_FLAG);
         submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
         submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
         submissionEntity.setUrId(urId);

@@ -3,6 +3,7 @@ package com.minh.nguyen.controller;
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.controller.common.BaseController;
 import com.minh.nguyen.dto.AuthorityDTO;
+import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.form.user.UserCreateForm;
 import com.minh.nguyen.form.user.UserUpdateForm;
@@ -126,6 +127,8 @@ public class UserController extends BaseController{
 
     private ModelAndView getStudentProfile(ModelAndView modelAndView,Integer urId){
         modelAndView.addObject("dataview","user/profile/profile-student-view");
+        StudentDTO studentDTO = userService.getStudentProfile(urId);
+        modelAndView.addObject("user",studentDTO);
         return modelAndView;
     }
 

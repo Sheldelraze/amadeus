@@ -19,4 +19,6 @@ public interface ContestMapper extends BaseMapper<ContestEntity> {
     Integer insertContest(ContestEntity record);
 
     List<ContestDTO> getAllContest(@Param("auth_participate_contest_id") Integer participateContestAuthId);
+
+    List<ContestDTO> getParticipatedContest(@Param("urId")Integer urId,@Param("auth_participate_contest_id")Integer authParticipateContest);
 }

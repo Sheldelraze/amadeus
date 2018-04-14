@@ -26,6 +26,8 @@ public interface SubmissionMapper extends BaseMapper<SubmissionEntity> {
 
     List<SubmissionDTO> getSubmissionInCourse(@Param("ceId") Integer ceId, @Param("handle") String handle);
 
+    List<SubmissionDTO> getAllSolvedProblem(@Param("urId")Integer urId);
+
     Integer checkSolvedStatusInContest(@Param("ctId")Integer ctId, @Param("pmId")Integer pmId, @Param("urId")Integer urId);
 
     Integer checkSolvedStatusInCourse(@Param("ceId")Integer ceId, @Param("pmId")Integer pmId, @Param("urId")Integer urId);

@@ -615,6 +615,7 @@ public class CourseService extends BaseService {
         submissionEntity.setVerdict(Constants.VERDICT_COMPILING);
         submissionEntity.setJudgeStatus(Constants.STATUS_JUDGING);
         submissionEntity.setUrId(urId);
+        submissionEntity.setIsPublic(Constants.PUBLIC_FLAG);
         setUpdateInfo(submissionEntity);
         setCreateInfo(submissionEntity);
         submissionMapper.insertSubmission(submissionEntity);
