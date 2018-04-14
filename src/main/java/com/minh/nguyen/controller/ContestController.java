@@ -198,7 +198,7 @@ public class ContestController extends BaseController {
     }
 
     @CheckNotNullFirst
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() && @ContestValidator.checkApplyPermission(#ctId,#urId)")
     @GetMapping("/{ctId}/apply/{urId}")
     public ModelAndView doApply(@PathVariable("ctId") Integer ctId, @PathVariable("urId") Integer urId) throws UserTryingToBeSmartException {
         ModelAndView modelAndView = getInformation(ctId);

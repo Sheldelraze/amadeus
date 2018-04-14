@@ -2,7 +2,6 @@ package com.minh.nguyen.validator;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.AuthorityDTO;
-import com.minh.nguyen.entity.ApplicationEntity;
 import com.minh.nguyen.entity.ContestEntity;
 import com.minh.nguyen.entity.SubmissionEntity;
 import com.minh.nguyen.entity.UrCtAuyEntity;
@@ -20,6 +19,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
@@ -167,6 +167,7 @@ public class ContestValidator extends BaseValidator {
     private  ContestEntity getContestById(int ctId){
         ContestEntity contestEntity = new ContestEntity();
         contestEntity.setId(ctId);
+        contestEntity.setDeleteFlg(Constants.NOT_DELETE_FLAG);
         contestEntity = contestMapper.selectByPK(contestEntity);
         if (null == contestEntity){
             throw new NoSuchPageException("Contest not found!");
@@ -207,12 +208,23 @@ public class ContestValidator extends BaseValidator {
         if (urId == null || ctId == null) {
             return false;
         }
+        ContestEntity contestEntity = getContestById(ctId);
+        Date currentTime = new Date();
+        Date startTime = contestEntity.getStartTime();
+        Date endTime = DateUtils.addMinutes(startTime, contestEntity.getDuration());
+
+        //if contest is over then no application for you good sir!
+        if (currentTime.compareTo(endTime) > 0){
+            return false;
+        }
 
         UrCtAuyEntity urCtAuyEntity = new UrCtAuyEntity();
         urCtAuyEntity.setUrId(urId);
         urCtAuyEntity.setCtId(ctId);
         List<UrCtAuyEntity> lstAuy = urCtAuyMapper.selectWithExample(urCtAuyEntity);
-        return lstAuy == null || lstAuy.size() == 0;
+
+        //we will allow user to apply if they are not in contest before (which means lstAuy is empty)
+        return CollectionUtils.isEmpty(lstAuy);
     }
 
     @Override

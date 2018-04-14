@@ -33,6 +33,7 @@
             contest.id,
             contest.name,
             contest.startTime,
+            contest.isPublic,
             user.id as urId,
             user.fullname,
             ur_ct_auy.rank
@@ -51,9 +52,10 @@
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="createTime" column="startTime"/>
+        <result property="isPublic" column="isPublic"/>
         <result property="rank" column="rank"/>
         <association property="creator" javaType="UserDTO">
-            <id property="id" column="id"/>
+            <id property="id" column="urId"/>
             <result column="fullname" property="fullname"/>
         </association>
     </resultMap>
