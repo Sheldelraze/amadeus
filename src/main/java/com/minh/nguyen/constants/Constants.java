@@ -204,6 +204,9 @@ public class Constants {
     public static final Integer JUDGE_TYPE_ACM = 1;
     public static final Integer JUDGE_TYPE_IOI = 2;
 
+    public static final String DELETE_FLAG = "1";
+    public static final String NOT_DELETE_FLAG = "0";
+
     public static final List<AuthorityDTO> LST_DEFAULT_AUTHORITY = new ArrayList<>();
 
     static {
