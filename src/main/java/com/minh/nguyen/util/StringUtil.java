@@ -65,10 +65,13 @@ public class StringUtil {
     public static boolean isNull(Object str) {
         return str == null || str.toString().length() <= 0;
     }
-    public static boolean checkBlank(String s){
+    public static boolean isBlank(String s){
+        if (s == null){
+            return true;
+        }
         for(int i = 0;i < s.length();i++){
             char x = s.charAt(i);
-            if (x == ' ' || x == '\n' || x == '\r'){
+            if (x == ' ' || x == '\n' || x == '\r' || x == '\t'){
                 continue;
             }
             return false;

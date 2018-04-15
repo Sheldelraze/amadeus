@@ -1,5 +1,6 @@
 package com.minh.nguyen.mapper;
 
+import com.minh.nguyen.dto.LecturerDTO;
 import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.entity.UserEntity;
@@ -47,6 +48,8 @@ public interface UserMapper extends BaseMapper<UserEntity> {
     List<StudentDTO> getTopUser(@Param("role_student_id")Integer roleStudentID);
 
     StudentDTO getStudentProfile(@Param("urId")Integer urId);
+
+    LecturerDTO getLecturerProfile(@Param("urId")Integer urId);
 
     Integer getRoleForUser(@Param("urId")Integer urId);
 

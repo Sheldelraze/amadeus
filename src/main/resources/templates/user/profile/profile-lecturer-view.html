@@ -1,9 +1,9 @@
 <div th:fragment="information" xmlns:th="http://www.w3.org/1999/xhtml">
     <small class="text-muted">Học vị</small>
-    <h6>Tiến sĩ</h6>
+    <h6 th:text="${user.degree}">Tiến sĩ</h6>
 </div>
 
-<div class="col-9" th:fragment="data" xmlns:th="http://www.w3.org/1999/xhtml">
+<div class="col-9" th:fragment="data" xmlns:th="http://www.w3.org/1999/xhtml" style="color:black">
     <div id="accordionexample" class="accordion" role="tablist" aria-multiselectable="true">
         <!--education-->
         <div class="card">
@@ -14,9 +14,10 @@
                     </a>
                 </h5>
             </div>
-            <div id="educationToggle" class="collapse show" role="tabpanel" aria-labelledby="educationArea">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+            <div id="educationToggle" class="collapse" role="tabpanel" aria-labelledby="educationArea">
+                <div class="card-body"  style="white-space: pre" th:text="${user.education}" th:if="${user.education != null}"></div>
+                <div class="card-body text-muted" th:unless="${user.education != null}">
+                    Không có thông tin về học vấn
                 </div>
             </div>
         </div>
@@ -31,8 +32,9 @@
                 </h5>
             </div>
             <div id="careerToggle" class="collapse" role="tabpanel" aria-labelledby="careerArea">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+                <div class="card-body"  style="white-space: pre" th:text="${user.career}" th:if="${user.career != null}"></div>
+                <div class="card-body text-muted" th:unless="${user.career != null}">
+                    Không có thông tin về quá trình công tác
                 </div>
             </div>
         </div>
@@ -47,8 +49,9 @@
                 </h5>
             </div>
             <div id="researchToggle" class="collapse" role="tabpanel" aria-labelledby="researchArea">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+                <div class="card-body"  style="white-space: pre" th:text="${user.research}" th:if="${user.research != null}"></div>
+                <div class="card-body text-muted" th:unless="${user.research != null}">
+                    Không có thông tin về nghiên cứu khoa học
                 </div>
             </div>
         </div>
@@ -63,8 +66,9 @@
                 </h5>
             </div>
             <div id="publicationToggle" class="collapse" role="tabpanel" aria-labelledby="publicationArea">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+                <div class="card-body"  style="white-space: pre" th:text="${user.publication}" th:if="${user.publication != null}"></div>
+                <div class="card-body text-muted" th:unless="${user.publication != null}">
+                    Không có thông tin về các bài báo đã xuất bản
                 </div>
             </div>
         </div>
@@ -79,8 +83,9 @@
                 </h5>
             </div>
             <div id="awardToggle" class="collapse" role="tabpanel" aria-labelledby="awardArea">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+                <div class="card-body"  style="white-space: pre" th:text="${user.award}" th:if="${user.award != null}"></div>
+                <div class="card-body text-muted" th:unless="${user.award != null}">
+                    Không có thông tin về các giải thưởng
                 </div>
             </div>
         </div>

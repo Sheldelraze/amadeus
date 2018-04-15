@@ -208,6 +208,7 @@ public class Constants {
     public static final String NOT_DELETE_FLAG = "0";
 
     public static final List<AuthorityDTO> LST_DEFAULT_AUTHORITY = new ArrayList<>();
+    public static final List<String> LST_DEGREE = new ArrayList<>();
 
     static {
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_CREATE_CONTEST_ID,"Tạo cuộc thi"));
@@ -219,5 +220,10 @@ public class Constants {
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_MATERIAL_ID,"Xem tất cả tài liệu"));
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_SUBMISSION_ID,"Xem tất cả bài nộp"));
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_PROBLEM_ID,"Xem tất cả bài tập"));
+
+        LST_DEGREE.add("Thạc sĩ");
+        LST_DEGREE.add("Tiến sĩ");
+        LST_DEGREE.add("Phó giáo sư");
+        LST_DEGREE.add("Giáo sư");
     }
 }

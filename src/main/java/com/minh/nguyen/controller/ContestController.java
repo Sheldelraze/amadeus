@@ -299,7 +299,7 @@ public class ContestController extends BaseController {
         problemService.getProblemInfo(problemDTO);
         problemService.getShowInStatementTest(problemDTO);
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
-        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())) {
+        if (null != problemPreviewVO.getNote() && StringUtil.isBlank(problemPreviewVO.getNote())) {
             problemPreviewVO.setNote(null);
         }
         modelMapper.map(problemDTO, problemPreviewVO);

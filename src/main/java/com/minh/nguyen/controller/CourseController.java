@@ -413,7 +413,7 @@ public class CourseController extends BaseController {
         problemService.getProblemInfo(problemDTO);
         problemService.getShowInStatementTest(problemDTO);
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
-        if (problemPreviewVO.getNote() != null && StringUtil.checkBlank(problemPreviewVO.getNote())) {
+        if (problemPreviewVO.getNote() != null && StringUtil.isBlank(problemPreviewVO.getNote())) {
             problemPreviewVO.setNote(null);
         }
         modelMapper.map(problemDTO, problemPreviewVO);

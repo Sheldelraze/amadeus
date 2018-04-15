@@ -431,6 +431,34 @@
               AND user.deleteFlg = '0'
         ORDER BY point DESC
     </select>
+    <select id="getLecturerProfile" resultMap="lecturerProfile">
+        SELECT
+            user.id,
+            user.handle,
+            user.fullname,
+            user.dateOfBirth,
+            user.email,
+            user.phone,
+            user.avatar,
+            user.description,
+            lecturer.degree,
+            lecturer.education,
+            lecturer.career,
+            lecturer.research,
+            lecturer.publication,
+            lecturer.award,
+            role.id   AS reId,
+            role.text AS reText
+        FROM user
+            INNER JOIN lecturer
+                ON lecturer.urId = user.id
+                   AND lecturer.deleteFlg = '0'
+            INNER JOIN role
+                ON user.reId = role.id
+                   AND role.deleteFlg = '0'
+        WHERE user.id = #{urId}
+              AND user.deleteFlg = '0'
+    </select>
     <select id="getStudentProfile" resultMap="studentProfile">
         SELECT
             user.id,
@@ -441,11 +469,11 @@
             user.phone,
             user.avatar,
             user.description,
-            level.id          AS llId,
+            level.id    AS llId,
             level.name  AS lvName,
             level.color AS lvColor,
-            role.id as reId,
-            role.text as reText,
+            role.id     AS reId,
+            role.text   AS reText,
             student.point,
             student.solveCnt,
             class.id    AS csId,
@@ -461,20 +489,40 @@
                            FROM student
                                INNER JOIN
                                level ON student.point >= level.point
-                            where student.urId = #{urId}
+                           WHERE student.urId = #{urId}
                        ) AS score
                 ON score.urId = student.urId
             INNER JOIN level
                 ON level.point = score.point
-            and level.deleteFlg = '0'
+                   AND level.deleteFlg = '0'
             LEFT JOIN class
                 ON student.csId = class.id
                    AND class.deleteFlg = '0'
             LEFT JOIN role
-                on user.reId = role.id
-                and role.deleteFlg = '0'
+                ON user.reId = role.id
+                   AND role.deleteFlg = '0'
         WHERE student.urId = #{urId}
     </select>
+    <resultMap id="lecturerProfile" type="LecturerDTO">
+        <id property="id" column="id"/>
+        <result column="handle" property="handle"/>
+        <result column="fullname" property="fullname"/>
+        <result column="dateOfBirth" property="dateOfBirth"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="avatar" property="avatar"/>
+        <result column="degree" property="degree"/>
+        <result column="description" property="description"/>
+        <result column="education" property="education"/>
+        <result column="career" property="career"/>
+        <result column="research" property="research"/>
+        <result column="publication" property="publication"/>
+        <result column="award" property="award"/>
+        <association property="role" javaType="RoleDTO">
+            <id column="reId" property="id"/>
+            <result column="reText" property="text"/>
+        </association>
+    </resultMap>
     <resultMap id="studentProfile" type="StudentDTO">
         <id column="id" property="id"/>
         <result column="handle" property="handle"/>

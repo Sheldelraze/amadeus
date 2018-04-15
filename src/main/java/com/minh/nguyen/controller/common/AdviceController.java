@@ -98,7 +98,7 @@ public class AdviceController {
     public ModelAndView globalErrorHandle(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         String err = e.toString();
-        if (null == err || StringUtil.checkBlank(err)) {
+        if (null == err || StringUtil.isBlank(err)) {
                 err = ExceptionUtil.toString(e);
         }
         logger.error("Request: " + req.getRequestURL());

@@ -176,7 +176,7 @@ public class ProblemController extends BaseController {
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
         modelMapper.map(problemDTO, problemPreviewVO);
         problemPreviewVO.setLstInput(problemDTO.getLstInput());
-        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())){
+        if (null != problemPreviewVO.getNote() && StringUtil.isBlank(problemPreviewVO.getNote())){
             problemPreviewVO.setNote(null);
         }
         modelAndView.addObject(PREVIEW_VO, problemPreviewVO);
@@ -214,7 +214,7 @@ public class ProblemController extends BaseController {
         ProblemPreviewVO problemPreviewVO = new ProblemPreviewVO();
         modelMapper.map(problemDTO, problemPreviewVO);
         problemPreviewVO.setLstInput(problemDTO.getLstInput());
-        if (null != problemPreviewVO.getNote() && StringUtil.checkBlank(problemPreviewVO.getNote())){
+        if (null != problemPreviewVO.getNote() && StringUtil.isBlank(problemPreviewVO.getNote())){
             problemPreviewVO.setNote(null);
         }
         modelAndView.addObject(PREVIEW_VO, problemPreviewVO);

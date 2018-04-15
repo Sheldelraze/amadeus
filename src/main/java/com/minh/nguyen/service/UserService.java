@@ -218,4 +218,23 @@ public class UserService extends BaseService{
 
         return student;
     }
+
+    public LecturerDTO getLecturerProfile(Integer urId){
+        LecturerDTO lecturer = userMapper.getLecturerProfile(urId);
+
+        //check if any of these property are blank, if they do then set null
+        if (StringUtil.isBlank(lecturer.getAward())){
+            lecturer.setAward(null);
+        }
+        if (StringUtil.isBlank(lecturer.getEducation())){
+            lecturer.setEducation(null);
+        }
+        if (StringUtil.isBlank(lecturer.getCareer())){
+            lecturer.setCareer(null);
+        }
+        if (StringUtil.isBlank(lecturer.getPublication())){
+            lecturer.setPublication(null);
+        }
+        return lecturer;
+    }
 }
