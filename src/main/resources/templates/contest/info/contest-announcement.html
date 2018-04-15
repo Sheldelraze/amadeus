@@ -87,27 +87,45 @@
                                                     ✔ Thêm thành công
                                                 </div>
                                             </th:block>
-                                            <h3>Thêm câu hỏi</h3>
-                                            <label class="col-form-label">Chọn bài tập</label>
-                                            <select class="form-control" style="width: 40%" th:field="*{pmId}">
-                                                <option value="0">Thông tin chung</option>
-                                                <option th:each="problem : ${lstProblem}" th:value="${problem.id}"
-                                                        th:text="${problem.name}"></option>
-                                            </select>
-                                            <br/>
-                                            <label class="col-form-label">Nội dung (tối đa 2000 ký tự)</label>
-                                            <textarea class="form-control" rows="5" id="question"
-                                                      name="question"></textarea>
-                                            <th:block th:if="${#fields.hasErrors('question')}">
-                                                <label
-                                                        th:class="'error'"
-                                                        th:errors="*{question}">Name Error</label>
-                                                <br/>
-                                            </th:block>
-                                            <button type="submit" class="btn btn-warning" style="margin-top:20px">Đặt
-                                                câu hỏi
+                                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                                    data-target="#addOneMoreQuestion" data-whatever="@mdo"><i
+                                                    class="fa fa-plus"></i> Thêm câu hỏi
                                             </button>
-                                            <hr style="width: 100%"/>
+                                            <div class="modal fade" id="addOneMoreQuestion" tabindex="-1" role="dialog"
+                                                 aria-labelledby="exampleModalLabel1">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card-body">
+                                                            <h3>Thêm câu hỏi</h3>
+                                                            <label class="col-form-label">Chọn bài tập</label>
+                                                            <select class="form-control" style="width: 40%"
+                                                                    th:field="*{pmId}">
+                                                                <option value="0">Thông tin chung</option>
+                                                                <option th:each="problem : ${lstProblem}"
+                                                                        th:value="${problem.id}"
+                                                                        th:text="${problem.name}"></option>
+                                                            </select>
+                                                            <br/>
+                                                            <label class="col-form-label">Nội dung (tối đa 2000 ký
+                                                                tự)</label>
+                                                            <textarea class="form-control" rows="5" id="question"
+                                                                      name="question"></textarea>
+                                                            <th:block th:if="${#fields.hasErrors('question')}">
+                                                                <label
+                                                                        th:class="'error'"
+                                                                        th:errors="*{question}">Name Error</label>
+                                                                <br/>
+                                                            </th:block>
+                                                            <button type="submit" class="btn btn-warning"
+                                                                    style="margin-top:20px">Đặt
+                                                                câu hỏi
+                                                            </button>
+                                                            <hr style="width: 100%"/>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </form>
                                     </th:block>
                                     <th:block th:if="${contestAuth == 'CAN_EDIT_CONTEST'}">
@@ -120,31 +138,51 @@
                                             </th:block>
                                             <th:block th:if="${updateSuccess}">
                                                 <div class="alert alert-success">
-                                                    ✔ Thêm thành công
+                                                    ✔ Cập nhật thành công
                                                 </div>
                                             </th:block>
-                                            <h3>Thêm thông báo</h3>
-                                            <label class="col-form-label">Chọn bài tập</label>
-                                            <select class="form-control" style="width: 40%" th:field="*{pmId}">
-                                                <option value="0">Thông tin chung</option>
-                                                <option th:each="problem : ${lstProblem}" th:value="${problem.id}"
-                                                        th:text="${problem.name}"></option>
-                                            </select>
-                                            <br/>
-                                            <label class="col-form-label">Nội dung (tối đa 2000 ký tự)</label>
-                                            <textarea class="form-control" rows="5" id="answer"
-                                                      name="answer"></textarea>
-                                            <th:block th:if="${#fields.hasErrors('answer')}">
-                                                <label
-                                                        th:class="'error'"
-                                                        th:errors="*{answer}">Name Error</label>
-                                                <br/>
-                                            </th:block>
-                                            <button type="submit" class="btn btn-warning" style="margin-top:20px">Thêm
-                                                thông
-                                                báo
+                                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                                    data-target="#exampleModal" data-whatever="@mdo"><i
+                                                    class="fa fa-plus"></i> Thêm thông báo
                                             </button>
-                                            <hr style="width: 100%"/>
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                                 aria-labelledby="exampleModalLabel1">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card-body">
+
+                                                            <h3>Thêm thông báo</h3>
+                                                            <label class="col-form-label">Chọn bài tập</label>
+                                                            <select class="form-control" style="width: 40%"
+                                                                    th:field="*{pmId}">
+                                                                <option value="0">Thông tin chung</option>
+                                                                <option th:each="problem : ${lstProblem}"
+                                                                        th:value="${problem.id}"
+                                                                        th:text="${problem.name}"></option>
+                                                            </select>
+                                                            <br/>
+                                                            <label class="col-form-label">Nội dung (tối đa 2000 ký
+                                                                tự)</label>
+                                                            <textarea class="form-control" rows="5" id="answer"
+                                                                      name="answer"></textarea>
+                                                            <th:block th:if="${#fields.hasErrors('answer')}">
+                                                                <label
+                                                                        th:class="'error'"
+                                                                        th:errors="*{answer}">Name Error</label>
+                                                                <br/>
+                                                            </th:block>
+                                                            <button type="submit" class="btn btn-warning"
+                                                                    style="margin-top:20px">
+                                                                Thêm
+                                                                thông
+                                                                báo
+                                                            </button>
+                                                            <hr style="width: 100%"/>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </form>
                                     </th:block>
                                     <div class="table-responsive">
@@ -182,8 +220,12 @@
                                                     Thông tin chung
                                                 </td>
                                                 <!--question-->
-                                                <td th:text="${announce.question}"
+                                                <td th:text="${announce.question}" th:if="${announce.isFromCreator == 0}"
                                                     style="white-space: pre-line;text-align: left"></td>
+                                                <td th:if="${announce.isFromCreator == 1}" class="text-muted"
+                                                    style="text-align: left">
+                                                    Thông báo từ người quản lý
+                                                </td>
 
                                                 <!--answer-->
                                                 <td th:text="${announce.answer}" th:if="${announce.isAnswered == 1}"
@@ -270,6 +312,7 @@
     function HandlePopupResult() {
         location.reload();
     }
+
     function changeState(ctId, atId, hidden) {
         var newState = 1 - hidden;
         window.location.replace("/contest/" + ctId + "/changeAnnounceState/" + atId + "/to/" + newState);
