@@ -56,7 +56,7 @@
     <select id="getRecentMessage" resultType="MessageDTO">
         SELECT
             user.fullname AS username,
-            user.id,
+            user.id as urId,
             user.avatar,
             message.createTime,
             message.content,
@@ -81,7 +81,7 @@
     <select id="getPublicMessage" resultType="MessageDTO">
         SELECT
             user.fullname AS username,
-            user.id,
+            user.id as urId,
             user.avatar,
             message.createTime,
             message.content

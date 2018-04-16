@@ -6,6 +6,19 @@ var retypePasswordInput = $('#retypePassword');
 var retypePasswordDiv = $('#retypePasswordDiv');
 var retypePasswordErr = $('#retypePasswordErr');
 var errReturnDiv = $('#errReturnDiv');
+$('#changePassword').on('hidden.bs.modal', function () {
+    $(newPasswordDiv).removeClass('has-success');
+    $(newPasswordDiv).removeClass('has-danger');
+    $(newPasswordInput).removeClass('form-control-success');
+    $(newPasswordInput).removeClass('form-control-danger');
+    $(retypePasswordDiv).removeClass('has-success');
+    $(retypePasswordDiv).removeClass('has-danger');
+    $(retypePasswordInput).removeClass('form-control-success');
+    $(retypePasswordInput).removeClass('form-control-danger');
+    $(newPasswordInput).val('');
+    $(oldPasswordInput).val('');
+    $(retypePasswordInput).val('');
+});
 $(document).ready(function() {
     $("#buttonSubmit").click(function(){
         $(errReturnDiv).addClass('hiddenDiv');
@@ -31,13 +44,6 @@ $(document).ready(function() {
                     $(errReturnDiv).html('✘ ' + data);
                 }
                 else{
-                    $(newPasswordDiv).removeClass('has-success');
-                    $(newPasswordInput).removeClass('form-control-success');
-                    $(retypePasswordDiv).removeClass('has-success');
-                    $(retypePasswordInput).removeClass('form-control-success');
-                    $(newPasswordInput).val('');
-                    $(oldPasswordInput).val('');
-                    $(retypePasswordInput).val('');
                     $('#changePassword').modal('toggle');
                     $.toast({
                         heading: 'Cập nhật mật khẩu thành công',

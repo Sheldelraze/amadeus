@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.RollbackException;
@@ -128,6 +129,18 @@ public class UserController extends BaseController{
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(messageUtil.getMessage(Constants.MSG_SYSTEM_ERR));
+        }
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/uploadAvatar", consumes = "multipart/form-data")
+    public ResponseEntity uploadFile(@RequestParam("newAvatar") MultipartFile uploadfile) {
+        try {
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

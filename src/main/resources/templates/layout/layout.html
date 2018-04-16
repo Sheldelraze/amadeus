@@ -246,10 +246,10 @@
                                     <div class="dw-user-box">
                                         <div class="u-img">
                                             <img src="../../static/assets/images/users/1.jpg"
-                                                 th:src="@{/assets/images/users/1.jpg}" alt="user">
+                                                 th:src="@{${avatar}}" alt="user">
                                         </div>
                                         <div class="u-text">
-                                            <h4>Makise Kurisu</h4>
+                                            <h4 th:text="${username}">Makise Kurisu</h4>
                                             <a href="Profile.aspx" class="btn btn-rounded btn-danger btn-sm">Xem tài
                                                 khoản</a>
                                         </div>

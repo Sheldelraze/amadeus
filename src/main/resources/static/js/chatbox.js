@@ -102,10 +102,13 @@ function addMessage(message, position) {
 
     //chat img
     var chatImgDiv = document.createElement('div');
+    var chatLink = document.createElement('a');
     var chatImg = document.createElement('img');
     chatImgDiv.classList.add('chat-img');
-    chatImgDiv.appendChild(chatImg);
-    chatImg.src = '/assets/images/users/1.jpg';
+    chatImgDiv.appendChild(chatLink);
+    chatLink.href = '/user/' + message.urId + '/profile';
+    chatLink.appendChild(chatImg);
+    chatImg.src = message.avatar;
     chatImg.alt = message.username;
 
     //chat content

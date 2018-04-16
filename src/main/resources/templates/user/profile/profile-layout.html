@@ -61,6 +61,13 @@
                     <button type="button" class=" btn btn-warning" data-toggle="modal" data-target="#changePassword">
                         <i class="fa fa-lock"></i> Đổi mật khẩu
                     </button>
+                    <button type="button" id="btnUploadAvatar" data-toggle="tooltip" data-placement="bottom" title="Để ảnh được đẹp nhất vui lòng upload ảnh có tỉ lệ 1:1, bạn có thể vào trang imageresize.org để cắt ảnh tĩnh hoặc ezgif.com để cắt ảnh động"
+                            class=" btn btn-primary"><i class="fa fa-camera"></i> Thay đổi ảnh đại diện
+                    </button>
+                    <form method="POST" enctype="multipart/form-data" id="avatarUploadForm">
+                     <input name="newAvatar" id="uploadAvatar" type="file" style="display: none" accept="image/*"/>
+                    </form>
+
                     <div class="modal fade" id="changePassword" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLabel1">
                         <div class="modal-dialog modal-lg" role="document">
@@ -169,7 +176,12 @@
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
 <div th:replace="__${dataview}__ :: js"></div>
+<script th:inline="javascript">
+    var parameter = /*[[${_csrf.parameterName}]]*/ null;
+    var token = /*[[${_csrf.token}]]*/ null;
+</script>
 <script  th:src="@{/js/changePassword.js}"></script>
+<script  th:src="@{/js/uploadAvatar.js}"></script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>
