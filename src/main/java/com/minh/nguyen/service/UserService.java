@@ -237,4 +237,26 @@ public class UserService extends BaseService{
         }
         return lecturer;
     }
+
+    public void updatePassword(Integer urId,String oldPassword,String newPassword){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(urId);
+        userEntity = userMapper.selectByPK(userEntity);
+        if (userEntity == null){
+            throw new NoSuchPageException("User not found!");
+        }
+
+        //check if the old password user enter matches with password stored in database
+        if (!bCryptPasswordEncoder.matches(oldPassword,userEntity.getPassword())){
+            rollBack(Constants.MSG_WRONG_OLD_PASSWORD_ERR);
+        }
+
+        //if valid then we update new password (encrypt it first)
+        setUpdateInfo(userEntity);
+        userEntity.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        int recordCnt = userMapper.updateNotNullByPK(userEntity);
+        if (recordCnt != 1){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+    }
 }

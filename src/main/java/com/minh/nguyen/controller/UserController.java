@@ -8,18 +8,19 @@ import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.UserDTO;
 import com.minh.nguyen.form.user.UserCreateForm;
 import com.minh.nguyen.form.user.UserUpdateForm;
+import com.minh.nguyen.form.user.UserUpdatePasswordForm;
 import com.minh.nguyen.service.UserService;
+import com.minh.nguyen.util.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -37,6 +38,9 @@ public class UserController extends BaseController{
 
     @Autowired
     private HttpSession httpSession;
+
+    @Autowired
+    private MessageUtil messageUtil;
 
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_USER_TEXT + "')")
     @GetMapping("/create")
@@ -112,6 +116,19 @@ public class UserController extends BaseController{
         }
         userService.updateUser(userDTO);
         return updateUser(urId,userUpdateForm,true);
+    }
+
+    @PostMapping("/updatePassword")
+    public ResponseEntity<?> updateMessageStatus(@RequestBody UserUpdatePasswordForm userUpdatePasswordForm) {
+        try {
+            userService.updatePassword(userUpdatePasswordForm.getUrId(),userUpdatePasswordForm.getOldPassword(),userUpdatePasswordForm.getNewPassword());
+            return ResponseEntity.ok().build();
+        } catch (RollbackException e){
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageUtil.getMessage(e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(messageUtil.getMessage(Constants.MSG_SYSTEM_ERR));
+        }
     }
 
     @GetMapping("/{urId}/profile")

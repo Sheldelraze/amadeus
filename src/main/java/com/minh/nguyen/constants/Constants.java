@@ -94,6 +94,7 @@ public class Constants {
     public static final String MSG_CONTEST_APPLY_SUCCESS = "msg026";
     public static final String MSG_ALREADY_IN_CONTEST_ERR = "msg027";
     public static final String MSG_HANDLE_EXISTED_ERR = "msg028";
+    public static final String MSG_WRONG_OLD_PASSWORD_ERR = "msg029";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;

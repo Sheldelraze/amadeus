@@ -55,11 +55,45 @@
                         <li class="breadcrumb-item active" th:text="${user.fullname}">Dashboard2</li>
                     </ol>
                 </div>
-                <div class="col-md-7 col-4" style="text-align:right">
+                <div class="col-md-7 col-4" style="text-align:right" th:if="${urId == user.id}">
                     <button type="button" class=" btn btn-success">Cập nhật thông tin
                     </button>
-                    <button type="button" class=" btn btn-warning">Đổi mật khẩu
+                    <button type="button" class=" btn btn-warning" data-toggle="modal" data-target="#changePassword">
+                        <i class="fa fa-lock"></i> Đổi mật khẩu
                     </button>
+                    <div class="modal fade" id="changePassword" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel1">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="card-body" style="text-align:left">
+                                    <form class="form-control-line">
+                                        <div id="errReturnDiv" class="alert alert-danger hiddenDiv">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mật khẩu cũ</label>
+                                            <input id="oldPassword" type="password" class="form-control form-control-line">
+                                        </div>
+                                        <div class="form-group" id="newPasswordDiv">
+                                            <label for="newPassword" class="form-control-label">Mật khẩu mới</label>
+                                            <input id="newPassword" type="password" class="form-control">
+                                            <span class="help-block text-muted"><small>Không quá 30 ký tự</small></span>
+                                            <div id="newPasswordErr" class="form-control-feedback"></div>
+                                        </div>
+                                        <div class="form-group" id="retypePasswordDiv">
+                                            <label for="retypePassword" class="form-control-label">Nhập lại mật khẩu mới</label>
+                                            <input id="retypePassword" type="password" class="form-control ">
+                                            <div id="retypePasswordErr" class="form-control-feedback"></div>
+                                        </div>
+                                        <div style="text-align: center">
+                                            <button type="button" class=" btn btn-warning" id="buttonSubmit">
+                                                Cập nhật mật khẩu
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- ============================================================== -->
@@ -74,7 +108,8 @@
                             <div style="text-align: center;margin-top: 10px">
                                 <img th:src="@{${user.avatar}}" class="img-thumbnail" width="200"/>
                                 <h4 class="card-title m-t-10" th:text="${user.fullname}">Hanna Gover</h4>
-                                <h6 class="card-subtitle" style="margin-bottom: -5px" th:text="${user.role.text}">Giảng viên</h6>
+                                <h6 class="card-subtitle" style="margin-bottom: -5px" th:text="${user.role.text}">Giảng
+                                    viên</h6>
                             </div>
                         </div>
                         <div>
@@ -134,6 +169,7 @@
 <!-- ============================================================== -->
 <div th:replace="layout/layout::js"></div>
 <div th:replace="__${dataview}__ :: js"></div>
+<script  th:src="@{/js/changePassword.js}"></script>
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>

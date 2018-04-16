@@ -122,7 +122,9 @@
                                 <label
                                         th:if="${#fields.hasErrors('memoryLimit')}" th:class="'error'"
                                         th:errors="*{memoryLimit}">Name Error</label>
-                                <small class="text-muted p-t-10 db">Độ khó (sẽ dùng để tính điểm)</small>
+                                <small class="text-muted p-t-10 db">Độ khó (sẽ dùng để tính điểm) <i data-toggle="tooltip" data-placement="auto"
+                                                                                                    title="Công thức tính: ĐộKhó * 10 - (SốLầnNộp - 1) * ĐộKhó, tuy nhiên nếu sai >= 10 lần thì khi nộp đúng vẫn được 1 điểm an ủi. Chỉ tính điểm lần đầu tiên nộp đúng."
+                                                                                                    class="fa fa-question-circle"></i></small>
                                 <div style="width: 30%">
                                     <select class="select2" th:remove="all-but-first" id="difficulty"
                                             name="difficulty" style="color:black">

@@ -24,6 +24,7 @@
         <!--This page css - Morris CSS -->
         <link th:href="@{/assets/plugins/c3-master/c3.min.css}"
               rel="stylesheet">
+        <link th:href="@{/assets/plugins/toast-master/css/jquery.toast.css}" rel="stylesheet">
         <link th:href="@{/assets/plugins/icheck/skins/all.css}" rel="stylesheet">
         <!-- Custom CSS -->
         <link href="../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
@@ -462,7 +463,8 @@
     <script th:src="@{/js/notification.js}"></script>
     <script th:src="@{/js/sockjs.min.js}"></script>
     <script th:src="@{/js/stomp.min.js}"></script>
-    <script  th:src="@{/js/icheck.js}"></script>
+    <script th:src="@{/js/icheck.js}"></script>
+    <script th:src="@{/assets/plugins/toast-master/js/jquery.toast.js}"></script>
     <script>
         function openInNewTab(url) {
             var win = window.open(url, '_blank');
