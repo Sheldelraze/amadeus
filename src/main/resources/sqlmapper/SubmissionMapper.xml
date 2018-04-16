@@ -128,7 +128,9 @@
             submission.pmId         AS pmId,
             problem.name            AS pmNm,
             submission.memoryUsed   AS memoryUsed,
+            submission.createUser   AS createUser,
             submission.timeRun      AS timeRun,
+            submission.isPublic   AS isPublic,
             submission.createTime   AS createTime,
             submission.judgeStatus  AS judgeStatus,
             submission.verdict      AS verdict,
@@ -206,7 +208,9 @@
         <result column="pmId" property="pmId"/>
         <result column="timeRun" property="timeRun"/>
         <result column="memoryUsed" property="memoryUsed"/>
+        <result column="isPublic" property="isPublic"/>
         <result column="sourceCode" property="sourceCode"/>
+        <result column="createUser" property="createUser"/>
         <result column="createTime" property="createTime"/>
         <result column="verdict" property="verdict"/>
         <result column="judgeStatus" property="judgeStatus"/>

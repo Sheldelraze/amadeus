@@ -7,8 +7,10 @@ import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.service.GeneralService;
 import com.minh.nguyen.service.MessageService;
+import com.minh.nguyen.util.MessageUtil;
 import com.minh.nguyen.vo.StatusVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -36,6 +39,8 @@ public class GeneralController extends BaseController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private MessageUtil messageUtil;
 
     @GetMapping({"/login", "/login/"})
     public ModelAndView getLogin(Boolean logout) {
@@ -105,7 +110,21 @@ public class GeneralController extends BaseController {
         modelAndView.setViewName("submission/submission");
         SubmissionDTO submissionDTO = generalService.getSubmitDetail(snId);
         modelAndView.addObject("submitDetail", submissionDTO);
+        modelAndView.addObject("canEditSubmission", submissionDTO.getCanEditSubmission());
         return modelAndView;
     }
 
+
+    @GetMapping("/submission/{snId}/changePublicState/{state}")
+    public ResponseEntity<?> updateMessageStatus(@PathVariable("snId")Integer snId,@PathVariable("state")Integer state) {
+        try {
+            generalService.changeSubmissionPublicState(snId,state);
+            return ResponseEntity.ok().build();
+        } catch (RollbackException e){
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageUtil.getMessage(e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(messageUtil.getMessage(Constants.MSG_SYSTEM_ERR));
+        }
+    }
 }

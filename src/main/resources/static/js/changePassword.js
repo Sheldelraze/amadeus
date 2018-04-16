@@ -44,7 +44,7 @@ $(document).ready(function() {
                         position: 'bottom-right',
                         loaderBg:'#ff6849',
                         icon: 'success',
-                        hideAfter: 3000,
+                        hideAfter: 1000,
                         stack: 6
                     });
                 }

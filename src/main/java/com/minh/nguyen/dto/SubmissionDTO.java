@@ -28,6 +28,15 @@ public class SubmissionDTO extends BaseDTO {
     private LanguageDTO language;
     private Integer isPublic;
     private Integer point;
+    private Boolean canEditSubmission;
+
+    public Boolean getCanEditSubmission() {
+        return canEditSubmission;
+    }
+
+    public void setCanEditSubmission(Boolean canEditSubmission) {
+        this.canEditSubmission = canEditSubmission;
+    }
 
     public Integer getPoint() {
         return point;

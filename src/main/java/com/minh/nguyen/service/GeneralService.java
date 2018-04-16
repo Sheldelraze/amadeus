@@ -6,14 +6,19 @@ import com.minh.nguyen.dto.SubmissionDTO;
 import com.minh.nguyen.dto.SubmitDetailDTO;
 import com.minh.nguyen.entity.BaseEntity;
 import com.minh.nguyen.entity.NotificationEntity;
+import com.minh.nguyen.entity.SubmissionEntity;
+import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.mapper.NotificationMapper;
 import com.minh.nguyen.mapper.SubmissionMapper;
 import com.minh.nguyen.mapper.UserMapper;
+import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,6 +41,9 @@ public class GeneralService extends BaseService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private HttpSession httpSession;
 
     public List<SubmissionDTO> getSubmission() {
         List<SubmissionDTO> lstSubmission = submissionMapper.getSubmission();
@@ -62,6 +70,9 @@ public class GeneralService extends BaseService {
     //normal submission
     public SubmissionDTO getSubmitDetail(int snId) {
         List<SubmissionDTO> lstSubmit = submissionMapper.getSubmitDetail(snId);
+        if (CollectionUtils.isEmpty(lstSubmit)){
+            throw  new NoSuchPageException("No submission found!");
+        }
         SubmissionDTO submit = lstSubmit.get(0);
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String strDate = dateFormat.format(submit.getCreateTime());
@@ -76,6 +87,15 @@ public class GeneralService extends BaseService {
             if (null != res) {
                 res = res.replaceAll(" ", "&ensp;");
                 detail.setResult(res);
+            }
+        }
+
+        //check if current user can edit submission
+        Object currentUserHandle = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        submit.setCanEditSubmission(false);
+        if (!StringUtil.isNull(currentUserHandle)){
+            if (submit.getCreateUser().equals(currentUserHandle.toString())){
+                submit.setCanEditSubmission(true);
             }
         }
         return submit;
@@ -106,5 +126,25 @@ public class GeneralService extends BaseService {
         List<StudentDTO> lstUser = userMapper.getTopUser(Constants.ROLE_STUDENT_ID);
 
         return lstUser;
+    }
+
+    public void changeSubmissionPublicState(Integer snId,Integer newState){
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setId(snId);
+        submissionEntity = submissionMapper.selectByPK(submissionEntity);
+        if (submissionEntity == null){
+            throw new NoSuchPageException("Submission not found!");
+        }
+        //check if current user can edit submission
+        Object currentUserHandle = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_HANDLE);
+        if (currentUserHandle == null || !submissionEntity.getCreateUser().equals(currentUserHandle.toString())){
+            rollBack(Constants.MSG_NOT_ALLOWED_ERR);
+        }
+
+        submissionEntity.setIsPublic(newState);
+        int recordCnt = submissionMapper.updateNotNullByPK(submissionEntity);
+        if (recordCnt == 0){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
     }
 }

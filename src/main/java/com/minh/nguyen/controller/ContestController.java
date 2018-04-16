@@ -460,6 +460,7 @@ public class ContestController extends BaseController {
         modelAndView.addObject("submitDetail", submissionDTO);
         modelAndView.addObject(TAB, 0);
         modelAndView.addObject(CONTEST_ID, ctId);
+        modelAndView.addObject("canEditSubmission", false);
         return modelAndView;
     }
 

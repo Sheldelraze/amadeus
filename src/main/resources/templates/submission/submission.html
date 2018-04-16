@@ -8,21 +8,24 @@
     <!-- Favicon icon -->
     <title>Amadeus system</title>
     <div th:replace="layout/layout::css"></div>
-    <style type="text/css" media="screen" >
+    <style type="text/css" media="screen">
         #editor {
             position: relative !important;
             border: 1px solid lightgray;
             margin: auto;
             width: 100%;
         }
-         .judging{
-             color: slategray;
-         }
-        .fail{
+
+        .judging {
+            color: slategray;
+        }
+
+        .fail {
             color: red;
             font-weight: 500;
         }
-        .accepted{
+
+        .accepted {
             color: limegreen;
             font-weight: 800;
         }
@@ -100,18 +103,29 @@
                                     <tbody>
                                     <tr>
                                         <td th:text="${submitDetail.id}"></td>
-                                        <td><b><a href="#" th:text="${submitDetail.user.fullname}">Makise Kurisu</a></b></td>
+                                        <td><b><a href="#" th:text="${submitDetail.user.fullname}">Makise Kurisu</a></b>
+                                        </td>
                                         <th:block th:if="${submitDetail.contestDTO != null}">
-                                            <td><b><a th:href="|/contest/${submitDetail.contestDTO.id}|" th:text="${submitDetail.contestDTO.name}">Lập trình hướng đối tượng</a></b></td>
-                                            <td><b><a th:href="|/contest/${submitDetail.contestDTO.id}/problem/${submitDetail.pmId}/view|" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                            <td><b><a th:href="|/contest/${submitDetail.contestDTO.id}|"
+                                                      th:text="${submitDetail.contestDTO.name}">Lập trình hướng đối
+                                                tượng</a></b></td>
+                                            <td><b><a
+                                                    th:href="|/contest/${submitDetail.contestDTO.id}/problem/${submitDetail.pmId}/view|"
+                                                    th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
                                         </th:block>
                                         <th:block th:if="${submitDetail.courseDTO != null}">
-                                            <td><b><a th:href="|/course/${submitDetail.courseDTO.id}|" th:text="${submitDetail.courseDTO.name}">Lập trình hướng đối tượng</a></b></td>
-                                            <td><b><a th:href="|/course/${submitDetail.courseDTO.id}/problem/${submitDetail.pmId}/view|" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                            <td><b><a th:href="|/course/${submitDetail.courseDTO.id}|"
+                                                      th:text="${submitDetail.courseDTO.name}">Lập trình hướng đối
+                                                tượng</a></b></td>
+                                            <td><b><a
+                                                    th:href="|/course/${submitDetail.courseDTO.id}/problem/${submitDetail.pmId}/view|"
+                                                    th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
                                         </th:block>
-                                        <th:block th:if="${submitDetail.contestDTO == null && submitDetail.courseDTO == null}">
+                                        <th:block
+                                                th:if="${submitDetail.contestDTO == null && submitDetail.courseDTO == null}">
                                             <td><b>Bài tập tự do</b></td>
-                                            <td><b><a href="#" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b></td>
+                                            <td><b><a href="#" th:text="${submitDetail.pmNm}">Tính tổng 2 số</a></b>
+                                            </td>
                                         </th:block>
                                         <td th:text="${submitDetail.submitTime}">02:20:30</td>
                                         <td><label th:text="${submitDetail.memoryUsed}"></label>MB</td>
@@ -129,6 +143,12 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                                <th:block th:if="${canEditSubmission}">
+                                    <label>Chia sẻ bài làm (ai cũng có thể xem)</label>
+                                    <input th:checked="${submitDetail.isPublic == 1} ?'checked'" type="checkbox"
+                                           id="publicBox"/>
+                                    <label style="margin-bottom: -10px;margin-left: 20px" for="publicBox"></label>
+                                </th:block>
                             </div>
 
                         </div>
@@ -138,38 +158,46 @@
                     <h4>Mã nguồn</h4>
                     <div class="card">
                         <div class="card-body">
+
                             <div id="editor" style="height:300px" th:text="${submitDetail.sourceCode}">
                             </div>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" th:if="${submitDetail.lstSubmitDetail != null}" style="color:black" th:each="detail,iter : ${submitDetail.lstSubmitDetail}">
-                    <h4>Test #<label th:text="${iter.count}"></label> (<label th:text="${detail.timeRun}"></label> ms,<label th:text="${detail.memoryUsed}"></label> MB)</h4>
+                <div class="col-md-12" th:if="${submitDetail.lstSubmitDetail != null}" style="color:black"
+                     th:each="detail,iter : ${submitDetail.lstSubmitDetail}">
+                    <h4>Test #<label th:text="${iter.count}"></label> (<label th:text="${detail.timeRun}"></label>
+                        ms,<label th:text="${detail.memoryUsed}"></label> MB)</h4>
                     <div class="card">
                         <div class="card-header">
                             Input
                         </div>
                         <div class="card-body" style="color: black">
-                            <label th:if="${detail.input != null}" style="white-space: pre" th:text="${detail.input}"></label>
+                            <label th:if="${detail.input != null}" style="white-space: pre"
+                                   th:text="${detail.input}"></label>
                         </div>
                         <div class="card-header">
                             Output
                         </div>
                         <div class="card-body" style="color: black">
-                            <label th:if="${detail.output != null}" style="white-space: pre" th:text="${detail.output}"></label>
+                            <label th:if="${detail.output != null}" style="white-space: pre"
+                                   th:text="${detail.output}"></label>
                         </div>
                         <div class="card-header">
                             Đáp án
                         </div>
                         <div class="card-body" style="color: black">
-                            <label th:if="${detail.answer != null}" style="white-space: pre" th:text="${detail.answer}"></label>
+                            <label th:if="${detail.answer != null}" style="white-space: pre"
+                                   th:text="${detail.answer}"></label>
                         </div>
                         <div class="card-header">
                             Kết quả
                         </div>
                         <div class="card-body" style="font-family: verdana,arial,sans-serif">
-                            <label th:if="${detail.result != null}" style="white-space: pre;font-weight: bolder" th:utext="${detail.result}" th:classappend="${detail.result == 'Đúng'}?'accepted':'fail'"></label>
+                            <label th:if="${detail.result != null}" style="white-space: pre;font-weight: bolder"
+                                   th:utext="${detail.result}"
+                                   th:classappend="${detail.result == 'Đúng'}?'accepted':'fail'"></label>
                         </div>
                     </div>
                 </div>
@@ -202,11 +230,58 @@
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
-
+<div th:replace="layout/layout::js"></div>
 <script src="../../static/ace/ace.js" th:src="@{/ace/ace.js}"></script>
 <script src="../../static/ace/ext-themelist.js" th:src="@{/ace/ext-themelist.js}"></script>
+<script th:inline="javascript">
+    var snId = /*[[${submitDetail.id}]]*/ 1;
+</script>
 <script>
-    var $ = document.getElementById.bind(document);
+    var checkBox = $('#publicBox');
+    $(checkBox).change(function () {
+        var url = null;
+        if (this.checked) {
+            if (!confirm('Bạn có chắc là muốn công khai bài nộp không?')){
+                $(this).prop('checked', false);
+                return false;
+            }
+            url = "/submission/" + snId + "/changePublicState/" + 1;
+        }else{
+            if (!confirm('Bạn có chắc là bỏ công khai bài nộp không?')){
+                $(this).prop('checked', true);
+                return false;
+            }
+            url = "/submission/" + snId + "/changePublicState/" + 0;
+        }
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: url,
+            cache: false,
+            timeout: 10000,
+            success: function (data) {
+                $.toast({
+                    heading: 'Cập nhật thành công!',
+                    position: 'bottom-right',
+                    loaderBg: '#ff6849',
+                    icon: 'success',
+                    hideAfter: 1000,
+                    stack: 6
+                });
+            },
+            error: function (e) {
+                $.toast({
+                    heading: e.responseText,
+                    position: 'bottom-right',
+                    loaderBg: '#ff6849',
+                    icon: 'error',
+                    hideAfter: 3000,
+                    stack: 6
+                });
+            }
+        });
+    });
+
     var dom = require("ace/lib/dom");
 
     // create first editor
@@ -224,7 +299,7 @@
         return t.theme
     });
 </script>
-<div th:replace="layout/layout::js"></div>
+
 </body>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
 </html>
