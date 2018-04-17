@@ -64,14 +64,14 @@ $(uploadInput).change(function () {
     }
     var uploadData = $('#avatarUploadForm')[0];
     $.ajax({
-        url: "/user/uploadAvatar?" + parameter + "=" + token,
+        url: "/user/" + urId + "/uploadAvatar?" + parameter + "=" + token,
         type: "POST",
         data: new FormData(uploadData),
         enctype: 'multipart/form-data',
         processData : false,  // <----required to upload
         contentType : false,  // <----required to upload
         cache: false,
-        timeout: 10000,
+        timeout: 60000,
         success: function () {
             alert('ok');
         },

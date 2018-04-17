@@ -1,7 +1,9 @@
 package com.minh.nguyen.constants;
 
 import com.minh.nguyen.dto.AuthorityDTO;
+import com.minh.nguyen.util.StringUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,8 @@ import java.util.List;
  * For instance, current number of authorities is 25, so if you want to add another authority, start with AUTH_XXX = 26
  */
 public class Constants {
-    public static final Integer MAX_UPLOAD_SIZE = 50;
+    public static final Integer MAX_UPLOAD_SIZE = 50; //MB
+    public static final Integer MAX_AVATAR_SIZE = 4; //MB
     public static final Integer MAX_FILENAME_LENGTH_SIZE = 100;
 
     public static final String DEFAULT_AVATAR = "/assets/images/users/1.jpg";
@@ -60,9 +63,13 @@ public class Constants {
     public static final String JAVA_COMPILER = "javac";
     public static final String JAVA_EXECUTOR = "java";
     public static final String JAVA_EXTENSION = "java";
-    public static final String PROBLEM_LOCATION_PREFIX = "src\\main\\resources\\storage\\problem\\";
-    public static final String SUBMISSION_LOCATION_PREFIX = "src\\main\\resources\\storage\\submission\\";
-    public static final String MATERIAL_LOCATION_PREFIX = "src\\main\\resources\\storage\\material\\";
+
+    //the separator is based on OS (on window is "\\", on UNIX is "/")
+    public static final String RESOURCE_LOCATION_PREFIX = StringUtil.buildString("src", File.separator,"main",File.separator,"resources",File.separator,"static"); //"src\\main\\resources\\static";
+    public static final String SUBMISSION_LOCATION_PREFIX = StringUtil.buildString(RESOURCE_LOCATION_PREFIX,File.separator,"storage",File.separator,"submission",File.separator); //"src\\main\\resources\\static\\storage\\submission\\"
+    public static final String MATERIAL_LOCATION_PREFIX = StringUtil.buildString(RESOURCE_LOCATION_PREFIX ,File.separator,"storage",File.separator,"material",File.separator); //"src\\main\\resources\\static\\storage\\material\\"
+    public static final String PROBLEM_LOCATION_PREFIX = StringUtil.buildString(RESOURCE_LOCATION_PREFIX, File.separator,"storage",File.separator,"problem",File.separator); //"src\\main\\resources\\static\\storage\\problem\\";
+    public static final String AVATAR_LOCATION_PREFIX = StringUtil.buildString(RESOURCE_LOCATION_PREFIX ,File.separator,"storage",File.separator,"avatar",File.separator); //"src\\main\\resources\\static\\storage\\avatar\\"
     public static final String BLANK = "";
 
     public static final String MSG_TOTAL_ERR = "msg000";

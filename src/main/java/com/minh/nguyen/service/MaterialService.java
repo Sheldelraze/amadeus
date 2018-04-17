@@ -53,7 +53,7 @@ public class MaterialService extends BaseService {
         }
         Integer urId = (Integer) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
         String location = StringUtil.buildString(Constants.MATERIAL_LOCATION_PREFIX, "userId-", urId.toString());
-        String storedLocation = StringUtil.buildString(location, "\\", multipartFile.getOriginalFilename());
+        String storedLocation = StringUtil.buildString(location, File.separator, multipartFile.getOriginalFilename());
         File f = new File(storedLocation);
         if (f.exists() && !f.isDirectory()) {
             rollBack(Constants.MSG_FILENAME_EXISTED_ERR);

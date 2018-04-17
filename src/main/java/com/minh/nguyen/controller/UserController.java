@@ -132,15 +132,18 @@ public class UserController extends BaseController{
         }
     }
 
+    @PreAuthorize("")
     @ResponseBody
-    @PostMapping(value = "/uploadAvatar", consumes = "multipart/form-data")
-    public ResponseEntity uploadFile(@RequestParam("newAvatar") MultipartFile uploadfile) {
+    @PostMapping(value = "/{urId}/uploadAvatar", consumes = "multipart/form-data")
+    public ResponseEntity uploadFile(@PathVariable("urId")Integer urId,@RequestParam("newAvatar") MultipartFile multipartFile) {
         try {
-            return ResponseEntity.ok().build();
-        }
-        catch (Exception e) {
+            String url = userService.uploadAvatar(urId,multipartFile);
+            return ResponseEntity.ok().body(url);
+        } catch(RollbackException e){
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageUtil.getMessage(e.getMessage()));
+        }catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(messageUtil.getMessage(Constants.MSG_SYSTEM_ERR));
         }
     }
 

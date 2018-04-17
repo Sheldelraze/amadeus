@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
@@ -239,6 +240,12 @@ public class UserService extends BaseService{
     }
 
     public void updatePassword(Integer urId,String oldPassword,String newPassword){
+        //check if current logging user is the one who change password
+        Integer currentLoginUserID = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (currentLoginUserID == null || !currentLoginUserID.equals(urId)){
+            rollBack(Constants.MSG_NOT_ALLOWED_ERR);
+        }
+
         UserEntity userEntity = new UserEntity();
         userEntity.setId(urId);
         userEntity = userMapper.selectByPK(userEntity);
@@ -258,5 +265,23 @@ public class UserService extends BaseService{
         if (recordCnt != 1){
             rollBack(Constants.MSG_SYSTEM_ERR);
         }
+    }
+
+    public String uploadAvatar(Integer urId,MultipartFile multipartFile){
+        //check if current logging user is the one who change password
+        Integer currentLoginUserID = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        if (currentLoginUserID == null || !currentLoginUserID.equals(urId)){
+            rollBack(Constants.MSG_NOT_ALLOWED_ERR);
+        }
+
+        if (multipartFile.getSize() == 0) {
+            rollBack(Constants.MSG_UPLOAD_ERR);
+        }
+        if (multipartFile.getSize() / (1024 * 1024) > Constants.MAX_AVATAR_SIZE) {
+            rollBack(Constants.MSG_UPLOAD_FILE_TOO_BIG_ERR);
+        }
+
+
+        return null;
     }
 }
