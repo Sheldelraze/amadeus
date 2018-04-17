@@ -75,13 +75,15 @@ $(uploadInput).change(function () {
         success: function (data) {
             $.toast({
                 heading: 'Cập nhật ảnh đại diện thành công!',
-                text: 'Ảnh có thể mất đến 1 phút để cập nhật.',
                 position: 'bottom-right',
                 loaderBg: '#ff6849',
                 icon: 'success',
                 hideAfter: 3000,
                 stack: 6
             });
+            $("#userAvatar").attr("src",data);
+            $("#userAvatar1").attr("src",data);
+            $("#userAvatar2").attr("src",data);
         },
         error: function (e) {
             $.toast({

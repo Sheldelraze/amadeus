@@ -123,7 +123,7 @@
                             <hr>
                         </div>
                         <div class="card-body">
-                            <small class="text-muted">Tên tài khoản</small>
+                            <small id="labelUsername" class="text-muted">Tên tài khoản</small>
                             <h6 th:text="${user.handle}">admin</h6>
                             <div th:replace="__${dataview}__ :: information"></div>
                             <th:block th:if="${user.dateOfBirth != null}">
