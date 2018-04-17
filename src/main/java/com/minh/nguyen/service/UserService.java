@@ -8,6 +8,7 @@ import com.minh.nguyen.entity.UrAuyEntity;
 import com.minh.nguyen.entity.UserEntity;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.mapper.*;
+import com.minh.nguyen.util.FileUtil;
 import com.minh.nguyen.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -281,7 +283,49 @@ public class UserService extends BaseService{
             rollBack(Constants.MSG_UPLOAD_FILE_TOO_BIG_ERR);
         }
 
+        //get current numnber of avatar this user has uploaded
+        String parentFolder = StringUtil.buildString(Constants.AVATAR_LOCATION_PREFIX,"userId-" + urId);
+        File folder = new File(parentFolder);
+        Integer currentIndex = 1;
+        if (!folder.exists()){
+            folder.mkdir();
+        }
+        else {
+            File[] listOfFiles = folder.listFiles();
+            if (listOfFiles == null || listOfFiles.length == 0) {
+                currentIndex = 1;
+            } else {
+                currentIndex = listOfFiles.length + 1;
+            }
+        }
+        //create child folder based on the current index
+        String childLocation = StringUtil.buildString(parentFolder,File.separator,currentIndex.toString());
+        FileUtil.store(multipartFile,childLocation);
 
-        return null;
+        //return avatar's storage location
+        String storeLoaction = StringUtil.buildString(childLocation,File.separator,multipartFile.getOriginalFilename());
+
+        //remove the resource location of the string, we only need to store the latter half
+        //for example if the store location is: src\\main\\resources\\static\\storage\\avatar\\userId-1\\1\\profile.png
+        //then we need to save this url in database: /storage/avatar/userId-1/1/profile.png
+        storeLoaction = storeLoaction.substring(Constants.RESOURCE_LOCATION_PREFIX.length());
+
+        //replace File.seperator with "/" since url in html slashes need to be forward
+        storeLoaction = storeLoaction.replace(File.separator, "/");
+
+        //update database
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(urId);
+        userEntity = userMapper.selectByPK(userEntity);
+        setUpdateInfo(userEntity);
+        userEntity.setAvatar(storeLoaction);
+        int recordCnt = userMapper.updateNotNullByPK(userEntity);
+        if (recordCnt == 0){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+
+        //update avatar value stored in session
+        httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_AVATAR,storeLoaction);
+        return storeLoaction;
     }
 }

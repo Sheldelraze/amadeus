@@ -113,7 +113,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div style="text-align: center;margin-top: 10px">
-                                <img th:src="@{${user.avatar}}" class="img-thumbnail" width="200"/>
+                                <img id="userAvatar" th:src="@{${user.avatar}}" class="img-thumbnail" width="200"/>
                                 <h4 class="card-title m-t-10" th:text="${user.fullname}">Hanna Gover</h4>
                                 <h6 class="card-subtitle" style="margin-bottom: -5px" th:text="${user.role.text}">Giảng
                                     viên</h6>

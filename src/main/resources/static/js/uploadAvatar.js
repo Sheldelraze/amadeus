@@ -52,7 +52,7 @@ $(uploadInput).change(function () {
                     position: 'bottom-right',
                     loaderBg: '#ff6849',
                     icon: 'warning',
-                    hideAfter: 4000,
+                    hideAfter: 5000,
                     stack: 6
                 });
             }
@@ -72,11 +72,27 @@ $(uploadInput).change(function () {
         contentType : false,  // <----required to upload
         cache: false,
         timeout: 60000,
-        success: function () {
-            alert('ok');
+        success: function (data) {
+            $.toast({
+                heading: 'Cập nhật ảnh đại diện thành công!',
+                text: 'Ảnh có thể mất đến 1 phút để cập nhật.',
+                position: 'bottom-right',
+                loaderBg: '#ff6849',
+                icon: 'success',
+                hideAfter: 3000,
+                stack: 6
+            });
         },
-        error: function () {
-            alert('fail');
+        error: function (e) {
+            $.toast({
+                heading: 'Cập nhật ảnh thất bại!',
+                text: 'Nguyên nhân: ' + e.responseText,
+                position: 'bottom-right',
+                loaderBg: '#ff6849',
+                icon: 'warning',
+                hideAfter: 5000,
+                stack: 6
+            });
         }
     });
 });

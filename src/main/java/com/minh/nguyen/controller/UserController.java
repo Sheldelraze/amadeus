@@ -132,7 +132,6 @@ public class UserController extends BaseController{
         }
     }
 
-    @PreAuthorize("")
     @ResponseBody
     @PostMapping(value = "/{urId}/uploadAvatar", consumes = "multipart/form-data")
     public ResponseEntity uploadFile(@PathVariable("urId")Integer urId,@RequestParam("newAvatar") MultipartFile multipartFile) {
