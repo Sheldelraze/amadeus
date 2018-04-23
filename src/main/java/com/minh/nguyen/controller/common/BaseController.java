@@ -229,6 +229,7 @@ public class BaseController {
     protected ModelAndView createGeneralModel() {
         ModelAndView modelAndView = new ModelAndView();
         boolean canCreateProblem = false;
+        boolean canUploadMaterial = false;
         boolean canCreateContest = false;
         if (null != httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES)) {
             List<Integer> defaultAuth = (List<Integer>) httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_DEFAULT_AUTHORITIES);
@@ -237,6 +238,9 @@ public class BaseController {
             }
             if (defaultAuth.contains(Constants.AUTH_CREATE_CONTEST_ID)) {
                 canCreateContest = true;
+            }
+            if (defaultAuth.contains(Constants.AUTH_UPLOAD_MATERIAL_ID)) {
+                canUploadMaterial = true;
             }
         }
         Object currewntUserId = httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
@@ -254,6 +258,7 @@ public class BaseController {
         }
         modelAndView.addObject("canCreateProblem", canCreateProblem);
         modelAndView.addObject("canCreateContest", canCreateContest);
+        modelAndView.addObject("canUploadMaterial", canUploadMaterial);
         modelAndView.addObject("username", username);
         modelAndView.addObject("avatar", avatar);
         modelAndView.addObject("urId", currewntUserId);

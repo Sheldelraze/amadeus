@@ -250,7 +250,7 @@
                                         </div>
                                         <div class="u-text">
                                             <h4 th:text="${username}">Makise Kurisu</h4>
-                                            <a href="Profile.aspx" class="btn btn-rounded btn-danger btn-sm">Xem tài
+                                            <a th:href="@{/profile/__${urId}__}" class="btn btn-rounded btn-danger btn-sm">Xem tài
                                                 khoản</a>
                                         </div>
                                     </div>
@@ -317,11 +317,11 @@
                     </li>
                     <li>
                         <a class="waves-effect waves-dark" href="/status" aria-expanded="false"><i
-                                class="mdi mdi-bank"></i><span class="hide-menu">Bảng chấm bài</span></a>
+                                class="mdi mdi-bulletin-board"></i><span class="hide-menu">Bảng chấm bài</span></a>
                     </li>
                     <li>
                         <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
-                                class="mdi mdi-clipboard-text"></i><span class="hide-menu">Khoá học</span></a>
+                                class="mdi mdi-library"></i><span class="hide-menu">Khoá học</span></a>
                         <ul aria-expanded="false" class="collapse">
                             <li><a th:href="@{/course/all}">Tất cả khóa học</a></li>
                             <li th:if="${urId != null}"><a th:href="@{/course/my}">Khóa học của tôi</a></li>
@@ -332,6 +332,14 @@
                         <ul aria-expanded="false" class="collapse">
                             <li><a th:href="@{/contest/all}">Tất cả kì thi</a></li>
                             <li th:if="${canCreateContest}"><a href="/contest/my">Kì thi của tôi</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
+                            class="mdi mdi-briefcase-download"></i><span class="hide-menu">Tài liệu</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a th:href="@{/material/info/all}">Tất cả tài liệu</a></li>
+                            <li th:if="${canUploadMaterial}"><a th:href="@{/problem/info/my}">Tài liệu của tôi</a></li>
                         </ul>
                     </li>
                     <li>
