@@ -1,4 +1,4 @@
-<div th:fragment="information" xmlns:th="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="information" xmlns:th="http://www.w3.org/1999/xhtml">
     <small class="text-muted">Trình độ</small>
     <h6 th:classappend="${user.level.id == 8} ? 'legendary'"
         th:style="'color : __${user.level.color}__;font-weight: 600'" th:text="${user.level.name}">Cao thủ</h6>
@@ -10,7 +10,7 @@
         <small class="text-muted">Lớp</small>
         <h6 th:text="${user.classDTO.name}">KTPM_CLC_K9</h6>
     </th:block>
-</div>
+</th:block>
 <div class="col-9" th:fragment="data" xmlns:th="http://www.w3.org/1999/xhtml">
     <div id="accordionexample" class="accordion" role="tablist" aria-multiselectable="true">
         <!--Contest participated-->
@@ -121,4 +121,8 @@
             });
         });
     </script>
+</th:block>
+
+<th:block th:fragment="update" xmlns:th="http://www.w3.org/1999/xhtml">
+
 </th:block>

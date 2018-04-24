@@ -91,6 +91,17 @@ public class CommonValidator {
                     throw ex;
                 }
             }
+            else  if (anno.type().equals(Format.FormatType.PHONE)) {
+                boolean isValidPhone = CheckUtil.isValidPhone(fieldVal);
+                if (!isValidPhone) {
+                    InputCheckException ex = new InputCheckException(
+                            Constants.MSG_PHONE_FORMAT_ERR, new String[] {
+                            anno.displayFieldName(), anno.pattern() });
+                    ex.setFieldName(field.getName());
+                    errorItemNameList.add(field.getName());
+                    throw ex;
+                }
+            }
         }
 
         //Check if fieldVal is integer

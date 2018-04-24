@@ -103,6 +103,7 @@ public class Constants {
     public static final String MSG_HANDLE_EXISTED_ERR = "msg028";
     public static final String MSG_WRONG_OLD_PASSWORD_ERR = "msg029";
     public static final String MSG_NOT_ALLOWED_ERR = "msg030";
+    public static final String MSG_PHONE_FORMAT_ERR = "msg031";
 
     public static final Integer STATUS_JUDGING = 0;
     public static final Integer STATUS_COMPILE_ERROR = 1;
@@ -228,6 +229,7 @@ public class Constants {
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_UPLOAD_MATERIAL_ID,"Upload tài liệu mới"));
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_MATERIAL_ID,"Xem tất cả tài liệu"));
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_SUBMISSION_ID,"Xem tất cả bài nộp"));
+        LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_CREATE_PROBLEM_ID,"Tạo bài tập"));
         LST_DEFAULT_AUTHORITY.add(new AuthorityDTO(AUTH_VIEW_ALL_PROBLEM_ID,"Xem tất cả bài tập"));
 
         LST_DEGREE.add("Thạc sĩ");

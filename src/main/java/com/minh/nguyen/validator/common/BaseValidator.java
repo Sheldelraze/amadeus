@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -48,7 +49,11 @@ public abstract class BaseValidator {
         String fieldVal = "";
         Class<? extends Object> clazz = targetObj.getClass();
 
-        Field[] fields = clazz.getDeclaredFields();
+        List<Field> fields = new ArrayList<>();
+        while (clazz != BaseForm.class) {
+            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+            clazz = clazz.getSuperclass();
+        }
         BaseForm baseForm = BaseForm.class.cast(targetObj);
         errorItemNameList = new ArrayList<String>();
 

@@ -15,7 +15,7 @@
                 </h5>
             </div>
             <div id="educationToggle" class="collapse" role="tabpanel" aria-labelledby="educationArea">
-                <div class="card-body"  style="white-space: pre" th:text="${user.education}" th:if="${user.education != null}"></div>
+                <div class="card-body"  style="white-space: pre" th:utext="${user.education}" th:if="${user.education != null}"></div>
                 <div class="card-body text-muted" th:unless="${user.education != null}">
                     Không có thông tin về học vấn
                 </div>
@@ -32,7 +32,7 @@
                 </h5>
             </div>
             <div id="careerToggle" class="collapse" role="tabpanel" aria-labelledby="careerArea">
-                <div class="card-body"  style="white-space: pre" th:text="${user.career}" th:if="${user.career != null}"></div>
+                <div class="card-body"  style="white-space: pre" th:utext="${user.career}" th:if="${user.career != null}"></div>
                 <div class="card-body text-muted" th:unless="${user.career != null}">
                     Không có thông tin về quá trình công tác
                 </div>
@@ -49,7 +49,7 @@
                 </h5>
             </div>
             <div id="researchToggle" class="collapse" role="tabpanel" aria-labelledby="researchArea">
-                <div class="card-body"  style="white-space: pre" th:text="${user.research}" th:if="${user.research != null}"></div>
+                <div class="card-body"  style="white-space: pre" th:utext="${user.research}" th:if="${user.research != null}"></div>
                 <div class="card-body text-muted" th:unless="${user.research != null}">
                     Không có thông tin về nghiên cứu khoa học
                 </div>
@@ -66,7 +66,7 @@
                 </h5>
             </div>
             <div id="publicationToggle" class="collapse" role="tabpanel" aria-labelledby="publicationArea">
-                <div class="card-body"  style="white-space: pre" th:text="${user.publication}" th:if="${user.publication != null}"></div>
+                <div class="card-body"  style="white-space: pre" th:utext="${user.publication}" th:if="${user.publication != null}"></div>
                 <div class="card-body text-muted" th:unless="${user.publication != null}">
                     Không có thông tin về các bài báo đã xuất bản
                 </div>
@@ -83,7 +83,7 @@
                 </h5>
             </div>
             <div id="awardToggle" class="collapse" role="tabpanel" aria-labelledby="awardArea">
-                <div class="card-body"  style="white-space: pre" th:text="${user.award}" th:if="${user.award != null}"></div>
+                <div class="card-body"  style="white-space: pre" th:utext="${user.award}" th:if="${user.award != null}"></div>
                 <div class="card-body text-muted" th:unless="${user.award != null}">
                     Không có thông tin về các giải thưởng
                 </div>
@@ -91,6 +91,82 @@
         </div>
     </div>
 </div>
-<div th:fragment="js" xmlns:th="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="js" xmlns:th="http://www.w3.org/1999/xhtml">
 
-</div>
+</th:block>
+
+<th:block th:fragment="update" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="form-group row">
+        <label class="col-2 col-form-label text-right">Học vị</label>
+        <div class="col-4 col-form-label">
+            <select class="select2" th:field="*{degree}" style="color:black">
+                    <option value="" >«Không chọn»
+                    </option>
+                    <option th:selected="${userProfileUpdateForm.degree==deg}?'selected'"
+                            th:each="deg : ${lstDegree}"
+                            th:value="${deg}" th:text="${deg}">
+                    </option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-2 col-form-label text-right">Học vấn</label>
+        <div class="col-10">
+            <div class="summernote" id="educationEditor" th:utext="*{education}">
+            </div>
+            <input id="education" name="education" type="hidden"/>
+            <th:block th:if="${#fields.hasErrors('education')}">
+                <label class="error" th:errors="*{education}">Screen
+                    Error</label>
+            </th:block>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-2 col-form-label text-right">Quá trình công tác</label>
+        <div class="col-10">
+            <div class="summernote" id="careerEditor" th:utext="*{career}">
+            </div>
+            <input id="career" name="career" type="hidden"/>
+            <th:block th:if="${#fields.hasErrors('career')}">
+                <label class="error" th:errors="*{career}">Screen
+                    Error</label>
+            </th:block>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-2 col-form-label text-right">Nghiên cứu khoa học</label>
+        <div class="col-10">
+            <div class="summernote" id="researchEditor" th:utext="*{research}">
+            </div>
+            <input id="research" name="research" type="hidden"/>
+            <th:block th:if="${#fields.hasErrors('research')}">
+                <label class="error" th:errors="*{research}">Screen
+                    Error</label>
+            </th:block>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-2 col-form-label text-right">Các bài báo đã xuất bản</label>
+        <div class="col-10">
+            <div class="summernote" id="publicationEditor" th:utext="*{publication}">
+            </div>
+            <input id="publication" name="publication" type="hidden"/>
+            <th:block th:if="${#fields.hasErrors('publication')}">
+                <label class="error" th:errors="*{publication}">Screen
+                    Error</label>
+            </th:block>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-2 col-form-label text-right">Các giải thưởng và danh hiệu khác</label>
+        <div class="col-10">
+            <div class="summernote" id="awardEditor" th:utext="*{award}">
+            </div>
+            <input id="award" name="award" type="hidden"/>
+            <th:block th:if="${#fields.hasErrors('award')}">
+                <label class="error" th:errors="*{award}">Screen
+                    Error</label>
+            </th:block>
+        </div>
+    </div>
+</th:block>

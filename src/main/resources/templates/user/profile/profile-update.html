@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../static/assets/images/favicon.png"
+          th:href="@{/assets/images/favicon.png}">
+    <!-- Favicon icon -->
+    <title>Amadeus system</title>
+
+    <link href="../../../static/assets/plugins/bootstrap/css/bootstrap.min.css"
+          th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/assets/plugins/summernote/dist/summernote.css}" rel="stylesheet"/>
+    <!-- You can change the theme colors from here -->
+    <link href="../../../static/css/colors/blue.css" th:href="@{/css/colors/blue.css}" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: #1ed921;
+        }
+    </style>
+</head>
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <div class="row" style="margin-top:30px">
+            <!-- Column -->
+            <!-- Column -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="settings" class="tab-pane active" style="color: black">
+                            <form th:action="${reId == 3} ?  @{/user/updateStudent} :  @{/user/updateLecturer}"
+                                  th:object="${userProfileUpdateForm}"
+                                  id="updateForm"
+                                  method="post">
+                                <th:block th:if="${#fields.hasErrors('screenMessage')}">
+                                    <div class="alert alert-danger">
+                                        ✘ <th:block th:errors="*{screenMessage}"></th:block>
+                                    </div>
+                                </th:block>
+                                <th:block th:if="${updateSuccess}">
+                                    <div class="alert alert-success">
+                                        ✔ Cập nhật tài khoản thành công
+                                    </div>
+                                </th:block>
+                                <button type="button" class=" btn btn-secondary" onclick="CloseMySelf()" style="margin-left: 50px">Đóng cứa sổ
+                                </button>
+                                <div style="text-align: center">
+                                    <h3>Cập nhật thông tin tài khoản</h3>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Tên tài khoản</label>
+                                    <div class="col-5 col-form-label" >
+                                        <label th:text="*{handle}"></label>
+                                        <input type="hidden" th:field="*{handle}"/>
+                                        <input type="hidden" name="urId" th:value="${urId}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Họ tên <b
+                                            style="color:red">(*)</b></label>
+                                    <div class="col-4">
+                                        <small style="color:slategray">Tối đa 45 ký tự</small>
+                                        <input style="color:black" class="form-control"
+                                                  th:field="*{fullname}"/>
+                                        <th:block th:if="${#fields.hasErrors('fullname')}">
+                                            <label class="error" th:errors="*{fullname}">Screen
+                                                Error</label>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Ngày sinh</label>
+                                    <div class="col-3">
+                                        <small style="color:slategray">Định đạng dd/MM/yyyy</small>
+                                        <input style="color:black" class="form-control"
+                                                  th:field="*{dateOfBirth}"/>
+                                        <th:block th:if="${#fields.hasErrors('dateOfBirth')}">
+                                            <label class="error" th:errors="*{dateOfBirth}">Screen
+                                                Error</label>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Email</label>
+                                    <div class="col-5">
+                                        <small style="color:slategray">Không quá 55 ký tự</small>
+                                        <input style="color:black" class="form-control"
+                                               th:field="*{email}"/>
+                                        <th:block th:if="${#fields.hasErrors('email')}">
+                                            <label class="error" th:errors="*{email}">Screen
+                                                Error</label>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Số điện thoại</label>
+                                    <div class="col-3">
+                                        <input style="color:black" class="form-control"
+                                               th:field="*{phone}"/>
+                                        <th:block th:if="${#fields.hasErrors('phone')}">
+                                            <label class="error" th:errors="*{phone}">Screen
+                                                Error</label>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label text-right">Mô tả về bản thân</label>
+                                    <div class="col-10">
+                                        <textarea style="color:black" class="form-control" rows="5"
+                                                  th:field="*{description}"></textarea>
+                                        <th:block th:if="${#fields.hasErrors('description')}">
+                                            <label class="error" th:errors="*{description}">Screen
+                                                Error</label>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div th:replace="__${dataupdate}__ :: update"></div>
+                                <div style="text-align: center">
+                                    <button type="button" th:onclick="|doMagic(__${updateEditor}__)|" class="btn btn-success" style="margin-left: 50px">Cập nhật
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Column -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End PAge Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- footer -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+
+<script src="../../../static/assets/plugins/jquery/jquery.min.js"
+        th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="../../../static/assets/plugins/bootstrap/js/popper.min.js"
+        th:src="@{/assets/plugins/bootstrap/js/popper.min.js}"></script>
+<script src="../../../static/assets/plugins/bootstrap/js/bootstrap.min.js"
+        th:src="@{/assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
+
+<!--Custom JavaScript -->
+<script src="../../../static/js/custom.min.js" th:src="@{/js/custom.min.js}"></script>
+<script src="../assets/plugins/summernote/dist/summernote.min.js"
+        th:src="@{/assets/plugins/summernote/dist/summernote.min.js}"></script>
+<script>
+    $('.summernote').summernote({
+        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather'],
+        toolbar: [
+            // [groupName, [list of button]]
+            ['font', ['bold', 'italic', 'underline', 'superscript', 'subscript', 'strikethrough', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['list', ['ul', 'ol']],
+            ['table', ['table']],
+            ['insert', ['picture']],
+            ['insert', ['link']],
+            ['insert', ['hr']],
+        ],
+        height: 150, // set editor height
+        minHeight: null, // set minimum height of editor
+        maxHeight: null, // set maximum height of editor
+        focus: false // set focus to editable area after initializing summernote
+    });
+    function doMagic(updateEditor){
+        if (updateEditor){
+            var educationText = $('#educationEditor').summernote('code');
+            $('#education').val(educationText);
+            var careerText = $('#careerEditor').summernote('code');
+            $('#career').val(careerText);
+            var researchText = $('#researchEditor').summernote('code');
+            $('#research').val(researchText);
+            var publicationText = $('#publicationEditor').summernote('code');
+            $('#publication').val(publicationText);
+            var awardText = $('#awardEditor').summernote('code');
+            $('#award').val(awardText);
+        }
+        $('#updateForm').submit();
+    }
+    function CloseMySelf() {
+        try {
+            window.opener.HandlePopupResult();
+        }
+        catch (err) {}
+        window.close();
+        return false;
+    }
+</script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!--c3 JavaScript -->
+</body>
+<!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:33:03 GMT -->
+</html>

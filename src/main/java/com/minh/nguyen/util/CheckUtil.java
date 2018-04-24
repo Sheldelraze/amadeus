@@ -1,7 +1,5 @@
 package com.minh.nguyen.util;
 
-import org.springframework.stereotype.Component;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +29,13 @@ public class CheckUtil {
                 + ".[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         Pattern p = Pattern.compile(ePattern);
         Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
+    public static boolean isValidPhone(String phone) {
+        String ePattern = "\\d{10}|\\d{11}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
+        Pattern p = Pattern.compile(ePattern);
+        Matcher m = p.matcher(phone);
         return m.matches();
     }
 

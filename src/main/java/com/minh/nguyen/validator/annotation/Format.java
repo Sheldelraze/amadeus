@@ -21,7 +21,7 @@ public @interface Format  {
 		TIME,
 		DATE,
 		EMAIL,
-		PHONENUMBER
+		PHONE
 	}
 
 
