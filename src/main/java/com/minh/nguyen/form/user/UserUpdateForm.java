@@ -20,6 +20,7 @@ public class UserUpdateForm extends BaseForm {
     private String password;
 
     @MaxLength(displayFieldName = "fullnamen", maxlength = 40)
+    @Required
     private String fullname;
 
     @Required(displayFieldName = "reId")

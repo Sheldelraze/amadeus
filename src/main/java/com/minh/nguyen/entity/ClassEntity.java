@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Purpose:
  */
 @Table(name = "class")
-public class ClassEntity extends UserEntity implements Serializable{
+public class ClassEntity extends BaseEntity implements Serializable{
     static final long serialVersionUID = 42L;
 
     @Id
@@ -29,12 +29,10 @@ public class ClassEntity extends UserEntity implements Serializable{
     @Column(name = "academicYear")
     private String academicYear;
 
-    @Override
     public Integer getId() {
         return id;
     }
 
-    @Override
     public void setId(Integer id) {
         this.id = id;
     }

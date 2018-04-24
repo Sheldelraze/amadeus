@@ -6,6 +6,7 @@ import com.minh.nguyen.dto.AuthorityDTO;
 import com.minh.nguyen.dto.LecturerDTO;
 import com.minh.nguyen.dto.StudentDTO;
 import com.minh.nguyen.dto.UserDTO;
+import com.minh.nguyen.entity.ClassEntity;
 import com.minh.nguyen.form.user.UserCreateForm;
 import com.minh.nguyen.form.user.UserUpdateForm;
 import com.minh.nguyen.form.user.UserUpdatePasswordForm;
@@ -195,8 +196,13 @@ public class UserController extends BaseController {
         modelAndView.addObject("dataupdate", "user/profile/profile-student-view");
         if (userProfileUpdateForm.getUrId() == null) {
             StudentDTO studentDTO = userService.getStudentProfile(urId);
+            if ((studentDTO.getClassDTO() != null)) {
+                studentDTO.setCsId(studentDTO.getClassDTO().getId());
+            }
             userProfileUpdateForm = modelMapper.map(studentDTO,StudentProfileUpdateForm.class);
         }
+        List<ClassEntity> lstClass = userService.getAllClass();
+        modelAndView.addObject("lstClass", lstClass);
         modelAndView.addObject("userProfileUpdateForm", userProfileUpdateForm);
         modelAndView.addObject("updateEditor", 0);
         return modelAndView;
@@ -221,7 +227,11 @@ public class UserController extends BaseController {
         if (bindingResult.hasErrors()){
             return updateProfile(lecturerProfileUpdateForm,false);
         }
-        return null;
+        UserDTO userDTO = modelMapper.map(lecturerProfileUpdateForm,UserDTO.class);
+        LecturerDTO lecturerDTO = modelMapper.map(lecturerProfileUpdateForm,LecturerDTO.class);
+        Integer urId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        userService.updateLecturer(urId,lecturerDTO,userDTO);
+        return updateProfile(lecturerProfileUpdateForm,true);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -231,6 +241,10 @@ public class UserController extends BaseController {
         if (bindingResult.hasErrors()){
             return updateProfile(studentProfileUpdateForm,false);
         }
-        return null;
+        UserDTO userDTO = modelMapper.map(studentProfileUpdateForm,UserDTO.class);
+        StudentDTO studentDTO = modelMapper.map(studentProfileUpdateForm,StudentDTO.class);
+        Integer urId = (Integer)httpSession.getAttribute(Constants.CURRENT_LOGIN_USER_ID);
+        userService.updateStudent(urId,studentDTO,userDTO);
+        return updateProfile(studentProfileUpdateForm,true);
     }
 }

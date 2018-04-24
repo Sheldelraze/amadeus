@@ -124,5 +124,18 @@
 </th:block>
 
 <th:block th:fragment="update" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="form-group row">
+        <label class="col-2 text-right">Lớp học</label>
+        <div class="col-3">
+            <select class="select2" style="width: 100%; color: black">
+                <option value="" >«Không chọn»</option>
+                <option th:selected="${clazz.id == userProfileUpdateForm.csId} ? 'selected'" th:each="clazz : ${lstClass}" th:value="${clazz.id}" th:text="${clazz.name}"></option>
+            </select>
+            <th:block th:if="${#fields.hasErrors('csId')}">
+                <label class="error" th:errors="*{csId}">Screen
+                    Error</label>
+            </th:block>
+        </div>
+    </div>
 
 </th:block>

@@ -2,10 +2,7 @@ package com.minh.nguyen.service;
 
 import com.minh.nguyen.constants.Constants;
 import com.minh.nguyen.dto.*;
-import com.minh.nguyen.entity.LecturerEntity;
-import com.minh.nguyen.entity.StudentEntity;
-import com.minh.nguyen.entity.UrAuyEntity;
-import com.minh.nguyen.entity.UserEntity;
+import com.minh.nguyen.entity.*;
 import com.minh.nguyen.exception.NoSuchPageException;
 import com.minh.nguyen.mapper.*;
 import com.minh.nguyen.util.FileUtil;
@@ -57,6 +54,9 @@ public class UserService extends BaseService{
 
     @Autowired
     private ContestMapper contestMapper;
+
+    @Autowired
+    private ClassMapper classMapper;
 
     public List<AuthorityDTO> getDefaultAuthority(Integer reId){
         List<AuthorityDTO> lstAuth = authorityMapper.getDefaultAuthorityForRole(reId);
@@ -327,5 +327,47 @@ public class UserService extends BaseService{
         //update avatar value stored in session
         httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_AVATAR,storeLoaction);
         return storeLoaction;
+    }
+
+    @Transactional
+    public void updateLecturer(Integer urId,LecturerDTO lecturerDTO,UserDTO userDTO){
+        LecturerEntity lecturerEntity = modelMapper.map(lecturerDTO,LecturerEntity.class);
+        setUpdateInfo(lecturerEntity);
+        int recordCnt = lecturerMapper.updateNotNullByPK(lecturerEntity);
+        if (recordCnt == 0){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+        userDTO.setId(urId);
+        userUserProfile(userDTO);
+    }
+
+    @Transactional
+    public void updateStudent(Integer urId,StudentDTO studentDTO,UserDTO userDTO){
+        StudentEntity studentEntity = modelMapper.map(studentDTO,StudentEntity.class);
+        setUpdateInfo(studentEntity);
+        int recordCnt = studentMapper.updateNotNullByPK(studentEntity);
+        if (recordCnt == 0){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+        userDTO.setId(urId);
+        userUserProfile(userDTO);
+    }
+
+    private void userUserProfile(UserDTO userDTO){
+        UserEntity userEntity = modelMapper.map(userDTO,UserEntity.class);
+        setUpdateInfo(userEntity);
+        int recordCnt = userMapper.updateNotNullByPK(userEntity);
+        if (recordCnt == 0){
+            rollBack(Constants.MSG_SYSTEM_ERR);
+        }
+        if (userDTO.getFullname() != null){
+            httpSession.setAttribute(Constants.CURRENT_LOGIN_USER_FULLNAME,userDTO.getFullname());
+        }
+    }
+
+    public List<ClassEntity> getAllClass(){
+        List<ClassEntity> lstClass = classMapper.selectAll(ClassEntity.class);
+
+        return lstClass;
     }
 }
