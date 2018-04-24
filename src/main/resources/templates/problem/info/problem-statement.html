@@ -205,13 +205,13 @@
         $(".select2").select2();
     });
     function doMagic() {
-        var statementText = $('#statementEditor').summernote('code');
+        var statementText = $('#statementEditor').summernote('isEmpty')? '' : $('#statementEditor').summernote('code');
         $('#statement').val(statementText);
-        var inputText = $('#inputEditor').summernote('code');
+        var inputText = $('#inputEditor').summernote('isEmpty')? '' : $('#inputEditor').summernote('code');
         $('#input').val(inputText);
-        var outputText = $('#outputEditor').summernote('code');
+        var outputText = $('#outputEditor').summernote('isEmpty')? '' : $('#outputEditor').summernote('code');
         $('#output').val(outputText);
-        var noteText = $('#noteEditor').summernote('code');
+        var noteText = $('#noteEditor').summernote('isEmpty')? '' : $('#noteEditor').summernote('code');
         $('#note').val(noteText);
         $('#updateForm').submit();
     }

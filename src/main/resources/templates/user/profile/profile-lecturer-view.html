@@ -112,8 +112,7 @@
     <div class="form-group row">
         <label class="col-2 col-form-label text-right">Học vấn</label>
         <div class="col-10">
-            <div class="summernote" id="educationEditor" th:utext="*{education}">
-            </div>
+            <div class="summernote" id="educationEditor" th:utext="*{education}"></div>
             <input id="education" name="education" type="hidden"/>
             <th:block th:if="${#fields.hasErrors('education')}">
                 <label class="error" th:errors="*{education}">Screen
@@ -124,8 +123,7 @@
     <div class="form-group row">
         <label class="col-2 col-form-label text-right">Quá trình công tác</label>
         <div class="col-10">
-            <div class="summernote" id="careerEditor" th:utext="*{career}">
-            </div>
+            <div class="summernote" id="careerEditor" th:utext="*{career}"></div>
             <input id="career" name="career" type="hidden"/>
             <th:block th:if="${#fields.hasErrors('career')}">
                 <label class="error" th:errors="*{career}">Screen
@@ -136,8 +134,7 @@
     <div class="form-group row">
         <label class="col-2 col-form-label text-right">Nghiên cứu khoa học</label>
         <div class="col-10">
-            <div class="summernote" id="researchEditor" th:utext="*{research}">
-            </div>
+            <div class="summernote" id="researchEditor" th:utext="*{research}"></div>
             <input id="research" name="research" type="hidden"/>
             <th:block th:if="${#fields.hasErrors('research')}">
                 <label class="error" th:errors="*{research}">Screen
@@ -148,8 +145,7 @@
     <div class="form-group row">
         <label class="col-2 col-form-label text-right">Các bài báo đã xuất bản</label>
         <div class="col-10">
-            <div class="summernote" id="publicationEditor" th:utext="*{publication}">
-            </div>
+            <div class="summernote" id="publicationEditor" th:utext="*{publication}"></div>
             <input id="publication" name="publication" type="hidden"/>
             <th:block th:if="${#fields.hasErrors('publication')}">
                 <label class="error" th:errors="*{publication}">Screen
@@ -160,8 +156,7 @@
     <div class="form-group row">
         <label class="col-2 col-form-label text-right">Các giải thưởng và danh hiệu khác</label>
         <div class="col-10">
-            <div class="summernote" id="awardEditor" th:utext="*{award}">
-            </div>
+            <div class="summernote" id="awardEditor" th:utext="*{award}"></div>
             <input id="award" name="award" type="hidden"/>
             <th:block th:if="${#fields.hasErrors('award')}">
                 <label class="error" th:errors="*{award}">Screen

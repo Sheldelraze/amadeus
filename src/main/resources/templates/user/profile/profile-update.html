@@ -242,16 +242,16 @@
     });
     function doMagic(updateEditor){
         if (updateEditor){
-            var educationText = $('#educationEditor').summernote('code');
-            $('#education').val(educationText);
-            var careerText = $('#careerEditor').summernote('code');
-            $('#career').val(careerText);
-            var researchText = $('#researchEditor').summernote('code');
-            $('#research').val(researchText);
-            var publicationText = $('#publicationEditor').summernote('code');
-            $('#publication').val(publicationText);
-            var awardText = $('#awardEditor').summernote('code');
-            $('#award').val(awardText);
+            var educationText = $('#educationEditor').summernote('isEmpty')? '' : $('#educationEditor').summernote('code');
+            $('#education').val(educationText.trim());
+            var careerText = $('#careerEditor').summernote('isEmpty')? '' : $('#careerEditor').summernote('code');
+            $('#career').val(careerText.trim());
+            var researchText = $('#researchEditor').summernote('isEmpty')? '' : $('#researchEditor').summernote('code');
+            $('#research').val(researchText.trim());
+            var publicationText = $('#publicationEditor').summernote('isEmpty')? '' : $('#publicationEditor').summernote('code');
+            $('#publication').val(publicationText.trim());
+            var awardText = $('#awardEditor').summernote('isEmpty')? '' : $('#awardEditor').summernote('code');
+            $('#award').val(awardText.trim());
         }
         $('#updateForm').submit();
     }
