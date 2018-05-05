@@ -126,7 +126,15 @@
                                                                                                     title="Công thức tính: ĐộKhó * 10 - (SốLầnNộp - 1) * ĐộKhó, tuy nhiên nếu sai >= 10 lần thì khi nộp đúng vẫn được 1 điểm an ủi. Chỉ tính điểm lần đầu tiên nộp đúng."
                                                                                                     class="fa fa-question-circle"></i></small>
                                 <div style="width: 30%">
-                                    '
+                                    <select class="select2" th:remove="all-but-first" id="difficulty"
+                                            name="difficulty" style="color:black">
+                                        <th:block th:if="${problemLayoutVO != null} ">
+                                            <option th:selected="${problemLayoutVO.difficulty==difValue}?'selected'"
+                                                    th:each="difValue : ${problemLayoutVO.difficultValue}"
+                                                    th:value="${difValue}" th:text="${difValue}">
+                                            </option>
+                                        </th:block>
+                                    </select>
                                 </div>
 
                                 <small class="text-muted p-t-10 db">Số bộ test</small>

@@ -16,7 +16,7 @@
         FROM contest
             INNER JOIN user
                 ON contest.createUser = user.handle
-            INNER JOIN (
+            LEFT JOIN (
                            SELECT
                                ctId,
                                count(*) AS userCnt

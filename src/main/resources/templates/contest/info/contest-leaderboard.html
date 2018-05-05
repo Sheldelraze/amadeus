@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+>
 <!-- Mirrored from wrappixel.com/demos/admin-templates/material-pro/material/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Sep 2017 15:31:42 GMT -->
 <head>
     <div th:replace="layout/layout::meta"></div>
@@ -119,8 +119,8 @@
                                             <div th:text="${iter.count}" class="center"></div>
                                         </td>
                                         <td>
-                                            <div style="text-align: left" th:text="${user.fullname}"
-                                                 class="center"></div>
+                                            <div style="text-align: left"
+                                                 class="center"><a th:text="${user.fullname}" th:href="|/user/${user.id}/profile|"></a></div>
                                         </td>
                                         <td>
                                             <div th:text="${user.score}" class="center"></div>
@@ -133,6 +133,7 @@
                                             <td th:if="${null == problem.lstSubmission or #lists.size(problem.lstSubmission) == 0}"></td>
 
                                             <!--first solve-->
+                                            <!--ACM JUDGE TYPE-->
                                             <th:block th:if="${judgeType == 1}">
                                                 <td th:if="${problem.isFirstSolve == 1}" class="firstSolve">
                                                     <div style="margin-bottom: -35px">
@@ -152,8 +153,8 @@
                                                     th:unless="${null == problem.lstSubmission or #lists.size(problem.lstSubmission) == 0}">
                                                     <div style="margin-bottom: -35px"
                                                          th:classappend="${problem.isSolved != 1}?'center'">
-                                                        <b th:classappend="${problem.isSolved == 1}?'accepted':'fail'">
-                                                            <label th:text="${problem.isSolved == 1}?'+':'-'"></label>
+                                                        <b th:classappend="|${problem.isSolved == 1?'accepted':''} ${problem.isSolved == -1?'text-muted':'fail'}|">
+                                                            <label th:if="${problem.isSolved != -1}" th:text="${problem.isSolved == 1}?'+':'-'"></label>
                                                             <th:block th:if="${problem.isSolved == 1}">
                                                                 <label th:text="${problem.submitCnt == 1}?'':${problem.submitCnt - 1}"></label>
                                                             </th:block>
@@ -168,6 +169,8 @@
                                                     </div>
                                                 </td>
                                             </th:block>
+
+                                            <!--IOI JUDGE TYPE-->
                                             <th:block th:unless="${judgeType == 1}">
                                                 <td th:unless="${null == problem.lstSubmission or #lists.size(problem.lstSubmission) == 0}">
                                                     <div style="margin-bottom: -20px">

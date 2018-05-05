@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
@@ -394,6 +395,15 @@ public class ContestService extends BaseService {
                 problem.setSubmitCnt(submitCnt);
                 problem.setIsSolved(isSolved);
                 problem.setSolveTime(solveTime);
+
+
+                //check if last submission still pending
+                if (!CollectionUtils.isEmpty(problem.getLstSubmission())) {
+                    SubmissionDTO submit = problem.getLstSubmission().get(problem.getLstSubmission().size() - 1);
+                    if (submit.getJudgeStatus().equals(Constants.STATUS_JUDGING)){
+                        problem.setIsSolved(-1);
+                    }
+                }
             }
             user.setScore(score);
             user.setPenalty(penalty);
@@ -736,6 +746,10 @@ public class ContestService extends BaseService {
         List<ContestDTO> lstOngoing = new ArrayList<>();
         List<ContestDTO> lstPast = new ArrayList<>();
         for (ContestDTO contest : lstContest) {
+            if (contest.getUserCnt() == null){
+                contest.setUserCnt(0);
+            }
+
             //get contest's start time and end time
             Date startTime = contest.getCreateTime();
             Date endTime = DateUtils.addMinutes(startTime, contest.getDuration());

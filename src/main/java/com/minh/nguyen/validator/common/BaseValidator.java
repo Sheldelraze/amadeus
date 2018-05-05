@@ -2,6 +2,7 @@ package com.minh.nguyen.validator.common;
 
 import com.minh.nguyen.exception.BaseException;
 import com.minh.nguyen.form.BaseForm;
+import com.minh.nguyen.form.problem.ProblemLayoutForm;
 import com.minh.nguyen.util.StringUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public abstract class BaseValidator {
         Class<? extends Object> clazz = targetObj.getClass();
 
         List<Field> fields = new ArrayList<>();
-        while (clazz != BaseForm.class) {
+        while (clazz != BaseForm.class && clazz != ProblemLayoutForm.class) {
             fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
             clazz = clazz.getSuperclass();
         }

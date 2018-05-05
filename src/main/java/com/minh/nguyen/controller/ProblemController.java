@@ -238,15 +238,17 @@ public class ProblemController extends BaseController {
     public ModelAndView getStatement(@PathVariable("pmId") Integer pmId, ProblemLayoutForm problemLayoutForm, ProblemStatementForm problemStatementForm,
                                      boolean updateGeneralSuccess, boolean updateSuccess) {
         ModelAndView modelAndView = getGeneralInfo(pmId, problemLayoutForm, STATEMENT_TAB, updateGeneralSuccess);
-
-        ProblemDTO problemDTO = new ProblemDTO();
         ProblemStatementVO problemStatementVO = new ProblemStatementVO();
-        problemDTO.setId(pmId);
-        problemService.getProblemInfo(problemDTO);
-        modelMapper.map(problemDTO, problemStatementVO);
         modelAndView.addObject(STATEMENT_VO, problemStatementVO);
-        if (null == problemStatementForm) {
+        if (problemStatementForm.getId() == null) {
             problemStatementForm = new ProblemStatementForm();
+            ProblemDTO problemDTO = new ProblemDTO();
+            problemDTO.setId(pmId);
+            problemService.getProblemInfo(problemDTO);
+            modelMapper.map(problemDTO, problemStatementVO);
+        }
+        else{
+            modelMapper.map(problemStatementForm, problemStatementVO);
         }
         if (updateSuccess) {
             problemStatementVO.setUpdateSuccess(true);

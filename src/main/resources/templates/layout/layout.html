@@ -235,6 +235,9 @@
                     <!-- ============================================================== -->
                     <!-- Profile -->
                     <!-- ============================================================== -->
+                    <div th:if="${urId == null}">
+                        <button onclick="window.location='/login'" type="button" class="btn btn-success">Đăng nhập</button>
+                    </div>
                     <li class="nav-item dropdown" th:if="${urId != null}">
                         <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="#"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
