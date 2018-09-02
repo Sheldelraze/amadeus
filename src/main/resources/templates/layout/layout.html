@@ -264,7 +264,7 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#"><i class="ti-settings"></i>Thiết lập</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="fa fa-power-off"></i>Đăng xuất</a></li>
+                                <li><a href="/logout"><i class="fa fa-power-off"></i>Đăng xuất</a></li>
                             </ul>
                         </div>
                     </li>
@@ -341,8 +341,8 @@
                     <li><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i
                             class="mdi mdi-briefcase-download"></i><span class="hide-menu">Tài liệu</span></a>
                         <ul aria-expanded="false" class="collapse">
-                            <li><a th:href="@{/material/info/all}">Tất cả tài liệu</a></li>
-                            <li th:if="${canUploadMaterial}"><a th:href="@{/problem/info/my}">Tài liệu của tôi</a></li>
+                            <li><a th:href="@{/material/all}">Tất cả tài liệu</a></li>
+                            <li th:if="${canUploadMaterial}"><a th:href="@{/material/my}">Tài liệu của tôi</a></li>
                         </ul>
                     </li>
                     <li>

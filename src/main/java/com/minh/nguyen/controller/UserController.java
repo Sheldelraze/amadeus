@@ -47,6 +47,12 @@ public class UserController extends BaseController {
     @Autowired
     private MessageUtil messageUtil;
 
+    @GetMapping("/all")
+    public ModelAndView getAll(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user/user-all");
+        return modelAndView;
+    }
     @PreAuthorize("hasAuthority('" + Constants.AUTH_CREATE_USER_TEXT + "')")
     @GetMapping("/create")
     public ModelAndView getCreate(UserCreateForm userCreateForm, boolean updateSuccess) {
