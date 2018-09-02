@@ -16,11 +16,11 @@
             INNER JOIN user
                 ON user.id = application.urId
                    AND user.deleteFlg = '0'
-            LEFT JOIN cs_ur
-                ON cs_ur.urId = user.id
-                   AND cs_ur.deleteFlg = '0'
+            INNER JOIN student
+              on user.id = student.urId
+                and student.deleteFlg = '0'
             LEFT JOIN class
-                ON cs_ur.csId = class.id
+                ON class.id = student.csId
                    AND class.deleteFlg = '0'
         WHERE application.deleteFlg = '0'
               AND application.ceId = #{ceId}

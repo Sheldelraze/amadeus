@@ -138,6 +138,13 @@ public class ContestController extends BaseController {
         return modelAndView;
     }
 
+    @GetMapping("/my")
+    public ModelAndView getMyContest(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("contest/list/contest-list-my");
+        return modelAndView;
+    }
+
     @GetMapping("/all")
     public ModelAndView getAllContest() {
         ModelAndView modelAndView = createGeneralModel();
