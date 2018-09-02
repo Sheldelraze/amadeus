@@ -67,6 +67,7 @@ public class UserController extends BaseController {
         modelAndView.addObject("canEditAuth", canEditAuth);
         modelAndView.addObject("userCreateForm", userCreateForm);
         modelAndView.addObject("updateSuccess", updateSuccess);
+        modelAndView.addObject("current_title", "Thêm người dùng");
         return modelAndView;
     }
 
@@ -86,6 +87,7 @@ public class UserController extends BaseController {
         modelAndView.addObject("canEditAuth", canEditAuth);
         modelAndView.addObject("userUpdateForm", userUpdateForm);
         modelAndView.addObject("updateSuccess", updateSuccess);
+        modelAndView.addObject("current_title", "Cập nhật thông tin người dùng");
         return modelAndView;
     }
 
